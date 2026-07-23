@@ -1,0 +1,12 @@
+{
+  "name": "Try Jesus Media",
+  "short_name": "Try Jesus",
+  "description": "Free Bible guides for real life.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#311E33",
+  "theme_color": "#311E33",
+  "icons": [
+    {"src": "assets/favicon.png", "sizes": "256x256", "type": "image/png"}
+  ]
+}
