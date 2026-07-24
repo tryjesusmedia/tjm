@@ -136,7 +136,15 @@ button { cursor: pointer; }
 .trust-row i { color: var(--gold); font-style: normal; margin-right: 5px; }
 .hero-art { position: relative; min-height: 560px; display: grid; place-items: center; }
 .logo-halo { position: absolute; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle, rgba(238,189,74,.24), rgba(238,189,74,.05) 46%, transparent 70%); filter: blur(6px); }
-.hero-logo { position: relative; z-index: 2; width: min(100%, 500px); filter: drop-shadow(0 24px 34px rgba(0,0,0,.34)); animation: float-logo 6s ease-in-out infinite; }
+.hero-logo {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 500px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 34px rgba(0,0,0,.34));
+  animation: float-logo 6s ease-in-out infinite;
+}
 @keyframes float-logo { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
 .hero-card {
   position: absolute; z-index: 3; min-width: 190px; padding: 15px 18px; border: 1px solid rgba(255,255,255,.14);
