@@ -1,34 +1,34 @@
-# Try Jesus Media — Lesson 1
+# Try Jesus Media — Lesson 2
 
 This package contains a self-contained static page for:
 
-`https://tryjesusmedia.com/lesson1/`
+`https://tryjesusmedia.com/lesson2/`
 
 ## Files
 
-- `lesson1/index.html`
-- `lesson1/assets/styles.css`
-- `lesson1/assets/script.js`
+- `lesson2/index.html`
+- `lesson2/assets/styles.css`
+- `lesson2/assets/script.js`
 
 ## Publish
 
-Upload the entire `lesson1` folder to the root of the repository that powers TryJesusMedia.com.
+Upload the entire `lesson2` folder to the root of the repository that powers TryJesusMedia.com.
 
 ## Included
 
 - Eight-screen, mobile-first Bible study experience
-- Interactive Daniel 2 statue
+- Premium visual design consistent with Lesson 1
 - Full public-domain KJV passage text in expandable Scripture cards
 - Direct NKJV links to BibleGateway for every passage
-- Historical source links from the British Museum, Getty Museum, Encyclopaedia Iranica, HISTORY, and Andrews University
-- Amazon purchase link for *A Thousand Shall Fall*
-- Franz Hasel and Gerhard Hasel follow-up material
+- Expandable illustrations, deeper-study notes, and difficult-text explanations
+- Credible external links for the *Woman-Ochre* theft, recovery, and restoration
 - Automatic progress and private reflection saving in local browser storage
 - Browser-based narration
+- Responsive design, keyboard navigation, and accessibility support
 
 ## Before publication
 
-1. Confirm `/lesson2/` is the correct next-lesson URL.
+1. Confirm `/lesson3/` is the correct next-lesson URL.
 2. Confirm `https://zoombiblestudy.com` is the correct live-discussion URL.
 3. Replace the temporary `TJ` brand mark with the official Try Jesus Media logo if desired.
 4. Test all external links after deployment.
