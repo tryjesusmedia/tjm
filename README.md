@@ -1,17 +1,17 @@
-# Try Jesus Media — Lesson 3
+# Try Jesus Media — Welcome Page
 
-GitHub-ready static webpage for:
+GitHub-ready static welcome page for:
 
-`https://tryjesusmedia.com/lesson3/`
+`https://tryjesusmedia.com/welcome/`
 
 ## Upload
 
-Upload the entire `lesson3` folder to the root of the repository that powers TryJesusMedia.com.
+Upload the complete `welcome` folder to the root of the repository that powers TryJesusMedia.com.
 
 Expected structure:
 
 ```text
-lesson3/
+welcome/
 ├── index.html
 └── assets/
     ├── config.js
@@ -19,15 +19,15 @@ lesson3/
     └── styles.css
 ```
 
-No framework, build step, package installation, or external font dependency is required.
+No framework, package installation, or build step is required.
 
-## Important: direct Zoom join link
+## Direct Zoom link
 
-The page currently uses `https://zoombiblestudy.com/` as the safe discussion-access fallback because the direct Zoom meeting URL was not supplied.
+The page currently uses `https://zoombiblestudy.com/` as the discussion-access fallback because the direct Zoom join URL was not supplied.
 
 For a true one-click button that enters the Zoom meeting, open:
 
-`lesson3/assets/config.js`
+`welcome/assets/config.js`
 
 Replace:
 
@@ -35,64 +35,50 @@ Replace:
 zoomUrl: 'https://zoombiblestudy.com/',
 ```
 
-with the direct Zoom join URL, for example:
+with the direct Zoom join link, for example:
 
 ```js
 zoomUrl: 'https://us06web.zoom.us/j/MEETING_ID?pwd=PASSCODE',
 ```
 
-When the URL contains `zoom.us`, the page automatically changes the button wording to:
+When the link contains `zoom.us`, the page automatically changes the primary wording to **Enter the Live Zoom Call** and tells readers the Zoom meeting room will open.
 
-**Enter the Live Zoom Call**
+## Schedule
 
-and tells the reader that Zoom will open in a new tab.
+The countdown is configured for every Thursday at 8:00 PM Eastern and automatically accounts for Eastern daylight-saving time.
 
-## Weekly discussion schedule
-
-The page displays:
-
-**Every Thursday at 8:00 PM Eastern**
-
-A live countdown is calculated in the `America/New_York` time zone and adjusts for daylight-saving time.
-
-The schedule can be edited in `assets/config.js`:
+Edit these values in `assets/config.js` if the schedule changes:
 
 ```js
-discussionDay: 4,             // Thursday: Sunday=0 ... Saturday=6
-discussionHourEastern: 20,    // 8:00 PM
+discussionDay: 4,
+discussionHourEastern: 20,
 discussionMinuteEastern: 0,
 ```
 
+## Lesson links
+
+The lesson cards point to:
+
+- `/lesson1/`
+- `/lesson2/`
+- `/lesson3/`
+- `/lesson4/`
+- `/lesson5/`
+
+Lesson 4 and Lesson 5 buttons will work as soon as those folders are published.
+
 ## Social links
 
-The social links are centralized in `assets/config.js` so they can be updated once without editing the HTML.
-
-Included profiles:
-
-- YouTube: `https://www.youtube.com/@KalmanRoller`
-- Facebook: `https://www.facebook.com/profile.php?id=61575629752301`
-- Instagram: `https://www.instagram.com/zoom.bible.study`
-- TikTok: `https://tiktok.com/@zoombiblestudy.com`
-- X: `https://x.com/BonggiKalmander`
+YouTube, Facebook, Instagram, TikTok, and X URLs are centralized in `welcome/assets/config.js`.
 
 ## Features
 
-- Eight-screen mobile Bible study experience
-- Same premium plum, gold, ivory, and charcoal system as Lessons 1 and 2
-- Expandable KJV Scripture cards with NKJV BibleGateway links
-- Seven optional deeper-study and illustration drawers
-- Private reflection fields saved locally in the browser
-- Saved lesson progress
-- Browser-based narration
-- Keyboard navigation with left and right arrow keys
-- Weekly Zoom-community invitation
-- Eastern-time countdown to the next discussion
+- Premium mobile-first welcome experience
+- Live Thursday discussion invitation
+- Eastern-time countdown timer
+- Dynamic direct-Zoom wording
+- Community and belonging copy
+- Five premium lesson cards
+- Responsive mobile and desktop design
+- Accessible landmarks and tap targets
 - Restrained social footer
-- Responsive mobile and desktop layout
-- Reduced-motion and accessibility support
-
-## Links to confirm before launch
-
-- Direct Zoom meeting join URL
-- `/lesson4/` destination
-- TryJesusMedia.com home-page logo or brand treatment, if replacing the built-in TJ mark
