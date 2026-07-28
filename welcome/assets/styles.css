@@ -886,7 +886,490 @@ html {
   }
 }
 
+/* =========================================================
+   TRY JESUS MEDIA — SIMPLE EXPANDABLE LESSON ROADMAP
+   ========================================================= */
 
+.tjm-roadmap-section {
+  width: min(1080px, calc(100% - 32px));
+  margin: 48px auto 90px;
+  font-family: var(
+    --sans,
+    "Montserrat",
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif
+  );
+}
+
+.tjm-roadmap {
+  overflow: hidden;
+  border: 1px solid rgba(238, 189, 74, 0.52);
+  border-radius: 24px;
+  background: #fffdf9;
+  box-shadow:
+    0 24px 65px rgba(33, 19, 35, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.tjm-roadmap-summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  min-height: 145px;
+  padding: 27px 31px;
+  list-style: none;
+  cursor: pointer;
+  color: #311e33;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(238, 189, 74, 0.13),
+      transparent 34%
+    ),
+    linear-gradient(145deg, #fffdf9, #faf6ed);
+  transition: background 0.25s ease;
+}
+
+.tjm-roadmap-summary::-webkit-details-marker {
+  display: none;
+}
+
+.tjm-roadmap-summary:hover {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(238, 189, 74, 0.18),
+      transparent 36%
+    ),
+    linear-gradient(145deg, #ffffff, #faf5e9);
+}
+
+.tjm-roadmap-summary:focus-visible {
+  outline: 3px solid rgba(238, 189, 74, 0.55);
+  outline-offset: -4px;
+}
+
+.tjm-roadmap-icon {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  color: #eebd4a;
+  border: 1px solid rgba(238, 189, 74, 0.5);
+  border-radius: 50%;
+  background: #311e33;
+  box-shadow: 0 13px 30px rgba(33, 19, 35, 0.17);
+}
+
+.tjm-roadmap-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.tjm-roadmap-eyebrow {
+  margin-bottom: 6px;
+  color: #91630a;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tjm-roadmap-copy strong {
+  font-family: var(
+    --serif,
+    "Cormorant Garamond",
+    Georgia,
+    "Times New Roman",
+    serif
+  );
+  font-size: clamp(29px, 4vw, 42px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.tjm-roadmap-copy small {
+  max-width: 650px;
+  margin-top: 9px;
+  color: #726873;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.tjm-roadmap-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 47px;
+  padding: 0 18px;
+  border: 1px solid rgba(49, 30, 51, 0.16);
+  border-radius: 999px;
+  color: #311e33;
+  background: rgba(255, 255, 255, 0.78);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tjm-roadmap-summary:hover .tjm-roadmap-button {
+  border-color: #eebd4a;
+  background: #f7d983;
+}
+
+.tjm-roadmap-close-text {
+  display: none;
+}
+
+.tjm-roadmap-chevron {
+  transition: transform 0.3s ease;
+}
+
+.tjm-roadmap[open] .tjm-roadmap-open-text {
+  display: none;
+}
+
+.tjm-roadmap[open] .tjm-roadmap-close-text {
+  display: inline;
+}
+
+.tjm-roadmap[open] .tjm-roadmap-chevron {
+  transform: rotate(180deg);
+}
+
+.tjm-roadmap[open] .tjm-roadmap-summary {
+  border-bottom: 1px solid rgba(49, 30, 51, 0.1);
+}
+
+.tjm-roadmap-content {
+  padding: 66px 42px 44px;
+  background:
+    radial-gradient(
+      circle at 0% 15%,
+      rgba(238, 189, 74, 0.09),
+      transparent 24%
+    ),
+    #fffdf9;
+  animation: tjm-roadmap-open 0.35s ease;
+}
+
+@keyframes tjm-roadmap-open {
+  from {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tjm-roadmap-introduction {
+  max-width: 760px;
+  margin-bottom: 48px;
+}
+
+.tjm-roadmap-introduction > span {
+  color: #91630a;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+}
+
+.tjm-roadmap-introduction h2 {
+  margin: 13px 0 17px;
+  color: #311e33;
+  font-family: var(
+    --serif,
+    "Cormorant Garamond",
+    Georgia,
+    "Times New Roman",
+    serif
+  );
+  font-size: clamp(42px, 6vw, 65px);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.tjm-roadmap-introduction p {
+  max-width: 710px;
+  margin: 0;
+  color: #726873;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.tjm-lesson-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(49, 30, 51, 0.11);
+}
+
+.tjm-lesson-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 23px;
+  min-height: 155px;
+  padding: 28px 4px;
+  border-bottom: 1px solid rgba(49, 30, 51, 0.11);
+  transition:
+    background 0.2s ease,
+    padding 0.2s ease;
+}
+
+.tjm-lesson-item:hover {
+  padding-right: 18px;
+  padding-left: 18px;
+  background: rgba(238, 189, 74, 0.055);
+}
+
+.tjm-lesson-number {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  color: #91630a;
+  border: 1px solid rgba(238, 189, 74, 0.62);
+  border-radius: 50%;
+  font-family: var(
+    --serif,
+    "Cormorant Garamond",
+    Georgia,
+    "Times New Roman",
+    serif
+  );
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.tjm-lesson-information {
+  min-width: 0;
+}
+
+.tjm-lesson-topic {
+  color: #91630a;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.tjm-lesson-information h3 {
+  margin: 6px 0 7px;
+  color: #311e33;
+  font-family: var(
+    --serif,
+    "Cormorant Garamond",
+    Georgia,
+    "Times New Roman",
+    serif
+  );
+  font-size: clamp(25px, 3vw, 32px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+.tjm-lesson-information p {
+  max-width: 680px;
+  margin: 0;
+  color: #726873;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.tjm-lesson-status,
+.tjm-lesson-link {
+  min-width: 105px;
+  color: #91630a;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: right;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tjm-lesson-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  text-decoration: none;
+}
+
+.tjm-lesson-link:hover {
+  color: #311e33;
+}
+
+.tjm-roadmap-closing {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 65px 20px 25px;
+  text-align: center;
+}
+
+.tjm-roadmap-closing > span {
+  color: #91630a;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.tjm-roadmap-closing h3 {
+  margin: 15px 0 10px;
+  color: #311e33;
+  font-family: var(
+    --serif,
+    "Cormorant Garamond",
+    Georgia,
+    "Times New Roman",
+    serif
+  );
+  font-size: clamp(33px, 5vw, 47px);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.tjm-roadmap-closing p {
+  max-width: 590px;
+  margin: 0 auto;
+  color: #726873;
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+/* TABLET */
+
+@media (max-width: 820px) {
+  .tjm-roadmap-summary {
+    grid-template-columns: auto 1fr;
+  }
+
+  .tjm-roadmap-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .tjm-roadmap-content {
+    padding: 54px 25px 36px;
+  }
+
+  .tjm-lesson-item {
+    grid-template-columns: 55px minmax(0, 1fr);
+  }
+
+  .tjm-lesson-status,
+  .tjm-lesson-link {
+    grid-column: 2;
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 560px) {
+  .tjm-roadmap-section {
+    width: min(100% - 22px, 1080px);
+    margin: 35px auto 70px;
+  }
+
+  .tjm-roadmap {
+    border-radius: 20px;
+  }
+
+  .tjm-roadmap-summary {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    min-height: auto;
+    padding: 25px 20px;
+    text-align: center;
+  }
+
+  .tjm-roadmap-icon {
+    width: 57px;
+    height: 57px;
+    margin: 0 auto;
+  }
+
+  .tjm-roadmap-copy {
+    align-items: center;
+  }
+
+  .tjm-roadmap-copy strong {
+    font-size: 31px;
+  }
+
+  .tjm-roadmap-copy small {
+    font-size: 11px;
+  }
+
+  .tjm-roadmap-content {
+    padding: 44px 16px 28px;
+  }
+
+  .tjm-roadmap-introduction {
+    margin-bottom: 36px;
+  }
+
+  .tjm-roadmap-introduction h2 {
+    font-size: 42px;
+  }
+
+  .tjm-lesson-item {
+    grid-template-columns: 45px minmax(0, 1fr);
+    gap: 14px;
+    min-height: 145px;
+    padding: 24px 0;
+  }
+
+  .tjm-lesson-item:hover {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  .tjm-lesson-number {
+    width: 42px;
+    height: 42px;
+    font-size: 17px;
+  }
+
+  .tjm-lesson-information h3 {
+    font-size: 25px;
+  }
+
+  .tjm-lesson-information p {
+    font-size: 10px;
+  }
+
+  .tjm-lesson-status,
+  .tjm-lesson-link {
+    grid-column: 2;
+  }
+
+  .tjm-roadmap-closing {
+    padding: 52px 8px 17px;
+  }
+}
 
 .tjm-roadmap-start-button {
   width: fit-content;
