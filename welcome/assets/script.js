@@ -2,11 +2,11 @@
   'use strict';
 
   const config = window.TJM_CONFIG || {};
-  const zoomButtons = [
-    document.getElementById('zoomButton'),
-    document.getElementById('communityZoomButton'),
-    document.getElementById('finalZoomButton')
-  ].filter(Boolean);
+
+    const zoomButtons = [
+  document.getElementById('zoomButton')
+].filter(Boolean);
+  
   const zoomNote = document.getElementById('zoomNote');
   const countdown = document.getElementById('discussionCountdown');
   const countdownLabel = document.getElementById('countdownLabel');
