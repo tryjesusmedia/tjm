@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171418">
+  <meta name="description" content="A private, guided journey through the Bible for honest questions, credible evidence, and a deeper experience with Jesus.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Try Jesus">
+  <meta property="og:title" content="Try Jesus: The Journey">
+  <meta property="og:description" content="Investigate the evidence. Experience the difference. Decide for yourself.">
+  <meta property="og:type" content="website">
+  <title>Try Jesus: The Journey</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#app-main">Skip to content</a>
+  <noscript>
+    <div class="noscript">Try Jesus: The Journey requires JavaScript to save your progress and display the guided experience.</div>
+  </noscript>
+
+  <div class="app-shell" id="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#/home" data-route="home" aria-label="Try Jesus Media home">
+        <img src="assets/logo-256.png" alt="Try Jesus Media lion and lamb emblem" width="64" height="64">
+        <span><strong>TRY JESUS</strong><small>THE JOURNEY</small></span>
+      </a>
+      <nav class="side-nav">
+        <button type="button" class="nav-item" data-route="home"><span aria-hidden="true">⌂</span><b>Home</b></button>
+        <button type="button" class="nav-item" data-route="journeys"><span aria-hidden="true">◇</span><b>Journeys</b></button>
+        <button type="button" class="nav-item" data-route="journal"><span aria-hidden="true">✎</span><b>Journal</b></button>
+        <button type="button" class="nav-item" data-route="questions"><span aria-hidden="true">?</span><b>Ask Anything</b></button>
+        <button type="button" class="nav-item" data-route="more"><span aria-hidden="true">•••</span><b>More</b></button>
+      </nav>
+      <div class="sidebar-live">
+        <span class="pulse-dot"></span>
+        <small>LIVE THURSDAY</small>
+        <strong>Bring your questions.</strong>
+        <a data-live-link href="https://tryjesusmedia.com/welcome" target="_blank" rel="noopener">Join the discussion →</a>
+      </div>
+      <p class="sidebar-foot">No pressure. No judgment.<br>Explore at your own pace.</p>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar" id="topbar">
+        <button class="menu-button" type="button" id="menu-button" aria-label="Open navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <a class="mobile-brand" href="#/home" data-route="home">
+          <img src="assets/logo-192.png" alt="" width="44" height="44">
+          <span>TRY JESUS<small>THE JOURNEY</small></span>
+        </a>
+        <div class="topbar-actions">
+          <button type="button" class="icon-button install-header-button" id="install-header-button" aria-label="Install app" title="Install app" hidden>⇩</button>
+          <button type="button" class="profile-chip" id="profile-chip" aria-label="Open profile"><span id="profile-initial">G</span></button>
+        </div>
+      </header>
+
+      <main id="app-main" tabindex="-1"></main>
+
+      <nav class="bottom-nav" aria-label="Mobile navigation">
+        <button type="button" data-route="home"><span>⌂</span><small>Home</small></button>
+        <button type="button" data-route="journeys"><span>◇</span><small>Journeys</small></button>
+        <button type="button" data-route="journal"><span>✎</span><small>Journal</small></button>
+        <button type="button" data-route="questions"><span>?</span><small>Ask</small></button>
+        <button type="button" data-route="more"><span>•••</span><small>More</small></button>
+      </nav>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <div class="modal-root" id="modal-root"></div>
+
+  <script src="config.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
