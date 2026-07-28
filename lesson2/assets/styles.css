@@ -885,3 +885,57 @@ p { margin: 0 0 1.15em; }
     width: auto;
   }
 }
+
+.lesson-return {
+  display: flex;
+  justify-content: center;
+  margin: 42px 0 22px;
+}
+
+.lesson-return-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid rgba(238, 189, 74, 0.65);
+  border-radius: 999px;
+  color: #311e33;
+  background: #fffdf9;
+  font-family: "Montserrat", Inter, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.lesson-return-link span {
+  color: #a8730d;
+  font-size: 17px;
+  transition: transform 0.2s ease;
+}
+
+.lesson-return-link:hover {
+  transform: translateY(-2px);
+  border-color: #eebd4a;
+  background: #f7d983;
+  box-shadow: 0 12px 28px rgba(49, 30, 51, 0.12);
+}
+
+.lesson-return-link:hover span {
+  transform: translateX(-4px);
+}
+
+.lesson-return-link:focus-visible {
+  outline: 3px solid rgba(238, 189, 74, 0.5);
+  outline-offset: 4px;
+}
+
+
