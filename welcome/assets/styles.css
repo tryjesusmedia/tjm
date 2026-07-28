@@ -885,3 +885,22 @@ html {
     padding: 52px 8px 17px;
   }
 }
+
+
+
+.tjm-roadmap-start-button {
+  width: fit-content;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px auto 0;
+  padding: 0 25px;
+  border-radius: 999px;
+  color: #211323;
+  background: linear-gradient(135deg, #f7d983, #eebd4a);
+  box-shadow: 0 14px 30px rgba(238, 189, 74, 0.22);
+  font-size: 10px;
+  text-align: center;
+}
+
