@@ -389,3 +389,14 @@ h3 { font-size: clamp(25px, 3vw, 34px); color: var(--plum); }
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+
+<!-- smooth scroll -->
+html {
+  scroll-behavior: smooth;
+}
+
+#live-discussion {
+  scroll-margin-top: 90px;
+}
+
