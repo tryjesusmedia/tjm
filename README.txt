@@ -1,18 +1,20 @@
-TRY JESUS MEDIA — LESSON 7
+TRY JESUS MEDIA — LESSON 8
+==========================
 
-Upload the entire lesson7 folder to the root of your GitHub repository.
+Upload the complete "lesson8" folder to the root of your GitHub repository.
 
-Expected structure:
-lesson7/
-  index.html
-  assets/
-    style.css
-    script.js
-    logo-orb.png
-    favicon.png
+Final structure:
 
-The public URL will be:
-https://tryjesusmedia.com/lesson7/
+lesson8/
+├── index.html
+└── assets/
+    ├── style.css
+    ├── script.js
+    ├── logo-orb.png
+    └── favicon.png
 
-No manifest or service worker is included.
-The official Try Jesus Media YouTube, Facebook, TikTok, merch, email, text, and booking links are included.
+Expected address:
+https://tryjesusmedia.com/lesson8/
+
+The page is self-contained except for Google Fonts and external Bible/history links.
+It contains no web manifest or service worker.
