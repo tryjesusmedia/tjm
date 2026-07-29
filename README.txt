@@ -1,16 +1,18 @@
-TRY JESUS MEDIA — LESSON 5
+TRY JESUS MEDIA — LESSON 6
 
-Upload the entire "lesson5" folder to the root of your GitHub repository.
-The finished path should be:
+Upload the entire lesson6 folder to the root of your GitHub repository.
 
-  lesson5/index.html
-  lesson5/assets/style.css
-  lesson5/assets/script.js
-  lesson5/assets/logo-orb.png
-  lesson5/assets/favicon.png
+Expected structure:
+lesson6/
+  index.html
+  assets/
+    style.css
+    script.js
+    logo-orb.png
+    favicon.png
 
-This page is self-contained and does not require changes to the main website assets.
-It does not include a web app manifest or service worker, so it will not trigger an app-install prompt.
+The public URL will be:
+https://tryjesusmedia.com/lesson6/
 
-The YouTube link has been corrected to:
-https://www.youtube.com/@TryJesusMedia
+No manifest or service worker is included.
+The YouTube footer link has been corrected to https://www.youtube.com/@TryJesusMedia.
