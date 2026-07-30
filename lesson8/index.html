@@ -455,15 +455,22 @@
             </details>
 
             <div class="completion-actions">
-              <a class="primary-button" href="/lesson9/">Continue to Lesson 9 <span aria-hidden="true">→</span></a>
+              <a class="primary-button" id="journeyNextButton" href="/welcome/#lessons">  Continue Journey  <span aria-hidden="true">→</span></a>
               <a class="secondary-button" href="/welcome#live">Join the Live Bible Discussion</a>
             </div>
 
-            <aside class="next-lesson-card">
-              <span>NEXT INVESTIGATION · LESSON 9</span>
-              <h3>The Sanctuary: God’s Blueprint of Salvation</h3>
-              <p>The ancient sanctuary was more than a tent or system of ceremonies. Every sacrifice, priest, furnishing, and service revealed another part of God’s plan to save humanity through Jesus.</p>
+            <aside class="next-lesson-card" id="nextJourneyCard">
+              <span id="nextJourneyLabel">NEXT GUIDE</span>
+
+              <h3 id="nextJourneyTitle">
+              Continue Your Journey
+              </h3>
+
+              <p id="nextJourneyDescription">
+                Continue to the next connected Bible guide.
+              </p>
             </aside>
+            
           </div>
         </section>
       </div>
@@ -515,6 +522,7 @@
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="assets/script.js"></script>
+<script src="/assets/guide-journey.js"></script>
+<script src="assets/script.js"></script>
 </body>
 </html>
