@@ -1,20 +1,18 @@
-TRY JESUS MEDIA — LESSON 8
-==========================
+TRY JESUS MEDIA — GET TO KNOW JESUS · GUIDE 1
 
-Upload the complete "lesson8" folder to the root of your GitHub repository.
+Upload the included `get-to-know-jesus` folder to the root of your GitHub repository.
 
-Final structure:
+Expected page URL:
+https://tryjesusmedia.com/get-to-know-jesus/guide1/
 
-lesson8/
-├── index.html
-└── assets/
-    ├── style.css
-    ├── script.js
-    ├── logo-orb.png
-    └── favicon.png
+Contents:
+get-to-know-jesus/guide1/index.html
+get-to-know-jesus/guide1/assets/style.css
+get-to-know-jesus/guide1/assets/script.js
+get-to-know-jesus/guide1/assets/logo-orb.png
+get-to-know-jesus/guide1/assets/favicon.png
 
-Expected address:
-https://tryjesusmedia.com/lesson8/
+The next-guide button points to:
+/get-to-know-jesus/guide2/
 
-The page is self-contained except for Google Fonts and external Bible/history links.
-It contains no web manifest or service worker.
+No manifest or service worker is included.
