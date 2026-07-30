@@ -37,7 +37,13 @@
       <!-- SCREEN 1 -->
       <section class="lesson-screen is-active" data-screen="1" data-title="A Claim Too Important to Inherit" aria-labelledby="screen1-title">
         <div class="hero-card lesson4-hero">
-          <div class="eyebrow">LESSON 4 · THE MESSIAH TIMELINE</div>
+         
+<p class="eyebrow">
+  <span></span>
+  <b id="journeyEyebrow">Understand Bible Prophecy · Guide 2 of 9</b>
+  · The Messiah Timeline
+</p>
+          
           <h1 id="screen1-title">The Prophecy That Pinpointed the Messiah</h1>
           <p class="hero-subtitle">Centuries before Jesus was born, the Bible revealed when the Messiah would appear.</p>
           <div class="credibility-row" aria-label="Lesson information"><span>10-minute study</span><span>Historical sources</span><span>Private reflection</span></div>
@@ -432,15 +438,31 @@
           </div>
 
           <div class="completion-actions">
-            <a class="primary-button anchor-button" id="nextLessonLink" href="/lesson5/">Continue to Lesson 5 →</a>
+     
+            <a
+  class="primary-button"
+  id="journeyNextButton"
+  href="/welcome/#lessons"
+>
+  Continue Journey
+  <span aria-hidden="true">→</span>
+</a>
+            
             <a class="secondary-link" id="welcomeLink" href="/welcome/">Join a live discussion this Thursday</a>
           </div>
 
-          <div class="next-study-preview">
-            <small>NEXT STUDY</small>
-            <h3>The Greatest Scam in History: The Lie That Distorted God’s Character</h3>
-            <p>God’s law has been misunderstood and turned into a system of fear, control, and human effort. Discover how His law actually reveals His love, character, and design for freedom.</p>
-          </div>
+         <aside class="next-lesson-card" id="nextJourneyCard">
+  <span id="nextJourneyLabel">NEXT GUIDE</span>
+
+  <h3 id="nextJourneyTitle">
+    Continue Your Journey
+  </h3>
+
+  <p id="nextJourneyDescription">
+    Continue to the next connected Bible guide.
+  </p>
+</aside>
+          
         </div>
       </section>
     </main>
@@ -477,6 +499,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="assets/config.js"></script>
-  <script src="assets/script.js"></script>
+<script src="/assets/guide-journey.js"></script>
+<script src="assets/script.js"></script>
 </body>
 </html>
