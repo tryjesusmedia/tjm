@@ -49,7 +49,11 @@
       <!-- SCREEN 1 -->
       <section class="lesson-screen is-active" data-screen="1" data-title="The Daniel 2 Test" aria-labelledby="screen1-title">
         <div class="hero-card">
-          <div class="eyebrow">LESSON 1 · DANIEL 2</div>
+         <p class="eyebrow">
+  <span></span>
+  <b id="journeyEyebrow">Understand Bible Prophecy · Guide 1 of 9</b>
+  · Daniel 2
+</p>
           <h1 id="screen1-title">The Daniel 2 Test</h1>
           <p class="hero-subtitle">Can an ancient prophecy give us credible reasons to trust the Bible?</p>
 
@@ -463,15 +467,28 @@
           </div>
 
           <div class="completion-actions">
-            <a class="primary-button anchor-button" href="/lesson2/">Continue to Study 2 →</a>
+            <a
+  class="primary-button"
+  id="journeyNextButton"
+  href="/welcome/#lessons"
+>
+  Continue Journey
+  <span aria-hidden="true">→</span>
+</a>
          <a class="secondary-link" href="/welcome/">Join a live discussion this Thursday</a>
           </div>
 
-          <div class="next-study-preview">
-            <small>NEXT STUDY</small>
-            <h3>If God Is Good, Why Is There Evil?</h3>
-            <p>If God sees history clearly and has the power to act, why does He allow suffering, injustice, and evil?</p>
-          </div>
+          <aside class="next-lesson-card" id="nextJourneyCard">
+  <span id="nextJourneyLabel">NEXT GUIDE</span>
+
+  <h3 id="nextJourneyTitle">
+    Continue Your Journey
+  </h3>
+
+  <p id="nextJourneyDescription">
+    Continue to the next connected Bible guide.
+  </p>
+</aside>
 
           <div class="navigation-row single-back"><button class="secondary-button back-button" type="button">← Back</button></div>
         </div>
@@ -511,6 +528,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="assets/config.js"></script>
-  <script src="assets/script.js"></script>
+<script src="/assets/guide-journey.js"></script>
+<script src="assets/script.js"></script>
 </body>
 </html>
