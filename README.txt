@@ -1,18 +1,13 @@
-TRY JESUS MEDIA — GET TO KNOW JESUS · GUIDE 3
+TRY JESUS MEDIA · GET TO KNOW JESUS · GUIDE 4
 
 Upload the included get-to-know-jesus folder to the root of the GitHub repository.
 
-Final path:
-https://tryjesusmedia.com/get-to-know-jesus/guide3/
+Final URL:
+https://tryjesusmedia.com/get-to-know-jesus/guide4/
 
-The next-guide buttons point to:
-/get-to-know-jesus/guide4/
-
-Included:
-- index.html
-- assets/style.css
-- assets/script.js
-- assets/logo-orb.png
-- assets/favicon.png
-
-This static package contains no manifest or service worker.
+Contents:
+get-to-know-jesus/guide4/index.html
+get-to-know-jesus/guide4/assets/style.css
+get-to-know-jesus/guide4/assets/script.js
+get-to-know-jesus/guide4/assets/logo-orb.png
+get-to-know-jesus/guide4/assets/favicon.png
