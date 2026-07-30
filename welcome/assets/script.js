@@ -141,3 +141,22 @@
   timer = window.setInterval(updateCountdown, 1000);
   window.addEventListener('beforeunload', () => window.clearInterval(timer));
 })();
+
+
+
+const guideTracks = document.querySelectorAll(
+  ".guide-library .guide-track"
+);
+
+guideTracks.forEach((track) => {
+  track.addEventListener("toggle", () => {
+    if (!track.open) return;
+
+    guideTracks.forEach((otherTrack) => {
+      if (otherTrack !== track) {
+        otherTrack.open = false;
+      }
+    });
+  });
+});
+
