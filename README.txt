@@ -1,8 +1,8 @@
-TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 4
+TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 5
 =========================================
 
 Guide title:
-Who Is the Antichrist? Follow the Biblical Clues
+The Seal of God vs. the Mark of the Beast
 
 Upload instructions:
 1. Unzip this package.
@@ -10,17 +10,18 @@ Upload instructions:
 3. Keep the folder structure unchanged.
 
 Expected public URL:
-https://tryjesusmedia.com/bible-prophecy/guide4/
+https://tryjesusmedia.com/bible-prophecy/guide5/
 
 Next guide link:
-/bible-prophecy/guide5/
+/bible-prophecy/guide6/
 
 End-of-guide offer:
-https://tryjesusmedia.com/welcome/#live-discussion
+Check Out Our Merch
+https://try-jesus-new-york-shop.fourthwall.com/
 
 Package structure:
 bible-prophecy/
-└── guide4/
+└── guide5/
     ├── index.html
     └── assets/
         ├── style.css
