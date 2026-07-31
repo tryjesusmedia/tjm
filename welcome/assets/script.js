@@ -81,13 +81,18 @@
     const currentMinutes = (Number(eastern.hour) % 24) * 60 + Number(eastern.minute);
     const targetMinutes = targetHour * 60 + targetMinute;
     const isTargetDay = daysAhead === 0;
-    const isLiveWindow = isTargetDay && currentMinutes >= targetMinutes && currentMinutes < targetMinutes + 90;
+   const isLiveWindow =
+  isTargetDay &&
+  currentMinutes >= targetMinutes &&
+  currentMinutes < targetMinutes + 60;
 
     if (isLiveWindow) {
       return { live: true, date: now };
     }
 
-    if (isTargetDay && currentMinutes >= targetMinutes + 90) daysAhead = 7;
+   if (isTargetDay && currentMinutes >= targetMinutes + 60) {
+  daysAhead = 7;
+}
 
     const baseUTC = Date.UTC(Number(eastern.year), Number(eastern.month) - 1, Number(eastern.day));
     const targetDayDate = new Date(baseUTC + daysAhead * 86400000);
