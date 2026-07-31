@@ -1,13 +1,24 @@
-TRY JESUS MEDIA · GET TO KNOW JESUS · GUIDE 4
+TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 1
+=========================================
 
-Upload the included get-to-know-jesus folder to the root of the GitHub repository.
+Page:
+  Can the Bible Really Predict the Future?
 
-Final URL:
-https://tryjesusmedia.com/get-to-know-jesus/guide4/
+Upload instructions:
+1. Open this ZIP.
+2. Upload the included "bible-prophecy" folder to the root of your GitHub repository.
+3. Keep the folder structure exactly as provided.
 
-Contents:
-get-to-know-jesus/guide4/index.html
-get-to-know-jesus/guide4/assets/style.css
-get-to-know-jesus/guide4/assets/script.js
-get-to-know-jesus/guide4/assets/logo-orb.png
-get-to-know-jesus/guide4/assets/favicon.png
+Final path:
+  /bible-prophecy/guide1/
+
+Expected live URL:
+  https://tryjesusmedia.com/bible-prophecy/guide1/
+
+Next-guide link:
+  /bible-prophecy/guide2/
+
+Welcome/live discussion link:
+  /welcome/#live-discussion
+
+The page uses only local HTML, CSS, JavaScript, logo, and favicon assets. No build step, manifest, or service worker is required.
