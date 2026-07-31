@@ -1,25 +1,25 @@
-TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 2
-=========================================
+TRY JESUS MEDIA — UNDERSTAND BIBLE PROPHECY, GUIDE 3
 
-Page:
-  The Prophecy That Pinpointed the Messiah
+Title:
+The Greatest Scam in History: The Lie That Distorted God’s Character
+
+Deployment path:
+/bible-prophecy/guide3/
 
 Upload instructions:
-1. Open this ZIP.
-2. Upload the included "bible-prophecy" folder to the root of your GitHub repository.
-3. Keep the folder structure exactly as provided.
+1. Extract this ZIP file.
+2. Upload the included bible-prophecy folder to the root of the GitHub repository.
+3. Preserve the folder structure exactly.
+4. The finished page will be available at:
+   https://tryjesusmedia.com/bible-prophecy/guide3/
 
-Final path:
-  /bible-prophecy/guide2/
+Next guide link:
+/bible-prophecy/guide4/
 
-Expected live URL:
-  https://tryjesusmedia.com/bible-prophecy/guide2/
+Rotating end-of-guide offer:
+View the Get to Know Jesus set at /welcome/#lessons
 
-Next-guide link:
-  /bible-prophecy/guide3/
+Shared-guide note:
+This study intentionally also appears as Get to Know Jesus, Guide 3. The page explains this in opening microcopy and saves progress independently for the prophecy journey.
 
-End-of-guide offer:
-  View Other Programs
-  https://try-jesus-new-york-shop.fourthwall.com/
-
-The page uses only local HTML, CSS, JavaScript, logo, and favicon assets. No build step, manifest, or service worker is required.
+No build process, manifest, or service worker is required.
