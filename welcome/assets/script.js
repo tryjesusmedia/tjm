@@ -3,183 +3,418 @@
 
   const config = window.TJM_CONFIG || {};
 
-    const zoomButtons = [
-  document.getElementById('zoomButton')
-].filter(Boolean);
-  
+  const TIME_ZONE = 'America/New_York';
+  const DEFAULT_DISCUSSION_DAY = 4; // Sunday = 0, Thursday = 4
+  const DEFAULT_DISCUSSION_HOUR = 20; // 8:00 PM Eastern
+  const DEFAULT_DISCUSSION_MINUTE = 0;
+  const LIVE_DURATION_MINUTES = 60; // Live from 8:00–9:00 PM Eastern
+
+  const zoomButton = document.getElementById('zoomButton');
   const zoomNote = document.getElementById('zoomNote');
   const countdown = document.getElementById('discussionCountdown');
   const countdownLabel = document.getElementById('countdownLabel');
   const meetingStatus = document.getElementById('meetingStatus');
+
   let timer = null;
+  let defaultZoomButtonHtml = '';
+  let defaultZoomNoteText = '';
 
   function configureLinks() {
-    const zoomUrl = config.zoomUrl || 'https://zoombiblestudy.com/';
-    const isDirectZoom = /(^|\.)zoom\.us\//i.test(zoomUrl) || /zoom\.us\/j\//i.test(zoomUrl);
+    const zoomUrl =
+      config.zoomUrl || 'https://zoombiblestudy.com/';
 
-    zoomButtons.forEach((button, index) => {
-      button.href = zoomUrl;
-      if (isDirectZoom) {
-        if (index === 0) button.innerHTML = 'Enter the Live Zoom Call <span aria-hidden="true">↗</span>';
-        if (index === 1) button.innerHTML = 'Join Thursday’s Zoom Discussion <span aria-hidden="true">↗</span>';
-        if (index === 2) button.innerHTML = 'Enter the Live Zoom Call <span aria-hidden="true">↗</span>';
-      }
-    });
+    const isDirectZoom =
+      /(^|\.)zoom\.us\//i.test(zoomUrl) ||
+      /zoom\.us\/j\//i.test(zoomUrl);
+
+    if (zoomButton) {
+      zoomButton.href = zoomUrl;
+
+      defaultZoomButtonHtml = isDirectZoom
+        ? 'Enter the Live Zoom Call <span aria-hidden="true">↗</span>'
+        : 'Join the Live Discussion <span aria-hidden="true">↗</span>';
+
+      zoomButton.innerHTML = defaultZoomButtonHtml;
+    }
 
     if (zoomNote) {
-      zoomNote.textContent = isDirectZoom
+      defaultZoomNoteText = isDirectZoom
         ? 'This button opens the live Zoom meeting room in a new tab.'
         : 'This button opens the discussion access page in a new tab.';
+
+      zoomNote.textContent = defaultZoomNoteText;
     }
 
     document.querySelectorAll('[data-social]').forEach((link) => {
       const key = link.dataset.social;
       const url = config.social && config.social[key];
-      if (url) link.href = url;
-      else link.hidden = true;
+
+      if (url) {
+        link.href = url;
+        link.hidden = false;
+      }
     });
 
     const year = document.getElementById('year');
-    if (year) year.textContent = new Date().getFullYear();
+
+    if (year) {
+      year.textContent = String(new Date().getFullYear());
+    }
   }
 
-  function getEasternParts(date) {
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'America/New_York',
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false
-    }).formatToParts(date);
-    return Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  function getZonedParts(date, timeZone = TIME_ZONE) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hourCycle: 'h23'
+    });
+
+    const values = {};
+
+    formatter.formatToParts(date).forEach((part) => {
+      if (part.type !== 'literal') {
+        values[part.type] = Number(part.value);
+      }
+    });
+
+    return values;
   }
 
-  function easternOffsetMs(date) {
-    const parts = getEasternParts(date);
-    const asUTC = Date.UTC(
-      Number(parts.year), Number(parts.month) - 1, Number(parts.day),
-      Number(parts.hour) % 24, Number(parts.minute), Number(parts.second)
+  function getTimeZoneOffsetMs(date, timeZone = TIME_ZONE) {
+    const parts = getZonedParts(date, timeZone);
+
+    const zonedTimeAsUtc = Date.UTC(
+      parts.year,
+      parts.month - 1,
+      parts.day,
+      parts.hour,
+      parts.minute,
+      parts.second
     );
-    return asUTC - date.getTime();
+
+    return zonedTimeAsUtc - date.getTime();
   }
 
-  function easternWallTimeToDate(year, month, day, hour, minute) {
-    let guess = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
-    guess = new Date(guess.getTime() - easternOffsetMs(guess));
-    const correction = easternOffsetMs(guess);
-    const wallUTC = Date.UTC(year, month - 1, day, hour, minute, 0);
-    return new Date(wallUTC - correction);
-  }
+  function zonedDateTimeToUtc(
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second = 0,
+    timeZone = TIME_ZONE
+  ) {
+    const wallTimeAsUtc = Date.UTC(
+      year,
+      month - 1,
+      day,
+      hour,
+      minute,
+      second
+    );
 
-  function nextDiscussion(now = new Date()) {
-    const targetDay = Number.isInteger(config.discussionDay) ? config.discussionDay : 4;
-    const targetHour = Number.isFinite(config.discussionHourEastern) ? config.discussionHourEastern : 20;
-    const targetMinute = Number.isFinite(config.discussionMinuteEastern) ? config.discussionMinuteEastern : 0;
-    const eastern = getEasternParts(now);
-    const weekdayIndex = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(eastern.weekday);
-    let daysAhead = (targetDay - weekdayIndex + 7) % 7;
+    let utcGuess = wallTimeAsUtc;
 
-    const currentMinutes = (Number(eastern.hour) % 24) * 60 + Number(eastern.minute);
-    const targetMinutes = targetHour * 60 + targetMinute;
-    const isTargetDay = daysAhead === 0;
-   const isLiveWindow =
-  isTargetDay &&
-  currentMinutes >= targetMinutes &&
-  currentMinutes < targetMinutes + 60;
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      const offset = getTimeZoneOffsetMs(
+        new Date(utcGuess),
+        timeZone
+      );
 
-    if (isLiveWindow) {
-      return { live: true, date: now };
+      const correctedGuess = wallTimeAsUtc - offset;
+
+      if (correctedGuess === utcGuess) {
+        break;
+      }
+
+      utcGuess = correctedGuess;
     }
 
-   if (isTargetDay && currentMinutes >= targetMinutes + 60) {
-  daysAhead = 7;
-}
+    return new Date(utcGuess);
+  }
 
-    const baseUTC = Date.UTC(Number(eastern.year), Number(eastern.month) - 1, Number(eastern.day));
-    const targetDayDate = new Date(baseUTC + daysAhead * 86400000);
+  function getDiscussionSettings() {
+    return {
+      day: Number.isInteger(config.discussionDay)
+        ? config.discussionDay
+        : DEFAULT_DISCUSSION_DAY,
+
+      hour: Number.isFinite(config.discussionHourEastern)
+        ? config.discussionHourEastern
+        : DEFAULT_DISCUSSION_HOUR,
+
+      minute: Number.isFinite(config.discussionMinuteEastern)
+        ? config.discussionMinuteEastern
+        : DEFAULT_DISCUSSION_MINUTE
+    };
+  }
+
+  function getDiscussionState(now = new Date()) {
+    const settings = getDiscussionSettings();
+    const eastern = getZonedParts(now);
+
+    const easternCivilDate = new Date(
+      Date.UTC(
+        eastern.year,
+        eastern.month - 1,
+        eastern.day
+      )
+    );
+
+    const weekday = easternCivilDate.getUTCDay();
+
+    const currentSeconds =
+      eastern.hour * 3600 +
+      eastern.minute * 60 +
+      eastern.second;
+
+    const meetingStartSeconds =
+      settings.hour * 3600 +
+      settings.minute * 60;
+
+    const meetingEndSeconds =
+      meetingStartSeconds +
+      LIVE_DURATION_MINUTES * 60;
+
+    const isDiscussionDay =
+      weekday === settings.day;
+
+    const isLive =
+      isDiscussionDay &&
+      currentSeconds >= meetingStartSeconds &&
+      currentSeconds < meetingEndSeconds;
+
+    if (isLive) {
+      return {
+        live: true,
+        target: null
+      };
+    }
+
+    let daysUntilDiscussion =
+      (settings.day - weekday + 7) % 7;
+
+    /*
+     * At 9:00 PM Eastern on Thursday,
+     * begin counting down to the following Thursday.
+     */
+    if (
+      isDiscussionDay &&
+      currentSeconds >= meetingEndSeconds
+    ) {
+      daysUntilDiscussion = 7;
+    }
+
+    const targetCivilDate =
+      new Date(easternCivilDate);
+
+    targetCivilDate.setUTCDate(
+      targetCivilDate.getUTCDate() +
+      daysUntilDiscussion
+    );
+
+    const target = zonedDateTimeToUtc(
+      targetCivilDate.getUTCFullYear(),
+      targetCivilDate.getUTCMonth() + 1,
+      targetCivilDate.getUTCDate(),
+      settings.hour,
+      settings.minute
+    );
+
     return {
       live: false,
-      date: easternWallTimeToDate(
-        targetDayDate.getUTCFullYear(),
-        targetDayDate.getUTCMonth() + 1,
-        targetDayDate.getUTCDate(),
-        targetHour,
-        targetMinute
-      )
+      target
     };
   }
 
   function setUnit(unit, value) {
-    const el = countdown && countdown.querySelector(`[data-unit="${unit}"]`);
-    if (el) el.textContent = String(value).padStart(2, '0');
-  }
-
-  function updateCountdown() {
-    if (!countdown) return;
-    const now = new Date();
-    const next = nextDiscussion(now);
-
-    if (next.live) {
-      setUnit('days', 0); setUnit('hours', 0); setUnit('minutes', 0); setUnit('seconds', 0);
-      countdownLabel.textContent = 'The live discussion is happening now';
-      meetingStatus.textContent = 'LIVE NOW';
-      meetingStatus.parentElement.classList.add('is-live');
+    if (!countdown) {
       return;
     }
 
-    meetingStatus.textContent = 'NEXT LIVE DISCUSSION';
-    meetingStatus.parentElement.classList.remove('is-live');
-    countdownLabel.textContent = 'The next live discussion begins in';
+    const element = countdown.querySelector(
+      `[data-unit="${unit}"]`
+    );
 
-    const diff = Math.max(0, next.date.getTime() - now.getTime());
-    const days = Math.floor(diff / 86400000);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    const minutes = Math.floor((diff % 3600000) / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
+    if (element) {
+      element.textContent =
+        String(value).padStart(2, '0');
+    }
+  }
+
+  function setCountdownValues(
+    days,
+    hours,
+    minutes,
+    seconds
+  ) {
     setUnit('days', days);
     setUnit('hours', hours);
     setUnit('minutes', minutes);
     setUnit('seconds', seconds);
   }
 
+  function showLiveState() {
+    setCountdownValues(0, 0, 0, 0);
+
+    if (countdownLabel) {
+      countdownLabel.textContent =
+        'The live discussion is happening now';
+    }
+
+    if (meetingStatus) {
+      meetingStatus.textContent = 'LIVE NOW';
+
+      if (meetingStatus.parentElement) {
+        meetingStatus.parentElement.classList.add(
+          'is-live'
+        );
+      }
+    }
+
+    if (countdown) {
+      countdown.classList.add('is-live');
+    }
+
+    if (zoomButton) {
+      zoomButton.innerHTML =
+        'Join the Discussion Now <span aria-hidden="true">↗</span>';
+    }
+
+    if (zoomNote) {
+      zoomNote.textContent =
+        'The discussion is live until 9:00 PM Eastern.';
+    }
+  }
+
+  function showCountdownState(target, now) {
+    if (countdownLabel) {
+      countdownLabel.textContent =
+        'The next live discussion begins in';
+    }
+
+    if (meetingStatus) {
+      meetingStatus.textContent =
+        'NEXT LIVE DISCUSSION';
+
+      if (meetingStatus.parentElement) {
+        meetingStatus.parentElement.classList.remove(
+          'is-live'
+        );
+      }
+    }
+
+    if (countdown) {
+      countdown.classList.remove('is-live');
+    }
+
+    if (
+      zoomButton &&
+      defaultZoomButtonHtml
+    ) {
+      zoomButton.innerHTML =
+        defaultZoomButtonHtml;
+    }
+
+    if (
+      zoomNote &&
+      defaultZoomNoteText
+    ) {
+      zoomNote.textContent =
+        defaultZoomNoteText;
+    }
+
+    const remainingMs = Math.max(
+      0,
+      target.getTime() - now.getTime()
+    );
+
+    const totalSeconds =
+      Math.floor(remainingMs / 1000);
+
+    const days =
+      Math.floor(totalSeconds / 86400);
+
+    const hours =
+      Math.floor(
+        (totalSeconds % 86400) / 3600
+      );
+
+    const minutes =
+      Math.floor(
+        (totalSeconds % 3600) / 60
+      );
+
+    const seconds =
+      totalSeconds % 60;
+
+    setCountdownValues(
+      days,
+      hours,
+      minutes,
+      seconds
+    );
+  }
+
+  function updateCountdown() {
+    if (!countdown) {
+      return;
+    }
+
+    const now = new Date();
+    const state = getDiscussionState(now);
+
+    if (state.live) {
+      showLiveState();
+    } else {
+      showCountdownState(
+        state.target,
+        now
+      );
+    }
+  }
+
+  function configureGuideTracks() {
+    const guideTracks =
+      document.querySelectorAll(
+        '.guide-library .guide-track'
+      );
+
+    guideTracks.forEach((track) => {
+      track.addEventListener('toggle', () => {
+        if (!track.open) {
+          return;
+        }
+
+        guideTracks.forEach((otherTrack) => {
+          if (otherTrack !== track) {
+            otherTrack.open = false;
+          }
+        });
+      });
+    });
+  }
+
   configureLinks();
+  configureGuideTracks();
   updateCountdown();
-  timer = window.setInterval(updateCountdown, 1000);
-  window.addEventListener('beforeunload', () => window.clearInterval(timer));
+
+  timer = window.setInterval(
+    updateCountdown,
+    1000
+  );
+
+  window.addEventListener(
+    'beforeunload',
+    () => {
+      if (timer) {
+        window.clearInterval(timer);
+      }
+    }
+  );
 })();
-
-
-
-const guideTracks = document.querySelectorAll(
-  ".guide-library .guide-track"
-);
-
-guideTracks.forEach((track) => {
-  track.addEventListener("toggle", () => {
-    if (!track.open) return;
-
-    guideTracks.forEach((otherTrack) => {
-      if (otherTrack !== track) {
-        otherTrack.open = false;
-      }
-    });
-  });
-});
-
-
-const guideTracks = document.querySelectorAll(
-  ".guide-library .guide-track"
-);
-
-guideTracks.forEach((track) => {
-  track.addEventListener("toggle", () => {
-    if (!track.open) return;
-
-    guideTracks.forEach((otherTrack) => {
-      if (otherTrack !== track) {
-        otherTrack.open = false;
-      }
-    });
-  });
-});
-
-
