@@ -1,42 +1,30 @@
-# Try Jesus Media — `/guides` Landing Page
+# Try Jesus Media — Panorama of Prophecy Guides
 
-This package is ready to deploy at:
+## Deploy
+
+Upload the extracted `guides` folder to the publishing root of the repository so the page resolves at:
 
 `https://tryjesusmedia.com/guides/`
 
-## Correct repository structure
+The repository structure should include:
 
-Upload the extracted `guides` folder to the publishing root of your website:
+- `guides/index.html`
+- `guides/assets/css/styles.css`
+- `guides/assets/js/main.js`
+- `guides/assets/images/try-jesus-media-logo.png`
+- `guides/assets/images/panorama-of-prophecy-guides.jpg`
+- `guides/site.webmanifest`
 
-```text
-guides/
-├── index.html
-└── assets/
-    ├── css/styles.css
-    ├── js/main.js
-    └── images/
-```
+## Omnisend form
 
-If GitHub Pages publishes from `/docs`, place the folder at `docs/guides/` instead.
-
-## Connect the Omnisend form
-
-Open `guides/index.html` and search for:
+The page now contains the exact embedded-form container supplied:
 
 ```html
-id="omnisend-form-location"
+<div id="omnisend-embedded-v2-6a6ec2f44b0e701059793992"></div>
 ```
 
-Replace the contents inside that container with the Omnisend embed code you supply later. Keep the outer element and its ID unless your Omnisend instructions require otherwise.
+The Omnisend tracking/embed script must also be installed on the site or supplied by the site-wide header for the form to render. If the container appears blank, install the full Omnisend website tracking snippet provided in your Omnisend account.
 
-The included HTML form is a visual preview only. Its JavaScript intentionally prevents live submissions until Omnisend is connected.
+## Branding
 
-## Page assets
-
-The attached Panorama of Prophecy guide image is included at:
-
-`guides/assets/images/panorama-of-prophecy-guides.jpg`
-
-## Fonts
-
-The page loads Cormorant Garamond and Montserrat from Google Fonts, with Georgia, Inter, and system fallbacks.
+The supplied Try Jesus Media logo is used in the header, final call-to-action, and footer. Matching favicon files are generated from the same logo.
