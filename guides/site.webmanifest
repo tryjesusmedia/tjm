@@ -1,0 +1,12 @@
+{
+  "name": "Try Jesus Media",
+  "short_name": "Try Jesus",
+  "start_url": "/guides/",
+  "display": "standalone",
+  "background_color": "#311E33",
+  "theme_color": "#311E33",
+  "icons": [
+    {"src": "assets/images/favicon-192x192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "assets/images/favicon-512x512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}

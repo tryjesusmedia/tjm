@@ -28,3 +28,14 @@ The Omnisend tracking/embed script must also be installed on the site or supplie
 ## Branding
 
 The supplied Try Jesus Media logo is used in the header, final call-to-action, and footer. Matching favicon files are generated from the same logo.
+
+## Omnisend embedded form
+
+The printed-guides page is configured with:
+
+- Brand ID: `6995f37d2de8216a26d88410`
+- Embedded form ID: `69965e87faf307608c8f562a`
+
+The IDs are stored in `guides/assets/js/config.js`. The page loads Omnisend's launcher from `https://omnisnippet1.com/inshop/launcher-v2.js` through `guides/assets/js/main.js`.
+
+The embedded form must be published in Omnisend and enabled for the live domain.
