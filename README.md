@@ -17,7 +17,7 @@ The repository structure should include:
 
 ## Omnisend form
 
-The page now contains the exact embedded-form container supplied:
+The page contains the exact embedded-form container supplied:
 
 ```html
 <div id="omnisend-embedded-v2-6a6ec2f44b0e701059793992"></div>
@@ -34,8 +34,15 @@ The supplied Try Jesus Media logo is used in the header, final call-to-action, a
 The printed-guides page is configured with:
 
 - Brand ID: `6995f37d2de8216a26d88410`
-- Embedded form ID: `69965e87faf307608c8f562a`
+- Embedded form ID: `6a6ec2f44b0e701059793992`
 
 The IDs are stored in `guides/assets/js/config.js`. The page loads Omnisend's launcher from `https://omnisnippet1.com/inshop/launcher-v2.js` through `guides/assets/js/main.js`.
 
 The embedded form must be published in Omnisend and enabled for the live domain.
+
+
+## Layout corrections in this build
+
+- The hero guide image is reduced and keeps its natural proportions.
+- The decorative horizontal wave between the hero and the next section has been removed.
+- The duplicate outer form card and duplicate form heading have been removed so Omnisend supplies the only visible form container and heading.
