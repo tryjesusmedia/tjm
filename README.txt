@@ -1,30 +1,26 @@
-TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 7
+TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 8
 
 Page title:
-One Bible. Why So Many Churches?
+How Can You Recognize God’s Church Today?
 
 Production URL:
-https://tryjesusmedia.com/bible-prophecy/guide7/
+https://tryjesusmedia.com/bible-prophecy/guide8/
 
-Upload instructions:
-1. Extract this ZIP.
-2. Upload the included bible-prophecy folder to the root of the GitHub repository.
-3. Preserve the folder structure exactly.
-4. Deploy through the existing Cloudflare Pages workflow.
+GitHub deployment:
+Upload the included bible-prophecy folder to the root of the Try Jesus Media repository. Preserve the folder structure exactly.
 
-Included structure:
-bible-prophecy/
-  guide7/
-    index.html
-    assets/
-      style.css
-      script.js
-      logo-orb.png
-      favicon.png
+Next guide link:
+/bible-prophecy/guide9/
 
-Navigation:
-- Next guide: /bible-prophecy/guide8/
-- Return: /welcome/
-- End offer: View Other Programs
+End-of-guide offer:
+View the Live Invitation
+https://tryjesusmedia.com/welcome/#live-discussion
 
-No framework, package installation, manifest, service worker, or build step is required.
+Files:
+bible-prophecy/guide8/index.html
+bible-prophecy/guide8/assets/style.css
+bible-prophecy/guide8/assets/script.js
+bible-prophecy/guide8/assets/logo-orb.png
+bible-prophecy/guide8/assets/favicon.png
+
+No framework, package installation, manifest, service worker, or build process is required.
