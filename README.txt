@@ -1,32 +1,31 @@
-TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 5
-=========================================
+TRY JESUS MEDIA — BIBLE PROPHECY GUIDE 6
+========================================
 
-Guide title:
-The Seal of God vs. the Mark of the Beast
+Page title:
+Does the Bible Predict the Rise of America?
 
-Upload instructions:
-1. Unzip this package.
-2. Upload the included "bible-prophecy" folder to the root of your GitHub repository.
-3. Keep the folder structure unchanged.
+DEPLOYMENT
+----------
+Upload the included bible-prophecy folder to the root of the GitHub repository.
 
-Expected public URL:
-https://tryjesusmedia.com/bible-prophecy/guide5/
+Expected production URL:
+https://tryjesusmedia.com/bible-prophecy/guide6/
 
-Next guide link:
-/bible-prophecy/guide6/
+Included files:
+- bible-prophecy/guide6/index.html
+- bible-prophecy/guide6/assets/style.css
+- bible-prophecy/guide6/assets/script.js
+- bible-prophecy/guide6/assets/logo-orb.png
+- bible-prophecy/guide6/assets/favicon.png
 
-End-of-guide offer:
-Check Out Our Merch
-https://try-jesus-new-york-shop.fourthwall.com/
-
-Package structure:
-bible-prophecy/
-└── guide5/
-    ├── index.html
-    └── assets/
-        ├── style.css
-        ├── script.js
-        ├── logo-orb.png
-        └── favicon.png
-
-This is a static page. No build process, manifest, or service worker is required.
+FEATURES
+--------
+- Eight interactive sections
+- Bible Prophecy navy, emerald, gold, and ivory visual system
+- Automatic local progress saving unique to Guide 6
+- Restart, keyboard navigation, and browser text-to-speech
+- Expandable Scripture, history, and interpretation resources
+- Next guide teaser linking to /bible-prophecy/guide7/
+- End offer linking to the Get to Know Jesus set
+- Current Try Jesus Media social footer
+- No build process, manifest, or service worker required
