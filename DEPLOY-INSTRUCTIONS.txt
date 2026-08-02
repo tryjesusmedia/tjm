@@ -1,0 +1,17 @@
+TRY JESUS MEDIA /GUIDES DEPLOYMENT
+
+Upload the CONTENTS of this ZIP to the ROOT of the repository that publishes tryjesusmedia.com.
+
+The final repository paths must be exactly:
+  guides/index.html
+  guides/assets/css/styles.css
+  guides/assets/js/main.js
+
+Do not upload the ZIP as a single file.
+Do not leave these files inside a folder named tryjesusmedia-guides.
+Commit the files to the branch/folder used by your host (often main, docs, public, or dist).
+
+After deployment, verify:
+  https://tryjesusmedia.com/guides/
+
+If your site uses React, Next.js, Vite, or another framework, these static files usually belong in the public/guides folder, not merely at repository root.
