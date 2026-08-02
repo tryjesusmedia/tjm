@@ -1,46 +1,42 @@
-# Try Jesus Media — Lesson 4
+# Try Jesus Media — `/guides` Landing Page
 
-This package contains the static webpage for:
+This package is ready to deploy at:
 
-`https://tryjesusmedia.com/lesson4/`
+`https://tryjesusmedia.com/guides/`
 
-## Upload
+## Correct repository structure
 
-Copy the complete `lesson4` folder to the root of the GitHub repository that serves TryJesusMedia.com.
-
-## Structure
+Upload the extracted `guides` folder to the publishing root of your website:
 
 ```text
-lesson4/
+guides/
 ├── index.html
 └── assets/
-    ├── config.js
-    ├── script.js
-    └── styles.css
+    ├── css/styles.css
+    ├── js/main.js
+    └── images/
 ```
 
-No build process, package installation, or framework is required.
+If GitHub Pages publishes from `/docs`, place the folder at `docs/guides/` instead.
 
-## Page behavior
+## Connect the Omnisend form
 
-- Eight-screen mobile lesson experience
-- Arrow-key and button navigation
-- Browser narration
-- Saved progress and private reflection responses using local storage
-- Expandable KJV Scripture cards with NKJV BibleGateway links
-- Optional historical and interpretive evidence drawers
-- Continue to `/lesson5/`
-- Live-discussion invitation to `/welcome/`
-- Official Try Jesus Media lesson footer, contact links, and Fourthwall Store link
+Open `guides/index.html` and search for:
 
-## Easy link changes
+```html
+id="omnisend-form-location"
+```
 
-Edit `lesson4/assets/config.js` to change:
+Replace the contents inside that container with the Omnisend embed code you supply later. Keep the outer element and its ID unless your Omnisend instructions require otherwise.
 
-- Welcome-page destination
-- Lesson 5 destination
-- Social, contact, Calendly, or Store links
+The included HTML form is a visual preview only. Its JavaScript intentionally prevents live submissions until Omnisend is connected.
 
-## Scripture note
+## Page assets
 
-Full displayed Scripture is from the public-domain King James Version. NKJV reading buttons link to BibleGateway.
+The attached Panorama of Prophecy guide image is included at:
+
+`guides/assets/images/panorama-of-prophecy-guides.jpg`
+
+## Fonts
+
+The page loads Cormorant Garamond and Montserrat from Google Fonts, with Georgia, Inter, and system fallbacks.
