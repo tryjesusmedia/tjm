@@ -1,17 +1,30 @@
-# Try Jesus Media Homepage
+# Try Jesus Media Welcome Page
 
-Upload `index.html` and the `assets` folder to the root of the GitHub repository. Keep the existing `bible-prophecy`, `get-to-know-jesus`, and `welcome` folders.
+Upload the included `welcome` folder to the root of the GitHub repository.
 
-## Featured YouTube videos
+Expected structure:
 
-In `index.html`, search for `data-youtube-url`. Change only the URL for the card you want to replace. The script updates the outgoing link and lightweight 320×180 thumbnail automatically.
+```text
+welcome/
+├── index.html
+└── assets/
+    ├── style.css
+    ├── script.js
+    ├── logo.webp
+    ├── favicon.png
+    ├── apple-touch-icon.png
+    ├── bible-decoded.jpg
+    └── programs-apparel.webp
+```
 
-## Omnisend
+Production URL:
 
-The embedded form host intentionally has no background, border, padding, or shadow because Omnisend supplies its own form card. If spacing still appears *inside* the Omnisend form, edit that padding/height in the Omnisend form builder; cross-origin iframe content cannot be styled by this site.
+```text
+https://tryjesusmedia.com/welcome/
+```
 
-## Optimized images
+This package does not replace the root homepage or either lesson directory.
 
-- `bible-decoded.jpg`: resized, progressive JPEG
-- `programs-apparel.webp`: resized WebP with transparency
-- Both images lazy-load below the fold.
+## Updating featured YouTube videos
+
+In `welcome/index.html`, search for `data-youtube-url` and replace only the URL. The page automatically updates the clickable link and lightweight 320×180 thumbnail.
