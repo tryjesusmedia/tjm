@@ -28,3 +28,8 @@ This package does not replace the root homepage or either lesson directory.
 ## Updating featured YouTube videos
 
 In `welcome/index.html`, search for `data-youtube-url` and replace only the URL. The page automatically updates the clickable link and lightweight 320×180 thumbnail.
+
+
+## Updated guide library
+
+Each Bible journey now expands into a complete, collapsible topic list. The program artwork uses natural image dimensions and smaller responsive presentation to prevent stretching.
