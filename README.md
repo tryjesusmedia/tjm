@@ -1,48 +1,17 @@
-# Try Jesus Media — Panorama of Prophecy Guides
+# Try Jesus Media Homepage
 
-## Deploy
+Upload `index.html` and the `assets` folder to the root of the GitHub repository. Keep the existing `bible-prophecy`, `get-to-know-jesus`, and `welcome` folders.
 
-Upload the extracted `guides` folder to the publishing root of the repository so the page resolves at:
+## Featured YouTube videos
 
-`https://tryjesusmedia.com/guides/`
+In `index.html`, search for `data-youtube-url`. Change only the URL for the card you want to replace. The script updates the outgoing link and lightweight 320×180 thumbnail automatically.
 
-The repository structure should include:
+## Omnisend
 
-- `guides/index.html`
-- `guides/assets/css/styles.css`
-- `guides/assets/js/main.js`
-- `guides/assets/images/try-jesus-media-logo.png`
-- `guides/assets/images/panorama-of-prophecy-guides.jpg`
-- `guides/site.webmanifest`
+The embedded form host intentionally has no background, border, padding, or shadow because Omnisend supplies its own form card. If spacing still appears *inside* the Omnisend form, edit that padding/height in the Omnisend form builder; cross-origin iframe content cannot be styled by this site.
 
-## Omnisend form
+## Optimized images
 
-The page contains the exact embedded-form container supplied:
-
-```html
-<div id="omnisend-embedded-v2-6a6ec2f44b0e701059793992"></div>
-```
-
-The Omnisend tracking/embed script must also be installed on the site or supplied by the site-wide header for the form to render. If the container appears blank, install the full Omnisend website tracking snippet provided in your Omnisend account.
-
-## Branding
-
-The supplied Try Jesus Media logo is used in the header, final call-to-action, and footer. Matching favicon files are generated from the same logo.
-
-## Omnisend embedded form
-
-The printed-guides page is configured with:
-
-- Brand ID: `6995f37d2de8216a26d88410`
-- Embedded form ID: `6a6ec2f44b0e701059793992`
-
-The IDs are stored in `guides/assets/js/config.js`. The page loads Omnisend's launcher from `https://omnisnippet1.com/inshop/launcher-v2.js` through `guides/assets/js/main.js`.
-
-The embedded form must be published in Omnisend and enabled for the live domain.
-
-
-## Layout corrections in this build
-
-- The hero guide image is reduced and keeps its natural proportions.
-- The decorative horizontal wave between the hero and the next section has been removed.
-- The duplicate outer form card and duplicate form heading have been removed so Omnisend supplies the only visible form container and heading.
+- `bible-decoded.jpg`: resized, progressive JPEG
+- `programs-apparel.webp`: resized WebP with transparency
+- Both images lazy-load below the fold.
