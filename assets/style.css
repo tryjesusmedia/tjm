@@ -85,12 +85,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
   -webkit-backdrop-filter: blur(18px);
 }
 .header-inner {
-  width: min(1240px, calc(100% - 32px));
-  min-height: 78px;
-  margin-inline: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.form-section,
+.form-shell,
+.form-card,
+#omnisend-embedded-v2-69965e87faf307608c8f562a {
+  height: auto;
+  min-height: 0;
+}
+
+#omnisend-embedded-v2-69965e87faf307608c8f562a {
+  width: 100%;
+}
   gap: 30px;
 }
 .brand {
