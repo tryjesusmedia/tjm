@@ -1,35 +1,40 @@
-TRY JESUS MEDIA · BIBLE PROPHECY GUIDE 9
-========================================
+TRY JESUS MEDIA — GET TO KNOW JESUS, GUIDE 5
+================================================
 
 Lesson:
-Does the Bible Predict a Last-Day Prophet?
+The Sanctuary Revealed: What Jesus Is Doing Now
 
-GitHub deployment path:
-/bible-prophecy/guide9/
+Production path:
+https://tryjesusmedia.com/get-to-know-jesus/guide5/
 
-Upload instructions:
-1. Extract this ZIP.
-2. Copy the included "bible-prophecy" folder into the root of the Try Jesus Media GitHub repository.
-3. Preserve the folder structure exactly.
-4. Commit and deploy through Cloudflare Pages.
+UPLOAD INSTRUCTIONS
+-------------------
+Upload the included "get-to-know-jesus" folder to the root of the GitHub repository.
 
-Production URL:
-https://tryjesusmedia.com/bible-prophecy/guide9/
+Expected structure:
+get-to-know-jesus/
+  guide5/
+    index.html
+    assets/
+      style.css
+      script.js
+      logo-orb.png
+      favicon.png
 
-Next journey link:
-/get-to-know-jesus/guide1/
+Next lesson:
+/get-to-know-jesus/guide6/
 
 End-of-guide offer:
-Check Out Our Merch
-https://try-jesus-new-york-shop.fourthwall.com/
+View the Bible Prophecy Set
+/welcome/#lessons
 
-Included features:
-- Eight-section interactive guide
-- Bible Prophecy midnight navy, emerald, gold, and ivory theme
-- Automatic progress saving
-- Restart, keyboard navigation, and text-to-speech
-- Expandable Scripture, history, evidence, and objection panels
-- BibleGateway NKJV and credible external source links
-- Journey-completion and next-journey teaser
-- Current Try Jesus Media footer and social links
-- No build process, manifest, or service worker
+FEATURES
+--------
+- Eight-section interactive lesson
+- Unique local progress storage: tjm-jesus-guide-5-progress
+- Restart and browser text-to-speech controls
+- Keyboard navigation with left and right arrows
+- BibleGateway NKJV links and credible supplemental sources
+- Responsive plum, gold, ivory, and charcoal Try Jesus Media design
+- Current social and contact footer
+- No framework, package manager, service worker, or build process
