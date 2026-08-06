@@ -305,7 +305,7 @@ h3 { margin-bottom: 8px; font-size: 28px; }
 .final-halo { position: absolute; top: -340px; left: 50%; width: 760px; height: 760px; border: 1px solid rgba(238,189,74,.18); border-radius: 50%; transform: translateX(-50%); box-shadow: inset 0 0 90px rgba(238,189,74,.07); }
 .final-inner { position: relative; max-width: 900px; text-align: center; }
 .final-inner > img { width: 90px; height: 90px; margin: 0 auto 24px; aspect-ratio: 1; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 16px 25px rgba(0,0,0,.4)); }
-.final-inner p:not(.eyebrow) { max-width: 680px; margin: 0 auto 32px; color: rgba(255,255,255,.7); }
+.final-inner > p:not(.eyebrow) { max-width: 680px; margin: 0 auto 32px; color: rgba(255,255,255,.7); }
 .final-inner .microcopy { margin-top: 15px; display: block; color: rgba(255,255,255,.43); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
 
 .site-footer { padding: 60px 20px 26px; color: var(--plum); background: var(--cream); text-align: center; border-top: 1px solid rgba(49,30,51,.1); }
@@ -659,39 +659,38 @@ h3 { margin-bottom: 8px; font-size: 28px; }
 
 /* =========================================================
    Compact Omnisend embed
-   The form is injected after page load, so these rules target
-   both the host and the generated form layout.
+   Keeps the form readable without stretching its containers.
    ========================================================= */
 
 #guide-form {
-  width: min(100%, 590px);
+  width: min(100%, 680px);
   height: auto !important;
   min-height: 0 !important;
-  margin: 30px auto 0;
+  margin: 32px auto 0;
   padding: 0;
   scroll-margin-top: 110px;
 }
 
-.omnisend-form-host {
-  display: block;
+.omnisend-form-host,
+.omnisend-form-wrapper {
   width: 100%;
-  max-width: 590px;
+  max-width: 680px;
   height: auto !important;
   min-height: 0 !important;
-  margin-inline: auto;
+  margin: 0 auto;
   padding: 0;
   border: 0;
   background: transparent;
   box-shadow: none;
-  overflow: visible;
 }
 
 #omnisend-embedded-v2-69965e87faf307608c8f562a {
   display: block !important;
   width: 100% !important;
-  max-width: 590px !important;
+  max-width: 680px !important;
   height: auto !important;
   min-height: 0 !important;
+  max-height: none !important;
   margin: 0 auto !important;
   padding: 0 !important;
   border: 0 !important;
@@ -701,25 +700,39 @@ h3 { margin-bottom: 8px; font-size: 28px; }
   overflow: visible !important;
 }
 
-/* Reset only generated layout containers that contain form controls. */
-#omnisend-embedded-v2-69965e87faf307608c8f562a :where(form, section, article, main, div):has(input, textarea, select, button) {
+/* Omnisend sometimes injects fixed or minimum heights into nested wrappers. */
+#omnisend-embedded-v2-69965e87faf307608c8f562a > div,
+#omnisend-embedded-v2-69965e87faf307608c8f562a > div > div,
+#omnisend-embedded-v2-69965e87faf307608c8f562a > div > div > div,
+#omnisend-embedded-v2-69965e87faf307608c8f562a form,
+#omnisend-embedded-v2-69965e87faf307608c8f562a form > div {
+  height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
-  align-content: start !important;
 }
 
-/* Omnisend's tall layout uses distributed vertical spacing. */
-#omnisend-embedded-v2-69965e87faf307608c8f562a :where(form, section, article, main, div):has(input, textarea, select, button) {
-  justify-content: flex-start !important;
+#omnisend-embedded-v2-69965e87faf307608c8f562a [style*="min-height"] {
+  min-height: 0 !important;
 }
 
-/* Keep consent, privacy, field and placeholder text readable. */
-#omnisend-embedded-v2-69965e87faf307608c8f562a :where(p, label, span, small, a) {
+#omnisend-embedded-v2-69965e87faf307608c8f562a [style*="height: 100%"],
+#omnisend-embedded-v2-69965e87faf307608c8f562a [style*="height:100%"] {
+  height: auto !important;
+}
+
+/* Keep consent, privacy, and field text visible on the light form. */
+#omnisend-embedded-v2-69965e87faf307608c8f562a p,
+#omnisend-embedded-v2-69965e87faf307608c8f562a label,
+#omnisend-embedded-v2-69965e87faf307608c8f562a span,
+#omnisend-embedded-v2-69965e87faf307608c8f562a small,
+#omnisend-embedded-v2-69965e87faf307608c8f562a a {
   color: #311e33 !important;
   opacity: 1 !important;
 }
 
-#omnisend-embedded-v2-69965e87faf307608c8f562a :where(input, textarea, select) {
+#omnisend-embedded-v2-69965e87faf307608c8f562a input,
+#omnisend-embedded-v2-69965e87faf307608c8f562a textarea,
+#omnisend-embedded-v2-69965e87faf307608c8f562a select {
   color: #171418 !important;
 }
 
@@ -729,6 +742,7 @@ h3 { margin-bottom: 8px; font-size: 28px; }
   opacity: 1 !important;
 }
 
+/* Prevent the final CTA layout from stretching the embedded form. */
 .final-inner {
   height: auto;
   min-height: 0;
@@ -737,8 +751,16 @@ h3 { margin-bottom: 8px; font-size: 28px; }
 @media (max-width: 600px) {
   #guide-form,
   .omnisend-form-host,
+  .omnisend-form-wrapper,
   #omnisend-embedded-v2-69965e87faf307608c8f562a {
     width: 100% !important;
     max-width: 100% !important;
   }
+}
+
+/* Omnisend spacing isolation:
+   Landing-page paragraph spacing applies only to direct children of .final-inner.
+   Omnisend keeps the spacing defined by its own form stylesheet. */
+.omnisend-form-host #omnisend-embedded-v2-69965e87faf307608c8f562a p {
+  max-width: none;
 }
