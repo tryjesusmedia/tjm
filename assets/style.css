@@ -656,3 +656,29 @@ h3 { margin-bottom: 8px; font-size: 28px; }
   .shop-actions .text-link { width: 100%; justify-content: center; }
   .omnisend-form-host { width: 100%; margin-top: 28px; }
 }
+
+/* Keep Omnisend form text visible inside the dark CTA section */
+#omnisend-embedded-v2-69965e87faf307608c8f562a {
+  color: #311e33 !important;
+}
+
+#omnisend-embedded-v2-69965e87faf307608c8f562a p,
+#omnisend-embedded-v2-69965e87faf307608c8f562a label,
+#omnisend-embedded-v2-69965e87faf307608c8f562a span,
+#omnisend-embedded-v2-69965e87faf307608c8f562a small,
+#omnisend-embedded-v2-69965e87faf307608c8f562a a {
+  color: #311e33 !important;
+  opacity: 1 !important;
+}
+
+#omnisend-embedded-v2-69965e87faf307608c8f562a input,
+#omnisend-embedded-v2-69965e87faf307608c8f562a textarea,
+#omnisend-embedded-v2-69965e87faf307608c8f562a select {
+  color: #171418 !important;
+}
+
+#omnisend-embedded-v2-69965e87faf307608c8f562a input::placeholder,
+#omnisend-embedded-v2-69965e87faf307608c8f562a textarea::placeholder {
+  color: #726873 !important;
+  opacity: 1 !important;
+}
