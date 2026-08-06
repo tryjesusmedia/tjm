@@ -33,3 +33,9 @@ In `welcome/index.html`, search for `data-youtube-url` and replace only the URL.
 ## Updated guide library
 
 Each Bible journey now expands into a complete, collapsible topic list. The program artwork uses natural image dimensions and smaller responsive presentation to prevent stretching.
+
+
+## August 2026 countdown update
+- Header CTA now reads “Explore More” and scrolls to `/welcome/#programs`.
+- The live-discussion card displays “Every Thursday · 8:00 PM Eastern Time” prominently.
+- A timezone-aware countdown automatically targets the next Thursday at 8:00 PM America/New_York and resets weekly.
