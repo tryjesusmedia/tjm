@@ -1,19 +1,12 @@
-TRY JESUS MEDIA — GET TO KNOW JESUS GUIDE 6
+TRY JESUS MEDIA — GET TO KNOW JESUS GUIDE 7
 
-Production URL:
-https://tryjesusmedia.com/get-to-know-jesus/guide6/
+Upload the included get-to-know-jesus folder to the root of the GitHub repository.
+Allow GitHub to merge it with the existing get-to-know-jesus folder.
 
-GitHub deployment:
-Upload the included "get-to-know-jesus" folder to the root of the repository.
-The final structure should be:
+Production path:
+https://tryjesusmedia.com/get-to-know-jesus/guide7/
 
-get-to-know-jesus/
-  guide6/
-    index.html
-    assets/
-      style.css
-      script.js
-      logo-orb.png
-      favicon.png
+This package changes only:
+get-to-know-jesus/guide7/
 
-This is a static page. No build step, package installation, manifest, or service worker is required.
+It does not replace the landing page, welcome page, other lessons, or root assets.
