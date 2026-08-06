@@ -657,11 +657,70 @@ h3 { margin-bottom: 8px; font-size: 28px; }
   .omnisend-form-host { width: 100%; margin-top: 28px; }
 }
 
-/* Keep Omnisend form text visible inside the dark CTA section */
-#omnisend-embedded-v2-69965e87faf307608c8f562a {
-  color: #311e33 !important;
+/* =========================================================
+   Compact Omnisend embed
+   Keeps the form readable without stretching its containers.
+   ========================================================= */
+
+#guide-form {
+  width: min(100%, 680px);
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 32px auto 0;
+  padding: 0;
+  scroll-margin-top: 110px;
 }
 
+.omnisend-form-host,
+.omnisend-form-wrapper {
+  width: 100%;
+  max-width: 680px;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#omnisend-embedded-v2-69965e87faf307608c8f562a {
+  display: block !important;
+  width: 100% !important;
+  max-width: 680px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  color: #311e33 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+/* Omnisend sometimes injects fixed or minimum heights into nested wrappers. */
+#omnisend-embedded-v2-69965e87faf307608c8f562a > div,
+#omnisend-embedded-v2-69965e87faf307608c8f562a > div > div,
+#omnisend-embedded-v2-69965e87faf307608c8f562a > div > div > div,
+#omnisend-embedded-v2-69965e87faf307608c8f562a form,
+#omnisend-embedded-v2-69965e87faf307608c8f562a form > div {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+
+#omnisend-embedded-v2-69965e87faf307608c8f562a [style*="min-height"] {
+  min-height: 0 !important;
+}
+
+#omnisend-embedded-v2-69965e87faf307608c8f562a [style*="height: 100%"],
+#omnisend-embedded-v2-69965e87faf307608c8f562a [style*="height:100%"] {
+  height: auto !important;
+}
+
+/* Keep consent, privacy, and field text visible on the light form. */
 #omnisend-embedded-v2-69965e87faf307608c8f562a p,
 #omnisend-embedded-v2-69965e87faf307608c8f562a label,
 #omnisend-embedded-v2-69965e87faf307608c8f562a span,
@@ -681,4 +740,20 @@ h3 { margin-bottom: 8px; font-size: 28px; }
 #omnisend-embedded-v2-69965e87faf307608c8f562a textarea::placeholder {
   color: #726873 !important;
   opacity: 1 !important;
+}
+
+/* Prevent the final CTA layout from stretching the embedded form. */
+.final-inner {
+  height: auto;
+  min-height: 0;
+}
+
+@media (max-width: 600px) {
+  #guide-form,
+  .omnisend-form-host,
+  .omnisend-form-wrapper,
+  #omnisend-embedded-v2-69965e87faf307608c8f562a {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
