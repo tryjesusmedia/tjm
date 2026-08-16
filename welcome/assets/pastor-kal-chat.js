@@ -89,7 +89,7 @@
     }
     addMessage(
       "assistant",
-      "Hi, I’m Pastor Kal, an AI Bible guide built from Pastor Kal Roller’s teachings and the KJV Bible. Bring me your Bible questions, doubts, or something you’re wrestling with. What’s on your mind?"
+      "Hi, I’m Pastor Kal, an AI Bible guide. Bring me your Bible questions, doubts, or something you’re wrestling with. What’s on your mind?"
     );
     const suggestions = el("div", "pk-suggestions");
     [
