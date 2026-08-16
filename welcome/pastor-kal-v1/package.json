@@ -1,0 +1,19 @@
+{
+  "name": "pastor-kal-v1",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "sync:guides": "node scripts/sync-guides.mjs",
+    "kb:upload": "node scripts/upload-knowledge.mjs",
+    "test:chat": "node scripts/test-chat.mjs",
+    "dev": "wrangler pages dev public"
+  },
+  "dependencies": {
+    "cheerio": "latest",
+    "openai": "latest"
+  },
+  "devDependencies": {
+    "wrangler": "latest"
+  }
+}
