@@ -42,7 +42,7 @@
   const avatar = el("div", "pk-avatar");
   avatar.innerHTML = '<img src="/welcome/assets/pastor-kal-avatar.jpg" alt="Pastor Kal">';
   const title = el("div", "pk-title");
-  title.innerHTML = '<strong>Pastor Kal</strong><span>AI Bible Guide • KJV + Try Jesus Media teachings</span>';
+  title.innerHTML = '<strong>Pastor Kal</strong><span>AI Bible Guide</span>';
   const close = el("button", "pk-close", "×");
   close.type = "button";
   close.setAttribute("aria-label", "Close Pastor Kal");
