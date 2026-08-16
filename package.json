@@ -1,0 +1,14 @@
+{
+  "name": "tryjesusmedia-pastor-kal-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync:guides": "node scripts/sync-guides.mjs",
+    "kb:upload": "node scripts/upload-knowledge.mjs",
+    "test:chat": "node scripts/test-chat.mjs"
+  },
+  "dependencies": {
+    "cheerio": "latest",
+    "openai": "latest"
+  }
+}

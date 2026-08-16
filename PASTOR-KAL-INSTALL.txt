@@ -1,0 +1,63 @@
+PASTOR KAL — CORRECT GITHUB ROOT PACKAGE
+=========================================
+
+IMPORTANT:
+Upload the CONTENTS of this ZIP to the ROOT of the tryjesusmedia/tjm repository.
+Do NOT upload this package while you are inside the /welcome folder.
+
+After upload, GitHub should show these paths:
+
+/functions/api/chat.js
+/lib/pastor-kal-prompt.js
+/knowledge/...
+/scripts/...
+/tests/...
+/welcome/index.html
+/welcome/assets/pastor-kal-chat.js
+/welcome/assets/pastor-kal-chat.css
+/welcome/assets/pastor-kal-avatar.jpg
+
+The included /welcome/index.html is your existing welcome page with only two Pastor Kal asset references added:
+  assets/pastor-kal-chat.css
+  assets/pastor-kal-chat.js
+
+The chatbot itself checks the browser path and renders only on:
+  /welcome
+  /welcome/
+
+The API endpoint is at:
+  /api/chat
+because Cloudflare Pages Functions must be in the repository-root /functions directory.
+
+CLOUDFLARE ENVIRONMENT VARIABLES REQUIRED FOR ANSWERS
+------------------------------------------------------
+In your Cloudflare Pages project, add these server-side variables/secrets:
+
+OPENAI_API_KEY = your OpenAI API key
+OPENAI_VECTOR_STORE_ID = the vector store created from the Pastor Kal knowledge files
+OPENAI_MODEL = gpt-5.6   (optional; defaults to gpt-5.6)
+
+Without OPENAI_API_KEY, the Pastor Kal button/window will still appear, but it will tell you that the API key has not been connected yet when you ask a question.
+
+KNOWLEDGE-BASE SETUP
+--------------------
+On a computer with Node.js installed, from the repository root:
+
+1. npm install
+2. Set OPENAI_API_KEY in your shell/environment.
+3. npm run sync:guides
+4. npm run kb:upload
+5. Copy the printed OPENAI_VECTOR_STORE_ID into Cloudflare Pages environment variables.
+6. Redeploy the Cloudflare Pages project.
+
+OLD WRONG NESTED FILES
+----------------------
+The earlier upload placed duplicate Pastor Kal project folders inside /welcome, such as:
+  /welcome/functions
+  /welcome/lib
+  /welcome/knowledge
+  /welcome/public
+  /welcome/scripts
+  /welcome/tests
+
+Those are not used by this corrected installation. You may delete those old nested duplicates after this version is working. Do NOT delete /welcome/assets or /welcome/index.html because those are part of the real welcome page.
