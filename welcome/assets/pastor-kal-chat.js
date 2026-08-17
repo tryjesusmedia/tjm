@@ -112,7 +112,7 @@
 
     state.busy = true;
     send.disabled = true;
-    const typing = el("div", "pk-message assistant pk-typing", "Pastor Kal is looking through Scripture and the teaching library…");
+    const typing = el("div", "pk-message assistant pk-typing", "Pastor Kal is checking his notes...");
     body.append(typing);
     body.scrollTop = body.scrollHeight;
 
