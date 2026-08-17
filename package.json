@@ -12,6 +12,7 @@
   "dependencies": {
     "cheerio": "latest",
     "googleapis": "latest",
+    "mammoth": "latest",
     "openai": "latest"
   }
 }
