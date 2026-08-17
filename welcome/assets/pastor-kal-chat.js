@@ -59,14 +59,9 @@
   send.type = "submit";
   send.setAttribute("aria-label", "Send question");
   form.append(input, send);
-  footer.append(
-    form,
-    el(
-      "div",
-      "pk-disclaimer",
-      "Pastor Kal is an AI Bible guide based on Pastor Kal Roller’s teachings, not the human pastor speaking live."
-    )
-  );
+  const disclaimer = el("div", "pk-disclaimer");
+  disclaimer.innerHTML = 'This Pastor Kal is an AI Bible guide. If you\'d like to reach the real human Pastor Kal, text him at <a href="sms:+18162596486">816-259-6486</a>.';
+  footer.append(form, disclaimer);
 
   panel.append(header, body, footer);
   document.body.append(launcher, panel);
