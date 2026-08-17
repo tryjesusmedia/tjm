@@ -242,7 +242,7 @@ h3 { margin-bottom: 8px; font-size: 28px; }
 .hero-glow { position: absolute; width: 440px; height: 440px; border-radius: 50%; filter: blur(90px); opacity: .13; }
 .hero-glow-one { top: -140px; right: -100px; background: var(--gold); }
 .hero-glow-two { left: -180px; bottom: -160px; background: var(--royal-purple); }
-.hero-divider { position: absolute; right: -5%; bottom: -90px; left: -5%; height: 160px; border-radius: 50% 50% 0 0; background: var(--white); transform: rotate(-2deg); }
+.hero-divider { position: absolute; right: -5%; bottom: -90px; left: -5%; height: 160px; border-radius: 50% 50% 0 0; background: #F3E8D0; transform: rotate(-2deg); }
 
 .story { padding: 125px 0 115px; }
 .story-grid { display: grid; grid-template-columns: .93fr 1.07fr; align-items: center; gap: 86px; }
