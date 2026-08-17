@@ -63,3 +63,4 @@ The earlier upload placed duplicate Pastor Kal project folders inside /welcome, 
 Those are not used by this corrected installation. You may delete those old nested duplicates after this version is working. Do NOT delete /welcome/assets or /welcome/index.html because those are part of the real welcome page.
 
 OpenAI API connected.
+Vector store connected
