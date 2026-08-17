@@ -4,11 +4,14 @@
   "type": "module",
   "scripts": {
     "sync:guides": "node scripts/sync-guides.mjs",
+    "sync:sermons": "node scripts/sync-drive-sermons.mjs",
     "kb:upload": "node scripts/upload-knowledge.mjs",
+    "kb:sync": "node scripts/upload-knowledge.mjs --sync",
     "test:chat": "node scripts/test-chat.mjs"
   },
   "dependencies": {
     "cheerio": "latest",
+    "googleapis": "latest",
     "openai": "latest"
   }
 }

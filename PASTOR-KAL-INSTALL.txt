@@ -62,5 +62,127 @@ The earlier upload placed duplicate Pastor Kal project folders inside /welcome, 
 
 Those are not used by this corrected installation. You may delete those old nested duplicates after this version is working. Do NOT delete /welcome/assets or /welcome/index.html because those are part of the real welcome page.
 
+GOOGLE DRIVE SERMON SYNC (Optional)
+-----------------------------------
+Pastor Kal can automatically ingest approved sermon and Bible-teaching documents from your Google Drive into the knowledge base without re-uploading duplicates.
+
+REQUIRED SETUP:
+
+1. Create a Google Cloud project and enable the Google Drive API
+   - Visit https://console.cloud.google.com
+   - Create a new project
+   - Enable the Google Drive API
+   - Create OAuth 2.0 credentials (Desktop application)
+   - Download the credentials JSON
+
+2. Get your Google Drive folder ID for your Bible folder
+   - Open https://drive.google.com
+   - Navigate to your Bible folder
+   - Copy the folder ID from the URL: https://drive.google.com/drive/folders/{FOLDER_ID}
+
+3. Generate a refresh token (one-time)
+   - Use Google's OAuth 2.0 playground or the official flow
+   - The refresh token allows the sync script to run without interactive login
+
+4. Set environment variables:
+   
+   export GOOGLE_DRIVE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
+   export GOOGLE_DRIVE_CLIENT_SECRET="your-client-secret"
+   export GOOGLE_DRIVE_REFRESH_TOKEN="your-refresh-token"
+   export GOOGLE_DRIVE_BIBLE_FOLDER_ID="your-bible-folder-id"
+   export OPENAI_API_KEY="your-openai-api-key"
+
+5. Install dependencies (if not already installed):
+   npm install
+
+6. First sync from Google Drive:
+   npm run sync:sermons
+
+   This:
+   - Scans only approved folders (2024, 2025, 2026, Favourite Sermons, Natural Law, End Times, Devotional, Bible Studies)
+   - Exports Google Docs to markdown
+   - Downloads DOCX and PDF files
+   - Copies text/markdown files
+   - Adds source metadata (title, file ID, modified date, category)
+   - Saves files to knowledge/sources/sermons/
+   - Tracks all files in knowledge/drive-sync-manifest.json
+
+7. Sync to OpenAI:
+   npm run kb:sync
+
+   This:
+   - Compares local files to OpenAI manifest (knowledge/openai-sync-manifest.json)
+   - Skips unchanged files (same hash)
+   - Uploads new files and changed files
+   - Removes old versions from the vector store
+   - Updates manifests to prevent duplicates
+   - Attaches all files to your OPENAI_VECTOR_STORE_ID
+
+MANIFEST SYSTEM
+---------------
+The system uses two manifests to prevent duplicates:
+
+- knowledge/drive-sync-manifest.json
+  Tracks each Google Drive file:
+    - File ID and modified time
+    - Local path where it's saved
+    - SHA-256 hash
+    - When it was synced
+  
+  On next sync: if modifiedTime hasn't changed, the file is skipped.
+
+- knowledge/openai-sync-manifest.json
+  Tracks each local knowledge file:
+    - Local path
+    - SHA-256 hash
+    - OpenAI file_id
+    - When it was uploaded
+  
+  On next kb:sync: if hash hasn't changed, the file is skipped.
+
+HOW TO ADD A NEW APPROVED DRIVE FOLDER
+---------------------------------------
+To sync an additional teaching folder from Google Drive:
+
+1. Open scripts/sync-drive-sermons.mjs
+2. Find the APPROVED_FOLDERS array near the top
+3. Add your new folder name to the list:
+
+   const APPROVED_FOLDERS = [
+     "2024",
+     "2025",
+     "2026",
+     "Favourite Sermons",
+     "Natural Law",
+     "End Times",
+     "Devotional",
+     "Bible Studies",
+     "My New Folder"    // ← Add here
+   ];
+
+4. Run npm run sync:sermons again
+5. Run npm run kb:sync to upload the new files
+
+IMPORTANT SAFETY NOTES
+----------------------
+- Only folders listed in APPROVED_FOLDERS are scanned
+- Personal administrative files, account details, and calendar material are not ingested
+- Google Drive file IDs and metadata are preserved for reference
+- Sync will not accidentally delete local files or OpenAI files until safe handling is fully tested
+- Sermons and teachings rank BELOW Scripture and core theology in the authority hierarchy
+- The chatbot interface remains unchanged
+
+TROUBLESHOOTING
+---------------
+If sync fails:
+  - Verify all four Google environment variables are set correctly
+  - Check that the refresh token is still valid (may need to re-authenticate)
+  - Ensure OPENAI_API_KEY is set before running kb:sync
+  - Check that knowledge/sources/sermons/ folder exists and is writable
+
+If duplicate files appear in vector store:
+  - The manifest system prevents new duplicates automatically
+  - Old duplicates can be removed manually via OpenAI's console
+
 OpenAI API connected.
 Vector store connected
