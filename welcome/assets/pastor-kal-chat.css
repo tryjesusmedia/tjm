@@ -176,5 +176,13 @@
 
 @media (max-width: 520px) {
   .pk-launcher { right: 12px; bottom: 12px; }
-  .pk-panel { right: 6px; bottom: 72px; width: calc(100vw - 12px); height: calc(100vh - 84px); border-radius: 18px; }
+  .pk-panel {
+    top: max(12px, env(safe-area-inset-top, 0px));
+    right: 6px;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 12px);
+    height: auto;
+    max-height: none;
+    border-radius: 18px;
+  }
 }
