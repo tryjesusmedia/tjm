@@ -1,5 +1,31 @@
 {
-  "lastSyncTime": null,
-  "vectorStoreId": null,
-  "files": {}
+  "lastSyncTime": "2026-08-28T20:47:52.880Z",
+  "vectorStoreId": "vs_6a827c154010819190f9acddde673e26",
+  "files": {
+    "knowledge/sources/conflict-of-the-ages/01-patriarchs-and-prophets.pdf": {
+      "hash": "303fb48da796b29640e7377bf9026c77626c4c4c57c15876a2792b1af260bbc9",
+      "openaiFileId": "file-6g9NofrDugAHF7zvqjUZPx",
+      "uploadedAt": "2026-08-28T20:47:52.880Z"
+    },
+    "knowledge/sources/conflict-of-the-ages/02-prophets-and-kings.pdf": {
+      "hash": "50266f29809e35168d1312695c3003f3fd015a054c9fee4a808906e7e0b3425d",
+      "openaiFileId": "file-9eYq4oPHZQAZt2LWRnbbrc",
+      "uploadedAt": "2026-08-28T20:47:52.880Z"
+    },
+    "knowledge/sources/conflict-of-the-ages/03-the-desire-of-ages.pdf": {
+      "hash": "961a7bfe5bd82d34cbc3415fedd287cb06c0cbabf923bfbeb42f81ccea07e70f",
+      "openaiFileId": "file-HfC38kSwVyBiX2rmckpz9n",
+      "uploadedAt": "2026-08-28T20:47:52.880Z"
+    },
+    "knowledge/sources/conflict-of-the-ages/04-the-acts-of-the-apostles.pdf": {
+      "hash": "7f3d39a91e8c373503c142f60d873b1940cfd5f7074c5851a58311c7c8ae2f08",
+      "openaiFileId": "file-KG8NT7KJiGzaeFbKCFx4hs",
+      "uploadedAt": "2026-08-28T20:47:52.880Z"
+    },
+    "knowledge/sources/conflict-of-the-ages/05-the-great-controversy.pdf": {
+      "hash": "c3cb29f62fd8ce221dfcfa614c6dc39bc7f87da06f00d3a9c116ff6285fcc98c",
+      "openaiFileId": "file-2D4sYxKakdHn2yDPdXLzfT",
+      "uploadedAt": "2026-08-28T20:47:52.880Z"
+    }
+  }
 }

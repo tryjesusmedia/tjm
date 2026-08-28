@@ -56,6 +56,10 @@ function computeFileHash(data) {
   return crypto.createHash("sha256").update(data).digest("hex");
 }
 
+function manifestPath(filePath) {
+  return path.relative(process.cwd(), filePath).split(path.sep).join("/");
+}
+
 // ============================================================================
 // File Operations
 // ============================================================================
@@ -84,7 +88,7 @@ async function getFileHash(filePath) {
 // ============================================================================
 
 async function uploadFileToOpenAI(filePath) {
-  const rel = path.relative(process.cwd(), filePath);
+  const rel = manifestPath(filePath);
   process.stdout.write(`  Uploading ${rel} ... `);
   
   try {
@@ -148,7 +152,7 @@ async function syncKnowledgeFiles(manifest, vectorStoreId) {
   console.log(`\nProcessing ${files.length} knowledge files (sync mode: ${SYNC_MODE}, scope: ${scope || "all"})...\n`);
 
   for (const filePath of files) {
-    const rel = path.relative(process.cwd(), filePath);
+    const rel = manifestPath(filePath);
     const hash = await getFileHash(filePath);
     const manifestEntry = manifest.files[rel];
 
@@ -251,7 +255,7 @@ async function main() {
           const uploaded = await uploadFileToOpenAI(filePath);
           await attachFileToVectorStore(vectorStoreId, uploaded.id);
           
-          const rel = path.relative(process.cwd(), filePath);
+          const rel = manifestPath(filePath);
           const hash = await getFileHash(filePath);
           manifest.files[rel] = {
             hash: hash,
