@@ -7,6 +7,8 @@
     "sync:sermons": "node scripts/sync-drive-sermons.mjs",
     "kb:upload": "node scripts/upload-knowledge.mjs",
     "kb:sync": "node scripts/upload-knowledge.mjs --sync",
+    "kb:conflict:fetch": "node scripts/fetch-conflict-books.mjs",
+    "kb:conflict:sync": "node scripts/upload-knowledge.mjs --sync --scope=conflict-of-the-ages",
     "test:chat": "node scripts/test-chat.mjs",
     "test:conflict": "node scripts/test-conflict-plan.mjs"
   },

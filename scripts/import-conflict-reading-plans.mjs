@@ -15,21 +15,46 @@ const bookMeta = {
   GC: { title: "The Great Controversy", shortTitle: "Great Controversy", accent: "#8f6b94" },
 };
 
-const reviewNotes = new Map([
-  ["PP:5", "The supplied commentary notation ends with “-86.3” after PP 80-89; preserved for owner review."],
-  ["PP:6", "The supplied commentary notation combines “96.3” with PP 90-110; preserved for owner review."],
-  ["PP:7", "The supplied commentary notation reads “PP 111-116- 112.1”; preserved for owner review."],
-  ["PP:26", "The supplied Scripture reference reads “Ex 42-34.” Exodus has no chapter 42, so no Bible link is generated until this is confirmed."],
-  ["PK:8", "The supplied Scripture reference reads “Eze 32: 33,” which may be a chapter/verse typo; preserved for owner review."],
-  ["PK:30", "The supplied book name is “Zephenaih”; preserved in the source record and normalized only for the outbound Bible link."],
-  ["PK:62", "Several Psalm ranges use colons where separators may have been intended; preserved for owner review."],
-  ["DA:32", "The supplied reference ends “Luke 8:40-56,” with a trailing comma; preserved for owner review."],
-  ["DA:39", "The supplied reference reads “Matthew 15-21-28”; no Bible link is generated until the intended punctuation is confirmed."],
-  ["DA:40", "The supplied reference reads “Mt 15:29-39; 16-1-12”; no Bible link is generated until the intended punctuation is confirmed."],
-  ["DA:43", "The supplied reference ends with the incomplete fragment “Mark”; no Bible link is generated until the intended Mark passage is confirmed."],
-  ["DA:51", "The supplied Luke range “Luke 11:1-18:14, 24-30, 35-43” is ambiguous; no Bible link is generated until confirmed."],
-  ["DA:77", "The supplied entry interleaves DA 788-794 with the Mark and Luke references; the pairing is preserved and flagged for owner review."],
+// Owner-approved corrections from Corrections.txt. The original supplied block is
+// retained separately on every corrected reading for auditability.
+const approvedCorrections = new Map([
+  ["PP:5", { bibleLines: ["Gen 4:17-26; 5"], commentaryLines: ["Chapter 6—Seth and Enoch, PP 80-89"] }],
+  ["PP:6", { bibleLines: ["Gen 6; 7"], commentaryLines: ["Chapter 7—The Flood", "Chapter 8—After the Flood, PP 90-110"] }],
+  ["PP:7", { bibleLines: ["Gen 8-10"], commentaryLines: ["Chapter 9—The Literal Week, PP 111-116"] }],
+  ["PP:26", { bibleLines: ["Ex 32-34"], commentaryLines: ["Chapter 28—Idolatry at Sinai, PP 315-330"] }],
+  ["PK:8", { bibleLines: ["1 Kings 17:1-7", "Ezekiel 32; 33"], commentaryLines: ["Chapter 9—Elijah the Tishbite"] }],
+  ["PK:17", { bibleLines: ["Song of Solomon 1-5; 7; 8"], commentaryLines: ["PK 229-234", "Chapter 18—The Healing of the Waters"] }],
+  ["PK:30", { bibleLines: ["2 Kings 21", "2 Chronicles 33", "Habakkuk", "Zephaniah"], commentaryLines: ["Chapter 32—Manasseh and Josiah (PK 381-391)"] }],
+  ["PK:62", { bibleLines: ["Ezekiel 34-48; Obadiah; Zechariah 11; 12; 14", "Psalm 1-8; 10-21; 23-45; 47; 49-67; 70; 73-75; 77; 79; 81; 84-86; 89; 90; 92-101; 103; 106; 108-111; 113-125; 127-145; 147-150"], commentaryLines: [] }],
+  ["DA:8", { bibleLines: ["Matthew 3:13-17; Mark 1:9-11; Luke 3:21-22"], commentaryLines: ["Chapter 11—The Baptism, DA 109-113"] }],
+  ["DA:32", { bibleLines: ["Matthew 9:18-31", "Mark 5:21-43", "Luke 8:40-56"], commentaryLines: ["Chapter 36—The Touch of Faith, DA 342-348"] }],
+  ["DA:39", { bibleLines: ["Matthew 15:21-28", "Mark 7:24-30"], commentaryLines: ["Chapter 43—The Gentile Woman, DA 399-403"] }],
+  ["DA:40", { bibleLines: ["Matthew 15:29-39; 16:1-12", "Mark 7:31-37; 8:1-21"], commentaryLines: ["Chapter 44—The Pharisees' Leaven, DA 404-409"] }],
+  ["DA:43", { bibleLines: ["Matthew 17:9-21", "Mark 9:9-29"], commentaryLines: ["Chapter 47—Ministry, DA 426-431"] }],
+  ["DA:45", { bibleLines: ["John 7:1-15; 37-39"], commentaryLines: ["Chapter 49—At the Feast of Tabernacles, DA 447-454"] }],
+  ["DA:49", { bibleLines: ["Matthew 19:1-12", "Luke 9:51-56", "Mark 10:1-12", "Matthew 19:23-30", "Mark 10:23-31", "Luke 10:1-24", "Matthew 20:1-19, 29-34", "Mark 10:46-52"], commentaryLines: ["Chapter 53—The Last Journey From Galilee, DA 485-496"] }],
+  ["DA:51", { bibleLines: ["Luke 11:1-18:14; 18:24-30; 18:35-43; 19:11-28"], commentaryLines: ["Chapter 55—Not With Outward Show, DA 506-510"] }],
+  ["DA:77", { bibleLines: ["Matthew 28:1, 5-8", "John 20:1-18", "Mark 16:1-14", "Luke 24:1-12"], commentaryLines: ["Chapter 82—“Why Weepest Thou?”, DA 788-794"] }],
+  ["AA:1", { bibleLines: [], commentaryLines: ["Chapter 1—God's Purpose for His Church, AA 9-20"] }],
+  ["AA:3", { bibleLines: ["Acts 1:9-26"], commentaryLines: ["Chapters 3 and 4, AA 30-34"] }],
+  ["AA:4", { bibleLines: ["Acts 2:1-39"], commentaryLines: ["Chapter 5—The Gift of the Spirit, AA 35-56"] }],
 ]);
+
+const ppChapterPages = new Map(Object.entries({
+  39: "433-437", 40: "438-452", 41: "453-461", 42: "462-468", 43: "469-480",
+  44: "481-486", 45: "487-498", 46: "499-504", 47: "505-509", 48: "510-520",
+  49: "521-524", 50: "525-529", 51: "530-536", 52: "537-542", 53: "543-559",
+  54: "560-568", 55: "569-574", 56: "575-580", 57: "581-591", 58: "592-602",
+  59: "603-615", 60: "616-626", 61: "627-636", 62: "637-642", 63: "643-648",
+  64: "649-659", 65: "660-674", 66: "675-682", 67: "683-689", 68: "690-696",
+  69: "697-701", 70: "703-716", 71: "717-726", 72: "727-745", 73: "746-755",
+}).map(([chapter, pages]) => [Number(chapter), pages]));
+
+function addPpPageRange(line) {
+  const chapter = Number(line.match(/^(?:Ch|Chapter)\s+(\d+)/i)?.[1]);
+  const pages = ppChapterPages.get(chapter);
+  return pages && !/\bPP\s+\d/i.test(line) ? `${line}, PP ${pages}` : line;
+}
 
 function blocks(text) {
   return text
@@ -99,13 +124,21 @@ function chapterTitle(citation, fallback, heading = "") {
 function createRaw(code, sourceBlock, sourceLines, bibleLines, commentaryLines, heading = "") {
   const meta = bookMeta[code];
   const sourceKey = `${code}:${sourceBlock}`;
-  let bibleReference = bibleLines.join("; ").replace(/;\s*;/g, ";").trim();
+  const correction = approvedCorrections.get(sourceKey);
+  const originalSourceEntry = sourceLines.join("\n");
+  const correctedBibleLines = correction?.bibleLines ?? bibleLines;
+  let correctedCommentaryLines = correction?.commentaryLines ?? commentaryLines;
+  if (code === "PP") correctedCommentaryLines = correctedCommentaryLines.map(addPpPageRange);
+  const correctedHeading = correction?.heading ?? heading;
+  const correctedSourceLines = correction
+    ? [...correctedBibleLines, ...correctedCommentaryLines]
+    : code === "PP" && correctedCommentaryLines.some((line, index) => line !== commentaryLines[index])
+      ? [...bibleLines, ...correctedCommentaryLines]
+      : sourceLines;
+  let bibleReference = correctedBibleLines.join("; ").replace(/;\s*;/g, ";").trim();
   if (sourceKey === "PK:15") bibleReference = bibleReference.replace(/; 2; Chronicles/i, "; 2 Chronicles");
-  if (sourceKey === "DA:77") bibleReference = "Matthew 28:1, 5-8; John 20:1-18; Mark 16:1-14; Luke 24:1-12";
-  const commentaryCitation = commentaryLines.join(" · ").trim();
+  const commentaryCitation = correctedCommentaryLines.join(" · ").trim();
   const pages = extractPages(code, commentaryCitation);
-  const reviewNote = reviewNotes.get(sourceKey) ?? null;
-  const malformedBible = ["PP:26", "DA:39", "DA:40", "DA:43", "DA:51"].includes(sourceKey);
   const bibleQuery = bibleReference ? normalizeBibleQuery(bibleReference) : "";
   const commentaryQuery = pages.start ? `${code} ${pages.start}` : `${meta.title} ${commentaryCitation}`;
   const fallbackTitle = bibleReference || `${meta.shortTitle} reading`;
@@ -113,12 +146,14 @@ function createRaw(code, sourceBlock, sourceLines, bibleLines, commentaryLines, 
     code,
     sourceBlock,
     sourceKey,
-    sourceEntry: sourceLines.join("\n"),
-    heading: heading || "",
-    title: chapterTitle(commentaryCitation, fallbackTitle, heading),
+    sourceEntry: correctedSourceLines.join("\n"),
+    originalSourceEntry: originalSourceEntry === correctedSourceLines.join("\n") ? null : originalSourceEntry,
+    correctionApplied: Boolean(correction),
+    heading: correctedHeading || "",
+    title: chapterTitle(commentaryCitation, fallbackTitle, correctedHeading),
     bibleReference,
     bibleQuery,
-    bibleUrl: bibleQuery && !malformedBible
+    bibleUrl: bibleQuery
       ? `https://www.biblegateway.com/passage/?search=${encodeURIComponent(bibleQuery)}&version=KJV`
       : null,
     commentaryBook: meta.title,
@@ -127,7 +162,7 @@ function createRaw(code, sourceBlock, sourceLines, bibleLines, commentaryLines, 
     commentaryPageStart: pages.start,
     commentaryPageEnd: pages.end,
     commentaryUrl: `https://m.egwwritings.org/en/search?query=${encodeURIComponent(commentaryQuery)}&suggestion=1`,
-    reviewNote,
+    reviewNote: null,
   };
 }
 
@@ -242,7 +277,7 @@ const payload = {
   planId: PLAN_ID,
   title: "The Bible & Conflict of the Ages Journey",
   subtitle: "Read Scripture. Follow the story. Discover the principles.",
-  sourcePolicy: "Pairings, order, and source wording are preserved from the five supplied plans. Ambiguities are flagged rather than silently corrected.",
+  sourcePolicy: "Pairings and order follow the five supplied plans. Owner-approved corrections are applied while each changed source block is retained in originalSourceEntry for auditability; any future ambiguity must be flagged rather than silently corrected.",
   generatedAt: new Date().toISOString(),
   sourceHashes: Object.fromEntries(Object.entries(sourceTexts).map(([code, text]) => [code, createHash("sha256").update(text).digest("hex")])),
   books: Object.entries(bookMeta).map(([code, meta]) => ({

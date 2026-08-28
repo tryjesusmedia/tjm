@@ -10,8 +10,7 @@ assert.deepEqual(appPlan, websitePlan, "The website and native app plan bundles 
 assert.equal(websitePlan.planId, "bible-conflict-ages-v1");
 assert.equal(websitePlan.readings.length, 265);
 assert.deepEqual(Object.fromEntries(websitePlan.books.map((book) => [book.code, book.readingCount])), { PP: 67, PK: 60, DA: 82, AA: 44, GC: 12 });
-assert.equal(websitePlan.reviewQueue.length, 13);
-assert.deepEqual(websitePlan.reviewQueue.map((item) => item.sourceKey), ["PP:5", "PP:6", "PP:7", "PP:26", "PK:8", "PK:30", "PK:62", "DA:32", "DA:39", "DA:40", "DA:43", "DA:51", "DA:77"]);
+assert.equal(websitePlan.reviewQueue.length, 0);
 
 for (const [index, reading] of websitePlan.readings.entries()) {
   assert.equal(reading.id, `coa-${String(index + 1).padStart(3, "0")}`);
@@ -31,12 +30,15 @@ for (const [index, reading] of websitePlan.readings.entries()) {
   }
 }
 
-for (const sourceKey of ["PP:26", "DA:39", "DA:40", "DA:43", "DA:51"]) {
-  assert.equal(websitePlan.readings.find((reading) => reading.sourceKey === sourceKey).bibleUrl, null, `${sourceKey} must not silently link a guessed correction`);
-}
-
-assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "PP:26").sourceEntry, /Ex 42-34/);
-assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "DA:39").sourceEntry, /Matthew 15-21-28/);
+assert.equal(websitePlan.readings.find((reading) => reading.sourceKey === "PP:26").bibleReference, "Ex 32-34");
+assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "PP:26").originalSourceEntry, /Ex 42-34/);
+assert.equal(websitePlan.readings.find((reading) => reading.sourceKey === "DA:39").bibleReference, "Matthew 15:21-28; Mark 7:24-30");
+assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "DA:39").originalSourceEntry, /Matthew 15-21-28/);
+assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "PP:37").commentaryCitation, /PP 433-437/);
+assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "PP:60").commentaryCitation, /PP 675-682.*PP 683-689/);
+assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "DA:43").commentaryCitation, /Chapter 47—Ministry, DA 426-431/);
+assert.match(websitePlan.readings.find((reading) => reading.sourceKey === "DA:77").commentaryCitation, /Chapter 82—“Why Weepest Thou\?”, DA 788-794/);
+assert.equal(websitePlan.readings.find((reading) => reading.sourceKey === "PK:62").bibleReference, "Ezekiel 34-48; Obadiah; Zechariah 11; 12; 14; Psalm 1-8; 10-21; 23-45; 47; 49-67; 70; 73-75; 77; 79; 81; 84-86; 89; 90; 92-101; 103; 106; 108-111; 113-125; 127-145; 147-150");
 assert.equal(websitePlan.readings.at(-1).bibleReference, "Revelation 21; 22");
 assert.match(websitePlan.readings.at(-1).commentaryCitation, /GC 662-678/);
 
@@ -47,4 +49,4 @@ assert.doesNotMatch(`${html}\n${app}`, /Ask Pastor Kal/i);
 assert.match(app, /conflict_reading_progress/);
 assert.match(app, /create_conflict_principle/);
 
-console.log("Conflict journey validation passed: 265 readings, exact app/web parity, 13 review flags, and safe outbound links.");
+console.log("Conflict journey validation passed: 265 corrected readings, exact app/web parity, no unresolved review flags, and safe outbound links.");

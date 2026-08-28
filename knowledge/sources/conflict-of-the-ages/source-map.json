@@ -1,0 +1,52 @@
+{
+  "collection": "Conflict of the Ages",
+  "retrievalRole": "Supplemental, hidden context. Scripture remains primary.",
+  "downloadedAt": "2026-08-28T20:40:12.481Z",
+  "books": [
+    {
+      "code": "PP",
+      "filename": "01-patriarchs-and-prophets.pdf",
+      "title": "Patriarchs and Prophets",
+      "year": 1890,
+      "url": "https://media2.egwwritings.org/pdf/en_PP.pdf",
+      "bytes": 2119415,
+      "sha256": "303fb48da796b29640e7377bf9026c77626c4c4c57c15876a2792b1af260bbc9"
+    },
+    {
+      "code": "PK",
+      "filename": "02-prophets-and-kings.pdf",
+      "title": "Prophets and Kings",
+      "year": 1917,
+      "url": "https://media2.egwwritings.org/pdf/en_PK.pdf",
+      "bytes": 1826729,
+      "sha256": "50266f29809e35168d1312695c3003f3fd015a054c9fee4a808906e7e0b3425d"
+    },
+    {
+      "code": "DA",
+      "filename": "03-the-desire-of-ages.pdf",
+      "title": "The Desire of Ages",
+      "year": 1898,
+      "url": "https://media2.egwwritings.org/pdf/en_DA.pdf",
+      "bytes": 2130373,
+      "sha256": "961a7bfe5bd82d34cbc3415fedd287cb06c0cbabf923bfbeb42f81ccea07e70f"
+    },
+    {
+      "code": "AA",
+      "filename": "04-the-acts-of-the-apostles.pdf",
+      "title": "The Acts of the Apostles",
+      "year": 1911,
+      "url": "https://media2.egwwritings.org/pdf/en_AA.pdf",
+      "bytes": 1275768,
+      "sha256": "7f3d39a91e8c373503c142f60d873b1940cfd5f7074c5851a58311c7c8ae2f08"
+    },
+    {
+      "code": "GC",
+      "filename": "05-the-great-controversy.pdf",
+      "title": "The Great Controversy",
+      "year": 1911,
+      "url": "https://media2.egwwritings.org/pdf/en_GC.pdf",
+      "bytes": 1895017,
+      "sha256": "c3cb29f62fd8ce221dfcfa614c6dc39bc7f87da06f00d3a9c116ff6285fcc98c"
+    }
+  ]
+}

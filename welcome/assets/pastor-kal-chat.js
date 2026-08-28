@@ -66,9 +66,8 @@
   panel.append(header, body, footer);
   document.body.append(launcher, panel);
 
-  function addMessage(role, text, { save = false, sources = [] } = {}) {
+  function addMessage(role, text, { save = false } = {}) {
     body.append(el("div", `pk-message ${role}`, text));
-    if (sources.length) body.append(el("div", "pk-sources", `Knowledge used: ${sources.join(", ")}`));
     if (save) {
       state.history.push({ role, content: text });
       state.history = state.history.slice(-MAX_LOCAL_MESSAGES);
@@ -125,7 +124,7 @@
       const data = await response.json();
       typing.remove();
       if (!response.ok) throw new Error(data?.error || "Could not get an answer.");
-      addMessage("assistant", data.answer, { save: true, sources: data.sources || [] });
+      addMessage("assistant", data.answer, { save: true });
     } catch (error) {
       typing.remove();
       addMessage("assistant", error?.message || "I couldn’t answer that right now. Please try again.");

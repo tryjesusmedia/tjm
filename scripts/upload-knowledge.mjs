@@ -13,6 +13,15 @@ const KNOWLEDGE_ROOT = path.resolve("knowledge/sources");
 const OPENAI_MANIFEST_PATH = "knowledge/openai-sync-manifest.json";
 const ALLOWED_EXTENSIONS = new Set([".txt", ".md", ".html", ".pdf"]);
 const SYNC_MODE = process.argv.includes("--sync");
+const scopeArg = process.argv.find((value) => value.startsWith("--scope="));
+const scope = scopeArg?.slice("--scope=".length).trim() || "";
+const SYNC_ROOT = scope ? path.resolve(KNOWLEDGE_ROOT, scope) : KNOWLEDGE_ROOT;
+const scopeRelative = path.relative(KNOWLEDGE_ROOT, SYNC_ROOT);
+
+if (scopeRelative.startsWith("..") || path.isAbsolute(scopeRelative)) {
+  console.error("Knowledge scope must stay inside knowledge/sources.");
+  process.exit(1);
+}
 
 if (!process.env.OPENAI_API_KEY) {
   console.error("Missing OPENAI_API_KEY");
@@ -126,7 +135,7 @@ async function deleteOpenAIFile(fileId) {
 // ============================================================================
 
 async function syncKnowledgeFiles(manifest, vectorStoreId) {
-  const files = await walk(KNOWLEDGE_ROOT);
+  const files = await walk(SYNC_ROOT);
   if (!files.length) {
     console.error("No knowledge files found.");
     process.exit(1);
@@ -136,7 +145,7 @@ async function syncKnowledgeFiles(manifest, vectorStoreId) {
   let unchangedCount = 0;
   let updatedCount = 0;
 
-  console.log(`\nProcessing ${files.length} knowledge files (sync mode: ${SYNC_MODE})...\n`);
+  console.log(`\nProcessing ${files.length} knowledge files (sync mode: ${SYNC_MODE}, scope: ${scope || "all"})...\n`);
 
   for (const filePath of files) {
     const rel = path.relative(process.cwd(), filePath);
@@ -230,7 +239,7 @@ async function main() {
       }
 
       manifest.vectorStoreId = vectorStoreId;
-      const files = await walk(KNOWLEDGE_ROOT);
+      const files = await walk(SYNC_ROOT);
       
       if (!files.length) {
         console.error("No knowledge files found.");

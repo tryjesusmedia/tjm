@@ -5,6 +5,8 @@
     "Pastor Kal Theology Core",
     "Get to Know Jesus Set",
     "Bible Prophecy Set",
+    "Conflict of the Ages Set (supplemental context)",
+    "Pastor Kal Sermons and Teaching Notes",
     "Other approved Try Jesus Media material"
   ],
   "sources": [
@@ -12,7 +14,12 @@
     {"path":"knowledge/sources/theology/01-law-of-love-and-life.md","type":"theology_core","authority":2,"label":"Law of Love and Life — Comprehensive Biblical Explanation"},
     {"path":"knowledge/sources/theology/02-objections-and-biblical-rebuttals.md","type":"theology_core","authority":2,"label":"Major Objections and Biblical Rebuttals"},
     {"path":"knowledge/sources/theology/03-bible-based-beliefs-framework.md","type":"theology_core","authority":2,"label":"Bible-Based Beliefs Framework"},
-    {"path":"knowledge/sources/guide-index.md","type":"resource_index","authority":5,"label":"Try Jesus Media Guide Index"},
+    {"path":"knowledge/sources/conflict-of-the-ages/01-patriarchs-and-prophets.pdf","type":"conflict_of_the_ages","authority":5,"label":"Patriarchs and Prophets — official EGW Writings PDF"},
+    {"path":"knowledge/sources/conflict-of-the-ages/02-prophets-and-kings.pdf","type":"conflict_of_the_ages","authority":5,"label":"Prophets and Kings — official EGW Writings PDF"},
+    {"path":"knowledge/sources/conflict-of-the-ages/03-the-desire-of-ages.pdf","type":"conflict_of_the_ages","authority":5,"label":"The Desire of Ages — official EGW Writings PDF"},
+    {"path":"knowledge/sources/conflict-of-the-ages/04-the-acts-of-the-apostles.pdf","type":"conflict_of_the_ages","authority":5,"label":"The Acts of the Apostles — official EGW Writings PDF"},
+    {"path":"knowledge/sources/conflict-of-the-ages/05-the-great-controversy.pdf","type":"conflict_of_the_ages","authority":5,"label":"The Great Controversy — official EGW Writings PDF"},
+    {"path":"knowledge/sources/guide-index.md","type":"resource_index","authority":7,"label":"Try Jesus Media Guide Index"},
     {"path":"knowledge/sources/lessons/*.txt","type":"lesson","authority":3,"label":"Synced Get to Know Jesus and Bible Prophecy lesson text"}
   ]
 }
