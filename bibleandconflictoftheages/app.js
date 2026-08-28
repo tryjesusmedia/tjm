@@ -302,7 +302,10 @@
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${complete} of ${readings.length} complete · ${percent}%</small></span>
         </button>
         <div class="reading-list" ${isOpen ? "" : "hidden"}>
-          ${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""}" type="button" data-reading-index="${reading.day - 1}"><span class="reading-check">✓</span><span><strong>Day ${reading.day} · ${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.bibleReference || reading.commentaryCitation)}</small></span><em>${reading.reviewNote ? "Needs review △" : "Open →"}</em></button>`).join("")}
+          ${readings.map((reading) => {
+            const complete = readingComplete(reading);
+            return `<button class="journey-reading ${complete ? "done" : ""}" type="button" data-reading-index="${reading.day - 1}"><span class="reading-check" aria-hidden="true">${complete ? "✓" : ""}</span><span><strong>Day ${reading.day} · ${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.bibleReference || reading.commentaryCitation)}</small></span><em>${reading.reviewNote ? "Needs review △" : "Open →"}</em></button>`;
+          }).join("")}
         </div>
       </section>`;
     }).join("");
