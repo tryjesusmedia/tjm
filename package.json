@@ -7,7 +7,8 @@
     "sync:sermons": "node scripts/sync-drive-sermons.mjs",
     "kb:upload": "node scripts/upload-knowledge.mjs",
     "kb:sync": "node scripts/upload-knowledge.mjs --sync",
-    "test:chat": "node scripts/test-chat.mjs"
+    "test:chat": "node scripts/test-chat.mjs",
+    "test:conflict": "node scripts/test-conflict-plan.mjs"
   },
   "dependencies": {
     "cheerio": "latest",
