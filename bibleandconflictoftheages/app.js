@@ -24,10 +24,9 @@
   let principles = [];
   let posts = [];
   let replies = [];
-  let activeView = "today";
+  let activeView = "readings";
   let currentIndex = 0;
   let activeBook = "PP";
-  let calendarMonth = startOfMonth(new Date());
   let principleSearch = "";
   let selectedMembersPrincipleId = "";
   let refreshTimer = null;
@@ -73,27 +72,6 @@
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
-  }
-
-  function parseDate(value) {
-    const [year, month, day] = String(value).split("-").map(Number);
-    return new Date(year, month - 1, day, 12);
-  }
-
-  function startOfMonth(date) {
-    return new Date(date.getFullYear(), date.getMonth(), 1, 12);
-  }
-
-  function addDays(date, amount) {
-    const next = new Date(date);
-    next.setDate(next.getDate() + amount);
-    return next;
-  }
-
-  function differenceInDays(left, right) {
-    const a = Date.UTC(left.getFullYear(), left.getMonth(), left.getDate());
-    const b = Date.UTC(right.getFullYear(), right.getMonth(), right.getDate());
-    return Math.round((a - b) / 86400000);
   }
 
   function formatDate(date, options = {}) {
@@ -178,7 +156,7 @@
     if (error) console.warn("Could not update current reading", error.message);
   }
 
-  function goToReading(index, view = "today") {
+  function goToReading(index, view = "readings") {
     currentIndex = Math.max(0, Math.min(Number(index), plan.readings.length - 1));
     activeBook = currentReading().code;
     updateLastReading(currentReading().id);
@@ -199,20 +177,23 @@
     return `<label class="complete-toggle"><input type="checkbox" data-progress-field="${field}" data-reading-id="${reading.id}" ${checked ? "checked" : ""}><i></i><span>${escapeHTML(label)}</span></label>`;
   }
 
-  function renderToday() {
+  function sourceTaskLinks(reading, kind, tasks) {
+    const style = kind === "bible" ? "button-primary" : "button-secondary";
+    const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
+    if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
+    return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => `<a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}"${task.title ? ` title="${escapeHTML(task.title)}"` : ""}>${escapeHTML(task.label)} <span>↗</span></a>`).join("")}</div>`;
+  }
+
+  function renderReadings() {
     const reading = currentReading();
     const saved = readingProgress(reading);
-    const dayPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
-    const scriptureAction = reading.bibleUrl
-      ? `<a class="button button-primary" href="${escapeHTML(reading.bibleUrl)}" target="_blank" rel="noopener noreferrer" data-open-source="bible" data-reading-id="${reading.id}">Read Scripture <span>↗</span></a>`
-      : `<button class="button button-primary" type="button" disabled>${reading.bibleReference ? "Awaiting reference review" : "No Scripture listed"}</button>`;
-    const commentaryAction = reading.commentaryCitation
-      ? `<a class="button button-secondary" href="${escapeHTML(reading.commentaryUrl)}" target="_blank" rel="noopener noreferrer" data-open-source="commentary" data-reading-id="${reading.id}">Read free on EGW Writings <span>↗</span></a>`
-      : `<button class="button button-secondary" type="button" disabled>No companion reading listed</button>`;
+    const readingPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
+    const scriptureActions = sourceTaskLinks(reading, "bible", reading.bibleTasks);
+    const commentaryActions = sourceTaskLinks(reading, "commentary", reading.commentaryTasks);
     const principlePanel = session ? `
           <aside class="principle-panel" aria-labelledby="principle-heading">
             <p class="eyebrow">YOUR PRIVATE DISCOVERY</p>
-            <h3 id="principle-heading">What principles do you see after today’s reading?</h3>
+            <h3 id="principle-heading">What principles do you see after this reading?</h3>
             <p>Write one principle at a time. It receives a permanent number you can connect to discoveries anywhere else in the journey.</p>
             <form id="principle-form">
               <div class="principle-number">PRINCIPLE <strong>#${nextPrincipleNumber()}</strong></div>
@@ -227,9 +208,9 @@
               </div>
               <div class="panel-actions"><button class="button button-primary" type="submit">Save principle</button></div>
             </form>
-            <div class="principles-for-day">
-              <strong>${dayPrinciples.length ? `${dayPrinciples.length} saved for this reading` : "No principles saved for this reading yet"}</strong>
-              ${dayPrinciples.map((principle) => principleMini(principle, true)).join("")}
+            <div class="principles-for-reading">
+              <strong>${readingPrinciples.length ? `${readingPrinciples.length} saved for this reading` : "No principles saved for this reading yet"}</strong>
+              ${readingPrinciples.map((principle) => principleMini(principle, true)).join("")}
             </div>
           </aside>` : `
           <aside class="principle-panel" aria-labelledby="principle-heading">
@@ -240,28 +221,28 @@
           </aside>`;
 
     return `
-      <section aria-labelledby="today-heading">
+      <section aria-labelledby="readings-heading">
         <header class="view-heading">
           <div>
             <p class="eyebrow">${escapeHTML(reading.commentaryBook)} · READING ${reading.day} OF ${plan.readings.length}</p>
-            <h2 id="today-heading">${escapeHTML(reading.title)}</h2>
-            <p>${settings?.schedule_mode === "calendar" ? `Scheduled for ${escapeHTML(formatDate(addDays(parseDate(settings.start_date), reading.day - 1), { weekday: "long", month: "long", day: "numeric" }))}.` : "Move at your own pace. Your next unfinished reading will be waiting whenever you return."}</p>
+            <h2 id="readings-heading">${escapeHTML(reading.title)}</h2>
+            <p>Move at your own pace. A reading may take one sitting, several days, or longer; your next unfinished reading will be waiting whenever you return.</p>
           </div>
-          <div class="day-switcher" aria-label="Reading navigation">
+          <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button" type="button" data-day-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
-            <span class="day-pill"><strong>Day ${reading.day}</strong><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
+            <span class="reading-number"><strong>Reading ${reading.day}</strong><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
             <button class="icon-button" type="button" data-day-nav="next" aria-label="Next reading" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
           </div>
         </header>
 
-        <div class="today-grid">
+        <div class="readings-grid">
           <div class="reading-stack">
             <article class="reading-card scripture-card">
               <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">READ FIRST</span></div>
               <h3>${escapeHTML(reading.bibleReference || "No Scripture passage listed")}</h3>
-              <p class="citation">${reading.bibleReference ? "Open the exact supplied passage on Bible Gateway (KJV), then return to record what you discovered." : "This source entry contains only a Conflict of the Ages assignment. The omission is preserved exactly as supplied."}</p>
+              <p class="citation">${reading.bibleReference ? "Choose one chapter at a time. Each link opens only that chapter or its assigned verses on Bible Gateway (KJV)." : "This source entry contains only a Conflict of the Ages assignment. The omission is preserved exactly as supplied."}</p>
               <div class="reading-actions">
-                ${scriptureAction}
+                ${scriptureActions}
                 ${reading.bibleReference ? completeToggle(reading, "bible_complete", saved.bible_complete, "Scripture complete") : ""}
               </div>
               ${reviewFlag(reading)}
@@ -273,7 +254,7 @@
               <h3>${escapeHTML(reading.commentaryBook)}</h3>
               <p class="citation">${escapeHTML(reading.commentaryCitation || "No companion reading was listed in this source entry.")}</p>
               <div class="reading-actions">
-                ${commentaryAction}
+                ${commentaryActions}
                 ${reading.commentaryCitation ? completeToggle(reading, "commentary_complete", saved.commentary_complete, "Companion complete") : ""}
               </div>
             </article>
@@ -304,36 +285,13 @@
         <div class="reading-list" ${isOpen ? "" : "hidden"}>
           ${readings.map((reading) => {
             const complete = readingComplete(reading);
-            return `<button class="journey-reading ${complete ? "done" : ""}" type="button" data-reading-index="${reading.day - 1}"><span class="reading-check" aria-hidden="true">${complete ? "✓" : ""}</span><span><strong>Day ${reading.day} · ${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.bibleReference || reading.commentaryCitation)}</small></span><em>${reading.reviewNote ? "Needs review △" : "Open →"}</em></button>`;
+            return `<button class="journey-reading ${complete ? "done" : ""}" type="button" data-reading-index="${reading.day - 1}"><span class="reading-check" aria-hidden="true">${complete ? "✓" : ""}</span><span><strong>Reading ${reading.day} · ${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.bibleReference || reading.commentaryCitation)}</small></span><em>${reading.reviewNote ? "Needs review △" : "Open →"}</em></button>`;
           }).join("")}
         </div>
       </section>`;
     }).join("");
 
-    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE STORY</p><h2 id="journey-heading">Your journey</h2><p>Every pairing appears in the order supplied. Open a book to revisit any reading, with completed days visible at a glance.</p></div></header><div class="book-grid">${bookSections}</div></section>`;
-  }
-
-  function renderCalendar() {
-    const monthStart = calendarMonth;
-    const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0, 12);
-    const firstWeekday = monthStart.getDay();
-    const cells = [];
-    for (let index = 0; index < firstWeekday; index += 1) cells.push(`<span class="calendar-day is-empty"></span>`);
-    for (let day = 1; day <= monthEnd.getDate(); day += 1) {
-      const date = new Date(monthStart.getFullYear(), monthStart.getMonth(), day, 12);
-      const readingIndex = differenceInDays(date, parseDate(settings.start_date));
-      const reading = plan.readings[readingIndex];
-      const today = isoDate(date) === isoDate(new Date());
-      cells.push(`<button class="calendar-day ${today ? "is-today" : ""} ${reading && readingComplete(reading) ? "is-complete" : ""}" type="button" ${reading ? `data-reading-index="${readingIndex}"` : "disabled"}><strong>${day}</strong><span>${reading ? `Day ${reading.day}<br>${escapeHTML(reading.bibleReference || reading.commentaryCode)}` : "Outside journey"}</span></button>`);
-    }
-
-    return `<section aria-labelledby="calendar-heading"><header class="view-heading"><div><p class="eyebrow">A CALM VIEW OF THE DAYS</p><h2 id="calendar-heading">Calendar</h2><p>Choose a fixed calendar or move at your own pace. Changing the mode never removes completed readings or principles.</p></div></header>
-      <div class="toolbar">
-        <div class="mode-toggle" aria-label="Reading schedule mode"><button type="button" data-mode="pace" class="${settings.schedule_mode === "pace" ? "active" : ""}">My pace</button><button type="button" data-mode="calendar" class="${settings.schedule_mode === "calendar" ? "active" : ""}">Calendar mode</button></div>
-        <label class="field" style="margin:0"><span class="eyebrow" style="margin:0">START DATE</span><input id="start-date" type="date" value="${escapeHTML(settings.start_date)}"></label>
-      </div>
-      <div class="calendar-shell"><div class="calendar-header"><button class="icon-button" type="button" data-calendar="prev" aria-label="Previous month">‹</button><h3>${escapeHTML(formatDate(monthStart, { month: "long", year: "numeric" }))}</h3><button class="icon-button" type="button" data-calendar="next" aria-label="Next month">›</button></div><div class="calendar-grid">${["SUN","MON","TUE","WED","THU","FRI","SAT"].map((day) => `<span class="weekday">${day}</span>`).join("")}${cells.join("")}</div></div>
-    </section>`;
+    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE STORY</p><h2 id="journey-heading">Your journey</h2><p>Every pairing appears in the order supplied. Open a book to revisit any reading, with completed readings visible at a glance.</p></div></header><div class="book-grid">${bookSections}</div></section>`;
   }
 
   function bestStreak() {
@@ -353,8 +311,8 @@
     const filteredPrinciples = principles.filter((principle) => `${principle.principle_number} ${principle.body} ${(principle.cross_reference_numbers ?? []).join(" ")}`.toLowerCase().includes(principleSearch.toLowerCase()));
     return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">EVERY DISCOVERY IN ONE PLACE</p><h2 id="progress-heading">Progress & principles</h2><p>${session ? "Your completion state and private principle index are saved to the same account used by the Try Jesus app." : "This preview starts at zero. Sign in to save your completion state and private principle index across the website and app."}</p></div></header>
       <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
-      <div class="progress-layout"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>Day ${item.day}</strong><br>${escapeHTML(item.reviewNote)}</div>`).join("")}</details></article>
-      <article class="progress-panel"><h3>My principle index</h3><div class="toolbar"><input id="principle-search" type="search" value="${escapeHTML(principleSearch)}" placeholder="Search number, words, or cross-reference"></div><div class="principle-index">${filteredPrinciples.length ? filteredPrinciples.map((principle) => `<article class="principle-index-card" id="principle-${principle.principle_number}"><header><b>PRINCIPLE #${principle.principle_number} · DAY ${plan.readings.find((reading) => reading.id === principle.reading_id)?.day ?? "—"}</b><button type="button" data-delete-principle="${principle.id}">Delete</button></header><p>${escapeHTML(principle.body)}</p>${(principle.cross_reference_numbers ?? []).length ? `<div class="reference-chips">${principle.cross_reference_numbers.map((number) => `<button type="button" class="reference-chip" data-find-principle="${number}">#${number}</button>`).join("")}</div>` : ""}</article>`).join("") : `<div class="empty-card">${principles.length ? "No principles match this search." : "Your first numbered principle will appear here after you save it from Today."}</div>`}</div></article></div>
+      <div class="progress-layout"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>Reading ${item.day}</strong><br>${escapeHTML(item.reviewNote)}</div>`).join("")}</details></article>
+      <article class="progress-panel"><h3>My principle index</h3><div class="toolbar"><input id="principle-search" type="search" value="${escapeHTML(principleSearch)}" placeholder="Search number, words, or cross-reference"></div><div class="principle-index">${filteredPrinciples.length ? filteredPrinciples.map((principle) => `<article class="principle-index-card" id="principle-${principle.principle_number}"><header><b>PRINCIPLE #${principle.principle_number} · READING ${plan.readings.find((reading) => reading.id === principle.reading_id)?.day ?? "—"}</b><button type="button" data-delete-principle="${principle.id}">Delete</button></header><p>${escapeHTML(principle.body)}</p>${(principle.cross_reference_numbers ?? []).length ? `<div class="reference-chips">${principle.cross_reference_numbers.map((number) => `<button type="button" class="reference-chip" data-find-principle="${number}">#${number}</button>`).join("")}</div>` : ""}</article>`).join("") : `<div class="empty-card">${principles.length ? "No principles match this search." : "Your first numbered principle will appear here after you save it from Readings."}</div>`}</div></article></div>
     </section>`;
   }
 
@@ -367,7 +325,7 @@
       const postReplies = replies.filter((reply) => reply.post_id === post.id);
       const reading = plan.readings.find((item) => item.id === post.reading_id);
       const author = post.author_name || "Try Jesus member";
-      return `<article class="member-post"><div class="post-author">${post.author_avatar_url ? `<img class="avatar" src="${escapeHTML(post.author_avatar_url)}" alt="">` : `<span class="avatar">${escapeHTML(initials(author))}</span>`}<span><strong>${escapeHTML(author)}</strong><small>${reading ? `Day ${reading.day} · ` : ""}${escapeHTML(formatDate(new Date(post.created_at), { month: "short", day: "numeric", year: "numeric" }))}</small></span></div>${post.principle_number ? `<blockquote class="post-principle"><b>PRINCIPLE #${post.principle_number}</b><br>${escapeHTML(post.principle_body || "")}</blockquote>` : ""}<p class="post-body">${escapeHTML(post.body)}</p><div class="reply-list">${postReplies.map((reply) => `<div class="reply"><b>${escapeHTML(reply.author_name || "Member")}</b> · ${escapeHTML(reply.body)}</div>`).join("")}</div><form class="reply-form" data-post-id="${post.id}"><input name="reply" maxlength="1000" required aria-label="Reply to ${escapeHTML(author)}" placeholder="Add to the discussion…"><button type="submit">Reply</button></form></article>`;
+      return `<article class="member-post"><div class="post-author">${post.author_avatar_url ? `<img class="avatar" src="${escapeHTML(post.author_avatar_url)}" alt="">` : `<span class="avatar">${escapeHTML(initials(author))}</span>`}<span><strong>${escapeHTML(author)}</strong><small>${reading ? `Reading ${reading.day} · ` : ""}${escapeHTML(formatDate(new Date(post.created_at), { month: "short", day: "numeric", year: "numeric" }))}</small></span></div>${post.principle_number ? `<blockquote class="post-principle"><b>PRINCIPLE #${post.principle_number}</b><br>${escapeHTML(post.principle_body || "")}</blockquote>` : ""}<p class="post-body">${escapeHTML(post.body)}</p><div class="reply-list">${postReplies.map((reply) => `<div class="reply"><b>${escapeHTML(reply.author_name || "Member")}</b> · ${escapeHTML(reply.body)}</div>`).join("")}</div><form class="reply-form" data-post-id="${post.id}"><input name="reply" maxlength="1000" required aria-label="Reply to ${escapeHTML(author)}" placeholder="Add to the discussion…"><button type="submit">Reply</button></form></article>`;
     }).join("");
     return `<section aria-labelledby="members-heading"><header class="view-heading"><div><p class="eyebrow">LEARN FROM ONE ANOTHER</p><h2 id="members-heading">Members discussion</h2><p>Share a discovery or a sincere question. This space is for thoughtful conversation, not an official answer key.</p></div></header><div class="members-layout"><aside class="share-panel"><p class="eyebrow">SHARE DELIBERATELY</p><h3>Share a finding</h3><p>Your principles are private until you choose one here and post it. Your Google email address is never displayed.</p><form id="post-form"><div class="field"><label for="post-principle">Principle (optional)</label><select id="post-principle"><option value="">Share without a principle</option>${principles.map((principle) => `<option value="${principle.id}" ${selected?.id === principle.id ? "selected" : ""}>#${principle.principle_number} — ${escapeHTML(principle.body.slice(0, 72))}</option>`).join("")}</select></div><div class="field"><label for="post-body">Observation or question</label><textarea id="post-body" minlength="3" maxlength="2000" required placeholder="What did you notice, and what would you like other members to consider?"></textarea><small>This will be visible to signed-in members.</small></div><button class="button button-primary" type="submit">Post to Members</button></form></aside><div class="member-feed">${feed || `<div class="empty-card">No member findings have been shared yet. You can begin the conversation.</div>`}</div></div></section>`;
   }
@@ -375,9 +333,8 @@
   function render() {
     if (!plan) return;
     let content;
-    if (activeView === "today") content = renderToday();
+    if (activeView === "readings") content = renderReadings();
     else if (activeView === "journey") content = renderJourney();
-    else if (activeView === "calendar") content = renderCalendar();
     else if (activeView === "progress") content = renderProgress();
     else content = renderMembers();
     root.innerHTML = `${guestBanner()}${content}`;
@@ -503,30 +460,6 @@
     render();
   }
 
-  async function updateSettings(changes) {
-    const previous = { ...settings };
-    settings = { ...settings, ...changes };
-    render();
-    if (!session) {
-      setSync("Viewing only — not saved");
-      toast("This calendar choice is temporary. Sign in to save it across devices.");
-      return;
-    }
-    setSync("Saving settings…", "saving");
-    const { data, error } = await db.from("conflict_journey_settings").upsert({
-      user_id: session.user.id,
-      plan_id: CONFIG.planId,
-      start_date: settings.start_date,
-      schedule_mode: settings.schedule_mode,
-      last_reading_id: settings.last_reading_id,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: "user_id,plan_id" }).select().single();
-    if (error) { settings = previous; setSync("Sync failed", "error"); toast(error.message, "error"); render(); return; }
-    settings = data;
-    setSync("Synced across devices", "synced");
-    render();
-  }
-
   async function loadMemberData() {
     setSync("Syncing your journey…", "saving");
     const userId = session.user.id;
@@ -558,7 +491,6 @@
     }
     currentIndex = defaultReadingIndex();
     activeBook = currentReading().code;
-    calendarMonth = startOfMonth(new Date());
     setSync("Synced across devices", "synced");
   }
 
@@ -641,8 +573,6 @@
     else if (target.dataset.dayNav) goToReading(currentIndex + (target.dataset.dayNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex) goToReading(Number(target.dataset.readingIndex));
     else if (target.dataset.book) { activeBook = activeBook === target.dataset.book ? "" : target.dataset.book; render(); }
-    else if (target.dataset.calendar) { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + (target.dataset.calendar === "next" ? 1 : -1), 1, 12); render(); }
-    else if (target.dataset.mode) updateSettings({ schedule_mode: target.dataset.mode });
     else if (target.dataset.sharePrinciple) { selectedMembersPrincipleId = target.dataset.sharePrinciple; showView("members", true); }
     else if (target.dataset.findPrinciple) { principleSearch = String(target.dataset.findPrinciple); showView("progress", true); setTimeout(() => document.getElementById(`principle-${target.dataset.findPrinciple}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0); }
     else if (target.dataset.deletePrinciple) deletePrinciple(target.dataset.deletePrinciple);
@@ -652,7 +582,6 @@
   root.addEventListener("change", (event) => {
     const target = event.target;
     if (target.matches("[data-progress-field]")) saveReadingProgress(target.dataset.readingId, target.dataset.progressField, target.checked);
-    else if (target.id === "start-date" && target.value) { calendarMonth = startOfMonth(parseDate(target.value)); updateSettings({ start_date: target.value }); }
   });
 
   root.addEventListener("input", (event) => {

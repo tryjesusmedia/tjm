@@ -2,12 +2,13 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createBibleChapterTasks } from "./bible-chapter-tasks.mjs";
 
 const PLAN_ID = "bible-conflict-ages-v1";
 const OUTPUT = new URL("../bibleandconflictoftheages/data/readings.json", import.meta.url);
 const APP_OUTPUT = new URL("../../tryjesusjourney/data/conflictPlan.json", import.meta.url);
 const egwReadingLinks = JSON.parse(await readFile(new URL("./egw-reading-links.json", import.meta.url), "utf8"));
-const EGW_LINK_REVIEW_NOTE = "Resolve and verify this assignment's direct link on egwwritings.org before publishing.";
+const EGW_LINK_REVIEW_NOTE = "Resolve and verify this assignment's chapter links on egwwritings.org before publishing.";
 
 const bookMeta = {
   PP: { title: "Patriarchs and Prophets", shortTitle: "Patriarchs & Prophets", accent: "#dca449" },
@@ -142,9 +143,10 @@ function createRaw(code, sourceBlock, sourceLines, bibleLines, commentaryLines, 
   const commentaryCitation = correctedCommentaryLines.join(" · ").trim();
   const pages = extractPages(code, commentaryCitation);
   const bibleQuery = bibleReference ? normalizeBibleQuery(bibleReference) : "";
+  const bibleTasks = createBibleChapterTasks(bibleQuery);
   const commentaryQuery = pages.start ? `${code} ${pages.start}` : `${meta.title} ${commentaryCitation}`;
   const mappedEgwLink = commentaryCitation ? egwReadingLinks[sourceKey] : null;
-  const egwLink = mappedEgwLink?.query === commentaryQuery ? mappedEgwLink : null;
+  const egwLink = mappedEgwLink?.query === commentaryQuery && mappedEgwLink.chapters?.length ? mappedEgwLink : null;
   const fallbackTitle = bibleReference || `${meta.shortTitle} reading`;
   return {
     code,
@@ -157,15 +159,15 @@ function createRaw(code, sourceBlock, sourceLines, bibleLines, commentaryLines, 
     title: chapterTitle(commentaryCitation, fallbackTitle, correctedHeading),
     bibleReference,
     bibleQuery,
-    bibleUrl: bibleQuery
-      ? `https://www.biblegateway.com/passage/?search=${encodeURIComponent(bibleQuery)}&version=KJV`
-      : null,
+    bibleUrl: bibleTasks[0]?.url ?? null,
+    bibleTasks,
     commentaryBook: meta.title,
     commentaryCode: code,
     commentaryCitation,
     commentaryPageStart: pages.start,
     commentaryPageEnd: pages.end,
-    commentaryUrl: commentaryCitation ? (egwLink?.url ?? "https://egwwritings.org/") : null,
+    commentaryUrl: commentaryCitation ? (egwLink?.chapters[0]?.url ?? "https://egwwritings.org/") : null,
+    commentaryTasks: egwLink?.chapters ?? [],
     reviewNote: commentaryCitation && !egwLink ? EGW_LINK_REVIEW_NOTE : null,
   };
 }

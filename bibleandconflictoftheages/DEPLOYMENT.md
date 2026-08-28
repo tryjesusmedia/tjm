@@ -18,4 +18,4 @@ The Supabase publishable key in `config.js` is intentionally public client confi
 
 `data/readings.json` is generated from the five supplied plans by `tjm-site/scripts/import-conflict-reading-plans.mjs`. The importer writes the same validated JSON bundle to `tryjesusjourney/data/conflictPlan.json`. It preserves source blocks and order, and writes ambiguous entries to `reviewQueue` instead of correcting them.
 
-Every companion assignment uses a direct paragraph-level link on `https://egwwritings.org/`. The resolved link catalog is stored in `scripts/egw-reading-links.json`; run `npm run links:egw` only when an assignment changes and its official starting location must be refreshed.
+Each Scripture assignment is expanded into one Bible Gateway link per chapter, and each companion assignment is expanded into one direct chapter link on `https://egwwritings.org/`. The resolved companion chapter catalog is stored in `scripts/egw-reading-links.json`; run `npm run links:egw` only when an assignment changes and its official chapter locations must be refreshed.

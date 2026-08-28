@@ -3,1578 +3,4365 @@
     "query": "PP 33",
     "bookId": 84,
     "paragraphId": 68,
-    "url": "https://egwwritings.org/read?panels=p84.68&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.68&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 1",
+        "chapterNumber": 1,
+        "title": "Chapter 1—Why was Sin Permitted?",
+        "paragraphId": 68,
+        "url": "https://egwwritings.org/read?panels=p84.68&index=0"
+      }
+    ]
   },
   "PP:2": {
     "query": "PP 44",
     "bookId": 84,
     "paragraphId": 117,
-    "url": "https://egwwritings.org/read?panels=p84.117&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.117&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 2",
+        "chapterNumber": 2,
+        "title": "Chapter 2—The Creation",
+        "paragraphId": 117,
+        "url": "https://egwwritings.org/read?panels=p84.117&index=0"
+      }
+    ]
   },
   "PP:3": {
     "query": "PP 52",
     "bookId": 84,
     "paragraphId": 155,
-    "url": "https://egwwritings.org/read?panels=p84.155&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.155&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 3",
+        "chapterNumber": 3,
+        "title": "Chapter 3—The Temptation and Fall",
+        "paragraphId": 155,
+        "url": "https://egwwritings.org/read?panels=p84.155&index=0"
+      },
+      {
+        "label": "Read Chapter 4",
+        "chapterNumber": 4,
+        "title": "Chapter 4—The Plan of Redemption",
+        "paragraphId": 215,
+        "url": "https://egwwritings.org/read?panels=p84.215&index=0"
+      }
+    ]
   },
   "PP:4": {
     "query": "PP 71",
     "bookId": 84,
     "paragraphId": 254,
-    "url": "https://egwwritings.org/read?panels=p84.254&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.254&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 5",
+        "chapterNumber": 5,
+        "title": "Chapter 5—Cain and Abel Tested",
+        "paragraphId": 254,
+        "url": "https://egwwritings.org/read?panels=p84.254&index=0"
+      }
+    ]
   },
   "PP:5": {
     "query": "PP 80",
     "bookId": 84,
     "paragraphId": 289,
-    "url": "https://egwwritings.org/read?panels=p84.289&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.289&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 6",
+        "chapterNumber": 6,
+        "title": "Chapter 6—Seth and Enoch",
+        "paragraphId": 289,
+        "url": "https://egwwritings.org/read?panels=p84.289&index=0"
+      }
+    ]
   },
   "PP:6": {
     "query": "PP 90",
     "bookId": 84,
     "paragraphId": 336,
-    "url": "https://egwwritings.org/read?panels=p84.336&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.336&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 7",
+        "chapterNumber": 7,
+        "title": "Chapter 7—The Flood",
+        "paragraphId": 336,
+        "url": "https://egwwritings.org/read?panels=p84.336&index=0"
+      },
+      {
+        "label": "Read Chapter 8",
+        "chapterNumber": 8,
+        "title": "Chapter 8—After the Flood",
+        "paragraphId": 399,
+        "url": "https://egwwritings.org/read?panels=p84.399&index=0"
+      }
+    ]
   },
   "PP:7": {
     "query": "PP 111",
     "bookId": 84,
     "paragraphId": 428,
-    "url": "https://egwwritings.org/read?panels=p84.428&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.428&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 9",
+        "chapterNumber": 9,
+        "title": "Chapter 9—The Literal Week",
+        "paragraphId": 428,
+        "url": "https://egwwritings.org/read?panels=p84.428&index=0"
+      }
+    ]
   },
   "PP:8": {
     "query": "PP 117",
     "bookId": 84,
     "paragraphId": 454,
-    "url": "https://egwwritings.org/read?panels=p84.454&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.454&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 10",
+        "chapterNumber": 10,
+        "title": "Chapter 10—The Tower of Babel",
+        "paragraphId": 454,
+        "url": "https://egwwritings.org/read?panels=p84.454&index=0"
+      }
+    ]
   },
   "PP:9": {
     "query": "PP 125",
     "bookId": 84,
     "paragraphId": 488,
-    "url": "https://egwwritings.org/read?panels=p84.488&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.488&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 11",
+        "chapterNumber": 11,
+        "title": "Chapter 11—The Call of Abraham",
+        "paragraphId": 488,
+        "url": "https://egwwritings.org/read?panels=p84.488&index=0"
+      }
+    ]
   },
   "PP:10": {
     "query": "PP 132",
     "bookId": 84,
     "paragraphId": 517,
-    "url": "https://egwwritings.org/read?panels=p84.517&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.517&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 12",
+        "chapterNumber": 12,
+        "title": "Chapter 12—Abraham in Canaan",
+        "paragraphId": 517,
+        "url": "https://egwwritings.org/read?panels=p84.517&index=0"
+      }
+    ]
   },
   "PP:11": {
     "query": "PP 145",
     "bookId": 84,
     "paragraphId": 584,
-    "url": "https://egwwritings.org/read?panels=p84.584&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.584&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 13",
+        "chapterNumber": 13,
+        "title": "Chapter 13—The Test of Faith",
+        "paragraphId": 584,
+        "url": "https://egwwritings.org/read?panels=p84.584&index=0"
+      }
+    ]
   },
   "PP:12": {
     "query": "PP 156",
     "bookId": 84,
     "paragraphId": 632,
-    "url": "https://egwwritings.org/read?panels=p84.632&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.632&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 14",
+        "chapterNumber": 14,
+        "title": "Chapter 14—Destruction of Sodom",
+        "paragraphId": 632,
+        "url": "https://egwwritings.org/read?panels=p84.632&index=0"
+      }
+    ]
   },
   "PP:13": {
     "query": "PP 171",
     "bookId": 84,
     "paragraphId": 697,
-    "url": "https://egwwritings.org/read?panels=p84.697&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.697&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 15",
+        "chapterNumber": 15,
+        "title": "Chapter 15—The Marriage of Isaac",
+        "paragraphId": 697,
+        "url": "https://egwwritings.org/read?panels=p84.697&index=0"
+      }
+    ]
   },
   "PP:14": {
     "query": "PP 177",
     "bookId": 84,
     "paragraphId": 729,
-    "url": "https://egwwritings.org/read?panels=p84.729&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.729&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 16",
+        "chapterNumber": 16,
+        "title": "Chapter 16—Jacob and Esau",
+        "paragraphId": 729,
+        "url": "https://egwwritings.org/read?panels=p84.729&index=0"
+      }
+    ]
   },
   "PP:15": {
     "query": "PP 183",
     "bookId": 84,
     "paragraphId": 758,
-    "url": "https://egwwritings.org/read?panels=p84.758&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.758&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 17",
+        "chapterNumber": 17,
+        "title": "Chapter 17—Jacob’s Flight and Exile",
+        "paragraphId": 758,
+        "url": "https://egwwritings.org/read?panels=p84.758&index=0"
+      }
+    ]
   },
   "PP:16": {
     "query": "PP 195",
     "bookId": 84,
     "paragraphId": 813,
-    "url": "https://egwwritings.org/read?panels=p84.813&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.813&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 18",
+        "chapterNumber": 18,
+        "title": "Chapter 18—The Night of Wrestling",
+        "paragraphId": 813,
+        "url": "https://egwwritings.org/read?panels=p84.813&index=0"
+      }
+    ]
   },
   "PP:17": {
     "query": "PP 204",
     "bookId": 84,
     "paragraphId": 852,
-    "url": "https://egwwritings.org/read?panels=p84.852&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.852&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 19",
+        "chapterNumber": 19,
+        "title": "Chapter 19—The Return to Canaan",
+        "paragraphId": 852,
+        "url": "https://egwwritings.org/read?panels=p84.852&index=0"
+      }
+    ]
   },
   "PP:18": {
     "query": "PP 213",
     "bookId": 84,
     "paragraphId": 901,
-    "url": "https://egwwritings.org/read?panels=p84.901&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.901&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 20",
+        "chapterNumber": 20,
+        "title": "Chapter 20—Joseph in Egypt",
+        "paragraphId": 901,
+        "url": "https://egwwritings.org/read?panels=p84.901&index=0"
+      }
+    ]
   },
   "PP:19": {
     "query": "PP 224",
     "bookId": 84,
     "paragraphId": 945,
-    "url": "https://egwwritings.org/read?panels=p84.945&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.945&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 21",
+        "chapterNumber": 21,
+        "title": "Chapter 21—Joseph and His Brothers",
+        "paragraphId": 945,
+        "url": "https://egwwritings.org/read?panels=p84.945&index=0"
+      }
+    ]
   },
   "PP:20": {
     "query": "PP 241",
     "bookId": 84,
     "paragraphId": 1042,
-    "url": "https://egwwritings.org/read?panels=p84.1042&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1042&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 22",
+        "chapterNumber": 22,
+        "title": "Chapter 22—Moses",
+        "paragraphId": 1042,
+        "url": "https://egwwritings.org/read?panels=p84.1042&index=0"
+      }
+    ]
   },
   "PP:21": {
     "query": "PP 257",
     "bookId": 84,
     "paragraphId": 1118,
-    "url": "https://egwwritings.org/read?panels=p84.1118&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1118&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 23",
+        "chapterNumber": 23,
+        "title": "Chapter 23—The Plagues of Egypt",
+        "paragraphId": 1118,
+        "url": "https://egwwritings.org/read?panels=p84.1118&index=0"
+      }
+    ]
   },
   "PP:22": {
     "query": "PP 273",
     "bookId": 84,
     "paragraphId": 1195,
-    "url": "https://egwwritings.org/read?panels=p84.1195&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1195&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 24",
+        "chapterNumber": 24,
+        "title": "Chapter 24—The Passover",
+        "paragraphId": 1195,
+        "url": "https://egwwritings.org/read?panels=p84.1195&index=0"
+      }
+    ]
   },
   "PP:23": {
     "query": "PP 281",
     "bookId": 84,
     "paragraphId": 1225,
-    "url": "https://egwwritings.org/read?panels=p84.1225&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1225&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 25",
+        "chapterNumber": 25,
+        "title": "Chapter 25—The Exodus",
+        "paragraphId": 1225,
+        "url": "https://egwwritings.org/read?panels=p84.1225&index=0"
+      }
+    ]
   },
   "PP:24": {
     "query": "PP 291",
     "bookId": 84,
     "paragraphId": 1270,
-    "url": "https://egwwritings.org/read?panels=p84.1270&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1270&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 26",
+        "chapterNumber": 26,
+        "title": "Chapter 26—From the Red Sea to Sinai",
+        "paragraphId": 1270,
+        "url": "https://egwwritings.org/read?panels=p84.1270&index=0"
+      }
+    ]
   },
   "PP:25": {
     "query": "PP 303",
     "bookId": 84,
     "paragraphId": 1328,
-    "url": "https://egwwritings.org/read?panels=p84.1328&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1328&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 27",
+        "chapterNumber": 27,
+        "title": "Chapter 27—The Law Given to Israel",
+        "paragraphId": 1328,
+        "url": "https://egwwritings.org/read?panels=p84.1328&index=0"
+      }
+    ]
   },
   "PP:26": {
     "query": "PP 315",
     "bookId": 84,
     "paragraphId": 1403,
-    "url": "https://egwwritings.org/read?panels=p84.1403&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1403&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 28",
+        "chapterNumber": 28,
+        "title": "Chapter 28—Idolatry at Sinai",
+        "paragraphId": 1403,
+        "url": "https://egwwritings.org/read?panels=p84.1403&index=0"
+      }
+    ]
   },
   "PP:27": {
     "query": "PP 331",
     "bookId": 84,
     "paragraphId": 1479,
-    "url": "https://egwwritings.org/read?panels=p84.1479&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1479&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 29",
+        "chapterNumber": 29,
+        "title": "Chapter 29—Satan’s Enmity Against the Law",
+        "paragraphId": 1479,
+        "url": "https://egwwritings.org/read?panels=p84.1479&index=0"
+      }
+    ]
   },
   "PP:28": {
     "query": "PP 343",
     "bookId": 84,
     "paragraphId": 1538,
-    "url": "https://egwwritings.org/read?panels=p84.1538&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1538&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 30",
+        "chapterNumber": 30,
+        "title": "Chapter 30—The Tabernacle and Its Services",
+        "paragraphId": 1538,
+        "url": "https://egwwritings.org/read?panels=p84.1538&index=0"
+      }
+    ]
   },
   "PP:29": {
     "query": "PP 359",
     "bookId": 84,
     "paragraphId": 1614,
-    "url": "https://egwwritings.org/read?panels=p84.1614&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1614&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 31",
+        "chapterNumber": 31,
+        "title": "Chapter 31—The Sin of Nadab and Abihu",
+        "paragraphId": 1614,
+        "url": "https://egwwritings.org/read?panels=p84.1614&index=0"
+      }
+    ]
   },
   "PP:30": {
     "query": "PP 363",
     "bookId": 84,
     "paragraphId": 1631,
-    "url": "https://egwwritings.org/read?panels=p84.1631&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1631&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 32",
+        "chapterNumber": 32,
+        "title": "Chapter 32—The Law and the Covenants",
+        "paragraphId": 1631,
+        "url": "https://egwwritings.org/read?panels=p84.1631&index=0"
+      }
+    ]
   },
   "PP:31": {
     "query": "PP 374",
     "bookId": 84,
     "paragraphId": 1687,
-    "url": "https://egwwritings.org/read?panels=p84.1687&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1687&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 33",
+        "chapterNumber": 33,
+        "title": "Chapter 33—From Sinai to Kadesh",
+        "paragraphId": 1687,
+        "url": "https://egwwritings.org/read?panels=p84.1687&index=0"
+      }
+    ]
   },
   "PP:32": {
     "query": "PP 387",
     "bookId": 84,
     "paragraphId": 1755,
-    "url": "https://egwwritings.org/read?panels=p84.1755&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1755&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 34",
+        "chapterNumber": 34,
+        "title": "Chapter 34—The Twelve Spies",
+        "paragraphId": 1755,
+        "url": "https://egwwritings.org/read?panels=p84.1755&index=0"
+      }
+    ]
   },
   "PP:33": {
     "query": "PP 395",
     "bookId": 84,
     "paragraphId": 1797,
-    "url": "https://egwwritings.org/read?panels=p84.1797&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1797&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 35",
+        "chapterNumber": 35,
+        "title": "Chapter 35—The Rebellion of Korah",
+        "paragraphId": 1797,
+        "url": "https://egwwritings.org/read?panels=p84.1797&index=0"
+      }
+    ]
   },
   "PP:34": {
     "query": "PP 406",
     "bookId": 84,
     "paragraphId": 1859,
-    "url": "https://egwwritings.org/read?panels=p84.1859&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1859&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 36",
+        "chapterNumber": 36,
+        "title": "Chapter 36—In the Wilderness",
+        "paragraphId": 1859,
+        "url": "https://egwwritings.org/read?panels=p84.1859&index=0"
+      }
+    ]
   },
   "PP:35": {
     "query": "PP 411",
     "bookId": 84,
     "paragraphId": 1887,
-    "url": "https://egwwritings.org/read?panels=p84.1887&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1887&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 37",
+        "chapterNumber": 37,
+        "title": "Chapter 37—The Smitten Rock",
+        "paragraphId": 1887,
+        "url": "https://egwwritings.org/read?panels=p84.1887&index=0"
+      }
+    ]
   },
   "PP:36": {
     "query": "PP 422",
     "bookId": 84,
     "paragraphId": 1932,
-    "url": "https://egwwritings.org/read?panels=p84.1932&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1932&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 38",
+        "chapterNumber": 38,
+        "title": "Chapter 38—The Journey Around Edom",
+        "paragraphId": 1932,
+        "url": "https://egwwritings.org/read?panels=p84.1932&index=0"
+      }
+    ]
   },
   "PP:37": {
     "query": "PP 433",
     "bookId": 84,
     "paragraphId": 1988,
-    "url": "https://egwwritings.org/read?panels=p84.1988&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.1988&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 39",
+        "chapterNumber": 39,
+        "title": "Chapter 39—The Conquest of Bashan",
+        "paragraphId": 1988,
+        "url": "https://egwwritings.org/read?panels=p84.1988&index=0"
+      }
+    ]
   },
   "PP:38": {
     "query": "PP 438",
     "bookId": 84,
     "paragraphId": 2012,
-    "url": "https://egwwritings.org/read?panels=p84.2012&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2012&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 40",
+        "chapterNumber": 40,
+        "title": "Chapter 40—Balaam",
+        "paragraphId": 2012,
+        "url": "https://egwwritings.org/read?panels=p84.2012&index=0"
+      }
+    ]
   },
   "PP:39": {
     "query": "PP 453",
     "bookId": 84,
     "paragraphId": 2085,
-    "url": "https://egwwritings.org/read?panels=p84.2085&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2085&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 41",
+        "chapterNumber": 41,
+        "title": "Chapter 41—Apostasy at the Jordan",
+        "paragraphId": 2085,
+        "url": "https://egwwritings.org/read?panels=p84.2085&index=0"
+      }
+    ]
   },
   "PP:40": {
     "query": "PP 462",
     "bookId": 84,
     "paragraphId": 2127,
-    "url": "https://egwwritings.org/read?panels=p84.2127&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2127&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 42",
+        "chapterNumber": 42,
+        "title": "Chapter 42—The Law Repeated",
+        "paragraphId": 2127,
+        "url": "https://egwwritings.org/read?panels=p84.2127&index=0"
+      }
+    ]
   },
   "PP:41": {
     "query": "PP 469",
     "bookId": 84,
     "paragraphId": 2163,
-    "url": "https://egwwritings.org/read?panels=p84.2163&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2163&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 43",
+        "chapterNumber": 43,
+        "title": "Chapter 43—The Death of Moses",
+        "paragraphId": 2163,
+        "url": "https://egwwritings.org/read?panels=p84.2163&index=0"
+      }
+    ]
   },
   "PP:42": {
     "query": "PP 481",
     "bookId": 84,
     "paragraphId": 2214,
-    "url": "https://egwwritings.org/read?panels=p84.2214&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2214&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 44",
+        "chapterNumber": 44,
+        "title": "Chapter 44—Crossing the Jordan",
+        "paragraphId": 2214,
+        "url": "https://egwwritings.org/read?panels=p84.2214&index=0"
+      }
+    ]
   },
   "PP:43": {
     "query": "PP 487",
     "bookId": 84,
     "paragraphId": 2245,
-    "url": "https://egwwritings.org/read?panels=p84.2245&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2245&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 45",
+        "chapterNumber": 45,
+        "title": "Chapter 45—The Fall of Jericho",
+        "paragraphId": 2245,
+        "url": "https://egwwritings.org/read?panels=p84.2245&index=0"
+      }
+    ]
   },
   "PP:44": {
     "query": "PP 499",
     "bookId": 84,
     "paragraphId": 2302,
-    "url": "https://egwwritings.org/read?panels=p84.2302&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2302&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 46",
+        "chapterNumber": 46,
+        "title": "Chapter 46—The Blessings and the Curses",
+        "paragraphId": 2302,
+        "url": "https://egwwritings.org/read?panels=p84.2302&index=0"
+      }
+    ]
   },
   "PP:45": {
     "query": "PP 505",
     "bookId": 84,
     "paragraphId": 2326,
-    "url": "https://egwwritings.org/read?panels=p84.2326&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2326&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 47",
+        "chapterNumber": 47,
+        "title": "Chapter 47—League With the Gibeonites",
+        "paragraphId": 2326,
+        "url": "https://egwwritings.org/read?panels=p84.2326&index=0"
+      }
+    ]
   },
   "PP:46": {
     "query": "PP 510",
     "bookId": 84,
     "paragraphId": 2352,
-    "url": "https://egwwritings.org/read?panels=p84.2352&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2352&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 48",
+        "chapterNumber": 48,
+        "title": "Chapter 48—The Division of Canaan",
+        "paragraphId": 2352,
+        "url": "https://egwwritings.org/read?panels=p84.2352&index=0"
+      }
+    ]
   },
   "PP:47": {
     "query": "PP 521",
     "bookId": 84,
     "paragraphId": 2414,
-    "url": "https://egwwritings.org/read?panels=p84.2414&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2414&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 49",
+        "chapterNumber": 49,
+        "title": "Chapter 49—The Last Words of Joshua",
+        "paragraphId": 2414,
+        "url": "https://egwwritings.org/read?panels=p84.2414&index=0"
+      },
+      {
+        "label": "Read Chapter 50",
+        "chapterNumber": 50,
+        "title": "Chapter 50—Tithes and Offerings",
+        "paragraphId": 2434,
+        "url": "https://egwwritings.org/read?panels=p84.2434&index=0"
+      }
+    ]
   },
   "PP:48": {
     "query": "PP 530",
     "bookId": 84,
     "paragraphId": 2461,
-    "url": "https://egwwritings.org/read?panels=p84.2461&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2461&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 51",
+        "chapterNumber": 51,
+        "title": "Chapter 51—God’s Care for the Poor",
+        "paragraphId": 2461,
+        "url": "https://egwwritings.org/read?panels=p84.2461&index=0"
+      },
+      {
+        "label": "Read Chapter 52",
+        "chapterNumber": 52,
+        "title": "Chapter 52—The Annual Feasts",
+        "paragraphId": 2499,
+        "url": "https://egwwritings.org/read?panels=p84.2499&index=0"
+      }
+    ]
   },
   "PP:49": {
     "query": "PP 543",
     "bookId": 84,
     "paragraphId": 2538,
-    "url": "https://egwwritings.org/read?panels=p84.2538&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2538&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 53",
+        "chapterNumber": 53,
+        "title": "Chapter 53—The Earlier Judges",
+        "paragraphId": 2538,
+        "url": "https://egwwritings.org/read?panels=p84.2538&index=0"
+      }
+    ]
   },
   "PP:50": {
     "query": "PP 560",
     "bookId": 84,
     "paragraphId": 2620,
-    "url": "https://egwwritings.org/read?panels=p84.2620&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2620&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 54",
+        "chapterNumber": 54,
+        "title": "Chapter 54—Samson",
+        "paragraphId": 2620,
+        "url": "https://egwwritings.org/read?panels=p84.2620&index=0"
+      }
+    ]
   },
   "PP:51": {
     "query": "PP 569",
     "bookId": 84,
     "paragraphId": 2666,
-    "url": "https://egwwritings.org/read?panels=p84.2666&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2666&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 55",
+        "chapterNumber": 55,
+        "title": "Chapter 55—The Child Samuel",
+        "paragraphId": 2666,
+        "url": "https://egwwritings.org/read?panels=p84.2666&index=0"
+      },
+      {
+        "label": "Read Chapter 56",
+        "chapterNumber": 56,
+        "title": "Chapter 56—Eli and His Sons",
+        "paragraphId": 2698,
+        "url": "https://egwwritings.org/read?panels=p84.2698&index=0"
+      }
+    ]
   },
   "PP:52": {
     "query": "PP 581",
     "bookId": 84,
     "paragraphId": 2726,
-    "url": "https://egwwritings.org/read?panels=p84.2726&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2726&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 57",
+        "chapterNumber": 57,
+        "title": "Chapter 57—The Ark Taken by the Philistines",
+        "paragraphId": 2726,
+        "url": "https://egwwritings.org/read?panels=p84.2726&index=0"
+      }
+    ]
   },
   "PP:53": {
     "query": "PP 592",
     "bookId": 84,
     "paragraphId": 2786,
-    "url": "https://egwwritings.org/read?panels=p84.2786&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2786&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 58",
+        "chapterNumber": 58,
+        "title": "Chapter 58—The Schools of the Prophets",
+        "paragraphId": 2786,
+        "url": "https://egwwritings.org/read?panels=p84.2786&index=0"
+      },
+      {
+        "label": "Read Chapter 59",
+        "chapterNumber": 59,
+        "title": "Chapter 59—The First King of Israel",
+        "paragraphId": 2832,
+        "url": "https://egwwritings.org/read?panels=p84.2832&index=0"
+      }
+    ]
   },
   "PP:54": {
     "query": "PP 616",
     "bookId": 84,
     "paragraphId": 2900,
-    "url": "https://egwwritings.org/read?panels=p84.2900&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2900&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 60",
+        "chapterNumber": 60,
+        "title": "Chapter 60—The Presumption of Saul",
+        "paragraphId": 2900,
+        "url": "https://egwwritings.org/read?panels=p84.2900&index=0"
+      }
+    ]
   },
   "PP:55": {
     "query": "PP 627",
     "bookId": 84,
     "paragraphId": 2946,
-    "url": "https://egwwritings.org/read?panels=p84.2946&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2946&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 61",
+        "chapterNumber": 61,
+        "title": "Chapter 61—Saul Rejected",
+        "paragraphId": 2946,
+        "url": "https://egwwritings.org/read?panels=p84.2946&index=0"
+      }
+    ]
   },
   "PP:56": {
     "query": "PP 637",
     "bookId": 84,
     "paragraphId": 2996,
-    "url": "https://egwwritings.org/read?panels=p84.2996&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.2996&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 62",
+        "chapterNumber": 62,
+        "title": "Chapter 62—The Anointing of David",
+        "paragraphId": 2996,
+        "url": "https://egwwritings.org/read?panels=p84.2996&index=0"
+      }
+    ]
   },
   "PP:57": {
     "query": "PP 643",
     "bookId": 84,
     "paragraphId": 3013,
-    "url": "https://egwwritings.org/read?panels=p84.3013&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3013&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 63",
+        "chapterNumber": 63,
+        "title": "Chapter 63—David and Goliath",
+        "paragraphId": 3013,
+        "url": "https://egwwritings.org/read?panels=p84.3013&index=0"
+      }
+    ]
   },
   "PP:58": {
     "query": "PP 649",
     "bookId": 84,
     "paragraphId": 3043,
-    "url": "https://egwwritings.org/read?panels=p84.3043&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3043&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 64",
+        "chapterNumber": 64,
+        "title": "Chapter 64—David a Fugitive",
+        "paragraphId": 3043,
+        "url": "https://egwwritings.org/read?panels=p84.3043&index=0"
+      }
+    ]
   },
   "PP:59": {
     "query": "PP 660",
     "bookId": 84,
     "paragraphId": 3100,
-    "url": "https://egwwritings.org/read?panels=p84.3100&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3100&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 65",
+        "chapterNumber": 65,
+        "title": "Chapter 65—The Magnanimity of David",
+        "paragraphId": 3100,
+        "url": "https://egwwritings.org/read?panels=p84.3100&index=0"
+      }
+    ]
   },
   "PP:60": {
     "query": "PP 675",
     "bookId": 84,
     "paragraphId": 3169,
-    "url": "https://egwwritings.org/read?panels=p84.3169&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3169&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 66",
+        "chapterNumber": 66,
+        "title": "Chapter 66—The Death of Saul",
+        "paragraphId": 3169,
+        "url": "https://egwwritings.org/read?panels=p84.3169&index=0"
+      },
+      {
+        "label": "Read Chapter 67",
+        "chapterNumber": 67,
+        "title": "Chapter 67—Ancient and Modern Sorcery",
+        "paragraphId": 3203,
+        "url": "https://egwwritings.org/read?panels=p84.3203&index=0"
+      }
+    ]
   },
   "PP:61": {
     "query": "PP 690",
     "bookId": 84,
     "paragraphId": 3236,
-    "url": "https://egwwritings.org/read?panels=p84.3236&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3236&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 68",
+        "chapterNumber": 68,
+        "title": "Chapter 68—David at Ziklag",
+        "paragraphId": 3236,
+        "url": "https://egwwritings.org/read?panels=p84.3236&index=0"
+      }
+    ]
   },
   "PP:62": {
     "query": "PP 697",
     "bookId": 84,
     "paragraphId": 3274,
-    "url": "https://egwwritings.org/read?panels=p84.3274&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3274&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 69",
+        "chapterNumber": 69,
+        "title": "Chapter 69—David Called to the Throne",
+        "paragraphId": 3274,
+        "url": "https://egwwritings.org/read?panels=p84.3274&index=0"
+      }
+    ]
   },
   "PP:63": {
     "query": "PP 703",
     "bookId": 84,
     "paragraphId": 3303,
-    "url": "https://egwwritings.org/read?panels=p84.3303&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3303&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 70",
+        "chapterNumber": 70,
+        "title": "Chapter 70—The Reign of David",
+        "paragraphId": 3303,
+        "url": "https://egwwritings.org/read?panels=p84.3303&index=0"
+      }
+    ]
   },
   "PP:64": {
     "query": "PP 717",
     "bookId": 84,
     "paragraphId": 3386,
-    "url": "https://egwwritings.org/read?panels=p84.3386&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3386&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 71",
+        "chapterNumber": 71,
+        "title": "Chapter 71—David’s Sin and Repentance",
+        "paragraphId": 3386,
+        "url": "https://egwwritings.org/read?panels=p84.3386&index=0"
+      }
+    ]
   },
   "PP:65": {
     "query": "PP 727",
     "bookId": 84,
     "paragraphId": 3447,
-    "url": "https://egwwritings.org/read?panels=p84.3447&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3447&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 72",
+        "chapterNumber": 72,
+        "title": "Chapter 72—The Rebellion of Absalom",
+        "paragraphId": 3447,
+        "url": "https://egwwritings.org/read?panels=p84.3447&index=0"
+      }
+    ]
   },
   "PP:66": {
     "query": "PP 746",
     "bookId": 84,
     "paragraphId": 3535,
-    "url": "https://egwwritings.org/read?panels=p84.3535&index=0"
+    "url": "https://egwwritings.org/read?panels=p84.3535&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 73",
+        "chapterNumber": 73,
+        "title": "Chapter 73—The Last Years of David",
+        "paragraphId": 3535,
+        "url": "https://egwwritings.org/read?panels=p84.3535&index=0"
+      }
+    ]
   },
   "PK:0": {
     "query": "Prophets and Kings Introduction—The Vineyard of the Lord",
     "bookId": 88,
     "paragraphId": 33,
-    "url": "https://egwwritings.org/read?panels=p88.33&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.33&index=0",
+    "chapters": [
+      {
+        "label": "Read Introduction",
+        "chapterNumber": null,
+        "title": "Introduction—The Vineyard of the Lord",
+        "paragraphId": 33,
+        "url": "https://egwwritings.org/read?panels=p88.33&index=0"
+      }
+    ]
   },
   "PK:1": {
     "query": "Prophets and Kings Chapter 1—Solomon",
     "bookId": 88,
     "paragraphId": 72,
-    "url": "https://egwwritings.org/read?panels=p88.72&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.72&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 1",
+        "chapterNumber": 1,
+        "title": "Chapter 1—Solomon",
+        "paragraphId": 72,
+        "url": "https://egwwritings.org/read?panels=p88.72&index=0"
+      }
+    ]
   },
   "PK:2": {
     "query": "Prophets and Kings Chapter 2—The Temple and Its Dedication",
     "bookId": 88,
     "paragraphId": 120,
-    "url": "https://egwwritings.org/read?panels=p88.120&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.120&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 2",
+        "chapterNumber": 2,
+        "title": "Chapter 2—The Temple and Its Dedication",
+        "paragraphId": 120,
+        "url": "https://egwwritings.org/read?panels=p88.120&index=0"
+      }
+    ]
   },
   "PK:3": {
     "query": "Prophets and Kings Chapter 3—Pride of Prosperity · Chapter 4—Results of Transgression",
     "bookId": 88,
     "paragraphId": 190,
-    "url": "https://egwwritings.org/read?panels=p88.190&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.190&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 3",
+        "chapterNumber": 3,
+        "title": "Chapter 3—Pride of Prosperity",
+        "paragraphId": 190,
+        "url": "https://egwwritings.org/read?panels=p88.190&index=0"
+      },
+      {
+        "label": "Read Chapter 4",
+        "chapterNumber": 4,
+        "title": "Chapter 4—Results of Transgression",
+        "paragraphId": 234,
+        "url": "https://egwwritings.org/read?panels=p88.234&index=0"
+      }
+    ]
   },
   "PK:4": {
     "query": "Prophets and Kings Chapter 5—Solomon's Repentance",
     "bookId": 88,
     "paragraphId": 301,
-    "url": "https://egwwritings.org/read?panels=p88.301&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.301&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 5",
+        "chapterNumber": 5,
+        "title": "Chapter 5—Solomon’s Repentance",
+        "paragraphId": 301,
+        "url": "https://egwwritings.org/read?panels=p88.301&index=0"
+      }
+    ]
   },
   "PK:5": {
     "query": "Prophets and Kings Chapter 6—The Rending of the Kingdom",
     "bookId": 88,
     "paragraphId": 361,
-    "url": "https://egwwritings.org/read?panels=p88.361&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.361&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 6",
+        "chapterNumber": 6,
+        "title": "Chapter 6—The Rending of the Kingdom",
+        "paragraphId": 361,
+        "url": "https://egwwritings.org/read?panels=p88.361&index=0"
+      }
+    ]
   },
   "PK:6": {
     "query": "Prophets and Kings Chapter 7—Jeroboam",
     "bookId": 88,
     "paragraphId": 422,
-    "url": "https://egwwritings.org/read?panels=p88.422&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.422&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 7",
+        "chapterNumber": 7,
+        "title": "Chapter 7—Jeroboam",
+        "paragraphId": 422,
+        "url": "https://egwwritings.org/read?panels=p88.422&index=0"
+      }
+    ]
   },
   "PK:7": {
     "query": "Prophets and Kings Chapter 8—National Apostasy",
     "bookId": 88,
     "paragraphId": 461,
-    "url": "https://egwwritings.org/read?panels=p88.461&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.461&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 8",
+        "chapterNumber": 8,
+        "title": "Chapter 8—National Apostasy",
+        "paragraphId": 461,
+        "url": "https://egwwritings.org/read?panels=p88.461&index=0"
+      }
+    ]
   },
   "PK:8": {
     "query": "Prophets and Kings Chapter 9—Elijah the Tishbite",
     "bookId": 88,
     "paragraphId": 505,
-    "url": "https://egwwritings.org/read?panels=p88.505&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.505&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 9",
+        "chapterNumber": 9,
+        "title": "Chapter 9—Elijah the Tishbite",
+        "paragraphId": 505,
+        "url": "https://egwwritings.org/read?panels=p88.505&index=0"
+      }
+    ]
   },
   "PK:9": {
     "query": "Prophets and Kings Chapter 10—The Voice of Stern Rebuke",
     "bookId": 88,
     "paragraphId": 544,
-    "url": "https://egwwritings.org/read?panels=p88.544&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.544&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 10",
+        "chapterNumber": 10,
+        "title": "Chapter 10—The Voice of Stern Rebuke",
+        "paragraphId": 544,
+        "url": "https://egwwritings.org/read?panels=p88.544&index=0"
+      }
+    ]
   },
   "PK:10": {
     "query": "PK 143",
     "bookId": 88,
     "paragraphId": 621,
-    "url": "https://egwwritings.org/read?panels=p88.621&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.621&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 11",
+        "chapterNumber": 11,
+        "title": "Chapter 11—Carmel",
+        "paragraphId": 621,
+        "url": "https://egwwritings.org/read?panels=p88.621&index=0"
+      }
+    ]
   },
   "PK:11": {
     "query": "PK 155",
     "bookId": 88,
     "paragraphId": 671,
-    "url": "https://egwwritings.org/read?panels=p88.671&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.671&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 12",
+        "chapterNumber": 12,
+        "title": "Chapter 12—From Jezreel to Horeb",
+        "paragraphId": 671,
+        "url": "https://egwwritings.org/read?panels=p88.671&index=0"
+      }
+    ]
   },
   "PK:12": {
     "query": "PK 167",
     "bookId": 88,
     "paragraphId": 723,
-    "url": "https://egwwritings.org/read?panels=p88.723&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.723&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 13",
+        "chapterNumber": 13,
+        "title": "Chapter 13—“What Doest Thou Here?”",
+        "paragraphId": 723,
+        "url": "https://egwwritings.org/read?panels=p88.723&index=0"
+      }
+    ]
   },
   "PK:13": {
     "query": "PK 177",
     "bookId": 88,
     "paragraphId": 767,
-    "url": "https://egwwritings.org/read?panels=p88.767&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.767&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 14",
+        "chapterNumber": 14,
+        "title": "Chapter 14—“In the Spirit and Power of Elias”",
+        "paragraphId": 767,
+        "url": "https://egwwritings.org/read?panels=p88.767&index=0"
+      }
+    ]
   },
   "PK:14": {
     "query": "PK 190",
     "bookId": 88,
     "paragraphId": 820,
-    "url": "https://egwwritings.org/read?panels=p88.820&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.820&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 15",
+        "chapterNumber": 15,
+        "title": "Chapter 15—Jehoshaphat",
+        "paragraphId": 820,
+        "url": "https://egwwritings.org/read?panels=p88.820&index=0"
+      }
+    ]
   },
   "PK:15": {
     "query": "PK 204",
     "bookId": 88,
     "paragraphId": 887,
-    "url": "https://egwwritings.org/read?panels=p88.887&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.887&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 16",
+        "chapterNumber": 16,
+        "title": "Chapter 16—The Fall of the House of Ahab",
+        "paragraphId": 887,
+        "url": "https://egwwritings.org/read?panels=p88.887&index=0"
+      }
+    ]
   },
   "PK:16": {
     "query": "PK 217",
     "bookId": 88,
     "paragraphId": 954,
-    "url": "https://egwwritings.org/read?panels=p88.954&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.954&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 17",
+        "chapterNumber": 17,
+        "title": "Chapter 17—The Call of Elisha",
+        "paragraphId": 954,
+        "url": "https://egwwritings.org/read?panels=p88.954&index=0"
+      }
+    ]
   },
   "PK:17": {
     "query": "PK 229",
     "bookId": 88,
     "paragraphId": 1008,
-    "url": "https://egwwritings.org/read?panels=p88.1008&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1008&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 18",
+        "chapterNumber": 18,
+        "title": "Chapter 18—The Healing of the Waters",
+        "paragraphId": 1008,
+        "url": "https://egwwritings.org/read?panels=p88.1008&index=0"
+      }
+    ]
   },
   "PK:18": {
     "query": "PK 235",
     "bookId": 88,
     "paragraphId": 1036,
-    "url": "https://egwwritings.org/read?panels=p88.1036&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1036&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 19",
+        "chapterNumber": 19,
+        "title": "Chapter 19—A Prophet of Peace",
+        "paragraphId": 1036,
+        "url": "https://egwwritings.org/read?panels=p88.1036&index=0"
+      }
+    ]
   },
   "PK:19": {
     "query": "PK 244",
     "bookId": 88,
     "paragraphId": 1073,
-    "url": "https://egwwritings.org/read?panels=p88.1073&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1073&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 20",
+        "chapterNumber": 20,
+        "title": "Chapter 20—Naaman",
+        "paragraphId": 1073,
+        "url": "https://egwwritings.org/read?panels=p88.1073&index=0"
+      }
+    ]
   },
   "PK:20": {
     "query": "PK 254",
     "bookId": 88,
     "paragraphId": 1115,
-    "url": "https://egwwritings.org/read?panels=p88.1115&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1115&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 21",
+        "chapterNumber": 21,
+        "title": "Chapter 21—Elisha’s Closing Ministry",
+        "paragraphId": 1115,
+        "url": "https://egwwritings.org/read?panels=p88.1115&index=0"
+      }
+    ]
   },
   "PK:21": {
     "query": "PK 265",
     "bookId": 88,
     "paragraphId": 1165,
-    "url": "https://egwwritings.org/read?panels=p88.1165&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1165&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 22",
+        "chapterNumber": 22,
+        "title": "Chapter 22—“Nineveh, That Great City”",
+        "paragraphId": 1165,
+        "url": "https://egwwritings.org/read?panels=p88.1165&index=0"
+      }
+    ]
   },
   "PK:22": {
     "query": "Prophets and Kings Chapter 23—The Assyrian Captivity · Chapter 24—“Destroyed for Lack of Knowledge”",
     "bookId": 88,
     "paragraphId": 1237,
-    "url": "https://egwwritings.org/read?panels=p88.1237&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1237&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 23",
+        "chapterNumber": 23,
+        "title": "Chapter 23—The Assyrian Captivity",
+        "paragraphId": 1237,
+        "url": "https://egwwritings.org/read?panels=p88.1237&index=0"
+      },
+      {
+        "label": "Read Chapter 24",
+        "chapterNumber": 24,
+        "title": "Chapter 24—“Destroyed for Lack of Knowledge”",
+        "paragraphId": 1297,
+        "url": "https://egwwritings.org/read?panels=p88.1297&index=0"
+      }
+    ]
   },
   "PK:23": {
     "query": "Prophets and Kings Chapter 25—The Call of Isaiah",
     "bookId": 88,
     "paragraphId": 1332,
-    "url": "https://egwwritings.org/read?panels=p88.1332&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1332&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 25",
+        "chapterNumber": 25,
+        "title": "Chapter 25—The Call of Isaiah",
+        "paragraphId": 1332,
+        "url": "https://egwwritings.org/read?panels=p88.1332&index=0"
+      }
+    ]
   },
   "PK:24": {
     "query": "Prophets and Kings Chapter 26—“Behold Your God!”",
     "bookId": 88,
     "paragraphId": 1371,
-    "url": "https://egwwritings.org/read?panels=p88.1371&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1371&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 26",
+        "chapterNumber": 26,
+        "title": "Chapter 26—“Behold Your God!”",
+        "paragraphId": 1371,
+        "url": "https://egwwritings.org/read?panels=p88.1371&index=0"
+      }
+    ]
   },
   "PK:25": {
     "query": "Prophets and Kings Chapter 27—Ahaz",
     "bookId": 88,
     "paragraphId": 1417,
-    "url": "https://egwwritings.org/read?panels=p88.1417&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1417&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 27",
+        "chapterNumber": 27,
+        "title": "Chapter 27—Ahaz",
+        "paragraphId": 1417,
+        "url": "https://egwwritings.org/read?panels=p88.1417&index=0"
+      }
+    ]
   },
   "PK:26": {
     "query": "Prophets and Kings Chapter 28—Hezekiah",
     "bookId": 88,
     "paragraphId": 1458,
-    "url": "https://egwwritings.org/read?panels=p88.1458&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1458&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 28",
+        "chapterNumber": 28,
+        "title": "Chapter 28—Hezekiah",
+        "paragraphId": 1458,
+        "url": "https://egwwritings.org/read?panels=p88.1458&index=0"
+      }
+    ]
   },
   "PK:27": {
     "query": "Prophets and Kings Chapter 29—The Ambassadors From Babylon",
     "bookId": 88,
     "paragraphId": 1495,
-    "url": "https://egwwritings.org/read?panels=p88.1495&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1495&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 29",
+        "chapterNumber": 29,
+        "title": "Chapter 29—The Ambassadors From Babylon",
+        "paragraphId": 1495,
+        "url": "https://egwwritings.org/read?panels=p88.1495&index=0"
+      }
+    ]
   },
   "PK:28": {
     "query": "Prophets and Kings Chapter 30—Deliverance From Assyria",
     "bookId": 88,
     "paragraphId": 1548,
-    "url": "https://egwwritings.org/read?panels=p88.1548&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1548&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 30",
+        "chapterNumber": 30,
+        "title": "Chapter 30—Deliverance From Assyria",
+        "paragraphId": 1548,
+        "url": "https://egwwritings.org/read?panels=p88.1548&index=0"
+      }
+    ]
   },
   "PK:29": {
     "query": "PK 367",
     "bookId": 88,
     "paragraphId": 1641,
-    "url": "https://egwwritings.org/read?panels=p88.1641&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1641&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 31",
+        "chapterNumber": 31,
+        "title": "Chapter 31—Hope for the Heathen",
+        "paragraphId": 1641,
+        "url": "https://egwwritings.org/read?panels=p88.1641&index=0"
+      }
+    ]
   },
   "PK:30": {
     "query": "PK 381",
     "bookId": 88,
     "paragraphId": 1702,
-    "url": "https://egwwritings.org/read?panels=p88.1702&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1702&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 32",
+        "chapterNumber": 32,
+        "title": "Chapter 32—Manasseh and Josiah",
+        "paragraphId": 1702,
+        "url": "https://egwwritings.org/read?panels=p88.1702&index=0"
+      }
+    ]
   },
   "PK:31": {
     "query": "PK 392",
     "bookId": 88,
     "paragraphId": 1753,
-    "url": "https://egwwritings.org/read?panels=p88.1753&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1753&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 33",
+        "chapterNumber": 33,
+        "title": "Chapter 33—The Book of the Law",
+        "paragraphId": 1753,
+        "url": "https://egwwritings.org/read?panels=p88.1753&index=0"
+      }
+    ]
   },
   "PK:32": {
     "query": "PK 407",
     "bookId": 88,
     "paragraphId": 1818,
-    "url": "https://egwwritings.org/read?panels=p88.1818&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1818&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 34",
+        "chapterNumber": 34,
+        "title": "Chapter 34—Jeremiah",
+        "paragraphId": 1818,
+        "url": "https://egwwritings.org/read?panels=p88.1818&index=0"
+      }
+    ]
   },
   "PK:33": {
     "query": "PK 422",
     "bookId": 88,
     "paragraphId": 1886,
-    "url": "https://egwwritings.org/read?panels=p88.1886&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1886&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 35",
+        "chapterNumber": 35,
+        "title": "Chapter 35—Approaching Doom",
+        "paragraphId": 1886,
+        "url": "https://egwwritings.org/read?panels=p88.1886&index=0"
+      }
+    ]
   },
   "PK:34": {
     "query": "PK 440",
     "bookId": 88,
     "paragraphId": 1962,
-    "url": "https://egwwritings.org/read?panels=p88.1962&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.1962&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 36",
+        "chapterNumber": 36,
+        "title": "Chapter 36—The Last King of Judah",
+        "paragraphId": 1962,
+        "url": "https://egwwritings.org/read?panels=p88.1962&index=0"
+      }
+    ]
   },
   "PK:35": {
     "query": "PK 452",
     "bookId": 88,
     "paragraphId": 2014,
-    "url": "https://egwwritings.org/read?panels=p88.2014&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2014&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 37",
+        "chapterNumber": 37,
+        "title": "Chapter 37—Carried Captive Into Babylon",
+        "paragraphId": 2014,
+        "url": "https://egwwritings.org/read?panels=p88.2014&index=0"
+      }
+    ]
   },
   "PK:36": {
     "query": "PK 464",
     "bookId": 88,
     "paragraphId": 2070,
-    "url": "https://egwwritings.org/read?panels=p88.2070&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2070&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 38",
+        "chapterNumber": 38,
+        "title": "Chapter 38—Light Through Darkness",
+        "paragraphId": 2070,
+        "url": "https://egwwritings.org/read?panels=p88.2070&index=0"
+      }
+    ]
   },
   "PK:37": {
     "query": "PK 479",
     "bookId": 88,
     "paragraphId": 2125,
-    "url": "https://egwwritings.org/read?panels=p88.2125&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2125&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 39",
+        "chapterNumber": 39,
+        "title": "Chapter 39—In the Court of Babylon",
+        "paragraphId": 2125,
+        "url": "https://egwwritings.org/read?panels=p88.2125&index=0"
+      }
+    ]
   },
   "PK:38": {
     "query": "PK 491",
     "bookId": 88,
     "paragraphId": 2180,
-    "url": "https://egwwritings.org/read?panels=p88.2180&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2180&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 40",
+        "chapterNumber": 40,
+        "title": "Chapter 40—Nebuchadnezzar’s Dream",
+        "paragraphId": 2180,
+        "url": "https://egwwritings.org/read?panels=p88.2180&index=0"
+      }
+    ]
   },
   "PK:39": {
     "query": "PK 503",
     "bookId": 88,
     "paragraphId": 2235,
-    "url": "https://egwwritings.org/read?panels=p88.2235&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2235&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 41",
+        "chapterNumber": 41,
+        "title": "Chapter 41—The Fiery Furnace",
+        "paragraphId": 2235,
+        "url": "https://egwwritings.org/read?panels=p88.2235&index=0"
+      }
+    ]
   },
   "PK:40": {
     "query": "PK 514",
     "bookId": 88,
     "paragraphId": 2285,
-    "url": "https://egwwritings.org/read?panels=p88.2285&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2285&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 42",
+        "chapterNumber": 42,
+        "title": "Chapter 42—True Greatness",
+        "paragraphId": 2285,
+        "url": "https://egwwritings.org/read?panels=p88.2285&index=0"
+      }
+    ]
   },
   "PK:41": {
     "query": "PK 522",
     "bookId": 88,
     "paragraphId": 2323,
-    "url": "https://egwwritings.org/read?panels=p88.2323&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2323&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 43",
+        "chapterNumber": 43,
+        "title": "Chapter 43—The Unseen Watcher",
+        "paragraphId": 2323,
+        "url": "https://egwwritings.org/read?panels=p88.2323&index=0"
+      }
+    ]
   },
   "PK:42": {
     "query": "PK 539",
     "bookId": 88,
     "paragraphId": 2403,
-    "url": "https://egwwritings.org/read?panels=p88.2403&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2403&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 44",
+        "chapterNumber": 44,
+        "title": "Chapter 44—In the Lions’ Den",
+        "paragraphId": 2403,
+        "url": "https://egwwritings.org/read?panels=p88.2403&index=0"
+      }
+    ]
   },
   "PK:43": {
     "query": "PK 551",
     "bookId": 88,
     "paragraphId": 2454,
-    "url": "https://egwwritings.org/read?panels=p88.2454&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2454&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 45",
+        "chapterNumber": 45,
+        "title": "Chapter 45—The Return of the Exiles",
+        "paragraphId": 2454,
+        "url": "https://egwwritings.org/read?panels=p88.2454&index=0"
+      }
+    ]
   },
   "PK:44": {
     "query": "PK 567",
     "bookId": 88,
     "paragraphId": 2525,
-    "url": "https://egwwritings.org/read?panels=p88.2525&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2525&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 46",
+        "chapterNumber": 46,
+        "title": "Chapter 46—“The Prophets of God Helping Them”",
+        "paragraphId": 2525,
+        "url": "https://egwwritings.org/read?panels=p88.2525&index=0"
+      }
+    ]
   },
   "PK:45": {
     "query": "PK 582",
     "bookId": 88,
     "paragraphId": 2594,
-    "url": "https://egwwritings.org/read?panels=p88.2594&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2594&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 47",
+        "chapterNumber": 47,
+        "title": "Chapter 47—Joshua and the Angel",
+        "paragraphId": 2594,
+        "url": "https://egwwritings.org/read?panels=p88.2594&index=0"
+      }
+    ]
   },
   "PK:46": {
     "query": "PK 593",
     "bookId": 88,
     "paragraphId": 2641,
-    "url": "https://egwwritings.org/read?panels=p88.2641&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2641&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 48",
+        "chapterNumber": 48,
+        "title": "Chapter 48—“Not by Might, nor by Power”",
+        "paragraphId": 2641,
+        "url": "https://egwwritings.org/read?panels=p88.2641&index=0"
+      }
+    ]
   },
   "PK:47": {
     "query": "PK 598",
     "bookId": 88,
     "paragraphId": 2665,
-    "url": "https://egwwritings.org/read?panels=p88.2665&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2665&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 49",
+        "chapterNumber": 49,
+        "title": "Chapter 49—In the Days of Queen Esther",
+        "paragraphId": 2665,
+        "url": "https://egwwritings.org/read?panels=p88.2665&index=0"
+      }
+    ]
   },
   "PK:48": {
     "query": "PK 607",
     "bookId": 88,
     "paragraphId": 2697,
-    "url": "https://egwwritings.org/read?panels=p88.2697&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2697&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 50",
+        "chapterNumber": 50,
+        "title": "Chapter 50—Ezra, the Priest and Scribe",
+        "paragraphId": 2697,
+        "url": "https://egwwritings.org/read?panels=p88.2697&index=0"
+      }
+    ]
   },
   "PK:49": {
     "query": "PK 618",
     "bookId": 88,
     "paragraphId": 3314,
-    "url": "https://egwwritings.org/read?panels=p88.3314&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.3314&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 51",
+        "chapterNumber": 51,
+        "title": "Chapter 51—A Spiritual Revival",
+        "paragraphId": 3314,
+        "url": "https://egwwritings.org/read?panels=p88.3314&index=0"
+      }
+    ]
   },
   "PK:50": {
     "query": "PK 628",
     "bookId": 88,
     "paragraphId": 2789,
-    "url": "https://egwwritings.org/read?panels=p88.2789&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2789&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 52",
+        "chapterNumber": 52,
+        "title": "Chapter 52—A Man of Opportunity",
+        "paragraphId": 2789,
+        "url": "https://egwwritings.org/read?panels=p88.2789&index=0"
+      }
+    ]
   },
   "PK:51": {
     "query": "PK 635",
     "bookId": 88,
     "paragraphId": 2818,
-    "url": "https://egwwritings.org/read?panels=p88.2818&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2818&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 53",
+        "chapterNumber": 53,
+        "title": "Chapter 53—The Builders on the Wall",
+        "paragraphId": 2818,
+        "url": "https://egwwritings.org/read?panels=p88.2818&index=0"
+      }
+    ]
   },
   "PK:52": {
     "query": "PK 646",
     "bookId": 88,
     "paragraphId": 2869,
-    "url": "https://egwwritings.org/read?panels=p88.2869&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2869&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 54",
+        "chapterNumber": 54,
+        "title": "Chapter 54—A Rebuke Against Extortion",
+        "paragraphId": 2869,
+        "url": "https://egwwritings.org/read?panels=p88.2869&index=0"
+      }
+    ]
   },
   "PK:53": {
     "query": "PK 653",
     "bookId": 88,
     "paragraphId": 2902,
-    "url": "https://egwwritings.org/read?panels=p88.2902&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2902&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 55",
+        "chapterNumber": 55,
+        "title": "Chapter 55—Heathen Plots",
+        "paragraphId": 2902,
+        "url": "https://egwwritings.org/read?panels=p88.2902&index=0"
+      }
+    ]
   },
   "PK:54": {
     "query": "PK 661",
     "bookId": 88,
     "paragraphId": 2934,
-    "url": "https://egwwritings.org/read?panels=p88.2934&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2934&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 56",
+        "chapterNumber": 56,
+        "title": "Chapter 56—Instructed in the Law of God",
+        "paragraphId": 2934,
+        "url": "https://egwwritings.org/read?panels=p88.2934&index=0"
+      }
+    ]
   },
   "PK:55": {
     "query": "PK 669",
     "bookId": 88,
     "paragraphId": 2965,
-    "url": "https://egwwritings.org/read?panels=p88.2965&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.2965&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 57",
+        "chapterNumber": 57,
+        "title": "Chapter 57—Reformation",
+        "paragraphId": 2965,
+        "url": "https://egwwritings.org/read?panels=p88.2965&index=0"
+      }
+    ]
   },
   "PK:56": {
     "query": "PK 681",
     "bookId": 88,
     "paragraphId": 3012,
-    "url": "https://egwwritings.org/read?panels=p88.3012&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.3012&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 58",
+        "chapterNumber": 58,
+        "title": "Chapter 58—The Coming of a Deliverer",
+        "paragraphId": 3012,
+        "url": "https://egwwritings.org/read?panels=p88.3012&index=0"
+      }
+    ]
   },
   "PK:60": {
     "query": "PK 703",
     "bookId": 88,
     "paragraphId": 3136,
-    "url": "https://egwwritings.org/read?panels=p88.3136&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.3136&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 59",
+        "chapterNumber": 59,
+        "title": "Chapter 59—“The House of Israel”",
+        "paragraphId": 3136,
+        "url": "https://egwwritings.org/read?panels=p88.3136&index=0"
+      }
+    ]
   },
   "PK:61": {
     "query": "PK 722",
     "bookId": 88,
     "paragraphId": 3221,
-    "url": "https://egwwritings.org/read?panels=p88.3221&index=0"
+    "url": "https://egwwritings.org/read?panels=p88.3221&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 60",
+        "chapterNumber": 60,
+        "title": "Chapter 60—Visions of Future Glory",
+        "paragraphId": 3221,
+        "url": "https://egwwritings.org/read?panels=p88.3221&index=0"
+      }
+    ]
   },
   "DA:1": {
     "query": "DA 19",
     "bookId": 130,
     "paragraphId": 21,
-    "url": "https://egwwritings.org/read?panels=p130.21&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.21&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 1",
+        "chapterNumber": 1,
+        "title": "Chapter 1—“God With Us”",
+        "paragraphId": 21,
+        "url": "https://egwwritings.org/read?panels=p130.21&index=0"
+      },
+      {
+        "label": "Read Chapter 2",
+        "chapterNumber": 2,
+        "title": "Chapter 2—The Chosen People",
+        "paragraphId": 61,
+        "url": "https://egwwritings.org/read?panels=p130.61&index=0"
+      }
+    ]
   },
   "DA:2": {
     "query": "DA 31",
     "bookId": 130,
     "paragraphId": 82,
-    "url": "https://egwwritings.org/read?panels=p130.82&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.82&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 3",
+        "chapterNumber": 3,
+        "title": "Chapter 3—“The Fullness of the Time”",
+        "paragraphId": 82,
+        "url": "https://egwwritings.org/read?panels=p130.82&index=0"
+      }
+    ]
   },
   "DA:3": {
     "query": "DA 43",
     "bookId": 130,
     "paragraphId": 120,
-    "url": "https://egwwritings.org/read?panels=p130.120&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.120&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 4",
+        "chapterNumber": 4,
+        "title": "Chapter 4—Unto You a Saviour",
+        "paragraphId": 120,
+        "url": "https://egwwritings.org/read?panels=p130.120&index=0"
+      }
+    ]
   },
   "DA:4": {
     "query": "DA 50",
     "bookId": 130,
     "paragraphId": 149,
-    "url": "https://egwwritings.org/read?panels=p130.149&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.149&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 5",
+        "chapterNumber": 5,
+        "title": "Chapter 5—The Dedication",
+        "paragraphId": 149,
+        "url": "https://egwwritings.org/read?panels=p130.149&index=0"
+      }
+    ]
   },
   "DA:5": {
     "query": "DA 59",
     "bookId": 130,
     "paragraphId": 188,
-    "url": "https://egwwritings.org/read?panels=p130.188&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.188&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 6",
+        "chapterNumber": 6,
+        "title": "Chapter 6—“We Have Seen His Star”",
+        "paragraphId": 188,
+        "url": "https://egwwritings.org/read?panels=p130.188&index=0"
+      },
+      {
+        "label": "Read Chapter 7",
+        "chapterNumber": 7,
+        "title": "Chapter 7—As a Child",
+        "paragraphId": 235,
+        "url": "https://egwwritings.org/read?panels=p130.235&index=0"
+      }
+    ]
   },
   "DA:6": {
     "query": "DA 75",
     "bookId": 130,
     "paragraphId": 269,
-    "url": "https://egwwritings.org/read?panels=p130.269&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.269&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 8",
+        "chapterNumber": 8,
+        "title": "Chapter 8—The Passover Visit",
+        "paragraphId": 269,
+        "url": "https://egwwritings.org/read?panels=p130.269&index=0"
+      },
+      {
+        "label": "Read Chapter 9",
+        "chapterNumber": 9,
+        "title": "Chapter 9—Days of Conflict",
+        "paragraphId": 316,
+        "url": "https://egwwritings.org/read?panels=p130.316&index=0"
+      }
+    ]
   },
   "DA:7": {
     "query": "DA 97",
     "bookId": 130,
     "paragraphId": 361,
-    "url": "https://egwwritings.org/read?panels=p130.361&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.361&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 10",
+        "chapterNumber": 10,
+        "title": "Chapter 10—The Voice in the Wilderness",
+        "paragraphId": 361,
+        "url": "https://egwwritings.org/read?panels=p130.361&index=0"
+      }
+    ]
   },
   "DA:8": {
     "query": "DA 109",
     "bookId": 130,
     "paragraphId": 432,
-    "url": "https://egwwritings.org/read?panels=p130.432&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.432&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 11",
+        "chapterNumber": 11,
+        "title": "Chapter 11—The Baptism",
+        "paragraphId": 432,
+        "url": "https://egwwritings.org/read?panels=p130.432&index=0"
+      }
+    ]
   },
   "DA:9": {
     "query": "DA 114",
     "bookId": 130,
     "paragraphId": 458,
-    "url": "https://egwwritings.org/read?panels=p130.458&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.458&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 12",
+        "chapterNumber": 12,
+        "title": "Chapter 12—The Temptation",
+        "paragraphId": 458,
+        "url": "https://egwwritings.org/read?panels=p130.458&index=0"
+      },
+      {
+        "label": "Read Chapter 13",
+        "chapterNumber": 13,
+        "title": "Chapter 13—The Victory",
+        "paragraphId": 509,
+        "url": "https://egwwritings.org/read?panels=p130.509&index=0"
+      }
+    ]
   },
   "DA:10": {
     "query": "DA 132",
     "bookId": 130,
     "paragraphId": 544,
-    "url": "https://egwwritings.org/read?panels=p130.544&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.544&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 14",
+        "chapterNumber": 14,
+        "title": "Chapter 14—“We Have Found the Messias”",
+        "paragraphId": 544,
+        "url": "https://egwwritings.org/read?panels=p130.544&index=0"
+      }
+    ]
   },
   "DA:11": {
     "query": "DA 144",
     "bookId": 130,
     "paragraphId": 621,
-    "url": "https://egwwritings.org/read?panels=p130.621&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.621&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 15",
+        "chapterNumber": 15,
+        "title": "Chapter 15—At the Marriage Feast",
+        "paragraphId": 621,
+        "url": "https://egwwritings.org/read?panels=p130.621&index=0"
+      }
+    ]
   },
   "DA:12": {
     "query": "DA 154",
     "bookId": 130,
     "paragraphId": 676,
-    "url": "https://egwwritings.org/read?panels=p130.676&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.676&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 16",
+        "chapterNumber": 16,
+        "title": "Chapter 16—In His Temple",
+        "paragraphId": 676,
+        "url": "https://egwwritings.org/read?panels=p130.676&index=0"
+      }
+    ]
   },
   "DA:13": {
     "query": "DA 167",
     "bookId": 130,
     "paragraphId": 739,
-    "url": "https://egwwritings.org/read?panels=p130.739&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.739&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 17",
+        "chapterNumber": 17,
+        "title": "Chapter 17—Nicodemus",
+        "paragraphId": 739,
+        "url": "https://egwwritings.org/read?panels=p130.739&index=0"
+      }
+    ]
   },
   "DA:14": {
     "query": "DA 178",
     "bookId": 130,
     "paragraphId": 791,
-    "url": "https://egwwritings.org/read?panels=p130.791&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.791&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 18",
+        "chapterNumber": 18,
+        "title": "Chapter 18—“He Must Increase”",
+        "paragraphId": 791,
+        "url": "https://egwwritings.org/read?panels=p130.791&index=0"
+      }
+    ]
   },
   "DA:15": {
     "query": "DA 187",
     "bookId": 130,
     "paragraphId": 829,
-    "url": "https://egwwritings.org/read?panels=p130.829&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.815&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 19",
+        "chapterNumber": 19,
+        "title": "Chapter 19—At Jacob’s Well",
+        "paragraphId": 815,
+        "url": "https://egwwritings.org/read?panels=p130.815&index=0"
+      }
+    ]
   },
   "DA:16": {
     "query": "DA 196",
     "bookId": 130,
     "paragraphId": 882,
-    "url": "https://egwwritings.org/read?panels=p130.882&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.882&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 20",
+        "chapterNumber": 20,
+        "title": "Chapter 20—“Except Ye See Signs and Wonders”",
+        "paragraphId": 882,
+        "url": "https://egwwritings.org/read?panels=p130.882&index=0"
+      }
+    ]
   },
   "DA:17": {
     "query": "DA 201",
     "bookId": 130,
     "paragraphId": 907,
-    "url": "https://egwwritings.org/read?panels=p130.907&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.907&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 21",
+        "chapterNumber": 21,
+        "title": "Chapter 21—Bethesda and the Sanhedrin",
+        "paragraphId": 907,
+        "url": "https://egwwritings.org/read?panels=p130.907&index=0"
+      }
+    ]
   },
   "DA:18": {
     "query": "DA 214",
     "bookId": 130,
     "paragraphId": 981,
-    "url": "https://egwwritings.org/read?panels=p130.981&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.981&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 22",
+        "chapterNumber": 22,
+        "title": "Chapter 22—Imprisonment and Death of John",
+        "paragraphId": 981,
+        "url": "https://egwwritings.org/read?panels=p130.981&index=0"
+      }
+    ]
   },
   "DA:19": {
     "query": "DA 231",
     "bookId": 130,
     "paragraphId": 1052,
-    "url": "https://egwwritings.org/read?panels=p130.1052&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1052&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 23",
+        "chapterNumber": 23,
+        "title": "Chapter 23—“The Kingdom of God Is at Hand”",
+        "paragraphId": 1052,
+        "url": "https://egwwritings.org/read?panels=p130.1052&index=0"
+      }
+    ]
   },
   "DA:20": {
     "query": "DA 236",
     "bookId": 130,
     "paragraphId": 1076,
-    "url": "https://egwwritings.org/read?panels=p130.1076&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1076&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 24",
+        "chapterNumber": 24,
+        "title": "Chapter 24—“Is Not This the Carpenter’s Son?”",
+        "paragraphId": 1076,
+        "url": "https://egwwritings.org/read?panels=p130.1076&index=0"
+      }
+    ]
   },
   "DA:21": {
     "query": "DA 244",
     "bookId": 130,
     "paragraphId": 1120,
-    "url": "https://egwwritings.org/read?panels=p130.1120&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1120&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 25",
+        "chapterNumber": 25,
+        "title": "Chapter 25—The Call by the Sea",
+        "paragraphId": 1120,
+        "url": "https://egwwritings.org/read?panels=p130.1120&index=0"
+      }
+    ]
   },
   "DA:22": {
     "query": "DA 252",
     "bookId": 130,
     "paragraphId": 1155,
-    "url": "https://egwwritings.org/read?panels=p130.1155&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1155&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 26",
+        "chapterNumber": 26,
+        "title": "Chapter 26—At Capernaum",
+        "paragraphId": 1155,
+        "url": "https://egwwritings.org/read?panels=p130.1155&index=0"
+      }
+    ]
   },
   "DA:23": {
     "query": "DA 262",
     "bookId": 130,
     "paragraphId": 1212,
-    "url": "https://egwwritings.org/read?panels=p130.1212&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1212&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 27",
+        "chapterNumber": 27,
+        "title": "Chapter 27—“Thou Canst Make Me Clean”",
+        "paragraphId": 1212,
+        "url": "https://egwwritings.org/read?panels=p130.1212&index=0"
+      }
+    ]
   },
   "DA:24": {
     "query": "DA 272",
     "bookId": 130,
     "paragraphId": 1268,
-    "url": "https://egwwritings.org/read?panels=p130.1268&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1268&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 28",
+        "chapterNumber": 28,
+        "title": "Chapter 28—Levi-Matthew",
+        "paragraphId": 1268,
+        "url": "https://egwwritings.org/read?panels=p130.1268&index=0"
+      }
+    ]
   },
   "DA:25": {
     "query": "DA 281",
     "bookId": 130,
     "paragraphId": 1322,
-    "url": "https://egwwritings.org/read?panels=p130.1322&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1322&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 29",
+        "chapterNumber": 29,
+        "title": "Chapter 29—The Sabbath",
+        "paragraphId": 1322,
+        "url": "https://egwwritings.org/read?panels=p130.1322&index=0"
+      }
+    ]
   },
   "DA:26": {
     "query": "DA 290",
     "bookId": 130,
     "paragraphId": 1369,
-    "url": "https://egwwritings.org/read?panels=p130.1369&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1369&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 30",
+        "chapterNumber": 30,
+        "title": "Chapter 30—“He Ordained Twelve”",
+        "paragraphId": 1369,
+        "url": "https://egwwritings.org/read?panels=p130.1369&index=0"
+      }
+    ]
   },
   "DA:27": {
     "query": "DA 298",
     "bookId": 130,
     "paragraphId": 1414,
-    "url": "https://egwwritings.org/read?panels=p130.1414&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1414&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 31",
+        "chapterNumber": 31,
+        "title": "Chapter 31—The Sermon on the Mount",
+        "paragraphId": 1414,
+        "url": "https://egwwritings.org/read?panels=p130.1414&index=0"
+      }
+    ]
   },
   "DA:28": {
     "query": "DA 315",
     "bookId": 130,
     "paragraphId": 1507,
-    "url": "https://egwwritings.org/read?panels=p130.1507&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1507&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 32",
+        "chapterNumber": 32,
+        "title": "Chapter 32—The Centurion",
+        "paragraphId": 1507,
+        "url": "https://egwwritings.org/read?panels=p130.1507&index=0"
+      }
+    ]
   },
   "DA:29": {
     "query": "DA 321",
     "bookId": 130,
     "paragraphId": 1538,
-    "url": "https://egwwritings.org/read?panels=p130.1538&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1538&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 33",
+        "chapterNumber": 33,
+        "title": "Chapter 33—Who Are My Brethren?",
+        "paragraphId": 1538,
+        "url": "https://egwwritings.org/read?panels=p130.1538&index=0"
+      }
+    ]
   },
   "DA:30": {
     "query": "DA 328",
     "bookId": 130,
     "paragraphId": 1573,
-    "url": "https://egwwritings.org/read?panels=p130.1573&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1573&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 34",
+        "chapterNumber": 34,
+        "title": "Chapter 34—The Invitation",
+        "paragraphId": 1573,
+        "url": "https://egwwritings.org/read?panels=p130.1573&index=0"
+      }
+    ]
   },
   "DA:31": {
     "query": "DA 333",
     "bookId": 130,
     "paragraphId": 1599,
-    "url": "https://egwwritings.org/read?panels=p130.1599&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1599&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 35",
+        "chapterNumber": 35,
+        "title": "Chapter 35—“Peace, Be Still”",
+        "paragraphId": 1599,
+        "url": "https://egwwritings.org/read?panels=p130.1599&index=0"
+      }
+    ]
   },
   "DA:32": {
     "query": "DA 342",
     "bookId": 130,
     "paragraphId": 1649,
-    "url": "https://egwwritings.org/read?panels=p130.1649&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1649&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 36",
+        "chapterNumber": 36,
+        "title": "Chapter 36—The Touch of Faith",
+        "paragraphId": 1649,
+        "url": "https://egwwritings.org/read?panels=p130.1649&index=0"
+      }
+    ]
   },
   "DA:33": {
     "query": "DA 349",
     "bookId": 130,
     "paragraphId": 1678,
-    "url": "https://egwwritings.org/read?panels=p130.1678&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1678&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 37",
+        "chapterNumber": 37,
+        "title": "Chapter 37—The First Evangelists",
+        "paragraphId": 1678,
+        "url": "https://egwwritings.org/read?panels=p130.1678&index=0"
+      }
+    ]
   },
   "DA:34": {
     "query": "DA 359",
     "bookId": 130,
     "paragraphId": 1726,
-    "url": "https://egwwritings.org/read?panels=p130.1726&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1726&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 38",
+        "chapterNumber": 38,
+        "title": "Chapter 38—Come Rest Awhile",
+        "paragraphId": 1726,
+        "url": "https://egwwritings.org/read?panels=p130.1726&index=0"
+      }
+    ]
   },
   "DA:35": {
     "query": "DA 364",
     "bookId": 130,
     "paragraphId": 1755,
-    "url": "https://egwwritings.org/read?panels=p130.1755&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1755&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 39",
+        "chapterNumber": 39,
+        "title": "Chapter 39—“Give Ye Them to Eat”",
+        "paragraphId": 1755,
+        "url": "https://egwwritings.org/read?panels=p130.1755&index=0"
+      }
+    ]
   },
   "DA:36": {
     "query": "DA 377",
     "bookId": 130,
     "paragraphId": 1800,
-    "url": "https://egwwritings.org/read?panels=p130.1800&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1800&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 40",
+        "chapterNumber": 40,
+        "title": "Chapter 40—A Night on the Lake",
+        "paragraphId": 1800,
+        "url": "https://egwwritings.org/read?panels=p130.1800&index=0"
+      }
+    ]
   },
   "DA:37": {
     "query": "DA 383",
     "bookId": 130,
     "paragraphId": 1834,
-    "url": "https://egwwritings.org/read?panels=p130.1834&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1834&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 41",
+        "chapterNumber": 41,
+        "title": "Chapter 41—The Crisis in Galilee",
+        "paragraphId": 1834,
+        "url": "https://egwwritings.org/read?panels=p130.1834&index=0"
+      }
+    ]
   },
   "DA:38": {
     "query": "DA 395",
     "bookId": 130,
     "paragraphId": 1908,
-    "url": "https://egwwritings.org/read?panels=p130.1908&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1908&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 42",
+        "chapterNumber": 42,
+        "title": "Chapter 42—Tradition",
+        "paragraphId": 1908,
+        "url": "https://egwwritings.org/read?panels=p130.1908&index=0"
+      }
+    ]
   },
   "DA:39": {
     "query": "DA 399",
     "bookId": 130,
     "paragraphId": 1931,
-    "url": "https://egwwritings.org/read?panels=p130.1931&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1931&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 43",
+        "chapterNumber": 43,
+        "title": "Chapter 43—Barriers Broken Down",
+        "paragraphId": 1931,
+        "url": "https://egwwritings.org/read?panels=p130.1931&index=0"
+      }
+    ]
   },
   "DA:40": {
     "query": "DA 404",
     "bookId": 130,
     "paragraphId": 1958,
-    "url": "https://egwwritings.org/read?panels=p130.1958&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1958&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 44",
+        "chapterNumber": 44,
+        "title": "Chapter 44—The True Sign",
+        "paragraphId": 1958,
+        "url": "https://egwwritings.org/read?panels=p130.1958&index=0"
+      }
+    ]
   },
   "DA:41": {
     "query": "DA 410",
     "bookId": 130,
     "paragraphId": 1990,
-    "url": "https://egwwritings.org/read?panels=p130.1990&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.1990&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 45",
+        "chapterNumber": 45,
+        "title": "Chapter 45—The Foreshadowing of the Cross",
+        "paragraphId": 1990,
+        "url": "https://egwwritings.org/read?panels=p130.1990&index=0"
+      }
+    ]
   },
   "DA:42": {
     "query": "DA 419",
     "bookId": 130,
     "paragraphId": 2042,
-    "url": "https://egwwritings.org/read?panels=p130.2042&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2042&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 46",
+        "chapterNumber": 46,
+        "title": "Chapter 46—He Was Transfigured",
+        "paragraphId": 2042,
+        "url": "https://egwwritings.org/read?panels=p130.2042&index=0"
+      }
+    ]
   },
   "DA:43": {
     "query": "DA 426",
     "bookId": 130,
     "paragraphId": 2068,
-    "url": "https://egwwritings.org/read?panels=p130.2068&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2068&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 47",
+        "chapterNumber": 47,
+        "title": "Chapter 47—Ministry",
+        "paragraphId": 2068,
+        "url": "https://egwwritings.org/read?panels=p130.2068&index=0"
+      }
+    ]
   },
   "DA:44": {
     "query": "DA 432",
     "bookId": 130,
     "paragraphId": 2101,
-    "url": "https://egwwritings.org/read?panels=p130.2101&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2101&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 48",
+        "chapterNumber": 48,
+        "title": "Chapter 48—Who Is the Greatest?",
+        "paragraphId": 2101,
+        "url": "https://egwwritings.org/read?panels=p130.2101&index=0"
+      }
+    ]
   },
   "DA:45": {
     "query": "DA 447",
     "bookId": 130,
     "paragraphId": 2166,
-    "url": "https://egwwritings.org/read?panels=p130.2166&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2166&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 49",
+        "chapterNumber": 49,
+        "title": "Chapter 49—At the Feast of Tabernacles",
+        "paragraphId": 2166,
+        "url": "https://egwwritings.org/read?panels=p130.2166&index=0"
+      }
+    ]
   },
   "DA:46": {
     "query": "DA 455",
     "bookId": 130,
     "paragraphId": 2204,
-    "url": "https://egwwritings.org/read?panels=p130.2204&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2204&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 50",
+        "chapterNumber": 50,
+        "title": "Chapter 50—Among Snares",
+        "paragraphId": 2204,
+        "url": "https://egwwritings.org/read?panels=p130.2204&index=0"
+      }
+    ]
   },
   "DA:47": {
     "query": "DA 463",
     "bookId": 130,
     "paragraphId": 2253,
-    "url": "https://egwwritings.org/read?panels=p130.2253&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2253&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 51",
+        "chapterNumber": 51,
+        "title": "Chapter 51—“The Light of Life”",
+        "paragraphId": 2253,
+        "url": "https://egwwritings.org/read?panels=p130.2253&index=0"
+      }
+    ]
   },
   "DA:48": {
     "query": "DA 476",
     "bookId": 130,
     "paragraphId": 2331,
-    "url": "https://egwwritings.org/read?panels=p130.2331&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2331&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 52",
+        "chapterNumber": 52,
+        "title": "Chapter 52—The Divine Shepherd",
+        "paragraphId": 2331,
+        "url": "https://egwwritings.org/read?panels=p130.2331&index=0"
+      }
+    ]
   },
   "DA:49": {
     "query": "DA 485",
     "bookId": 130,
     "paragraphId": 2371,
-    "url": "https://egwwritings.org/read?panels=p130.2371&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2371&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 53",
+        "chapterNumber": 53,
+        "title": "Chapter 53—The Last Journey From Galilee",
+        "paragraphId": 2371,
+        "url": "https://egwwritings.org/read?panels=p130.2371&index=0"
+      }
+    ]
   },
   "DA:50": {
     "query": "DA 497",
     "bookId": 130,
     "paragraphId": 2429,
-    "url": "https://egwwritings.org/read?panels=p130.2429&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2429&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 54",
+        "chapterNumber": 54,
+        "title": "Chapter 54—The Good Samaritan",
+        "paragraphId": 2429,
+        "url": "https://egwwritings.org/read?panels=p130.2429&index=0"
+      }
+    ]
   },
   "DA:51": {
     "query": "DA 506",
     "bookId": 130,
     "paragraphId": 2469,
-    "url": "https://egwwritings.org/read?panels=p130.2469&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2469&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 55",
+        "chapterNumber": 55,
+        "title": "Chapter 55—Not With Outward Show",
+        "paragraphId": 2469,
+        "url": "https://egwwritings.org/read?panels=p130.2469&index=0"
+      }
+    ]
   },
   "DA:52": {
     "query": "DA 511",
     "bookId": 130,
     "paragraphId": 2495,
-    "url": "https://egwwritings.org/read?panels=p130.2495&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2495&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 56",
+        "chapterNumber": 56,
+        "title": "Chapter 56—Blessing the Children",
+        "paragraphId": 2495,
+        "url": "https://egwwritings.org/read?panels=p130.2495&index=0"
+      }
+    ]
   },
   "DA:53": {
     "query": "DA 518",
     "bookId": 130,
     "paragraphId": 2528,
-    "url": "https://egwwritings.org/read?panels=p130.2528&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2528&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 57",
+        "chapterNumber": 57,
+        "title": "Chapter 57—“One Thing Thou Lackest”",
+        "paragraphId": 2528,
+        "url": "https://egwwritings.org/read?panels=p130.2528&index=0"
+      }
+    ]
   },
   "DA:54": {
     "query": "DA 524",
     "bookId": 130,
     "paragraphId": 2556,
-    "url": "https://egwwritings.org/read?panels=p130.2556&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2556&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 58",
+        "chapterNumber": 58,
+        "title": "Chapter 58—“Lazarus, Come Forth”",
+        "paragraphId": 2556,
+        "url": "https://egwwritings.org/read?panels=p130.2556&index=0"
+      }
+    ]
   },
   "DA:55": {
     "query": "DA 537",
     "bookId": 130,
     "paragraphId": 2622,
-    "url": "https://egwwritings.org/read?panels=p130.2622&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2622&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 59",
+        "chapterNumber": 59,
+        "title": "Chapter 59—Priestly Plottings",
+        "paragraphId": 2622,
+        "url": "https://egwwritings.org/read?panels=p130.2622&index=0"
+      }
+    ]
   },
   "DA:56": {
     "query": "DA 547",
     "bookId": 130,
     "paragraphId": 2654,
-    "url": "https://egwwritings.org/read?panels=p130.2654&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2654&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 60",
+        "chapterNumber": 60,
+        "title": "Chapter 60—The Law of the New Kingdom",
+        "paragraphId": 2654,
+        "url": "https://egwwritings.org/read?panels=p130.2654&index=0"
+      }
+    ]
   },
   "DA:57": {
     "query": "DA 552",
     "bookId": 130,
     "paragraphId": 2686,
-    "url": "https://egwwritings.org/read?panels=p130.2686&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2686&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 61",
+        "chapterNumber": 61,
+        "title": "Chapter 61—Zacchaeus",
+        "paragraphId": 2686,
+        "url": "https://egwwritings.org/read?panels=p130.2686&index=0"
+      }
+    ]
   },
   "DA:58": {
     "query": "DA 557",
     "bookId": 130,
     "paragraphId": 2715,
-    "url": "https://egwwritings.org/read?panels=p130.2715&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2715&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 62",
+        "chapterNumber": 62,
+        "title": "Chapter 62—The Feast at Simon’s House",
+        "paragraphId": 2715,
+        "url": "https://egwwritings.org/read?panels=p130.2715&index=0"
+      }
+    ]
   },
   "DA:59": {
     "query": "DA 569",
     "bookId": 130,
     "paragraphId": 2781,
-    "url": "https://egwwritings.org/read?panels=p130.2781&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2781&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 63",
+        "chapterNumber": 63,
+        "title": "Chapter 63—“Thy King Cometh”",
+        "paragraphId": 2781,
+        "url": "https://egwwritings.org/read?panels=p130.2781&index=0"
+      }
+    ]
   },
   "DA:60": {
     "query": "DA 580",
     "bookId": 130,
     "paragraphId": 2836,
-    "url": "https://egwwritings.org/read?panels=p130.2836&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2836&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 64",
+        "chapterNumber": 64,
+        "title": "Chapter 64—A Doomed People",
+        "paragraphId": 2836,
+        "url": "https://egwwritings.org/read?panels=p130.2836&index=0"
+      }
+    ]
   },
   "DA:61": {
     "query": "DA 589",
     "bookId": 130,
     "paragraphId": 2874,
-    "url": "https://egwwritings.org/read?panels=p130.2874&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2874&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 65",
+        "chapterNumber": 65,
+        "title": "Chapter 65—The Temple Cleansed Again",
+        "paragraphId": 2874,
+        "url": "https://egwwritings.org/read?panels=p130.2874&index=0"
+      }
+    ]
   },
   "DA:62": {
     "query": "DA 601",
     "bookId": 130,
     "paragraphId": 2938,
-    "url": "https://egwwritings.org/read?panels=p130.2938&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2938&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 66",
+        "chapterNumber": 66,
+        "title": "Chapter 66—Controversy",
+        "paragraphId": 2938,
+        "url": "https://egwwritings.org/read?panels=p130.2938&index=0"
+      }
+    ]
   },
   "DA:63": {
     "query": "DA 610",
     "bookId": 130,
     "paragraphId": 2987,
-    "url": "https://egwwritings.org/read?panels=p130.2987&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.2987&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 67",
+        "chapterNumber": 67,
+        "title": "Chapter 67—Woes on the Pharisees",
+        "paragraphId": 2987,
+        "url": "https://egwwritings.org/read?panels=p130.2987&index=0"
+      }
+    ]
   },
   "DA:64": {
     "query": "DA 621",
     "bookId": 130,
     "paragraphId": 3046,
-    "url": "https://egwwritings.org/read?panels=p130.3046&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3046&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 68",
+        "chapterNumber": 68,
+        "title": "Chapter 68—In the Outer Court",
+        "paragraphId": 3046,
+        "url": "https://egwwritings.org/read?panels=p130.3046&index=0"
+      }
+    ]
   },
   "DA:65": {
     "query": "DA 627",
     "bookId": 130,
     "paragraphId": 3081,
-    "url": "https://egwwritings.org/read?panels=p130.3081&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3081&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 69",
+        "chapterNumber": 69,
+        "title": "Chapter 69—On the Mount of Olives",
+        "paragraphId": 3081,
+        "url": "https://egwwritings.org/read?panels=p130.3081&index=0"
+      }
+    ]
   },
   "DA:66": {
     "query": "DA 637",
     "bookId": 130,
     "paragraphId": 3127,
-    "url": "https://egwwritings.org/read?panels=p130.3127&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3127&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 70",
+        "chapterNumber": 70,
+        "title": "Chapter 70—“The Least of These My Brethren”",
+        "paragraphId": 3127,
+        "url": "https://egwwritings.org/read?panels=p130.3127&index=0"
+      }
+    ]
   },
   "DA:67": {
     "query": "DA 642",
     "bookId": 130,
     "paragraphId": 3159,
-    "url": "https://egwwritings.org/read?panels=p130.3159&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3159&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 71",
+        "chapterNumber": 71,
+        "title": "Chapter 71—A Servant of Servants",
+        "paragraphId": 3159,
+        "url": "https://egwwritings.org/read?panels=p130.3159&index=0"
+      }
+    ]
   },
   "DA:68": {
     "query": "DA 652",
     "bookId": 130,
     "paragraphId": 3208,
-    "url": "https://egwwritings.org/read?panels=p130.3208&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3208&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 72",
+        "chapterNumber": 72,
+        "title": "Chapter 72—“In Remembrance of Me”",
+        "paragraphId": 3208,
+        "url": "https://egwwritings.org/read?panels=p130.3208&index=0"
+      }
+    ]
   },
   "DA:69": {
     "query": "DA 662",
     "bookId": 130,
     "paragraphId": 3257,
-    "url": "https://egwwritings.org/read?panels=p130.3257&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3257&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 73",
+        "chapterNumber": 73,
+        "title": "Chapter 73—“Let Not Your Heart Be Troubled”",
+        "paragraphId": 3257,
+        "url": "https://egwwritings.org/read?panels=p130.3257&index=0"
+      }
+    ]
   },
   "DA:70": {
     "query": "DA 685",
     "bookId": 130,
     "paragraphId": 3359,
-    "url": "https://egwwritings.org/read?panels=p130.3359&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3359&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 74",
+        "chapterNumber": 74,
+        "title": "Chapter 74—Gethsemane",
+        "paragraphId": 3359,
+        "url": "https://egwwritings.org/read?panels=p130.3359&index=0"
+      }
+    ]
   },
   "DA:71": {
     "query": "DA 698",
     "bookId": 130,
     "paragraphId": 3419,
-    "url": "https://egwwritings.org/read?panels=p130.3419&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3419&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 75",
+        "chapterNumber": 75,
+        "title": "Chapter 75—Before Annas and the Court of Caiaphas",
+        "paragraphId": 3419,
+        "url": "https://egwwritings.org/read?panels=p130.3419&index=0"
+      }
+    ]
   },
   "DA:72": {
     "query": "DA 716",
     "bookId": 130,
     "paragraphId": 3509,
-    "url": "https://egwwritings.org/read?panels=p130.3509&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3509&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 76",
+        "chapterNumber": 76,
+        "title": "Chapter 76—Judas",
+        "paragraphId": 3509,
+        "url": "https://egwwritings.org/read?panels=p130.3509&index=0"
+      }
+    ]
   },
   "DA:73": {
     "query": "DA 723",
     "bookId": 130,
     "paragraphId": 3548,
-    "url": "https://egwwritings.org/read?panels=p130.3548&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3548&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 77",
+        "chapterNumber": 77,
+        "title": "Chapter 77—In Pilate’s Judgment Hall",
+        "paragraphId": 3548,
+        "url": "https://egwwritings.org/read?panels=p130.3548&index=0"
+      }
+    ]
   },
   "DA:74": {
     "query": "DA 741",
     "bookId": 130,
     "paragraphId": 3660,
-    "url": "https://egwwritings.org/read?panels=p130.3660&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3660&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 78",
+        "chapterNumber": 78,
+        "title": "Chapter 78—Calvary",
+        "paragraphId": 3660,
+        "url": "https://egwwritings.org/read?panels=p130.3660&index=0"
+      },
+      {
+        "label": "Read Chapter 79",
+        "chapterNumber": 79,
+        "title": "Chapter 79—“It is Finished”",
+        "paragraphId": 3742,
+        "url": "https://egwwritings.org/read?panels=p130.3742&index=0"
+      }
+    ]
   },
   "DA:75": {
     "query": "DA 769",
     "bookId": 130,
     "paragraphId": 3790,
-    "url": "https://egwwritings.org/read?panels=p130.3790&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3790&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 80",
+        "chapterNumber": 80,
+        "title": "Chapter 80—In Joseph’s Tomb",
+        "paragraphId": 3790,
+        "url": "https://egwwritings.org/read?panels=p130.3790&index=0"
+      }
+    ]
   },
   "DA:76": {
     "query": "DA 779",
     "bookId": 130,
     "paragraphId": 3841,
-    "url": "https://egwwritings.org/read?panels=p130.3841&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3841&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 81",
+        "chapterNumber": 81,
+        "title": "Chapter 81—“The Lord Is Risen”",
+        "paragraphId": 3841,
+        "url": "https://egwwritings.org/read?panels=p130.3841&index=0"
+      }
+    ]
   },
   "DA:77": {
     "query": "DA 788",
     "bookId": 130,
     "paragraphId": 3880,
-    "url": "https://egwwritings.org/read?panels=p130.3880&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3880&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 82",
+        "chapterNumber": 82,
+        "title": "Chapter 82—“Why Weepest Thou?”",
+        "paragraphId": 3880,
+        "url": "https://egwwritings.org/read?panels=p130.3880&index=0"
+      }
+    ]
   },
   "DA:78": {
     "query": "DA 795",
     "bookId": 130,
     "paragraphId": 3913,
-    "url": "https://egwwritings.org/read?panels=p130.3913&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3913&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 83",
+        "chapterNumber": 83,
+        "title": "Chapter 83—The Walk to Emmaus",
+        "paragraphId": 3913,
+        "url": "https://egwwritings.org/read?panels=p130.3913&index=0"
+      }
+    ]
   },
   "DA:79": {
     "query": "DA 801",
     "bookId": 130,
     "paragraphId": 3936,
-    "url": "https://egwwritings.org/read?panels=p130.3936&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3913&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 83",
+        "chapterNumber": 83,
+        "title": "Chapter 83—The Walk to Emmaus",
+        "paragraphId": 3913,
+        "url": "https://egwwritings.org/read?panels=p130.3913&index=0"
+      },
+      {
+        "label": "Read Chapter 84",
+        "chapterNumber": 84,
+        "title": "Chapter 84—“Peace Be Unto You”",
+        "paragraphId": 3940,
+        "url": "https://egwwritings.org/read?panels=p130.3940&index=0"
+      }
+    ]
   },
   "DA:80": {
     "query": "DA 809",
     "bookId": 130,
     "paragraphId": 3977,
-    "url": "https://egwwritings.org/read?panels=p130.3977&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.3977&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 85",
+        "chapterNumber": 85,
+        "title": "Chapter 85—By the Sea Once More",
+        "paragraphId": 3977,
+        "url": "https://egwwritings.org/read?panels=p130.3977&index=0"
+      }
+    ]
   },
   "DA:81": {
     "query": "DA 818",
     "bookId": 130,
     "paragraphId": 4019,
-    "url": "https://egwwritings.org/read?panels=p130.4019&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.4019&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 86",
+        "chapterNumber": 86,
+        "title": "Chapter 86—Go Teach All Nations",
+        "paragraphId": 4019,
+        "url": "https://egwwritings.org/read?panels=p130.4019&index=0"
+      }
+    ]
   },
   "DA:82": {
     "query": "DA 829",
     "bookId": 130,
     "paragraphId": 4080,
-    "url": "https://egwwritings.org/read?panels=p130.4080&index=0"
+    "url": "https://egwwritings.org/read?panels=p130.4080&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 87",
+        "chapterNumber": 87,
+        "title": "Chapter 87—“To My Father, and Your Father”",
+        "paragraphId": 4080,
+        "url": "https://egwwritings.org/read?panels=p130.4080&index=0"
+      }
+    ]
   },
   "AA:1": {
     "query": "AA 9",
     "bookId": 127,
     "paragraphId": 22,
-    "url": "https://egwwritings.org/read?panels=p127.22&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.22&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 1",
+        "chapterNumber": 1,
+        "title": "Chapter 1—God’s Purpose for His Church",
+        "paragraphId": 22,
+        "url": "https://egwwritings.org/read?panels=p127.22&index=0"
+      }
+    ]
   },
   "AA:2": {
     "query": "AA 21",
     "bookId": 127,
     "paragraphId": 72,
-    "url": "https://egwwritings.org/read?panels=p127.72&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.53&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 2",
+        "chapterNumber": 2,
+        "title": "Chapter 2—The Training of the Twelve",
+        "paragraphId": 53,
+        "url": "https://egwwritings.org/read?panels=p127.53&index=0"
+      }
+    ]
   },
   "AA:3": {
     "query": "AA 30",
     "bookId": 127,
     "paragraphId": 108,
-    "url": "https://egwwritings.org/read?panels=p127.108&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.86&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 3",
+        "chapterNumber": 3,
+        "title": "Chapter 3—The Great Commission",
+        "paragraphId": 86,
+        "url": "https://egwwritings.org/read?panels=p127.86&index=0"
+      },
+      {
+        "label": "Read Chapter 4",
+        "chapterNumber": 4,
+        "title": "Chapter 4—Pentecost",
+        "paragraphId": 128,
+        "url": "https://egwwritings.org/read?panels=p127.128&index=0"
+      }
+    ]
   },
   "AA:4": {
     "query": "AA 35",
     "bookId": 127,
     "paragraphId": 128,
-    "url": "https://egwwritings.org/read?panels=p127.128&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.180&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 5",
+        "chapterNumber": 5,
+        "title": "Chapter 5—The Gift of the Spirit",
+        "paragraphId": 180,
+        "url": "https://egwwritings.org/read?panels=p127.180&index=0"
+      }
+    ]
   },
   "AA:5": {
     "query": "AA 57",
     "bookId": 127,
     "paragraphId": 222,
-    "url": "https://egwwritings.org/read?panels=p127.222&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.222&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 6",
+        "chapterNumber": 6,
+        "title": "Chapter 6—At the Temple Gate",
+        "paragraphId": 222,
+        "url": "https://egwwritings.org/read?panels=p127.222&index=0"
+      }
+    ]
   },
   "AA:6": {
     "query": "AA 70",
     "bookId": 127,
     "paragraphId": 281,
-    "url": "https://egwwritings.org/read?panels=p127.281&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.281&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 7",
+        "chapterNumber": 7,
+        "title": "Chapter 7—A Warning Against Hypocrisy",
+        "paragraphId": 281,
+        "url": "https://egwwritings.org/read?panels=p127.281&index=0"
+      }
+    ]
   },
   "AA:7": {
     "query": "AA 77",
     "bookId": 127,
     "paragraphId": 312,
-    "url": "https://egwwritings.org/read?panels=p127.312&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.312&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 8",
+        "chapterNumber": 8,
+        "title": "Chapter 8—Before the Sanhedrin",
+        "paragraphId": 312,
+        "url": "https://egwwritings.org/read?panels=p127.312&index=0"
+      }
+    ]
   },
   "AA:8": {
     "query": "AA 87",
     "bookId": 127,
     "paragraphId": 355,
-    "url": "https://egwwritings.org/read?panels=p127.355&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.355&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 9",
+        "chapterNumber": 9,
+        "title": "Chapter 9—The Seven Deacons",
+        "paragraphId": 355,
+        "url": "https://egwwritings.org/read?panels=p127.355&index=0"
+      }
+    ]
   },
   "AA:9": {
     "query": "AA 97",
     "bookId": 127,
     "paragraphId": 396,
-    "url": "https://egwwritings.org/read?panels=p127.396&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.396&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 10",
+        "chapterNumber": 10,
+        "title": "Chapter 10—The First Christian Martyr",
+        "paragraphId": 396,
+        "url": "https://egwwritings.org/read?panels=p127.396&index=0"
+      }
+    ]
   },
   "AA:10": {
     "query": "AA 103",
     "bookId": 127,
     "paragraphId": 422,
-    "url": "https://egwwritings.org/read?panels=p127.422&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.422&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 11",
+        "chapterNumber": 11,
+        "title": "Chapter 11—The Gospel in Samaria",
+        "paragraphId": 422,
+        "url": "https://egwwritings.org/read?panels=p127.422&index=0"
+      }
+    ]
   },
   "AA:11": {
     "query": "AA 112",
     "bookId": 127,
     "paragraphId": 463,
-    "url": "https://egwwritings.org/read?panels=p127.463&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.463&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 12",
+        "chapterNumber": 12,
+        "title": "Chapter 12—From Persecutor to Disciple",
+        "paragraphId": 463,
+        "url": "https://egwwritings.org/read?panels=p127.463&index=0"
+      }
+    ]
   },
   "AA:12": {
     "query": "AA 123",
     "bookId": 127,
     "paragraphId": 516,
-    "url": "https://egwwritings.org/read?panels=p127.516&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.516&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 13",
+        "chapterNumber": 13,
+        "title": "Chapter 13—Days of Preparation",
+        "paragraphId": 516,
+        "url": "https://egwwritings.org/read?panels=p127.516&index=0"
+      }
+    ]
   },
   "AA:13": {
     "query": "AA 131",
     "bookId": 127,
     "paragraphId": 551,
-    "url": "https://egwwritings.org/read?panels=p127.551&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.551&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 14",
+        "chapterNumber": 14,
+        "title": "Chapter 14—A Seeker for Truth",
+        "paragraphId": 551,
+        "url": "https://egwwritings.org/read?panels=p127.551&index=0"
+      }
+    ]
   },
   "AA:14": {
     "query": "AA 143",
     "bookId": 127,
     "paragraphId": 614,
-    "url": "https://egwwritings.org/read?panels=p127.614&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.614&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 15",
+        "chapterNumber": 15,
+        "title": "Chapter 15—Delivered From Prison",
+        "paragraphId": 614,
+        "url": "https://egwwritings.org/read?panels=p127.614&index=0"
+      }
+    ]
   },
   "AA:15": {
     "query": "AA 155",
     "bookId": 127,
     "paragraphId": 672,
-    "url": "https://egwwritings.org/read?panels=p127.672&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.672&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 16",
+        "chapterNumber": 16,
+        "title": "Chapter 16—The Gospel Message in Antioch",
+        "paragraphId": 672,
+        "url": "https://egwwritings.org/read?panels=p127.672&index=0"
+      }
+    ]
   },
   "AA:16": {
     "query": "AA 166",
     "bookId": 127,
     "paragraphId": 719,
-    "url": "https://egwwritings.org/read?panels=p127.719&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.719&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 17",
+        "chapterNumber": 17,
+        "title": "Chapter 17—Heralds of the Gospel",
+        "paragraphId": 719,
+        "url": "https://egwwritings.org/read?panels=p127.719&index=0"
+      }
+    ]
   },
   "AA:17": {
     "query": "AA 177",
     "bookId": 127,
     "paragraphId": 772,
-    "url": "https://egwwritings.org/read?panels=p127.772&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.772&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 18",
+        "chapterNumber": 18,
+        "title": "Chapter 18—Preaching Among the Heathen",
+        "paragraphId": 772,
+        "url": "https://egwwritings.org/read?panels=p127.772&index=0"
+      }
+    ]
   },
   "AA:18": {
     "query": "AA 188",
     "bookId": 127,
     "paragraphId": 824,
-    "url": "https://egwwritings.org/read?panels=p127.824&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.824&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 19",
+        "chapterNumber": 19,
+        "title": "Chapter 19—Jew and Gentile",
+        "paragraphId": 824,
+        "url": "https://egwwritings.org/read?panels=p127.824&index=0"
+      }
+    ]
   },
   "AA:19": {
     "query": "AA 201",
     "bookId": 127,
     "paragraphId": 882,
-    "url": "https://egwwritings.org/read?panels=p127.882&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.882&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 20",
+        "chapterNumber": 20,
+        "title": "Chapter 20—Exalting the Cross",
+        "paragraphId": 882,
+        "url": "https://egwwritings.org/read?panels=p127.882&index=0"
+      }
+    ]
   },
   "AA:20": {
     "query": "AA 211",
     "bookId": 127,
     "paragraphId": 926,
-    "url": "https://egwwritings.org/read?panels=p127.926&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.926&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 21",
+        "chapterNumber": 21,
+        "title": "Chapter 21—In the Regions Beyond",
+        "paragraphId": 926,
+        "url": "https://egwwritings.org/read?panels=p127.926&index=0"
+      }
+    ]
   },
   "AA:21": {
     "query": "AA 221",
     "bookId": 127,
     "paragraphId": 972,
-    "url": "https://egwwritings.org/read?panels=p127.972&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.972&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 22",
+        "chapterNumber": 22,
+        "title": "Chapter 22—Thessalonica",
+        "paragraphId": 972,
+        "url": "https://egwwritings.org/read?panels=p127.972&index=0"
+      }
+    ]
   },
   "AA:22": {
     "query": "AA 231",
     "bookId": 127,
     "paragraphId": 1020,
-    "url": "https://egwwritings.org/read?panels=p127.1020&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1020&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 23",
+        "chapterNumber": 23,
+        "title": "Chapter 23—Berea and Athens",
+        "paragraphId": 1020,
+        "url": "https://egwwritings.org/read?panels=p127.1020&index=0"
+      }
+    ]
   },
   "AA:23": {
     "query": "AA 243",
     "bookId": 127,
     "paragraphId": 1076,
-    "url": "https://egwwritings.org/read?panels=p127.1076&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1076&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 24",
+        "chapterNumber": 24,
+        "title": "Chapter 24—Corinth",
+        "paragraphId": 1076,
+        "url": "https://egwwritings.org/read?panels=p127.1076&index=0"
+      }
+    ]
   },
   "AA:24": {
     "query": "AA 255",
     "bookId": 127,
     "paragraphId": 1124,
-    "url": "https://egwwritings.org/read?panels=p127.1124&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1124&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 25",
+        "chapterNumber": 25,
+        "title": "Chapter 25—The Thessalonian Letters",
+        "paragraphId": 1124,
+        "url": "https://egwwritings.org/read?panels=p127.1124&index=0"
+      }
+    ]
   },
   "AA:25": {
     "query": "AA 269",
     "bookId": 127,
     "paragraphId": 1187,
-    "url": "https://egwwritings.org/read?panels=p127.1187&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1187&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 26",
+        "chapterNumber": 26,
+        "title": "Chapter 26—Apollos at Corinth",
+        "paragraphId": 1187,
+        "url": "https://egwwritings.org/read?panels=p127.1187&index=0"
+      }
+    ]
   },
   "AA:26": {
     "query": "AA 281",
     "bookId": 127,
     "paragraphId": 1240,
-    "url": "https://egwwritings.org/read?panels=p127.1240&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1240&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 27",
+        "chapterNumber": 27,
+        "title": "Chapter 27—Ephesus",
+        "paragraphId": 1240,
+        "url": "https://egwwritings.org/read?panels=p127.1240&index=0"
+      }
+    ]
   },
   "AA:27": {
     "query": "AA 291",
     "bookId": 127,
     "paragraphId": 1286,
-    "url": "https://egwwritings.org/read?panels=p127.1286&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1286&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 28",
+        "chapterNumber": 28,
+        "title": "Chapter 28—Days of Toil and Trial",
+        "paragraphId": 1286,
+        "url": "https://egwwritings.org/read?panels=p127.1286&index=0"
+      }
+    ]
   },
   "AA:28": {
     "query": "AA 298",
     "bookId": 127,
     "paragraphId": 1318,
-    "url": "https://egwwritings.org/read?panels=p127.1318&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1318&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 29",
+        "chapterNumber": 29,
+        "title": "Chapter 29—A Message of Warning and Entreaty",
+        "paragraphId": 1318,
+        "url": "https://egwwritings.org/read?panels=p127.1318&index=0"
+      },
+      {
+        "label": "Read Chapter 30",
+        "chapterNumber": 30,
+        "title": "Chapter 30—Called to Reach a Higher Standard",
+        "paragraphId": 1365,
+        "url": "https://egwwritings.org/read?panels=p127.1365&index=0"
+      }
+    ]
   },
   "AA:29": {
     "query": "AA 323",
     "bookId": 127,
     "paragraphId": 1427,
-    "url": "https://egwwritings.org/read?panels=p127.1427&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1427&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 31",
+        "chapterNumber": 31,
+        "title": "Chapter 31—The Message Heeded",
+        "paragraphId": 1427,
+        "url": "https://egwwritings.org/read?panels=p127.1427&index=0"
+      },
+      {
+        "label": "Read Chapter 32",
+        "chapterNumber": 32,
+        "title": "Chapter 32—A Liberal Church",
+        "paragraphId": 1476,
+        "url": "https://egwwritings.org/read?panels=p127.1476&index=0"
+      },
+      {
+        "label": "Read Chapter 33",
+        "chapterNumber": 33,
+        "title": "Chapter 33—Laboring Under Difficulties",
+        "paragraphId": 1525,
+        "url": "https://egwwritings.org/read?panels=p127.1525&index=0"
+      },
+      {
+        "label": "Read Chapter 34",
+        "chapterNumber": 34,
+        "title": "Chapter 34—A Consecrated Ministry",
+        "paragraphId": 1582,
+        "url": "https://egwwritings.org/read?panels=p127.1582&index=0"
+      }
+    ]
   },
   "AA:30": {
     "query": "AA 372",
     "bookId": 127,
     "paragraphId": 1638,
-    "url": "https://egwwritings.org/read?panels=p127.1638&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1638&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 35",
+        "chapterNumber": 35,
+        "title": "Chapter 35—Salvation to the Jews",
+        "paragraphId": 1638,
+        "url": "https://egwwritings.org/read?panels=p127.1638&index=0"
+      }
+    ]
   },
   "AA:31": {
     "query": "AA 383",
     "bookId": 127,
     "paragraphId": 1682,
-    "url": "https://egwwritings.org/read?panels=p127.1682&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1682&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 36",
+        "chapterNumber": 36,
+        "title": "Chapter 36—Apostasy in Galatia",
+        "paragraphId": 1682,
+        "url": "https://egwwritings.org/read?panels=p127.1682&index=0"
+      }
+    ]
   },
   "AA:32": {
     "query": "AA 389",
     "bookId": 127,
     "paragraphId": 1709,
-    "url": "https://egwwritings.org/read?panels=p127.1709&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1709&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 37",
+        "chapterNumber": 37,
+        "title": "Chapter 37—Paul’s Last Journey to Jerusalem",
+        "paragraphId": 1709,
+        "url": "https://egwwritings.org/read?panels=p127.1709&index=0"
+      }
+    ]
   },
   "AA:33": {
     "query": "AA 399",
     "bookId": 127,
     "paragraphId": 1757,
-    "url": "https://egwwritings.org/read?panels=p127.1757&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1757&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 38",
+        "chapterNumber": 38,
+        "title": "Chapter 38—Paul a Prisoner",
+        "paragraphId": 1757,
+        "url": "https://egwwritings.org/read?panels=p127.1757&index=0"
+      }
+    ]
   },
   "AA:34": {
     "query": "AA 419",
     "bookId": 127,
     "paragraphId": 1849,
-    "url": "https://egwwritings.org/read?panels=p127.1849&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1849&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 39",
+        "chapterNumber": 39,
+        "title": "Chapter 39—The Trial at Caesarea",
+        "paragraphId": 1849,
+        "url": "https://egwwritings.org/read?panels=p127.1849&index=0"
+      }
+    ]
   },
   "AA:35": {
     "query": "AA 428",
     "bookId": 127,
     "paragraphId": 1890,
-    "url": "https://egwwritings.org/read?panels=p127.1890&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1890&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 40",
+        "chapterNumber": 40,
+        "title": "Chapter 40—Paul Appeals to Caesar",
+        "paragraphId": 1890,
+        "url": "https://egwwritings.org/read?panels=p127.1890&index=0"
+      }
+    ]
   },
   "AA:36": {
     "query": "AA 433",
     "bookId": 127,
     "paragraphId": 1909,
-    "url": "https://egwwritings.org/read?panels=p127.1909&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1909&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 41",
+        "chapterNumber": 41,
+        "title": "Chapter 41—“Almost Thou Persuadest Me”",
+        "paragraphId": 1909,
+        "url": "https://egwwritings.org/read?panels=p127.1909&index=0"
+      }
+    ]
   },
   "AA:37": {
     "query": "AA 439",
     "bookId": 127,
     "paragraphId": 1939,
-    "url": "https://egwwritings.org/read?panels=p127.1939&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1939&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 42",
+        "chapterNumber": 42,
+        "title": "Chapter 42—The Voyage and Shipwreck",
+        "paragraphId": 1939,
+        "url": "https://egwwritings.org/read?panels=p127.1939&index=0"
+      }
+    ]
   },
   "AA:38": {
     "query": "AA 447",
     "bookId": 127,
     "paragraphId": 1976,
-    "url": "https://egwwritings.org/read?panels=p127.1976&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.1976&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 43",
+        "chapterNumber": 43,
+        "title": "Chapter 43—In Rome",
+        "paragraphId": 1976,
+        "url": "https://egwwritings.org/read?panels=p127.1976&index=0"
+      },
+      {
+        "label": "Read Chapter 44",
+        "chapterNumber": 44,
+        "title": "Chapter 44—Caesar’s Household",
+        "paragraphId": 2039,
+        "url": "https://egwwritings.org/read?panels=p127.2039&index=0"
+      }
+    ]
   },
   "AA:39": {
     "query": "AA 469",
     "bookId": 127,
     "paragraphId": 2074,
-    "url": "https://egwwritings.org/read?panels=p127.2074&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.2074&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 45",
+        "chapterNumber": 45,
+        "title": "Chapter 45—Written From Rome",
+        "paragraphId": 2074,
+        "url": "https://egwwritings.org/read?panels=p127.2074&index=0"
+      }
+    ]
   },
   "AA:40": {
     "query": "AA 485",
     "bookId": 127,
     "paragraphId": 2144,
-    "url": "https://egwwritings.org/read?panels=p127.2144&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.2144&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 46",
+        "chapterNumber": 46,
+        "title": "Chapter 46—At Liberty",
+        "paragraphId": 2144,
+        "url": "https://egwwritings.org/read?panels=p127.2144&index=0"
+      },
+      {
+        "label": "Read Chapter 47",
+        "chapterNumber": 47,
+        "title": "Chapter 47—The Final Arrest",
+        "paragraphId": 2162,
+        "url": "https://egwwritings.org/read?panels=p127.2162&index=0"
+      },
+      {
+        "label": "Read Chapter 48",
+        "chapterNumber": 48,
+        "title": "Chapter 48—Paul Before Nero",
+        "paragraphId": 2174,
+        "url": "https://egwwritings.org/read?panels=p127.2174&index=0"
+      }
+    ]
   },
   "AA:41": {
     "query": "AA 498",
     "bookId": 127,
     "paragraphId": 2201,
-    "url": "https://egwwritings.org/read?panels=p127.2201&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.2201&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 49",
+        "chapterNumber": 49,
+        "title": "Chapter 49—Paul’s Last Letter",
+        "paragraphId": 2201,
+        "url": "https://egwwritings.org/read?panels=p127.2201&index=0"
+      },
+      {
+        "label": "Read Chapter 50",
+        "chapterNumber": 50,
+        "title": "Chapter 50—Condemned to Die",
+        "paragraphId": 2250,
+        "url": "https://egwwritings.org/read?panels=p127.2250&index=0"
+      }
+    ]
   },
   "AA:42": {
     "query": "AA 514",
     "bookId": 127,
     "paragraphId": 2269,
-    "url": "https://egwwritings.org/read?panels=p127.2269&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.2269&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 51",
+        "chapterNumber": 51,
+        "title": "Chapter 51—A Faithful Under-Shepherd",
+        "paragraphId": 2269,
+        "url": "https://egwwritings.org/read?panels=p127.2269&index=0"
+      }
+    ]
   },
   "AA:43": {
     "query": "AA 529",
     "bookId": 127,
     "paragraphId": 2335,
-    "url": "https://egwwritings.org/read?panels=p127.2335&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.2335&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 52",
+        "chapterNumber": 52,
+        "title": "Chapter 52—Steadfast Unto the End",
+        "paragraphId": 2335,
+        "url": "https://egwwritings.org/read?panels=p127.2335&index=0"
+      },
+      {
+        "label": "Read Chapter 53",
+        "chapterNumber": 53,
+        "title": "Chapter 53—John the Beloved",
+        "paragraphId": 2377,
+        "url": "https://egwwritings.org/read?panels=p127.2377&index=0"
+      }
+    ]
   },
   "AA:44": {
     "query": "AA 546",
     "bookId": 127,
     "paragraphId": 2409,
-    "url": "https://egwwritings.org/read?panels=p127.2409&index=0"
+    "url": "https://egwwritings.org/read?panels=p127.2409&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 54",
+        "chapterNumber": 54,
+        "title": "Chapter 54—A Faithful Witness",
+        "paragraphId": 2409,
+        "url": "https://egwwritings.org/read?panels=p127.2409&index=0"
+      },
+      {
+        "label": "Read Chapter 55",
+        "chapterNumber": 55,
+        "title": "Chapter 55—Transformed by Grace",
+        "paragraphId": 2454,
+        "url": "https://egwwritings.org/read?panels=p127.2454&index=0"
+      },
+      {
+        "label": "Read Chapter 56",
+        "chapterNumber": 56,
+        "title": "Chapter 56—Patmos",
+        "paragraphId": 2496,
+        "url": "https://egwwritings.org/read?panels=p127.2496&index=0"
+      },
+      {
+        "label": "Read Chapter 57",
+        "chapterNumber": 57,
+        "title": "Chapter 57—The Revelation",
+        "paragraphId": 2541,
+        "url": "https://egwwritings.org/read?panels=p127.2541&index=0"
+      },
+      {
+        "label": "Read Chapter 58",
+        "chapterNumber": 58,
+        "title": "Chapter 58—The Church Triumphant",
+        "paragraphId": 2611,
+        "url": "https://egwwritings.org/read?panels=p127.2611&index=0"
+      }
+    ]
   },
   "GC:1": {
     "query": "GC 17",
     "bookId": 132,
     "paragraphId": 69,
-    "url": "https://egwwritings.org/read?panels=p132.69&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.69&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 1",
+        "chapterNumber": 1,
+        "title": "Chapter 1—The Destruction of Jerusalem",
+        "paragraphId": 69,
+        "url": "https://egwwritings.org/read?panels=p132.69&index=0"
+      },
+      {
+        "label": "Read Chapter 2",
+        "chapterNumber": 2,
+        "title": "Chapter 2—Persecution in the First Centuries",
+        "paragraphId": 160,
+        "url": "https://egwwritings.org/read?panels=p132.160&index=0"
+      }
+    ]
   },
   "GC:2": {
     "query": "GC 43",
     "bookId": 132,
     "paragraphId": 179,
-    "url": "https://egwwritings.org/read?panels=p132.179&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.160&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 2",
+        "chapterNumber": 2,
+        "title": "Chapter 2—Persecution in the First Centuries",
+        "paragraphId": 160,
+        "url": "https://egwwritings.org/read?panels=p132.160&index=0"
+      },
+      {
+        "label": "Read Chapter 3",
+        "chapterNumber": 3,
+        "title": "Chapter 3—An Era of Spiritual Darkness",
+        "paragraphId": 200,
+        "url": "https://egwwritings.org/read?panels=p132.200&index=0"
+      },
+      {
+        "label": "Read Chapter 4",
+        "chapterNumber": 4,
+        "title": "Chapter 4—The Waldenses",
+        "paragraphId": 257,
+        "url": "https://egwwritings.org/read?panels=p132.257&index=0"
+      },
+      {
+        "label": "Read Chapter 5",
+        "chapterNumber": 5,
+        "title": "Chapter 5—John Wycliffe",
+        "paragraphId": 336,
+        "url": "https://egwwritings.org/read?panels=p132.336&index=0"
+      },
+      {
+        "label": "Read Chapter 6",
+        "chapterNumber": 6,
+        "title": "Chapter 6—Huss and Jerome",
+        "paragraphId": 419,
+        "url": "https://egwwritings.org/read?panels=p132.419&index=0"
+      },
+      {
+        "label": "Read Chapter 7",
+        "chapterNumber": 7,
+        "title": "Chapter 7—Luther’s Separation From Rome",
+        "paragraphId": 526,
+        "url": "https://egwwritings.org/read?panels=p132.526&index=0"
+      },
+      {
+        "label": "Read Chapter 8",
+        "chapterNumber": 8,
+        "title": "Chapter 8—Luther Before the Diet",
+        "paragraphId": 646,
+        "url": "https://egwwritings.org/read?panels=p132.646&index=0"
+      },
+      {
+        "label": "Read Chapter 9",
+        "chapterNumber": 9,
+        "title": "Chapter 9—The Swiss Reformer",
+        "paragraphId": 768,
+        "url": "https://egwwritings.org/read?panels=p132.768&index=0"
+      },
+      {
+        "label": "Read Chapter 10",
+        "chapterNumber": 10,
+        "title": "Chapter 10—Progress of Reform in Germany",
+        "paragraphId": 832,
+        "url": "https://egwwritings.org/read?panels=p132.832&index=0"
+      },
+      {
+        "label": "Read Chapter 11",
+        "chapterNumber": 11,
+        "title": "Chapter 11—Protest of the Princes",
+        "paragraphId": 896,
+        "url": "https://egwwritings.org/read?panels=p132.896&index=0"
+      },
+      {
+        "label": "Read Chapter 12",
+        "chapterNumber": 12,
+        "title": "Chapter 12—The French Reformation",
+        "paragraphId": 963,
+        "url": "https://egwwritings.org/read?panels=p132.963&index=0"
+      },
+      {
+        "label": "Read Chapter 13",
+        "chapterNumber": 13,
+        "title": "Chapter 13—The Netherlands and Scandinavia",
+        "paragraphId": 1083,
+        "url": "https://egwwritings.org/read?panels=p132.1083&index=0"
+      },
+      {
+        "label": "Read Chapter 14",
+        "chapterNumber": 14,
+        "title": "Chapter 14—Later English Reformers",
+        "paragraphId": 1118,
+        "url": "https://egwwritings.org/read?panels=p132.1118&index=0"
+      },
+      {
+        "label": "Read Chapter 15",
+        "chapterNumber": 15,
+        "title": "Chapter 15—The Bible and the French Revolution",
+        "paragraphId": 1214,
+        "url": "https://egwwritings.org/read?panels=p132.1214&index=0"
+      },
+      {
+        "label": "Read Chapter 16",
+        "chapterNumber": 16,
+        "title": "Chapter 16—The Pilgrim Fathers",
+        "paragraphId": 1321,
+        "url": "https://egwwritings.org/read?panels=p132.1321&index=0"
+      },
+      {
+        "label": "Read Chapter 17",
+        "chapterNumber": 17,
+        "title": "Chapter 17—Heralds of the Morning",
+        "paragraphId": 1368,
+        "url": "https://egwwritings.org/read?panels=p132.1368&index=0"
+      },
+      {
+        "label": "Read Chapter 18",
+        "chapterNumber": 18,
+        "title": "Chapter 18—An American Reformer",
+        "paragraphId": 1450,
+        "url": "https://egwwritings.org/read?panels=p132.1450&index=0"
+      },
+      {
+        "label": "Read Chapter 19",
+        "chapterNumber": 19,
+        "title": "Chapter 19—Light Through Darkness",
+        "paragraphId": 1565,
+        "url": "https://egwwritings.org/read?panels=p132.1565&index=0"
+      },
+      {
+        "label": "Read Chapter 20",
+        "chapterNumber": 20,
+        "title": "Chapter 20—A Great Religious Awakening",
+        "paragraphId": 1619,
+        "url": "https://egwwritings.org/read?panels=p132.1619&index=0"
+      }
+    ]
   },
   "GC:3": {
     "query": "GC 375",
     "bookId": 132,
     "paragraphId": 1704,
-    "url": "https://egwwritings.org/read?panels=p132.1704&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.1704&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 21",
+        "chapterNumber": 21,
+        "title": "Chapter 21—A Warning Rejected",
+        "paragraphId": 1704,
+        "url": "https://egwwritings.org/read?panels=p132.1704&index=0"
+      },
+      {
+        "label": "Read Chapter 22",
+        "chapterNumber": 22,
+        "title": "Chapter 22—Prophecies Fulfilled",
+        "paragraphId": 1774,
+        "url": "https://egwwritings.org/read?panels=p132.1774&index=0"
+      }
+    ]
   },
   "GC:4": {
     "query": "GC 409",
     "bookId": 132,
     "paragraphId": 1851,
-    "url": "https://egwwritings.org/read?panels=p132.1851&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.1851&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 23",
+        "chapterNumber": 23,
+        "title": "Chapter 23—What is the Sanctuary?",
+        "paragraphId": 1851,
+        "url": "https://egwwritings.org/read?panels=p132.1851&index=0"
+      }
+    ]
   },
   "GC:5": {
     "query": "GC 423",
     "bookId": 132,
     "paragraphId": 1918,
-    "url": "https://egwwritings.org/read?panels=p132.1918&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.1918&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 24",
+        "chapterNumber": 24,
+        "title": "Chapter 24—In the Holy of Holies",
+        "paragraphId": 1918,
+        "url": "https://egwwritings.org/read?panels=p132.1918&index=0"
+      }
+    ]
   },
   "GC:6": {
     "query": "GC 433",
     "bookId": 132,
     "paragraphId": 1960,
-    "url": "https://egwwritings.org/read?panels=p132.1960&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.1960&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 25",
+        "chapterNumber": 25,
+        "title": "Chapter 25—God’s Law Immutable",
+        "paragraphId": 1960,
+        "url": "https://egwwritings.org/read?panels=p132.1960&index=0"
+      },
+      {
+        "label": "Read Chapter 26",
+        "chapterNumber": 26,
+        "title": "Chapter 26—A Work of Reform",
+        "paragraphId": 2041,
+        "url": "https://egwwritings.org/read?panels=p132.2041&index=0"
+      }
+    ]
   },
   "GC:7": {
     "query": "GC 461",
     "bookId": 132,
     "paragraphId": 2087,
-    "url": "https://egwwritings.org/read?panels=p132.2087&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.2087&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 27",
+        "chapterNumber": 27,
+        "title": "Chapter 27—Modern Revivals",
+        "paragraphId": 2087,
+        "url": "https://egwwritings.org/read?panels=p132.2087&index=0"
+      },
+      {
+        "label": "Read Chapter 28",
+        "chapterNumber": 28,
+        "title": "Chapter 28—Facing Life’s Record",
+        "paragraphId": 2168,
+        "url": "https://egwwritings.org/read?panels=p132.2168&index=0"
+      }
+    ]
   },
   "GC:8": {
     "query": "GC 492",
     "bookId": 132,
     "paragraphId": 2227,
-    "url": "https://egwwritings.org/read?panels=p132.2227&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.2227&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 29",
+        "chapterNumber": 29,
+        "title": "Chapter 29—The Origin of Evil",
+        "paragraphId": 2227,
+        "url": "https://egwwritings.org/read?panels=p132.2227&index=0"
+      },
+      {
+        "label": "Read Chapter 30",
+        "chapterNumber": 30,
+        "title": "Chapter 30—Enmity Between Man and Satan",
+        "paragraphId": 2286,
+        "url": "https://egwwritings.org/read?panels=p132.2286&index=0"
+      },
+      {
+        "label": "Read Chapter 31",
+        "chapterNumber": 31,
+        "title": "Chapter 31—Agency of Evil Spirits",
+        "paragraphId": 2312,
+        "url": "https://egwwritings.org/read?panels=p132.2312&index=0"
+      },
+      {
+        "label": "Read Chapter 32",
+        "chapterNumber": 32,
+        "title": "Chapter 32—Snares of Satan",
+        "paragraphId": 2343,
+        "url": "https://egwwritings.org/read?panels=p132.2343&index=0"
+      },
+      {
+        "label": "Read Chapter 33",
+        "chapterNumber": 33,
+        "title": "Chapter 33—The First Great Deception",
+        "paragraphId": 2404,
+        "url": "https://egwwritings.org/read?panels=p132.2404&index=0"
+      },
+      {
+        "label": "Read Chapter 34",
+        "chapterNumber": 34,
+        "title": "Chapter 34—Can Our Dead Speak to Us?",
+        "paragraphId": 2495,
+        "url": "https://egwwritings.org/read?panels=p132.2495&index=0"
+      },
+      {
+        "label": "Read Chapter 35",
+        "chapterNumber": 35,
+        "title": "Chapter 35—Liberty of Conscience Threatened",
+        "paragraphId": 2545,
+        "url": "https://egwwritings.org/read?panels=p132.2545&index=0"
+      },
+      {
+        "label": "Read Chapter 36",
+        "chapterNumber": 36,
+        "title": "Chapter 36—The Impending Conflict",
+        "paragraphId": 2635,
+        "url": "https://egwwritings.org/read?panels=p132.2635&index=0"
+      },
+      {
+        "label": "Read Chapter 37",
+        "chapterNumber": 37,
+        "title": "Chapter 37—The Scriptures a Safeguard",
+        "paragraphId": 2680,
+        "url": "https://egwwritings.org/read?panels=p132.2680&index=0"
+      },
+      {
+        "label": "Read Chapter 38",
+        "chapterNumber": 38,
+        "title": "Chapter 38—The Final Warning",
+        "paragraphId": 2727,
+        "url": "https://egwwritings.org/read?panels=p132.2727&index=0"
+      }
+    ]
   },
   "GC:9": {
     "query": "GC 613",
     "bookId": 132,
     "paragraphId": 2769,
-    "url": "https://egwwritings.org/read?panels=p132.2769&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.2769&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 39",
+        "chapterNumber": 39,
+        "title": "Chapter 39—The Time of Trouble",
+        "paragraphId": 2769,
+        "url": "https://egwwritings.org/read?panels=p132.2769&index=0"
+      }
+    ]
   },
   "GC:10": {
     "query": "GC 635",
     "bookId": 132,
     "paragraphId": 2868,
-    "url": "https://egwwritings.org/read?panels=p132.2868&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.2868&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 40",
+        "chapterNumber": 40,
+        "title": "Chapter 40—God’s People Delivered",
+        "paragraphId": 2868,
+        "url": "https://egwwritings.org/read?panels=p132.2868&index=0"
+      }
+    ]
   },
   "GC:11": {
     "query": "GC 653",
     "bookId": 132,
     "paragraphId": 2946,
-    "url": "https://egwwritings.org/read?panels=p132.2946&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.2946&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 41",
+        "chapterNumber": 41,
+        "title": "Chapter 41—Desolation of the Earth",
+        "paragraphId": 2946,
+        "url": "https://egwwritings.org/read?panels=p132.2946&index=0"
+      }
+    ]
   },
   "GC:12": {
     "query": "GC 662",
     "bookId": 132,
     "paragraphId": 2989,
-    "url": "https://egwwritings.org/read?panels=p132.2989&index=0"
+    "url": "https://egwwritings.org/read?panels=p132.2989&index=0",
+    "chapters": [
+      {
+        "label": "Read Chapter 42",
+        "chapterNumber": 42,
+        "title": "Chapter 42—The Controversy Ended",
+        "paragraphId": 2989,
+        "url": "https://egwwritings.org/read?panels=p132.2989&index=0"
+      }
+    ]
   }
 }

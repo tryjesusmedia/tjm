@@ -17,15 +17,35 @@ assert.equal(Object.keys(egwLinkMap).length, websitePlan.readings.filter((readin
 for (const [index, reading] of websitePlan.readings.entries()) {
   assert.equal(reading.id, `coa-${String(index + 1).padStart(3, "0")}`);
   assert.equal(reading.day, index + 1);
-  assert.ok(reading.sourceEntry, `Day ${reading.day} must preserve its supplied source block`);
-  assert.ok(reading.bibleReference || reading.commentaryCitation, `Day ${reading.day} must have at least one assignment`);
-  if (reading.bibleUrl) {
-    const bible = new URL(reading.bibleUrl);
-    assert.equal(bible.hostname, "www.biblegateway.com");
-    assert.ok(bible.searchParams.get("search"));
-    assert.equal(bible.searchParams.get("version"), "KJV");
+  assert.ok(reading.sourceEntry, `Reading ${reading.day} must preserve its supplied source block`);
+  assert.ok(reading.bibleReference || reading.commentaryCitation, `Reading ${reading.day} must have at least one assignment`);
+  if (reading.bibleReference) {
+    assert.ok(reading.bibleTasks.length > 0, `Reading ${reading.day} must have chapter-level Scripture links`);
+    assert.equal(reading.bibleUrl, reading.bibleTasks[0].url);
+    for (const task of reading.bibleTasks) {
+      assert.equal(task.label, `Read ${task.reference}`);
+      assert.ok(Number.isInteger(task.chapter) && task.chapter > 0);
+      const bible = new URL(task.url);
+      assert.equal(bible.hostname, "www.biblegateway.com");
+      assert.equal(bible.searchParams.get("search"), task.reference);
+      assert.equal(bible.searchParams.get("version"), "KJV");
+    }
+  } else {
+    assert.deepEqual(reading.bibleTasks, []);
+    assert.equal(reading.bibleUrl, null);
   }
   if (reading.commentaryCitation) {
+    assert.ok(reading.commentaryTasks.length > 0, `Reading ${reading.day} must have chapter-level companion links`);
+    assert.equal(reading.commentaryUrl, reading.commentaryTasks[0].url);
+    assert.deepEqual(reading.commentaryTasks, egwLinkMap[reading.sourceKey].chapters);
+    for (const task of reading.commentaryTasks) {
+      const commentary = new URL(task.url);
+      assert.match(task.label, /^Read (?:Chapter \d+|Introduction)$/);
+      assert.equal(commentary.hostname, "egwwritings.org");
+      assert.equal(commentary.pathname, "/read");
+      assert.match(commentary.searchParams.get("panels"), /^p\d+\.\d+$/);
+      assert.equal(commentary.searchParams.get("index"), "0");
+    }
     const commentary = new URL(reading.commentaryUrl);
     const expectedQuery = reading.commentaryPageStart
       ? `${reading.code} ${reading.commentaryPageStart}`
@@ -37,6 +57,7 @@ for (const [index, reading] of websitePlan.readings.entries()) {
     assert.equal(commentary.href, egwLinkMap[reading.sourceKey].url);
     assert.equal(egwLinkMap[reading.sourceKey].query, expectedQuery);
   } else {
+    assert.deepEqual(reading.commentaryTasks, []);
     assert.equal(reading.commentaryUrl, null);
   }
 }
@@ -53,11 +74,13 @@ assert.equal(websitePlan.readings.find((reading) => reading.sourceKey === "PK:62
 assert.equal(websitePlan.readings.at(-1).bibleReference, "Revelation 21; 22");
 assert.match(websitePlan.readings.at(-1).commentaryCitation, /GC 662-678/);
 
-for (const label of ["Today", "Journey", "Calendar", "Progress", "Members", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
+for (const label of ["Readings", "Journey", "Progress", "Members", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
+assert.doesNotMatch(html, />\s*(?:Today|Calendar)\s*</i);
+assert.doesNotMatch(app, /["'`]Day \$\{/);
 assert.match(app, /Viewing without an account/);
 assert.match(app, /saved only after you sign in/);
 assert.doesNotMatch(`${html}\n${app}`, /Ask Pastor Kal/i);
 assert.match(app, /conflict_reading_progress/);
 assert.match(app, /create_conflict_principle/);
 
-console.log("Conflict journey validation passed: 265 corrected readings, exact app/web parity, no unresolved review flags, and safe outbound links.");
+console.log("Conflict journey validation passed: 265 numbered readings, exact app/web parity, chapter-level Scripture and companion links, no unresolved review flags, and safe outbound links.");
