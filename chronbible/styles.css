@@ -1,0 +1,98 @@
+.chronbible .hero-copy h1 {
+  max-width: 850px;
+  font-size: clamp(54px, 8vw, 102px);
+}
+
+.chronbible .hero-copy h1 em {
+  display: inline-block;
+  font-size: .72em;
+  line-height: 1.08;
+}
+
+.chronbible .chapter-side {
+  position: sticky;
+  top: 92px;
+  padding: 25px;
+  border: 1px solid var(--line-dark);
+  border-radius: 24px;
+  background: #efe3cc;
+}
+
+.chronbible .chapter-side h3 {
+  margin: 0;
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: 31px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.chronbible .chapter-side > p:not(.eyebrow) {
+  margin: 10px 0 20px;
+  color: #6c6268;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.chronbible .side-progress {
+  margin: 18px 0;
+}
+
+.chronbible .side-progress strong {
+  display: block;
+  margin-top: 9px;
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: 24px;
+}
+
+.chronbible .side-progress small {
+  color: #7d7078;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
+.chronbible .chapter-side .button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.chronbible .progress-layout-wide {
+  grid-template-columns: minmax(0, 1.25fr) minmax(310px, .75fr);
+}
+
+.chronbible .next-reading-card {
+  padding: 23px;
+  border-radius: 20px;
+  background: var(--plum);
+  color: var(--ivory);
+}
+
+.chronbible .next-reading-card h3 {
+  margin: 0;
+  color: var(--white);
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.chronbible .next-reading-card p {
+  color: rgba(243,232,208,.68);
+  font-size: 10px;
+  line-height: 1.65;
+}
+
+.chronbible .next-reading-card .eyebrow { color: var(--gold); }
+.chronbible .next-reading-card .button { width: 100%; margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .chronbible .chapter-side { position: static; }
+  .chronbible .progress-layout-wide { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+  .chronbible .hero-copy h1 { font-size: clamp(42px, 13vw, 62px); }
+  .chronbible .chapter-side { padding: 20px; }
+}

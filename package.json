@@ -11,7 +11,8 @@
     "kb:conflict:sync": "node scripts/upload-knowledge.mjs --sync --scope=conflict-of-the-ages",
     "links:egw": "node scripts/resolve-egw-reading-links.mjs",
     "test:chat": "node scripts/test-chat.mjs",
-    "test:conflict": "node scripts/test-conflict-plan.mjs"
+    "test:conflict": "node scripts/test-conflict-plan.mjs",
+    "test:chronbible": "node scripts/test-chronological-plan.mjs"
   },
   "dependencies": {
     "cheerio": "latest",

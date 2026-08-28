@@ -12,3 +12,6 @@
 
 /bibleandconflictoftheages/*
   Cache-Control: public, max-age=0, must-revalidate
+
+/chronbible/*
+  Cache-Control: public, max-age=0, must-revalidate
