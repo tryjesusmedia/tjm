@@ -5,12 +5,14 @@ const websitePlan = JSON.parse(await readFile(new URL("../bibleandconflictofthea
 const appPlan = JSON.parse(await readFile(new URL("../../tryjesusjourney/data/conflictPlan.json", import.meta.url), "utf8"));
 const html = await readFile(new URL("../bibleandconflictoftheages/index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../bibleandconflictoftheages/app.js", import.meta.url), "utf8");
+const egwLinkMap = JSON.parse(await readFile(new URL("./egw-reading-links.json", import.meta.url), "utf8"));
 
 assert.deepEqual(appPlan, websitePlan, "The website and native app plan bundles must match exactly");
 assert.equal(websitePlan.planId, "bible-conflict-ages-v1");
 assert.equal(websitePlan.readings.length, 265);
 assert.deepEqual(Object.fromEntries(websitePlan.books.map((book) => [book.code, book.readingCount])), { PP: 67, PK: 60, DA: 82, AA: 44, GC: 12 });
 assert.equal(websitePlan.reviewQueue.length, 0);
+assert.equal(Object.keys(egwLinkMap).length, websitePlan.readings.filter((reading) => reading.commentaryCitation).length);
 
 for (const [index, reading] of websitePlan.readings.entries()) {
   assert.equal(reading.id, `coa-${String(index + 1).padStart(3, "0")}`);
@@ -25,8 +27,17 @@ for (const [index, reading] of websitePlan.readings.entries()) {
   }
   if (reading.commentaryCitation) {
     const commentary = new URL(reading.commentaryUrl);
-    assert.equal(commentary.hostname, "m.egwwritings.org");
-    assert.ok(commentary.searchParams.get("query"));
+    const expectedQuery = reading.commentaryPageStart
+      ? `${reading.code} ${reading.commentaryPageStart}`
+      : `${reading.commentaryBook} ${reading.commentaryCitation}`;
+    assert.equal(commentary.hostname, "egwwritings.org");
+    assert.equal(commentary.pathname, "/read");
+    assert.match(commentary.searchParams.get("panels"), /^p\d+\.\d+$/);
+    assert.equal(commentary.searchParams.get("index"), "0");
+    assert.equal(commentary.href, egwLinkMap[reading.sourceKey].url);
+    assert.equal(egwLinkMap[reading.sourceKey].query, expectedQuery);
+  } else {
+    assert.equal(reading.commentaryUrl, null);
   }
 }
 

@@ -9,6 +9,7 @@
     "kb:sync": "node scripts/upload-knowledge.mjs --sync",
     "kb:conflict:fetch": "node scripts/fetch-conflict-books.mjs",
     "kb:conflict:sync": "node scripts/upload-knowledge.mjs --sync --scope=conflict-of-the-ages",
+    "links:egw": "node scripts/resolve-egw-reading-links.mjs",
     "test:chat": "node scripts/test-chat.mjs",
     "test:conflict": "node scripts/test-conflict-plan.mjs"
   },

@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 const PLAN_ID = "bible-conflict-ages-v1";
 const OUTPUT = new URL("../bibleandconflictoftheages/data/readings.json", import.meta.url);
 const APP_OUTPUT = new URL("../../tryjesusjourney/data/conflictPlan.json", import.meta.url);
+const egwReadingLinks = JSON.parse(await readFile(new URL("./egw-reading-links.json", import.meta.url), "utf8"));
+const EGW_LINK_REVIEW_NOTE = "Resolve and verify this assignment's direct link on egwwritings.org before publishing.";
 
 const bookMeta = {
   PP: { title: "Patriarchs and Prophets", shortTitle: "Patriarchs & Prophets", accent: "#dca449" },
@@ -141,6 +143,8 @@ function createRaw(code, sourceBlock, sourceLines, bibleLines, commentaryLines, 
   const pages = extractPages(code, commentaryCitation);
   const bibleQuery = bibleReference ? normalizeBibleQuery(bibleReference) : "";
   const commentaryQuery = pages.start ? `${code} ${pages.start}` : `${meta.title} ${commentaryCitation}`;
+  const mappedEgwLink = commentaryCitation ? egwReadingLinks[sourceKey] : null;
+  const egwLink = mappedEgwLink?.query === commentaryQuery ? mappedEgwLink : null;
   const fallbackTitle = bibleReference || `${meta.shortTitle} reading`;
   return {
     code,
@@ -161,8 +165,8 @@ function createRaw(code, sourceBlock, sourceLines, bibleLines, commentaryLines, 
     commentaryCitation,
     commentaryPageStart: pages.start,
     commentaryPageEnd: pages.end,
-    commentaryUrl: `https://m.egwwritings.org/en/search?query=${encodeURIComponent(commentaryQuery)}&suggestion=1`,
-    reviewNote: null,
+    commentaryUrl: commentaryCitation ? (egwLink?.url ?? "https://egwwritings.org/") : null,
+    reviewNote: commentaryCitation && !egwLink ? EGW_LINK_REVIEW_NOTE : null,
   };
 }
 
