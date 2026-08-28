@@ -1769,6 +1769,34 @@ button:focus-visible {
     translateY(-2px);
 }
 
+.reading-journey-link {
+  width: fit-content;
+
+  margin:
+    22px auto 0;
+
+  display: block;
+
+  color: rgba(255,255,255,.82);
+
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+
+  text-align: center;
+  text-decoration-color: rgba(238,189,74,.55);
+  text-underline-offset: 4px;
+
+  transition:
+    color .2s ease,
+    text-decoration-color .2s ease;
+}
+
+.reading-journey-link:hover {
+  color: var(--gold);
+  text-decoration-color: var(--gold);
+}
+
 .footer-bottom {
   width:
     min(1080px, 100%);
