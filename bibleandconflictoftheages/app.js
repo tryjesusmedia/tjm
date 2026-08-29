@@ -119,6 +119,46 @@
     return plan.readings[Math.max(0, Math.min(currentIndex, plan.readings.length - 1))];
   }
 
+  function companionTitles(reading) {
+    const titles = (reading?.commentaryTasks ?? []).map((task) => String(task.title || "").trim()).filter(Boolean);
+    if (titles.length) return titles;
+    if (reading?.commentaryCitation) return [reading.commentaryCitation];
+    if (reading?.bibleReference) return [`Scripture—${reading.bibleReference}`];
+    return [reading?.title || "Reading assignment"];
+  }
+
+  function companionChapterSummary(reading) {
+    const sections = (reading?.commentaryTasks ?? []).map((task) => {
+      if (Number.isInteger(task.chapterNumber)) return `Chapter ${task.chapterNumber}`;
+      return String(task.title || task.label || "Introduction").split("—")[0].replace(/^Read\s+/i, "").trim();
+    }).filter(Boolean);
+    if (!sections.length) return reading?.bibleReference && !reading?.commentaryCitation ? "Scripture assignment" : "Companion reading";
+    if (sections.length === 1) return sections[0];
+    if (sections.every((section) => /^Chapter \d+$/.test(section))) {
+      return `Chapters ${sections.map((section) => section.replace("Chapter ", "")).join(" & ")}`;
+    }
+    return sections.join(" & ");
+  }
+
+  function companionIdentity(reading, includeBook = true) {
+    const chapter = companionChapterSummary(reading);
+    if (reading?.bibleReference && !reading?.commentaryCitation) return `Scripture · ${reading.bibleReference}`;
+    return includeBook ? `${reading?.code || ""} · ${chapter}` : chapter;
+  }
+
+  function companionHeading(reading, className = "") {
+    return companionTitles(reading).map((title) => `<span${className ? ` class="${className}"` : ""}>${escapeHTML(title)}</span>`).join("");
+  }
+
+  function bookChapterRange(readings) {
+    const tasks = readings.flatMap((reading) => reading.commentaryTasks ?? []);
+    const numbers = tasks.map((task) => task.chapterNumber).filter(Number.isInteger);
+    const hasIntroduction = tasks.some((task) => !Number.isInteger(task.chapterNumber) && /^Introduction/i.test(task.title || task.label || ""));
+    if (!numbers.length) return hasIntroduction ? "Introduction" : "Companion chapters";
+    const range = `Chapters ${Math.min(...numbers)}–${Math.max(...numbers)}`;
+    return hasIntroduction ? `Introduction + ${range}` : range;
+  }
+
   function defaultReadingIndex() {
     if (settings?.last_reading_id) {
       const last = plan.readings.findIndex((reading) => reading.id === settings.last_reading_id);
@@ -181,7 +221,10 @@
     const style = kind === "bible" ? "button-primary" : "button-secondary";
     const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
-    return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => `<a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}"${task.title ? ` title="${escapeHTML(task.title)}"` : ""}>${escapeHTML(task.label)} <span>↗</span></a>`).join("")}</div>`;
+    return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
+      const linkLabel = kind === "commentary" && task.title ? `Read ${task.title}` : task.label;
+      return `<a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}"${task.title ? ` title="${escapeHTML(task.title)}"` : ""}>${escapeHTML(linkLabel)} <span>↗</span></a>`;
+    }).join("")}</div>`;
   }
 
   function renderReadings() {
@@ -190,6 +233,31 @@
     const readingPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
     const scriptureActions = sourceTaskLinks(reading, "bible", reading.bibleTasks);
     const commentaryActions = sourceTaskLinks(reading, "commentary", reading.commentaryTasks);
+    const scriptureCard = reading.bibleReference ? `
+            <article class="reading-card scripture-card">
+              <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">READ FIRST</span></div>
+              <h3>${escapeHTML(reading.bibleReference)}</h3>
+              <p class="citation">Choose one chapter at a time. Each link opens only that chapter or its assigned verses on Bible Gateway (KJV).</p>
+              <div class="reading-actions">
+                ${scriptureActions}
+                ${completeToggle(reading, "bible_complete", saved.bible_complete, "Scripture complete")}
+              </div>
+              ${reviewFlag(reading)}
+              ${exactSource(reading, true)}
+            </article>` : "";
+    const companionCard = reading.commentaryCitation ? `
+            <article class="reading-card companion-card${reading.bibleReference ? "" : " companion-only"}">
+              <div class="card-kicker"><span>CONFLICT OF THE AGES</span><span class="source-order">COMPANION READING</span></div>
+              <h3>${escapeHTML(reading.commentaryBook)}</h3>
+              <div class="companion-chapters" aria-label="Assigned companion chapters">${companionHeading(reading, "companion-chapter")}</div>
+              <p class="citation">${escapeHTML(reading.commentaryCitation)}</p>
+              <div class="reading-actions">
+                ${commentaryActions}
+                ${completeToggle(reading, "commentary_complete", saved.commentary_complete, "Companion complete")}
+              </div>
+              ${reading.bibleReference ? "" : reviewFlag(reading)}
+              ${reading.bibleReference ? "" : exactSource(reading)}
+            </article>` : "";
     const principlePanel = session ? `
           <aside class="principle-panel" aria-labelledby="principle-heading">
             <p class="eyebrow">YOUR PRIVATE DISCOVERY</p>
@@ -224,40 +292,21 @@
       <section aria-labelledby="readings-heading">
         <header class="view-heading">
           <div>
-            <p class="eyebrow">${escapeHTML(reading.commentaryBook)} · READING ${reading.day} OF ${plan.readings.length}</p>
-            <h2 id="readings-heading">${escapeHTML(reading.title)}</h2>
+            <p class="eyebrow">${escapeHTML(reading.commentaryBook)}</p>
+            <h2 id="readings-heading" class="chapter-heading">${companionHeading(reading)}</h2>
             <p>Move at your own pace. A reading may take one sitting, several days, or longer; your next unfinished reading will be waiting whenever you return.</p>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button" type="button" data-day-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
-            <span class="reading-number"><strong>Reading ${reading.day}</strong><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
+            <span class="reading-number"><strong>${escapeHTML(companionIdentity(reading))}</strong><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
             <button class="icon-button" type="button" data-day-nav="next" aria-label="Next reading" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
           </div>
         </header>
 
         <div class="readings-grid">
           <div class="reading-stack">
-            <article class="reading-card scripture-card">
-              <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">READ FIRST</span></div>
-              <h3>${escapeHTML(reading.bibleReference || "No Scripture passage listed")}</h3>
-              <p class="citation">${reading.bibleReference ? "Choose one chapter at a time. Each link opens only that chapter or its assigned verses on Bible Gateway (KJV)." : "This source entry contains only a Conflict of the Ages assignment. The omission is preserved exactly as supplied."}</p>
-              <div class="reading-actions">
-                ${scriptureActions}
-                ${reading.bibleReference ? completeToggle(reading, "bible_complete", saved.bible_complete, "Scripture complete") : ""}
-              </div>
-              ${reviewFlag(reading)}
-              ${exactSource(reading, true)}
-            </article>
-
-            <article class="reading-card companion-card">
-              <div class="card-kicker"><span>CONFLICT OF THE AGES</span><span class="source-order">COMPANION READING</span></div>
-              <h3>${escapeHTML(reading.commentaryBook)}</h3>
-              <p class="citation">${escapeHTML(reading.commentaryCitation || "No companion reading was listed in this source entry.")}</p>
-              <div class="reading-actions">
-                ${commentaryActions}
-                ${reading.commentaryCitation ? completeToggle(reading, "commentary_complete", saved.commentary_complete, "Companion complete") : ""}
-              </div>
-            </article>
+            ${scriptureCard}
+            ${companionCard}
           </div>
 
           ${principlePanel}
@@ -279,13 +328,13 @@
       return `<section class="book-section">
         <button class="book-summary" type="button" data-book="${book.code}" aria-expanded="${isOpen}">
           <span class="book-badge">${book.code}</span>
-          <span><h3>${escapeHTML(book.title)}</h3><p>${readings[0].day === readings.at(-1).day ? `Reading ${readings[0].day}` : `Readings ${readings[0].day}–${readings.at(-1).day}`}</p></span>
+          <span><h3>${escapeHTML(book.title)}</h3><p>${escapeHTML(bookChapterRange(readings))}</p></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${complete} of ${readings.length} complete · ${percent}%</small></span>
         </button>
         <div class="reading-list" ${isOpen ? "" : "hidden"}>
           ${readings.map((reading) => {
             const complete = readingComplete(reading);
-            return `<button class="journey-reading ${complete ? "done" : ""}" type="button" data-reading-index="${reading.day - 1}"><span class="reading-check" aria-hidden="true">${complete ? "✓" : ""}</span><span><strong>Reading ${reading.day} · ${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.bibleReference || reading.commentaryCitation)}</small></span><em>${reading.reviewNote ? "Needs review △" : "Open →"}</em></button>`;
+            return `<button class="journey-reading ${complete ? "done" : ""}" type="button" data-reading-index="${reading.day - 1}"><span class="reading-check" aria-hidden="true">${complete ? "✓" : ""}</span><span><strong>${companionHeading(reading, "journey-chapter-title")}</strong><small>${escapeHTML(reading.bibleReference ? `Scripture: ${reading.bibleReference}` : `${reading.commentaryBook} companion chapter`)}</small></span><em>${reading.reviewNote ? "Needs review △" : "Open →"}</em></button>`;
           }).join("")}
         </div>
       </section>`;
@@ -311,8 +360,8 @@
     const filteredPrinciples = principles.filter((principle) => `${principle.principle_number} ${principle.body} ${(principle.cross_reference_numbers ?? []).join(" ")}`.toLowerCase().includes(principleSearch.toLowerCase()));
     return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">EVERY DISCOVERY IN ONE PLACE</p><h2 id="progress-heading">Progress & principles</h2><p>${session ? "Your completion state and private principle index are saved to the same account used by the Try Jesus app." : "This preview starts at zero. Sign in to save your completion state and private principle index across the website and app."}</p></div></header>
       <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
-      <div class="progress-layout"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>Reading ${item.day}</strong><br>${escapeHTML(item.reviewNote)}</div>`).join("")}</details></article>
-      <article class="progress-panel"><h3>My principle index</h3><div class="toolbar"><input id="principle-search" type="search" value="${escapeHTML(principleSearch)}" placeholder="Search number, words, or cross-reference"></div><div class="principle-index">${filteredPrinciples.length ? filteredPrinciples.map((principle) => `<article class="principle-index-card" id="principle-${principle.principle_number}"><header><b>PRINCIPLE #${principle.principle_number} · READING ${plan.readings.find((reading) => reading.id === principle.reading_id)?.day ?? "—"}</b><button type="button" data-delete-principle="${principle.id}">Delete</button></header><p>${escapeHTML(principle.body)}</p>${(principle.cross_reference_numbers ?? []).length ? `<div class="reference-chips">${principle.cross_reference_numbers.map((number) => `<button type="button" class="reference-chip" data-find-principle="${number}">#${number}</button>`).join("")}</div>` : ""}</article>`).join("") : `<div class="empty-card">${principles.length ? "No principles match this search." : "Your first numbered principle will appear here after you save it from Readings."}</div>`}</div></article></div>
+      <div class="progress-layout"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details></article>
+      <article class="progress-panel"><h3>My principle index</h3><div class="toolbar"><input id="principle-search" type="search" value="${escapeHTML(principleSearch)}" placeholder="Search number, words, or cross-reference"></div><div class="principle-index">${filteredPrinciples.length ? filteredPrinciples.map((principle) => { const reading = plan.readings.find((entry) => entry.id === principle.reading_id); return `<article class="principle-index-card" id="principle-${principle.principle_number}"><header><b>PRINCIPLE #${principle.principle_number}${reading ? ` · ${escapeHTML(companionIdentity(reading))}` : ""}</b><button type="button" data-delete-principle="${principle.id}">Delete</button></header><p>${escapeHTML(principle.body)}</p>${(principle.cross_reference_numbers ?? []).length ? `<div class="reference-chips">${principle.cross_reference_numbers.map((number) => `<button type="button" class="reference-chip" data-find-principle="${number}">#${number}</button>`).join("")}</div>` : ""}</article>`; }).join("") : `<div class="empty-card">${principles.length ? "No principles match this search." : "Your first numbered principle will appear here after you save it from Readings."}</div>`}</div></article></div>
     </section>`;
   }
 
@@ -325,7 +374,7 @@
       const postReplies = replies.filter((reply) => reply.post_id === post.id);
       const reading = plan.readings.find((item) => item.id === post.reading_id);
       const author = post.author_name || "Try Jesus member";
-      return `<article class="member-post"><div class="post-author">${post.author_avatar_url ? `<img class="avatar" src="${escapeHTML(post.author_avatar_url)}" alt="">` : `<span class="avatar">${escapeHTML(initials(author))}</span>`}<span><strong>${escapeHTML(author)}</strong><small>${reading ? `Reading ${reading.day} · ` : ""}${escapeHTML(formatDate(new Date(post.created_at), { month: "short", day: "numeric", year: "numeric" }))}</small></span></div>${post.principle_number ? `<blockquote class="post-principle"><b>PRINCIPLE #${post.principle_number}</b><br>${escapeHTML(post.principle_body || "")}</blockquote>` : ""}<p class="post-body">${escapeHTML(post.body)}</p><div class="reply-list">${postReplies.map((reply) => `<div class="reply"><b>${escapeHTML(reply.author_name || "Member")}</b> · ${escapeHTML(reply.body)}</div>`).join("")}</div><form class="reply-form" data-post-id="${post.id}"><input name="reply" maxlength="1000" required aria-label="Reply to ${escapeHTML(author)}" placeholder="Add to the discussion…"><button type="submit">Reply</button></form></article>`;
+      return `<article class="member-post"><div class="post-author">${post.author_avatar_url ? `<img class="avatar" src="${escapeHTML(post.author_avatar_url)}" alt="">` : `<span class="avatar">${escapeHTML(initials(author))}</span>`}<span><strong>${escapeHTML(author)}</strong><small>${reading ? `${escapeHTML(companionIdentity(reading))} · ` : ""}${escapeHTML(formatDate(new Date(post.created_at), { month: "short", day: "numeric", year: "numeric" }))}</small></span></div>${post.principle_number ? `<blockquote class="post-principle"><b>PRINCIPLE #${post.principle_number}</b><br>${escapeHTML(post.principle_body || "")}</blockquote>` : ""}<p class="post-body">${escapeHTML(post.body)}</p><div class="reply-list">${postReplies.map((reply) => `<div class="reply"><b>${escapeHTML(reply.author_name || "Member")}</b> · ${escapeHTML(reply.body)}</div>`).join("")}</div><form class="reply-form" data-post-id="${post.id}"><input name="reply" maxlength="1000" required aria-label="Reply to ${escapeHTML(author)}" placeholder="Add to the discussion…"><button type="submit">Reply</button></form></article>`;
     }).join("");
     return `<section aria-labelledby="members-heading"><header class="view-heading"><div><p class="eyebrow">LEARN FROM ONE ANOTHER</p><h2 id="members-heading">Members discussion</h2><p>Share a discovery or a sincere question. This space is for thoughtful conversation, not an official answer key.</p></div></header><div class="members-layout"><aside class="share-panel"><p class="eyebrow">SHARE DELIBERATELY</p><h3>Share a finding</h3><p>Your principles are private until you choose one here and post it. Your Google email address is never displayed.</p><form id="post-form"><div class="field"><label for="post-principle">Principle (optional)</label><select id="post-principle"><option value="">Share without a principle</option>${principles.map((principle) => `<option value="${principle.id}" ${selected?.id === principle.id ? "selected" : ""}>#${principle.principle_number} — ${escapeHTML(principle.body.slice(0, 72))}</option>`).join("")}</select></div><div class="field"><label for="post-body">Observation or question</label><textarea id="post-body" minlength="3" maxlength="2000" required placeholder="What did you notice, and what would you like other members to consider?"></textarea><small>This will be visible to signed-in members.</small></div><button class="button button-primary" type="submit">Post to Members</button></form></aside><div class="member-feed">${feed || `<div class="empty-card">No member findings have been shared yet. You can begin the conversation.</div>`}</div></div></section>`;
   }

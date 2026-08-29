@@ -41,6 +41,13 @@ for (const [index, reading] of websitePlan.readings.entries()) {
     for (const task of reading.commentaryTasks) {
       const commentary = new URL(task.url);
       assert.match(task.label, /^Read (?:Chapter \d+|Introduction)$/);
+      assert.ok(task.title, `Every ${reading.code} companion section must include its real title`);
+      if (task.chapterNumber === null) {
+        assert.match(task.title, /^Introduction—.+/, `${reading.code} introduction must include its name`);
+      } else {
+        assert.ok(Number.isInteger(task.chapterNumber) && task.chapterNumber > 0, `${reading.code} chapter number must be a positive integer`);
+        assert.match(task.title, new RegExp(`^Chapter ${task.chapterNumber}—.+`), `${reading.code} chapter must include its number and name`);
+      }
       assert.equal(commentary.hostname, "egwwritings.org");
       assert.equal(commentary.pathname, "/read");
       assert.match(commentary.searchParams.get("panels"), /^p\d+\.\d+$/);
@@ -79,6 +86,9 @@ assert.doesNotMatch(html, />\s*(?:Today|Calendar)\s*</i);
 assert.doesNotMatch(app, /["'`]Day \$\{/);
 assert.match(app, /Viewing without an account/);
 assert.match(app, /saved only after you sign in/);
+assert.match(app, /kind === "commentary" && task\.title \? `Read \$\{task\.title\}`/);
+assert.match(app, /const scriptureCard = reading\.bibleReference \?/);
+assert.doesNotMatch(app, /Reading \$\{reading\.day\}/);
 assert.doesNotMatch(`${html}\n${app}`, /Ask Pastor Kal/i);
 assert.match(app, /conflict_reading_progress/);
 assert.match(app, /create_conflict_principle/);

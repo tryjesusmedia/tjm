@@ -223,8 +223,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .icon-button:hover:not(:disabled) { border-color: var(--gold); transform: translateY(-1px); }
 .icon-button:disabled { opacity: .35; cursor: not-allowed; }
 .reading-number { min-width: 110px; text-align: center; }
-.reading-number strong { display: block; color: var(--plum); font-family: var(--serif); font-size: 20px; }
+.reading-number strong { display: block; max-width: 175px; color: var(--plum); font-family: var(--serif); font-size: 18px; line-height: 1.08; }
 .reading-number small { color: #877c84; font-size: 8px; font-weight: 800; letter-spacing: .12em; }
+.chapter-heading { display: grid; gap: 7px; }
+.chapter-heading > span { display: block; }
 
 .readings-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(300px, .55fr); gap: 24px; align-items: start; }
 .reading-stack { display: grid; gap: 17px; }
@@ -240,12 +242,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .reading-card h3 { position: relative; margin: 22px 0 8px; font-family: var(--serif); font-size: clamp(32px, 5vw, 50px); font-weight: 600; line-height: .98; }
 .scripture-card h3 { color: var(--white); }
 .companion-card h3 { color: var(--plum); font-size: clamp(27px, 4vw, 39px); }
+.companion-card.companion-only { min-height: 330px; }
+.companion-chapters { position: relative; margin: 17px 0 10px; display: grid; gap: 8px; }
+.companion-chapter { padding-left: 13px; border-left: 3px solid var(--gold); color: var(--plum); font-family: var(--serif); font-size: 18px; font-weight: 600; line-height: 1.25; }
 .citation { position: relative; margin: 0 0 24px; font-size: 13px; line-height: 1.65; }
 .scripture-card .citation { color: rgba(243,232,208,.66); }
 .companion-card .citation { color: #746972; }
 .reading-actions { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .source-task-list { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; }
 .source-task { width: 100%; justify-content: space-between; text-align: left; line-height: 1.35; }
+.journey-chapter-title { display: block; }
+.journey-chapter-title + .journey-chapter-title { margin-top: 3px; }
 .button {
   min-height: 46px;
   padding: 12px 17px;
