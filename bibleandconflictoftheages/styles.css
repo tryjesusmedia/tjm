@@ -122,10 +122,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 
 .journey-hero {
   position: relative;
-  min-height: 420px;
-  padding: 72px max(22px, calc((100% - 1180px) / 2));
+  min-height: 720px;
+  padding: 78px max(22px, calc((100% - 1180px) / 2));
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr);
+  grid-template-columns: minmax(0, 1.36fr) minmax(290px, .64fr);
   align-items: center;
   gap: 70px;
   overflow: hidden;
@@ -159,8 +159,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   letter-spacing: -.035em;
 }
 .hero-copy h1 em { color: var(--gold); font-weight: 500; }
-.hero-copy > p:not(.eyebrow) { margin: 24px 0 0; color: rgba(243,232,208,.72); font-size: 15px; letter-spacing: .02em; }
-.hero-stats { margin-top: 35px; display: flex; flex-wrap: wrap; gap: 10px; }
+.hero-intro { max-width: 760px; margin-top: 28px; display: grid; gap: 13px; }
+.hero-intro p { margin: 0; color: rgba(243,232,208,.72); font-size: 12px; line-height: 1.78; }
+.hero-intro strong { color: var(--white); }
+.hero-intro em { color: var(--gold-light); font-style: normal; font-weight: 700; }
+.hero-intro .hero-blessing { padding-left: 15px; border-left: 2px solid rgba(238,189,74,.6); color: rgba(243,232,208,.86); }
+.hero-stats { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
 .hero-stats span { padding: 10px 13px; border: 1px solid rgba(238,189,74,.18); border-radius: 999px; color: rgba(243,232,208,.63); font-size: 9px; font-weight: 700; letter-spacing: .05em; }
 .hero-stats strong { color: var(--gold-light); font-size: 12px; }
 .hero-mark {
@@ -173,6 +177,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .hero-mark span { color: var(--gold); font-size: 9px; font-weight: 800; letter-spacing: .2em; }
 .hero-mark strong { display: block; margin-top: 12px; color: var(--white); font-family: var(--serif); font-size: 38px; font-weight: 600; line-height: .95; }
 .hero-mark p { margin: 14px 0 0; color: rgba(243,232,208,.62); font-size: 11px; line-height: 1.7; }
+.hero-book-list { margin-top: 20px; padding-top: 17px; border-top: 1px solid rgba(238,189,74,.18); }
+.hero-book-list small { color: var(--gold); font-size: 7px; font-weight: 800; letter-spacing: .16em; }
+.hero-book-list ul { margin: 11px 0 0; padding: 0; display: grid; gap: 7px; list-style: none; }
+.hero-book-list li { position: relative; padding-left: 13px; color: rgba(243,232,208,.72); font-family: var(--serif); font-size: 15px; line-height: 1.15; }
+.hero-book-list li::before { content: "·"; position: absolute; left: 0; color: var(--gold); }
 
 .journey-nav {
   position: sticky;
