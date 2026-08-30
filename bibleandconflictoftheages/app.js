@@ -164,6 +164,14 @@
     return companionTitles(reading).map((title) => `<span${className ? ` class="${className}"` : ""}>${escapeHTML(title)}</span>`).join("");
   }
 
+  function companionPageSummary(reading) {
+    const code = String(reading?.code || "").toUpperCase();
+    if (!code || !reading?.commentaryCitation) return "";
+    const ranges = [...reading.commentaryCitation.matchAll(new RegExp(`\\b${code}\\s+(\\d+(?:\\.\\d+)?)(?:\\s*[-–]\\s*(\\d+(?:\\.\\d+)?))?`, "gi"))]
+      .map((match) => `${code} ${match[1]}${match[2] && match[2] !== match[1] ? `–${match[2]}` : ""}`);
+    return [...new Set(ranges)].join(" · ");
+  }
+
   function bookChapterRange(readings) {
     const tasks = readings.flatMap((reading) => reading.commentaryTasks ?? []);
     const numbers = tasks.map((task) => task.chapterNumber).filter(Number.isInteger);
@@ -227,8 +235,8 @@
     const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
     return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
-      const linkLabel = kind === "commentary" && task.title ? `Read ${task.title}` : task.label;
-      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(linkLabel.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}"${task.title ? ` title="${escapeHTML(task.title)}"` : ""}>${escapeHTML(linkLabel)} <span>↗</span></a></div>`;
+      const linkLabel = kind === "commentary" && task.title ? task.title : task.label;
+      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(linkLabel.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(linkLabel.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "Bible Gateway"}">${escapeHTML(linkLabel)} <span>↗</span></a></div>`;
     }).join("")}</div>`;
   }
 
@@ -237,6 +245,7 @@
     const readingPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
     const scriptureActions = sourceTaskLinks(reading, "bible", reading.bibleTasks);
     const commentaryActions = sourceTaskLinks(reading, "commentary", reading.commentaryTasks);
+    const commentaryPages = companionPageSummary(reading);
     const scriptureCard = reading.bibleReference ? `
             <article class="reading-card scripture-card">
               <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">READ FIRST</span></div>
@@ -251,8 +260,7 @@
             <article class="reading-card companion-card${reading.bibleReference ? "" : " companion-only"}">
               <div class="card-kicker"><span>CONFLICT OF THE AGES</span><span class="source-order">COMPANION READING</span></div>
               <h3>${escapeHTML(reading.commentaryBook)}</h3>
-              <div class="companion-chapters" aria-label="Assigned companion chapters">${companionHeading(reading, "companion-chapter")}</div>
-              <p class="citation">${escapeHTML(reading.commentaryCitation)}</p>
+              ${commentaryPages ? `<p class="citation">${escapeHTML(commentaryPages)}</p>` : ""}
               <div class="reading-actions">
                 ${commentaryActions}
               </div>
@@ -293,12 +301,12 @@
         <header class="view-heading">
           <div>
             <p class="eyebrow">${escapeHTML(reading.commentaryBook)}</p>
-            <h2 id="readings-heading" class="chapter-heading">${companionHeading(reading)}</h2>
+            <h2 id="readings-heading" class="chapter-heading">Reading task ${reading.day}</h2>
             <p>Move at your own pace. A reading may take one sitting, several days, or longer; your next unfinished reading will be waiting whenever you return.</p>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button" type="button" data-day-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
-            <span class="reading-number"><strong>${escapeHTML(companionIdentity(reading))}</strong><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
+            <span class="reading-number"><strong>Task ${reading.day} of ${plan.readings.length}</strong><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
             <button class="icon-button" type="button" data-day-nav="next" aria-label="Next reading" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
           </div>
         </header>
