@@ -250,6 +250,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .companion-card .citation { color: #746972; }
 .reading-actions { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .source-task-list { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; }
+.source-task-row { min-width: 0; display: grid; grid-template-columns: 27px minmax(0, 1fr); align-items: center; gap: 9px; }
+.chapter-checkbox { width: 25px; height: 25px; margin: 0; accent-color: var(--green); cursor: pointer; }
+.chapter-checkbox:focus-visible { outline: 3px solid rgba(238,189,74,.45); outline-offset: 3px; }
 .source-task { width: 100%; justify-content: space-between; text-align: left; line-height: 1.35; }
 .journey-chapter-title { display: block; }
 .journey-chapter-title + .journey-chapter-title { margin-top: 3px; }

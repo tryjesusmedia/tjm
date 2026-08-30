@@ -5,6 +5,8 @@ const websitePlan = JSON.parse(await readFile(new URL("../bibleandconflictofthea
 const appPlan = JSON.parse(await readFile(new URL("../../tryjesusjourney/data/conflictPlan.json", import.meta.url), "utf8"));
 const html = await readFile(new URL("../bibleandconflictoftheages/index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../bibleandconflictoftheages/app.js", import.meta.url), "utf8");
+const nativeScreen = await readFile(new URL("../../tryjesusjourney/app/conflict-journey.tsx", import.meta.url), "utf8");
+const nativeData = await readFile(new URL("../../tryjesusjourney/lib/conflictJourney.ts", import.meta.url), "utf8");
 const egwLinkMap = JSON.parse(await readFile(new URL("./egw-reading-links.json", import.meta.url), "utf8"));
 
 assert.deepEqual(appPlan, websitePlan, "The website and native app plan bundles must match exactly");
@@ -13,6 +15,7 @@ assert.equal(websitePlan.readings.length, 265);
 assert.deepEqual(Object.fromEntries(websitePlan.books.map((book) => [book.code, book.readingCount])), { PP: 67, PK: 60, DA: 82, AA: 44, GC: 12 });
 assert.equal(websitePlan.reviewQueue.length, 0);
 assert.equal(Object.keys(egwLinkMap).length, websitePlan.readings.filter((reading) => reading.commentaryCitation).length);
+assert.equal(websitePlan.readings.reduce((count, reading) => count + reading.bibleTasks.length + reading.commentaryTasks.length, 0), 1696);
 
 for (const [index, reading] of websitePlan.readings.entries()) {
   assert.equal(reading.id, `coa-${String(index + 1).padStart(3, "0")}`);
@@ -91,6 +94,14 @@ assert.match(app, /const scriptureCard = reading\.bibleReference \?/);
 assert.doesNotMatch(app, /Reading \$\{reading\.day\}/);
 assert.doesNotMatch(`${html}\n${app}`, /Ask Pastor Kal/i);
 assert.match(app, /conflict_reading_progress/);
+assert.match(app, /bible-conflict-ages-chapters-v1/);
+assert.match(app, /data-chapter-progress/);
+assert.match(app, /reading_plan_progress/);
+assert.doesNotMatch(app, /View supplied source entry/i);
+assert.doesNotMatch(app, /Scripture complete|Companion complete/);
+assert.match(nativeScreen, /ChapterTaskRow/);
+assert.match(nativeData, /CONFLICT_CHAPTER_PROGRESS_PLAN_ID/);
+assert.match(nativeData, /reading_plan_progress/);
 assert.match(app, /create_conflict_principle/);
 
-console.log("Conflict journey validation passed: 265 numbered readings, exact app/web parity, chapter-level Scripture and companion links, no unresolved review flags, and safe outbound links.");
+console.log("Conflict journey validation passed: 265 numbered readings, 1696 individually trackable chapters, exact app/web parity, no unresolved review flags, and safe outbound links.");

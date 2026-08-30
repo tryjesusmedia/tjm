@@ -3,6 +3,7 @@
 
   const CONFIG = window.TJM_CONFLICT_CONFIG;
   const PLAN_PATH = "data/readings.json";
+  const CHAPTER_PROGRESS_PLAN_ID = "bible-conflict-ages-chapters-v1";
   const root = document.getElementById("view-root");
   const loading = document.getElementById("loading-state");
   const authGate = document.getElementById("auth-gate");
@@ -21,6 +22,8 @@
   let guestBrowsing = false;
   let settings = null;
   let progress = new Map();
+  let chapterCompleted = new Set();
+  let chapterTaskCount = 0;
   let principles = [];
   let posts = [];
   let replies = [];
@@ -96,6 +99,20 @@
     return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading, but progress, principles, cross-references, and discussion activity are saved only after you sign in.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to save</button></aside>`;
   }
 
+  function prepareChapterProgressIndex() {
+    chapterTaskCount = 0;
+    for (const reading of plan.readings) {
+      for (const task of reading.bibleTasks ?? []) task.progressIndex = chapterTaskCount++;
+      for (const task of reading.commentaryTasks ?? []) task.progressIndex = chapterTaskCount++;
+    }
+  }
+
+  function taskGroupComplete(reading, kind) {
+    const tasks = kind === "bible" ? reading.bibleTasks : reading.commentaryTasks;
+    const hasAssignment = kind === "bible" ? reading.bibleReference : reading.commentaryCitation;
+    return !hasAssignment || (tasks?.length > 0 && tasks.every((task) => chapterCompleted.has(task.progressIndex)));
+  }
+
   function readingProgress(reading) {
     return progress.get(reading.id) ?? {
       reading_id: reading.id,
@@ -105,10 +122,7 @@
   }
 
   function readingComplete(reading) {
-    const saved = readingProgress(reading);
-    const bibleDone = !reading.bibleReference || Boolean(saved.bible_complete);
-    const commentaryDone = !reading.commentaryCitation || Boolean(saved.commentary_complete);
-    return bibleDone && commentaryDone;
+    return taskGroupComplete(reading, "bible") && taskGroupComplete(reading, "commentary");
   }
 
   function completedCount(code = null) {
@@ -208,28 +222,18 @@
     return `<p class="source-flag"><span aria-hidden="true">△</span><span><strong>Source reference needs review.</strong><br>${escapeHTML(reading.reviewNote)}</span></p>`;
   }
 
-  function exactSource(reading, dark = false) {
-    return `<details class="source-exact${dark ? " dark" : ""}"><summary>View supplied source entry</summary><pre>${escapeHTML(reading.sourceEntry)}</pre></details>`;
-  }
-
-  function completeToggle(reading, field, checked, label) {
-    if (!session) return `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`;
-    return `<label class="complete-toggle"><input type="checkbox" data-progress-field="${field}" data-reading-id="${reading.id}" ${checked ? "checked" : ""}><i></i><span>${escapeHTML(label)}</span></label>`;
-  }
-
   function sourceTaskLinks(reading, kind, tasks) {
     const style = kind === "bible" ? "button-primary" : "button-secondary";
     const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
     return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
       const linkLabel = kind === "commentary" && task.title ? `Read ${task.title}` : task.label;
-      return `<a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}"${task.title ? ` title="${escapeHTML(task.title)}"` : ""}>${escapeHTML(linkLabel)} <span>↗</span></a>`;
+      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(linkLabel.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}"${task.title ? ` title="${escapeHTML(task.title)}"` : ""}>${escapeHTML(linkLabel)} <span>↗</span></a></div>`;
     }).join("")}</div>`;
   }
 
   function renderReadings() {
     const reading = currentReading();
-    const saved = readingProgress(reading);
     const readingPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
     const scriptureActions = sourceTaskLinks(reading, "bible", reading.bibleTasks);
     const commentaryActions = sourceTaskLinks(reading, "commentary", reading.commentaryTasks);
@@ -240,10 +244,8 @@
               <p class="citation">Choose one chapter at a time. Each link opens only that chapter or its assigned verses on Bible Gateway (KJV).</p>
               <div class="reading-actions">
                 ${scriptureActions}
-                ${completeToggle(reading, "bible_complete", saved.bible_complete, "Scripture complete")}
               </div>
               ${reviewFlag(reading)}
-              ${exactSource(reading, true)}
             </article>` : "";
     const companionCard = reading.commentaryCitation ? `
             <article class="reading-card companion-card${reading.bibleReference ? "" : " companion-only"}">
@@ -253,10 +255,8 @@
               <p class="citation">${escapeHTML(reading.commentaryCitation)}</p>
               <div class="reading-actions">
                 ${commentaryActions}
-                ${completeToggle(reading, "commentary_complete", saved.commentary_complete, "Companion complete")}
               </div>
               ${reading.bibleReference ? "" : reviewFlag(reading)}
-              ${reading.bibleReference ? "" : exactSource(reading)}
             </article>` : "";
     const principlePanel = session ? `
           <aside class="principle-panel" aria-labelledby="principle-heading">
@@ -355,8 +355,8 @@
 
   function renderProgress() {
     const completed = completedCount();
-    const bibleComplete = plan.readings.filter((reading) => reading.bibleReference && readingProgress(reading).bible_complete).length;
-    const commentaryComplete = plan.readings.filter((reading) => reading.commentaryCitation && readingProgress(reading).commentary_complete).length;
+    const bibleComplete = plan.readings.filter((reading) => reading.bibleReference && taskGroupComplete(reading, "bible")).length;
+    const commentaryComplete = plan.readings.filter((reading) => reading.commentaryCitation && taskGroupComplete(reading, "commentary")).length;
     const filteredPrinciples = principles.filter((principle) => `${principle.principle_number} ${principle.body} ${(principle.cross_reference_numbers ?? []).join(" ")}`.toLowerCase().includes(principleSearch.toLowerCase()));
     return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">EVERY DISCOVERY IN ONE PLACE</p><h2 id="progress-heading">Progress & principles</h2><p>${session ? "Your completion state and private principle index are saved to the same account used by the Try Jesus app." : "This preview starts at zero. Sign in to save your completion state and private principle index across the website and app."}</p></div></header>
       <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
@@ -387,6 +387,69 @@
     else if (activeView === "progress") content = renderProgress();
     else content = renderMembers();
     root.innerHTML = `${guestBanner()}${content}`;
+  }
+
+  function migrateLegacyChapterProgress() {
+    const migrated = new Set();
+    for (const reading of plan.readings) {
+      const saved = readingProgress(reading);
+      if (saved.bible_complete) for (const task of reading.bibleTasks ?? []) migrated.add(task.progressIndex);
+      if (saved.commentary_complete) for (const task of reading.commentaryTasks ?? []) migrated.add(task.progressIndex);
+    }
+    return migrated;
+  }
+
+  async function syncAggregateReadingProgress(reading) {
+    const previous = readingProgress(reading);
+    const bibleComplete = taskGroupComplete(reading, "bible");
+    const commentaryComplete = taskGroupComplete(reading, "commentary");
+    const completedAt = bibleComplete && commentaryComplete ? (previous.completed_at || new Date().toISOString()) : null;
+    const next = { ...previous, bible_complete: bibleComplete, commentary_complete: commentaryComplete, completed_at: completedAt };
+    progress.set(reading.id, next);
+    const { data, error } = await db.from("conflict_reading_progress").upsert({
+      user_id: session.user.id,
+      plan_id: CONFIG.planId,
+      reading_id: reading.id,
+      bible_complete: bibleComplete,
+      commentary_complete: commentaryComplete,
+      bible_opened_at: next.bible_opened_at || null,
+      commentary_opened_at: next.commentary_opened_at || null,
+      completed_at: completedAt,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "user_id,plan_id,reading_id" }).select().single();
+    if (error) console.warn("Could not update legacy reading completion", error.message);
+    else progress.set(reading.id, data);
+  }
+
+  async function toggleChapter(progressIndex, readingId, checked) {
+    if (!session) { showSignIn(); return; }
+    const chapterIndex = Number(progressIndex);
+    const reading = plan.readings.find((item) => item.id === readingId);
+    if (!reading || !Number.isInteger(chapterIndex) || chapterIndex < 0 || chapterIndex >= chapterTaskCount) return;
+    const previous = new Set(chapterCompleted);
+    if (checked) chapterCompleted.add(chapterIndex);
+    else chapterCompleted.delete(chapterIndex);
+    currentIndex = reading.day - 1;
+    setSync("Saving…", "saving");
+    render();
+    const { error } = await db.from("reading_plan_progress").upsert({
+      user_id: session.user.id,
+      plan_id: CHAPTER_PROGRESS_PLAN_ID,
+      completed_indices: Array.from(chapterCompleted).sort((left, right) => left - right),
+      last_index: currentIndex,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "user_id,plan_id" });
+    if (error) {
+      chapterCompleted = previous;
+      setSync("Sync failed", "error");
+      toast(error.message, "error");
+      render();
+      return;
+    }
+    await syncAggregateReadingProgress(reading);
+    updateLastReading(reading.id);
+    setSync("Synced across devices", "synced");
+    render();
   }
 
   async function saveReadingProgress(readingId, field, value) {
@@ -512,14 +575,15 @@
   async function loadMemberData() {
     setSync("Syncing your journey…", "saving");
     const userId = session.user.id;
-    const [progressResult, settingsResult, principlesResult, postsResult, repliesResult] = await Promise.all([
+    const [progressResult, chapterProgressResult, settingsResult, principlesResult, postsResult, repliesResult] = await Promise.all([
       db.from("conflict_reading_progress").select("*").eq("user_id", userId).eq("plan_id", CONFIG.planId),
+      db.from("reading_plan_progress").select("completed_indices,last_index").eq("user_id", userId).eq("plan_id", CHAPTER_PROGRESS_PLAN_ID).maybeSingle(),
       db.from("conflict_journey_settings").select("*").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle(),
       db.from("conflict_principles").select("*").eq("user_id", userId).eq("plan_id", CONFIG.planId).order("principle_number"),
       db.from("conflict_discussion_posts").select("*").eq("plan_id", CONFIG.planId).order("created_at", { ascending: false }).limit(100),
       db.from("conflict_discussion_replies").select("*").order("created_at", { ascending: true }).limit(500),
     ]);
-    const firstError = [progressResult, settingsResult, principlesResult, postsResult, repliesResult].find((result) => result.error)?.error;
+    const firstError = [progressResult, chapterProgressResult, settingsResult, principlesResult, postsResult, repliesResult].find((result) => result.error)?.error;
     if (firstError) throw firstError;
     progress = new Map((progressResult.data ?? []).map((row) => [row.reading_id, row]));
     principles = principlesResult.data ?? [];
@@ -537,6 +601,21 @@
       }).select().single();
       if (error) throw error;
       settings = data;
+    }
+    const savedChapterIndices = chapterProgressResult.data?.completed_indices;
+    if (Array.isArray(savedChapterIndices)) {
+      chapterCompleted = new Set(savedChapterIndices.map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < chapterTaskCount));
+    } else {
+      chapterCompleted = migrateLegacyChapterProgress();
+      const migratedLastIndex = Math.max(0, plan.readings.findIndex((reading) => reading.id === settings.last_reading_id));
+      const { error } = await db.from("reading_plan_progress").upsert({
+        user_id: userId,
+        plan_id: CHAPTER_PROGRESS_PLAN_ID,
+        completed_indices: Array.from(chapterCompleted).sort((left, right) => left - right),
+        last_index: migratedLastIndex,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id,plan_id" });
+      if (error) throw error;
     }
     currentIndex = defaultReadingIndex();
     activeBook = currentReading().code;
@@ -562,6 +641,7 @@
     updateProfile();
     if (!session) {
       progress = new Map();
+      chapterCompleted = new Set();
       settings = guestSettings();
       principles = [];
       posts = [];
@@ -630,7 +710,10 @@
 
   root.addEventListener("change", (event) => {
     const target = event.target;
-    if (target.matches("[data-progress-field]")) saveReadingProgress(target.dataset.readingId, target.dataset.progressField, target.checked);
+    if (target.matches("[data-chapter-progress]")) {
+      if (!session) target.checked = false;
+      toggleChapter(target.dataset.chapterProgress, target.dataset.readingId, target.checked);
+    }
   });
 
   root.addEventListener("input", (event) => {
@@ -673,6 +756,8 @@
       if (!response.ok) throw new Error(`Reading plan could not be loaded (${response.status}).`);
       plan = await response.json();
       if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== 265) throw new Error("Reading plan validation failed.");
+      prepareChapterProgressIndex();
+      if (chapterTaskCount !== 1696) throw new Error("Chapter progress validation failed.");
       document.getElementById("hero-reading-count").textContent = plan.readings.length;
       loading.hidden = true;
       root.hidden = false;
