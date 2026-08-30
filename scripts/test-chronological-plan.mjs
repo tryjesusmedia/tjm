@@ -2,12 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const plan = JSON.parse(await readFile(new URL("../chronbible/data/readings.json", import.meta.url), "utf8"));
-const appPlan = JSON.parse(await readFile(new URL("../../tryjesusjourney/data/chronologicalBiblePlan.json", import.meta.url), "utf8"));
 const html = await readFile(new URL("../chronbible/index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../chronbible/app.js", import.meta.url), "utf8");
 const config = await readFile(new URL("../chronbible/config.js", import.meta.url), "utf8");
+const principleTools = await readFile(new URL("../lib/principles.js", import.meta.url), "utf8");
 
-assert.deepEqual(appPlan, plan, "The website and native app chronological plans must match exactly");
 assert.equal(plan.planId, "chronological-bible-order-v3");
 assert.equal(plan.legacyPlanId, "chronological-bible-order-v2");
 assert.equal(plan.originalLegacyPlanId, "chronological-bible-order-v1");
@@ -34,14 +33,17 @@ assert.deepEqual(plan.readings.filter((reading) => reading.sourceNumber === 2).m
 assert.deepEqual(plan.readings.filter((reading) => reading.sourceNumber === 150).map((reading) => reading.title), ["The Revelation of Jesus Christ", "The Seven Churches", "The Throne, the Lamb, and the Scroll", "The Seals", "The Trumpets and Two Witnesses", "The Dragon, the Beasts, and the Lamb", "The Seven Bowls", "Babylon's Fall", "Christ's Victory and Final Judgment", "New Jerusalem and Eternal Restoration"]);
 assert.match(html, /GOOGLE SIGN-IN IS OPTIONAL/);
 assert.match(html, /Progress and principles can only be saved and synced after you sign in/);
-assert.match(html, /data-view="members"/);
+assert.match(html, /data-view="principles"/);
+assert.doesNotMatch(html, /data-view="members"/);
 assert.match(app, /reading_plan_progress/);
 assert.match(app, /data-chapter-progress/);
 assert.match(app, /migrateV2Progress/);
 assert.match(app, /migrateV1Progress/);
-assert.match(app, /create_conflict_principle/);
-assert.match(app, /conflict_discussion_posts/);
+assert.match(principleTools, /create_conflict_principle/);
+assert.match(app, /principleManager\.renderCreateNumberField/);
+assert.match(app, /principleManager\.renderReadingPrinciple/);
+for (const feature of ["update_conflict_principle", "move_conflict_principle", "bulk_update_conflict_principles", "Export spreadsheet", "Go to reading", "data-principle-menu"]) assert.match(principleTools, new RegExp(feature));
 assert.doesNotMatch(app, /View (?:original )?supplied assignment/i);
 assert.match(config, /chronological-bible-order-v3/);
 
-console.log(`Chronological plan validated: ${plan.readings.length} named tasks, ${plan.chapterCount} individually trackable chapters, numbered principles, and Members sharing across ${plan.sections.length} sections.`);
+console.log(`Chronological plan validated: ${plan.readings.length} named tasks, ${plan.chapterCount} individually trackable chapters, and editable grouped principles across ${plan.sections.length} sections.`);

@@ -41,6 +41,26 @@
   let principleSearch = "";
   let selectedMembersPrincipleId = "";
   let refreshTimer = null;
+  const principleManager = window.TJMPrinciples.createController({
+    planId: CONFIG.planId,
+    exportFilename: "bible-and-conflict-of-the-ages",
+    getDb: () => db,
+    getSession: () => session,
+    getPrinciples: () => principles,
+    setPrinciples: (nextPrinciples) => { principles = nextPrinciples; },
+    getReadings: () => plan?.readings || [],
+    escapeHTML,
+    toast,
+    setSync,
+    showSignIn,
+    rerender: render,
+    showPrinciples: () => showView("principles", true),
+    goToReadingById: (readingId) => {
+      const index = plan.readings.findIndex((reading) => reading.id === readingId);
+      if (index >= 0) goToReading(index, "readings");
+    },
+    readingLabel: (reading) => companionIdentity(reading),
+  });
 
   function escapeHTML(value = "") {
     return String(value)
@@ -104,7 +124,7 @@
 
   function guestBanner() {
     if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading, but progress, principles, cross-references, and discussion activity are saved only after you sign in.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to save</button></aside>`;
+    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading, but progress, principles, cross-references, and principle groups are saved only after you sign in.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to save</button></aside>`;
   }
 
   function prepareChapterProgressIndex() {
@@ -207,7 +227,7 @@
   }
 
   function nextPrincipleNumber() {
-    return principles.reduce((max, principle) => Math.max(max, Number(principle.principle_number) || 0), 0) + 1;
+    return principleManager.nextNumber();
   }
 
   function showView(name, focusMain = false) {
@@ -288,7 +308,7 @@
             <h3 id="principle-heading">What principles do you see after this reading?</h3>
             <p>Write one principle at a time. It receives a permanent number you can connect to discoveries anywhere else in the journey.</p>
             <form id="principle-form">
-              <div class="principle-number">PRINCIPLE <strong>#${nextPrincipleNumber()}</strong></div>
+              ${principleManager.renderCreateNumberField()}
               <div class="field">
                 <label for="principle-body">The principle I see</label>
                 <textarea id="principle-body" maxlength="2000" required placeholder="In my own words…"></textarea>
@@ -302,7 +322,7 @@
             </form>
             <div class="principles-for-reading">
               <strong>${readingPrinciples.length ? `${readingPrinciples.length} saved for this reading` : "No principles saved for this reading yet"}</strong>
-              ${readingPrinciples.map((principle) => principleMini(principle, true)).join("")}
+              ${readingPrinciples.map((principle) => principleManager.renderReadingPrinciple(principle)).join("")}
             </div>
           </aside>` : `
           <aside class="principle-panel" aria-labelledby="principle-heading">
@@ -381,11 +401,10 @@
     const completed = completedCount();
     const bibleComplete = plan.readings.filter((reading) => reading.bibleReference && taskGroupComplete(reading, "bible")).length;
     const commentaryComplete = plan.readings.filter((reading) => reading.commentaryCitation && taskGroupComplete(reading, "commentary")).length;
-    const filteredPrinciples = principles.filter((principle) => `${principle.principle_number} ${principle.body} ${(principle.cross_reference_numbers ?? []).join(" ")}`.toLowerCase().includes(principleSearch.toLowerCase()));
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">EVERY DISCOVERY IN ONE PLACE</p><h2 id="progress-heading">Progress & principles</h2><p>${session ? "Your completion state and private principle index are saved to the same account used by the Try Jesus app." : "This preview starts at zero. Sign in to save your completion state and private principle index across the website and app."}</p></div></header>
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING JOURNEY</p><h2 id="progress-heading">Progress</h2><p>${session ? "Your completion state is saved to your account and available on every signed-in device." : "This preview starts at zero. Sign in to save your completion state across devices."}</p></div></header>
       <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
       <div class="progress-layout"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details></article>
-      <article class="progress-panel"><h3>My principle index</h3><div class="toolbar"><input id="principle-search" type="search" value="${escapeHTML(principleSearch)}" placeholder="Search number, words, or cross-reference"></div><div class="principle-index">${filteredPrinciples.length ? filteredPrinciples.map((principle) => { const reading = plan.readings.find((entry) => entry.id === principle.reading_id); return `<article class="principle-index-card" id="principle-${principle.principle_number}"><header><b>PRINCIPLE #${principle.principle_number}${reading ? ` · ${escapeHTML(companionIdentity(reading))}` : ""}</b><button type="button" data-delete-principle="${principle.id}">Delete</button></header><p>${escapeHTML(principle.body)}</p>${(principle.cross_reference_numbers ?? []).length ? `<div class="reference-chips">${principle.cross_reference_numbers.map((number) => `<button type="button" class="reference-chip" data-find-principle="${number}">#${number}</button>`).join("")}</div>` : ""}</article>`; }).join("") : `<div class="empty-card">${principles.length ? "No principles match this search." : "Your first numbered principle will appear here after you save it from Readings."}</div>`}</div></article></div>
+      <article class="progress-panel"><h3>Your principles</h3><p>Your ${principles.length} private ${principles.length === 1 ? "principle is" : "principles are"} organized in the Principles tab.</p><button class="button button-primary" type="button" data-view-shortcut="principles">Open Principles</button></article></div>
     </section>`;
   }
 
@@ -409,7 +428,7 @@
     if (activeView === "readings") content = renderReadings();
     else if (activeView === "journey") content = renderJourney();
     else if (activeView === "progress") content = renderProgress();
-    else content = renderMembers();
+    else content = principleManager.renderTab();
     root.innerHTML = `${guestBanner()}${content}`;
   }
 
@@ -524,28 +543,7 @@
   }
 
   async function createPrinciple(form) {
-    const body = form.querySelector("#principle-body").value.trim();
-    const crossReferences = parseCrossReferences(form.querySelector("#cross-references").value);
-    if (!body) return;
-    const unknown = crossReferences.filter((number) => !principles.some((principle) => principle.principle_number === number));
-    if (unknown.length) {
-      toast(`Principle ${unknown.map((number) => `#${number}`).join(", ")} does not exist yet. Save it later as a cross-reference.`, "error");
-      return;
-    }
-    setSync("Saving principle…", "saving");
-    const { data, error } = await db.rpc("create_conflict_principle", {
-      p_plan_id: CONFIG.planId,
-      p_reading_id: currentReading().id,
-      p_body: body,
-      p_cross_reference_numbers: crossReferences,
-    });
-    if (error) { setSync("Sync failed", "error"); toast(error.message, "error"); return; }
-    const created = Array.isArray(data) ? data[0] : data;
-    if (created) principles.push(created);
-    principles.sort((a, b) => a.principle_number - b.principle_number);
-    setSync("Principle saved", "synced");
-    toast(`Principle #${created?.principle_number ?? nextPrincipleNumber() - 1} saved.`);
-    render();
+    await principleManager.createFromForm(form, currentReading().id);
   }
 
   async function deletePrinciple(id) {
@@ -599,21 +597,18 @@
   async function loadMemberData() {
     setSync("Syncing your journey…", "saving");
     const userId = session.user.id;
-    const [progressResult, chapterProgressResult, settingsResult, principlesResult, postsResult, repliesResult] = await Promise.all([
+    const [progressResult, chapterProgressResult, settingsResult, principlesResult] = await Promise.all([
       db.from("conflict_reading_progress").select("*").eq("user_id", userId).eq("plan_id", CONFIG.planId),
       db.from("reading_plan_progress").select("completed_indices,last_index").eq("user_id", userId).eq("plan_id", CHAPTER_PROGRESS_PLAN_ID).maybeSingle(),
       db.from("conflict_journey_settings").select("*").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle(),
       db.from("conflict_principles").select("*").eq("user_id", userId).eq("plan_id", CONFIG.planId).order("principle_number"),
-      db.from("conflict_discussion_posts").select("*").eq("plan_id", CONFIG.planId).order("created_at", { ascending: false }).limit(100),
-      db.from("conflict_discussion_replies").select("*").order("created_at", { ascending: true }).limit(500),
     ]);
-    const firstError = [progressResult, chapterProgressResult, settingsResult, principlesResult, postsResult, repliesResult].find((result) => result.error)?.error;
+    const firstError = [progressResult, chapterProgressResult, settingsResult, principlesResult].find((result) => result.error)?.error;
     if (firstError) throw firstError;
     progress = new Map((progressResult.data ?? []).map((row) => [row.reading_id, row]));
     principles = principlesResult.data ?? [];
-    posts = postsResult.data ?? [];
-    const postIds = new Set(posts.map((post) => post.id));
-    replies = (repliesResult.data ?? []).filter((reply) => postIds.has(reply.post_id));
+    posts = [];
+    replies = [];
     settings = settingsResult.data;
     if (!settings) {
       const { data, error } = await db.from("conflict_journey_settings").insert({
@@ -670,6 +665,7 @@
       principles = [];
       posts = [];
       replies = [];
+      principleManager.resetForSession();
       currentIndex = 0;
       clearInterval(refreshTimer);
       authGate.hidden = guestBrowsing;
@@ -722,10 +718,12 @@
   root.addEventListener("click", (event) => {
     const target = event.target.closest("button, a");
     if (!target) return;
+    if (principleManager.handleClick(target)) return;
     if (target.hasAttribute("data-require-sign-in")) showSignIn();
     else if (target.dataset.dayNav) goToReading(currentIndex + (target.dataset.dayNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex) goToReading(Number(target.dataset.readingIndex));
     else if (target.dataset.book) { activeBook = activeBook === target.dataset.book ? "" : target.dataset.book; render(); }
+    else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.dataset.sharePrinciple) { selectedMembersPrincipleId = target.dataset.sharePrinciple; showView("members", true); }
     else if (target.dataset.findPrinciple) { principleSearch = String(target.dataset.findPrinciple); showView("progress", true); setTimeout(() => document.getElementById(`principle-${target.dataset.findPrinciple}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0); }
     else if (target.dataset.deletePrinciple) deletePrinciple(target.dataset.deletePrinciple);
@@ -734,6 +732,7 @@
 
   root.addEventListener("change", (event) => {
     const target = event.target;
+    if (principleManager.handleChange(target)) return;
     if (target.matches("[data-chapter-progress]")) {
       if (!session) target.checked = false;
       toggleChapter(target.dataset.chapterProgress, target.dataset.readingId, target.checked);
@@ -746,6 +745,7 @@
 
   root.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (principleManager.handleSubmit(event.target)) return;
     if (event.target.id === "principle-form") createPrinciple(event.target);
     else if (event.target.id === "post-form") createPost(event.target);
     else if (event.target.matches(".reply-form")) createReply(event.target);

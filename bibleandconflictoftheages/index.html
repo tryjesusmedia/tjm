@@ -15,7 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260830-3">
+  <link rel="stylesheet" href="styles.css?v=20260830-4">
+  <link rel="stylesheet" href="../lib/principles.css?v=20260830-1">
   <title>The Bible & Conflict of the Ages Journey | Try Jesus Media</title>
 </head>
 <body>
@@ -76,7 +77,7 @@
     <button class="active" type="button" data-view="readings"><span>01</span> Readings</button>
     <button type="button" data-view="journey"><span>02</span> Journey</button>
     <button type="button" data-view="progress"><span>03</span> Progress</button>
-    <button type="button" data-view="members"><span>04</span> Members</button>
+    <button type="button" data-view="principles"><span>04</span> Principles</button>
   </nav>
 
   <main id="journey-main" tabindex="-1">
@@ -93,7 +94,7 @@
       <span><strong>TRY JESUS</strong><small>MEDIA</small></span>
     </a>
     <p>Scripture is the foundation. The companion readings help you follow the story.</p>
-    <small>© 2026 Try Jesus Media. Your private notes are visible only to your account unless you choose to share a finding.</small>
+    <small>© 2026 Try Jesus Media. Your private principles are visible only to your signed-in account.</small>
   </footer>
 
   <div class="auth-gate" id="auth-gate" role="dialog" aria-modal="true" aria-labelledby="auth-title" hidden>
@@ -101,14 +102,14 @@
       <img src="../assets/logo.png" alt="" width="90" height="90">
       <p class="eyebrow">GOOGLE SIGN-IN IS OPTIONAL</p>
       <h2 id="auth-title">Begin your reading journey.</h2>
-      <p>Explore the complete journey without an account. Sign in with Google only when you want your progress, numbered principles, cross-references, and discussion posts saved and synced with the Try Jesus app.</p>
+      <p>Explore the complete journey without an account. Sign in with Google only when you want your progress, numbered principles, cross-references, and principle groups saved and synced across your devices.</p>
       <button class="google-button" id="google-sign-in" type="button">
         <svg aria-hidden="true" viewBox="0 0 24 24"><path fill="#4285f4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.06H12v3.9h5.38a4.6 4.6 0 0 1-2 3.02v2.53h3.24c1.9-1.75 2.98-4.33 2.98-7.39Z"/><path fill="#34a853" d="M12 22c2.7 0 4.97-.9 6.62-2.38l-3.24-2.53c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.76-5.59-4.13H3.06v2.61A10 10 0 0 0 12 22Z"/><path fill="#fbbc05" d="M6.41 13.92A6 6 0 0 1 6.1 12c0-.67.12-1.32.31-1.92V7.47H3.06A10 10 0 0 0 2 12c0 1.61.39 3.14 1.06 4.53l3.35-2.61Z"/><path fill="#ea4335" d="M12 5.95c1.47 0 2.78.5 3.82 1.49l2.87-2.87A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.94 5.47l3.35 2.61C7.2 7.71 9.4 5.95 12 5.95Z"/></svg>
         Continue with Google
       </button>
       <button class="guest-button" id="continue-without-sign-in" type="button">Explore without saving</button>
       <p class="auth-note"><strong>Progress can only be saved after you sign in.</strong></p>
-      <p class="auth-note">Private by default. Only findings you deliberately post in Members are shared.</p>
+      <p class="auth-note">Private by default. Your principles are visible only to your signed-in account.</p>
       <p class="auth-error" id="auth-error" role="alert"></p>
     </div>
   </div>
@@ -121,7 +122,9 @@
 
   <noscript><div class="noscript">JavaScript is required to save and sync this reading journey.</div></noscript>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
   <script src="config.js"></script>
-  <script src="app.js?v=20260830-3" defer></script>
+  <script src="../lib/principles.js?v=20260830-1"></script>
+  <script src="app.js?v=20260830-4" defer></script>
 </body>
 </html>

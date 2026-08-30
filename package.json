@@ -12,7 +12,8 @@
     "links:egw": "node scripts/resolve-egw-reading-links.mjs",
     "test:chat": "node scripts/test-chat.mjs",
     "test:conflict": "node scripts/test-conflict-plan.mjs",
-    "test:chronbible": "node scripts/test-chronological-plan.mjs"
+    "test:chronbible": "node scripts/test-chronological-plan.mjs",
+    "test:principles": "node scripts/test-principles.mjs"
   },
   "dependencies": {
     "cheerio": "latest",

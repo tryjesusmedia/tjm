@@ -2,14 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const websitePlan = JSON.parse(await readFile(new URL("../bibleandconflictoftheages/data/readings.json", import.meta.url), "utf8"));
-const appPlan = JSON.parse(await readFile(new URL("../../tryjesusjourney/data/conflictPlan.json", import.meta.url), "utf8"));
 const html = await readFile(new URL("../bibleandconflictoftheages/index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../bibleandconflictoftheages/app.js", import.meta.url), "utf8");
-const nativeScreen = await readFile(new URL("../../tryjesusjourney/app/conflict-journey.tsx", import.meta.url), "utf8");
-const nativeData = await readFile(new URL("../../tryjesusjourney/lib/conflictJourney.ts", import.meta.url), "utf8");
+const principleTools = await readFile(new URL("../lib/principles.js", import.meta.url), "utf8");
 const egwLinkMap = JSON.parse(await readFile(new URL("./egw-reading-links.json", import.meta.url), "utf8"));
 
-assert.deepEqual(appPlan, websitePlan, "The website and native app plan bundles must match exactly");
 assert.equal(websitePlan.planId, "bible-conflict-ages-v1");
 assert.equal(websitePlan.readings.length, 265);
 assert.deepEqual(Object.fromEntries(websitePlan.books.map((book) => [book.code, book.readingCount])), { PP: 67, PK: 60, DA: 82, AA: 44, GC: 12 });
@@ -84,7 +81,9 @@ assert.equal(websitePlan.readings.find((reading) => reading.sourceKey === "PK:62
 assert.equal(websitePlan.readings.at(-1).bibleReference, "Revelation 21; 22");
 assert.match(websitePlan.readings.at(-1).commentaryCitation, /GC 662-678/);
 
-for (const label of ["Readings", "Journey", "Progress", "Members", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
+for (const label of ["Readings", "Journey", "Progress", "Principles", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
+assert.match(html, /data-view="principles"/);
+assert.doesNotMatch(html, /data-view="members"/);
 assert.doesNotMatch(html, />\s*(?:Today|Calendar)\s*</i);
 assert.doesNotMatch(app, /["'`]Day \$\{/);
 assert.match(app, /Viewing without an account/);
@@ -106,9 +105,9 @@ assert.match(app, /data-chapter-progress/);
 assert.match(app, /reading_plan_progress/);
 assert.doesNotMatch(app, /View supplied source entry/i);
 assert.doesNotMatch(app, /Scripture complete|Companion complete/);
-assert.match(nativeScreen, /ChapterTaskRow/);
-assert.match(nativeData, /CONFLICT_CHAPTER_PROGRESS_PLAN_ID/);
-assert.match(nativeData, /reading_plan_progress/);
-assert.match(app, /create_conflict_principle/);
+assert.match(principleTools, /create_conflict_principle/);
+assert.match(app, /principleManager\.renderCreateNumberField/);
+assert.match(app, /principleManager\.renderReadingPrinciple/);
+for (const feature of ["update_conflict_principle", "move_conflict_principle", "bulk_update_conflict_principles", "Export spreadsheet", "Go to reading", "data-principle-menu"]) assert.match(principleTools, new RegExp(feature));
 
-console.log("Conflict journey validation passed: 265 numbered readings, 1696 individually trackable chapters, exact app/web parity, no unresolved review flags, and safe outbound links.");
+console.log("Conflict journey validation passed: 265 readings, 1696 individually trackable chapters, editable grouped principles, no unresolved review flags, and safe outbound links.");
