@@ -4,6 +4,14 @@
   const CONFIG = window.TJM_CONFLICT_CONFIG;
   const PLAN_PATH = "data/readings.json";
   const CHAPTER_PROGRESS_PLAN_ID = "bible-conflict-ages-chapters-v1";
+  // Exact printed page ranges confirmed against the official EGW Writings chapter text.
+  // These fill the ranges omitted from the supplied Prophets and Kings plan entries.
+  const PK_PAGE_RANGES = new Map([
+    ["introduction", "15–22"], [1, "25–34"], [2, "35–50"], [3, "51–60"], [4, "61–74"],
+    [5, "75–86"], [6, "87–98"], [7, "99–108"], [8, "109–116"], [9, "119–128"], [10, "129–142"],
+    [23, "279–292"], [24, "293–300"], [25, "303–310"], [26, "311–321"], [27, "322–330"],
+    [28, "331–339"], [29, "340–348"], [30, "349–366"],
+  ]);
   const root = document.getElementById("view-root");
   const loading = document.getElementById("loading-state");
   const authGate = document.getElementById("auth-gate");
@@ -169,7 +177,15 @@
     if (!code || !reading?.commentaryCitation) return "";
     const ranges = [...reading.commentaryCitation.matchAll(new RegExp(`\\b${code}\\s+(\\d+(?:\\.\\d+)?)(?:\\s*[-–]\\s*(\\d+(?:\\.\\d+)?))?`, "gi"))]
       .map((match) => `${code} ${match[1]}${match[2] && match[2] !== match[1] ? `–${match[2]}` : ""}`);
-    return [...new Set(ranges)].join(" · ");
+    if (ranges.length) return [...new Set(ranges)].join(" · ");
+    if (code === "PK") {
+      return (reading.commentaryTasks ?? []).map((task) => {
+        const key = Number.isInteger(task.chapterNumber) ? task.chapterNumber : "introduction";
+        const pageRange = PK_PAGE_RANGES.get(key);
+        return pageRange ? `PK ${pageRange}` : "";
+      }).filter(Boolean).join(" · ");
+    }
+    return "";
   }
 
   function bookChapterRange(readings) {
@@ -235,8 +251,9 @@
     const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
     return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
-      const linkLabel = kind === "commentary" && task.title ? task.title : task.label;
-      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(linkLabel.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(linkLabel.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "Bible Gateway"}">${escapeHTML(linkLabel)} <span>↗</span></a></div>`;
+      const taskTitle = kind === "commentary" && task.title ? task.title : task.label;
+      const linkLabel = kind === "commentary" ? "Open on EGW Writings" : task.label;
+      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "Bible Gateway"}">${escapeHTML(linkLabel)} <span>↗</span></a></div>`;
     }).join("")}</div>`;
   }
 
@@ -258,8 +275,7 @@
             </article>` : "";
     const companionCard = reading.commentaryCitation ? `
             <article class="reading-card companion-card${reading.bibleReference ? "" : " companion-only"}">
-              <div class="card-kicker"><span>CONFLICT OF THE AGES</span><span class="source-order">COMPANION READING</span></div>
-              <h3>${escapeHTML(reading.commentaryBook)}</h3>
+              <div class="card-kicker"><span>${escapeHTML(reading.commentaryBook).toUpperCase()}</span><span class="source-order">COMPANION READING</span></div>
               ${commentaryPages ? `<p class="citation">${escapeHTML(commentaryPages)}</p>` : ""}
               <div class="reading-actions">
                 ${commentaryActions}
@@ -300,14 +316,14 @@
       <section aria-labelledby="readings-heading">
         <header class="view-heading">
           <div>
-            <p class="eyebrow">${escapeHTML(reading.commentaryBook)}</p>
-            <h2 id="readings-heading" class="chapter-heading">Reading task ${reading.day}</h2>
+            <p class="eyebrow">CONFLICT OF THE AGES</p>
+            <h2 id="readings-heading" class="chapter-heading">${companionHeading(reading)}</h2>
             <p>Move at your own pace. A reading may take one sitting, several days, or longer; your next unfinished reading will be waiting whenever you return.</p>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
-            <button class="icon-button" type="button" data-day-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
-            <span class="reading-number"><strong>Task ${reading.day} of ${plan.readings.length}</strong><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
-            <button class="icon-button" type="button" data-day-nav="next" aria-label="Next reading" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
+            <button class="icon-button nav-button" type="button" data-day-nav="prev" ${currentIndex === 0 ? "disabled" : ""}>Previous</button>
+            <span class="reading-number"><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
+            <button class="icon-button nav-button" type="button" data-day-nav="next" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>Next</button>
           </div>
         </header>
 

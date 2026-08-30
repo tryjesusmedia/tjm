@@ -220,6 +220,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .view-heading p:not(.eyebrow) { max-width: 600px; margin: 12px 0 0; color: #6f646c; font-size: 13px; line-height: 1.7; }
 .reading-switcher { display: flex; align-items: center; gap: 10px; }
 .icon-button { width: 44px; height: 44px; border: 1px solid var(--line-dark); border-radius: 50%; background: var(--white); color: var(--plum); cursor: pointer; font-size: 22px; }
+.icon-button.nav-button { width: auto; min-width: 88px; padding: 0 16px; border-radius: 999px; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .icon-button:hover:not(:disabled) { border-color: var(--gold); transform: translateY(-1px); }
 .icon-button:disabled { opacity: .35; cursor: not-allowed; }
 .reading-number { min-width: 110px; text-align: center; }
