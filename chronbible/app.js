@@ -25,6 +25,7 @@
   let activeView = "readings";
   let activeSection = "";
   let principles = [];
+  let deletedPrinciples = [];
   let posts = [];
   let replies = [];
   let selectedMembersPrincipleId = "";
@@ -37,6 +38,8 @@
     getSession: () => session,
     getPrinciples: () => principles,
     setPrinciples: (nextPrinciples) => { principles = nextPrinciples; },
+    getDeletedPrinciples: () => deletedPrinciples,
+    setDeletedPrinciples: (nextPrinciples) => { deletedPrinciples = nextPrinciples; },
     getReadings: () => plan?.readings || [],
     escapeHTML,
     toast,
@@ -183,7 +186,7 @@
   function renderPrinciplePanel(reading) {
     const readingPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
     if (!session) return `<section class="chron-principle-panel" aria-labelledby="principle-heading"><p class="eyebrow">YOUR PRIVATE DISCOVERY</p><h3 id="principle-heading">Write numbered principles and connect your notes</h3><p>After you read, record the principles you discover in your own words. Sign in with Google to number them, cross-reference related notes, organize them into groups, and sync them across devices.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to save principles</button></section>`;
-    return `<section class="chron-principle-panel" aria-labelledby="principle-heading"><div><p class="eyebrow">YOUR PRIVATE DISCOVERY</p><h3 id="principle-heading">What principles do you see in this reading?</h3><p>Write one principle at a time. Choose any unused number so you can organize and connect related discoveries anywhere in the journey.</p><form id="principle-form">${principleManager.renderCreateNumberField()}<div class="field"><label for="principle-body">The principle I see</label><textarea id="principle-body" maxlength="2000" required placeholder="In my own words…"></textarea></div><div class="field"><label for="cross-references">Related principle numbers</label><input id="cross-references" inputmode="numeric" maxlength="120" placeholder="12, 19, 42"><small>Separate numbers with commas. Existing principle numbers become connected references.</small></div><button class="button button-primary" type="submit">Save principle</button></form></div><div class="principles-for-reading"><strong>${readingPrinciples.length ? `${readingPrinciples.length} saved for this reading` : "No principles saved for this reading yet"}</strong>${readingPrinciples.map((principle) => principleManager.renderReadingPrinciple(principle)).join("")}</div></section>`;
+    return `<section class="chron-principle-panel" aria-labelledby="principle-heading"><div>${principleManager.renderReadingReturnLink(reading.id)}<p class="eyebrow">YOUR PRIVATE DISCOVERY</p><h3 id="principle-heading">What principles do you see in this reading?</h3><p>Write one principle at a time. Choose any unused number so you can organize and connect related discoveries anywhere in the journey.</p><form id="principle-form">${principleManager.renderCreateNumberField()}<div class="field"><label for="principle-body">The principle I see</label><textarea id="principle-body" maxlength="2000" required placeholder="In my own words…"></textarea></div><div class="field"><label for="cross-references">Related principle numbers</label><input id="cross-references" inputmode="numeric" maxlength="120" placeholder="12, 19, 42"><small>Separate numbers with commas. Existing principle numbers become connected references.</small></div><button class="button button-primary" type="submit">Save principle</button></form></div><div class="principles-for-reading"><strong>${readingPrinciples.length ? `${readingPrinciples.length} saved for this reading` : "No principles saved for this reading yet"}</strong>${readingPrinciples.map((principle) => principleManager.renderReadingPrinciple(principle)).join("")}</div></section>`;
   }
 
   function renderReadings() {
@@ -348,14 +351,6 @@
     await principleManager.createFromForm(form, currentReading().id);
   }
 
-  async function deletePrinciple(id) {
-    if (!window.confirm("Delete this private principle? Existing member posts will keep the shared snapshot.")) return;
-    const { error } = await db.from("conflict_principles").delete().eq("id", id).eq("user_id", session.user.id);
-    if (error) { toast(error.message, "error"); return; }
-    principles = principles.filter((principle) => principle.id !== id);
-    render();
-  }
-
   async function createPost(form) {
     const principleId = form.querySelector("#post-principle").value;
     const principle = principles.find((item) => item.id === principleId);
@@ -413,7 +408,8 @@
       if (migrationError) throw migrationError;
     }
     completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
-    principles = principlesResult.data ?? [];
+    principles = (principlesResult.data ?? []).filter((principle) => !principle.deleted_at);
+    deletedPrinciples = (principlesResult.data ?? []).filter((principle) => principle.deleted_at);
     posts = [];
     replies = [];
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
@@ -464,6 +460,7 @@
     if (!session) {
       completed = new Set();
       principles = [];
+      deletedPrinciples = [];
       posts = [];
       replies = [];
       principleManager.resetForSession();
@@ -523,7 +520,6 @@
     } else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.dataset.sharePrinciple) { selectedMembersPrincipleId = target.dataset.sharePrinciple; showView("members", true); }
     else if (target.dataset.findPrinciple) { principleSearch = String(target.dataset.findPrinciple); showView("progress", true); setTimeout(() => document.getElementById(`principle-${target.dataset.findPrinciple}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0); }
-    else if (target.dataset.deletePrinciple) deletePrinciple(target.dataset.deletePrinciple);
   });
 
   root.addEventListener("change", (event) => {

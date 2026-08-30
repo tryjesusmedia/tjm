@@ -14,6 +14,7 @@ const context = vm.createContext({
     get(name) { return this.form.values?.[name] ?? null; }
   },
   window: {
+    confirm: () => true,
     localStorage: {
       getItem: (key) => storage.get(key) ?? null,
       setItem: (key, value) => storage.set(key, value),
@@ -34,6 +35,7 @@ let principles = [
   { id: "p1", reading_id: "r1", principle_number: 1, body: "First line of principle one\nMore detail", group_id: "g1", cross_reference_numbers: [] },
   { id: "p30", reading_id: "r3", principle_number: 30, body: "Third principle", group_id: null, cross_reference_numbers: [] },
 ];
+let deletedPrinciples = [];
 const rpcCalls = [];
 const toasts = [];
 const controller = context.window.TJMPrinciples.createController({
@@ -46,6 +48,8 @@ const controller = context.window.TJMPrinciples.createController({
   getSession: () => ({ user: { id: "user-1" } }),
   getPrinciples: () => principles,
   setPrinciples: (value) => { principles = value; },
+  getDeletedPrinciples: () => deletedPrinciples,
+  setDeletedPrinciples: (value) => { deletedPrinciples = value; },
   getReadings: () => [1, 2, 3, 4].map((number) => ({ id: `r${number}`, title: `Reading ${number}` })),
   escapeHTML: (value = "") => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"),
   toast: (message, type = "") => toasts.push({ message, type }),
@@ -64,6 +68,8 @@ assert.match(html, /GROUP · LED BY PRINCIPLE #1/);
 assert.match(html, /First line of principle one/);
 assert.match(html, /aria-label="Principles 1, 40"/);
 assert.ok(html.indexOf('data-principle-group-window="group:g1"') < html.indexOf('data-principle-group-window="single:p20"'), "The group led by #1 must be first");
+assert.ok(html.indexOf("aria-label=\"Principles 1, 40\"") < html.indexOf("</button></article>"), "Every number must be visible along the bottom of the group card");
+assert.doesNotMatch(html, /2 principles/);
 assert.match(html, /Open Principles tools/);
 assert.doesNotMatch(html, /Download spreadsheet/);
 
@@ -78,13 +84,37 @@ controller.handleClick({ dataset: { principleGroup: "group:g1" }, hasAttribute: 
 html = controller.renderTab();
 assert.equal((html.match(/class="principle-detail-card"/g) || []).length, 2);
 assert.match(html, /More detail/);
+assert.match(html, /Previous group/);
+assert.match(html, /Next group/);
+assert.match(html, /data-back-to-groups/);
 assert.match(styles, /\.principle-detail-card[^}]+background: #eadbe8/s);
 assert.match(styles, /\.principle-circles[^}]+flex-wrap: wrap/s);
 
 controller.handleClick({ dataset: { principleMenu: "p1" }, hasAttribute: () => false });
 html = controller.renderTab();
-for (const action of ["Edit", "Go to reading", "Move"]) assert.match(html, new RegExp(`>${action}<`));
+for (const action of ["Edit", "Go to reading", "Move to another group", "Delete principle"]) assert.match(html, new RegExp(`>${action}<`));
 
+controller.handleClick({ dataset: {}, hasAttribute: (name) => name === "data-group-menu" });
+html = controller.renderTab();
+for (const action of ["Name this group", "Manage principles", "Remove group, keep principles", "Delete group and principles"]) assert.match(html, new RegExp(action));
+
+controller.handleClick({ dataset: { principleMove: "p1" }, hasAttribute: () => false });
+html = controller.renderTab();
+assert.match(html, /Create a new group/);
+assert.match(html, /Make it standalone/);
+assert.match(html, /All groups and principles/);
+controller.handleClick({ dataset: {}, hasAttribute: (name) => name === "data-principle-cancel" });
+
+controller.handleClick({ dataset: {}, hasAttribute: (name) => name === "data-back-to-groups" });
+controller.handleClick({ dataset: {}, hasAttribute: (name) => name === "data-principles-toolbar" });
+controller.handleClick({ dataset: {}, hasAttribute: (name) => name === "data-enter-manage" });
+html = controller.renderTab();
+assert.match(html, /Select principles from any group/);
+assert.match(html, /Move selected/);
+assert.match(html, /Delete selected/);
+controller.handleClick({ dataset: {}, hasAttribute: (name) => name === "data-exit-manage" });
+
+controller.handleClick({ dataset: {}, hasAttribute: (name) => name === "data-principles-toolbar" });
 controller.handleSubmit({ matches: (selector) => selector === ".principle-search-form", values: { "principle-search": "principle" } });
 html = controller.renderTab();
 assert.match(html, /1 of 4 matches/);
@@ -112,4 +142,4 @@ assert.equal(rpcCalls[0].name, "create_conflict_principle");
 assert.equal(rpcCalls[0].args.p_principle_number, 50);
 assert.equal(Array.from(rpcCalls[0].args.p_cross_reference_numbers).join(","), "1");
 
-console.log("Principle manager validated: grouping, remembered open windows, three-option menus, editable unique numbers, and numbered creation.");
+console.log("Principle library validated: wrapping number circles, focused groups, visual moves, bulk management, search, and unique numbered creation.");

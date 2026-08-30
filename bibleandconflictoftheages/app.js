@@ -33,6 +33,7 @@
   let chapterCompleted = new Set();
   let chapterTaskCount = 0;
   let principles = [];
+  let deletedPrinciples = [];
   let posts = [];
   let replies = [];
   let activeView = "readings";
@@ -48,6 +49,8 @@
     getSession: () => session,
     getPrinciples: () => principles,
     setPrinciples: (nextPrinciples) => { principles = nextPrinciples; },
+    getDeletedPrinciples: () => deletedPrinciples,
+    setDeletedPrinciples: (nextPrinciples) => { deletedPrinciples = nextPrinciples; },
     getReadings: () => plan?.readings || [],
     escapeHTML,
     toast,
@@ -304,6 +307,7 @@
             </article>` : "";
     const principlePanel = session ? `
           <aside class="principle-panel" aria-labelledby="principle-heading">
+            ${principleManager.renderReadingReturnLink(reading.id)}
             <p class="eyebrow">YOUR PRIVATE DISCOVERY</p>
             <h3 id="principle-heading">What principles do you see after this reading?</h3>
             <p>Write one principle at a time. It receives a permanent number you can connect to discoveries anywhere else in the journey.</p>
@@ -546,15 +550,6 @@
     await principleManager.createFromForm(form, currentReading().id);
   }
 
-  async function deletePrinciple(id) {
-    if (!window.confirm("Delete this private principle? Existing member posts will keep the shared snapshot.")) return;
-    const { error } = await db.from("conflict_principles").delete().eq("id", id).eq("user_id", session.user.id);
-    if (error) { toast(error.message, "error"); return; }
-    principles = principles.filter((principle) => principle.id !== id);
-    render();
-    toast("Principle deleted.");
-  }
-
   async function createPost(form) {
     const principleId = form.querySelector("#post-principle").value;
     const principle = principles.find((item) => item.id === principleId);
@@ -606,7 +601,8 @@
     const firstError = [progressResult, chapterProgressResult, settingsResult, principlesResult].find((result) => result.error)?.error;
     if (firstError) throw firstError;
     progress = new Map((progressResult.data ?? []).map((row) => [row.reading_id, row]));
-    principles = principlesResult.data ?? [];
+    principles = (principlesResult.data ?? []).filter((principle) => !principle.deleted_at);
+    deletedPrinciples = (principlesResult.data ?? []).filter((principle) => principle.deleted_at);
     posts = [];
     replies = [];
     settings = settingsResult.data;
@@ -663,6 +659,7 @@
       chapterCompleted = new Set();
       settings = guestSettings();
       principles = [];
+      deletedPrinciples = [];
       posts = [];
       replies = [];
       principleManager.resetForSession();
@@ -726,7 +723,6 @@
     else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.dataset.sharePrinciple) { selectedMembersPrincipleId = target.dataset.sharePrinciple; showView("members", true); }
     else if (target.dataset.findPrinciple) { principleSearch = String(target.dataset.findPrinciple); showView("progress", true); setTimeout(() => document.getElementById(`principle-${target.dataset.findPrinciple}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0); }
-    else if (target.dataset.deletePrinciple) deletePrinciple(target.dataset.deletePrinciple);
     else if (target.dataset.openSource) recordOpen(target.dataset.readingId, target.dataset.openSource);
   });
 
