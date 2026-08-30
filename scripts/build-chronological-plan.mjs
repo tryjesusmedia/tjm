@@ -301,6 +301,8 @@ if (originals.length !== 150) throw new Error(`Expected 150 original assignments
 
 const readings = [];
 const legacyMigration = {};
+const taskChapterMigration = {};
+let chapterCount = 0;
 
 for (const original of originals) {
   const parts = subdivisions.get(String(original.number)) ?? [[original.reference, original.reference]];
@@ -308,8 +310,10 @@ for (const original of originals) {
   const generatedTasks = [];
 
   for (const [partIndex, [title, reference]] of parts.entries()) {
-    const bibleTasks = parts.length === 1 ? original.bibleTasks : normalizeTasks(reference);
+    const baseTasks = parts.length === 1 ? original.bibleTasks : normalizeTasks(reference);
+    const bibleTasks = baseTasks.map((task) => ({ label: task.label, url: task.url, progressIndex: chapterCount++ }));
     generatedTasks.push(...bibleTasks);
+    const readingIndex = readings.length;
     readings.push({
       id: `chron-${String(original.number).padStart(3, "0")}-${String(partIndex + 1).padStart(2, "0")}`,
       index: readings.length,
@@ -324,6 +328,7 @@ for (const original of originals) {
       bibleTasks,
       reviewNote: original.reviewNote ?? null,
     });
+    taskChapterMigration[String(readingIndex)] = bibleTasks.map((task) => task.progressIndex);
   }
 
   if (parts.length > 1) {
@@ -348,24 +353,28 @@ const reviewQueue = (currentPlan.reviewQueue ?? []).map((item) => ({
 }));
 
 const plan = {
-  planId: "chronological-bible-order-v2",
-  legacyPlanId: "chronological-bible-order-v1",
+  planId: "chronological-bible-order-v3",
+  legacyPlanId: "chronological-bible-order-v2",
+  originalLegacyPlanId: "chronological-bible-order-v1",
   title: "The Bible in Chronological Order",
   description: "Follow the biblical story in historical sequence through manageable, named reading tasks of no more than ten chapters.",
   source: "Try Jesus chronological Bible plan",
   originalReadingCount: 150,
   readingCount: readings.length,
+  chapterCount,
   sectionCount: sections.length,
   sections,
   reviewQueue,
   legacyMigration,
+  taskChapterMigration,
   readings,
 };
 
 if (readings.length !== 309) throw new Error(`Expected 309 reading tasks, generated ${readings.length}`);
 if (readings.some((reading) => reading.bibleTasks.length < 1 || reading.bibleTasks.length > 10)) throw new Error("Every reading task must contain 1-10 Bible chapters");
+if (chapterCount !== readings.reduce((total, reading) => total + reading.bibleTasks.length, 0)) throw new Error("Every chapter task must have one progress index");
 
 const serialized = `${JSON.stringify(plan, null, 2)}\n`;
 await writeFile(websitePlanUrl, serialized);
 await writeFile(appPlanUrl, serialized);
-console.log(`Generated ${readings.length} chronological reading tasks across ${sections.length} historical sections.`);
+console.log(`Generated ${readings.length} chronological reading tasks with ${chapterCount} individually trackable chapters across ${sections.length} historical sections.`);
