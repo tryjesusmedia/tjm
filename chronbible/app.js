@@ -84,6 +84,17 @@
     return plan.readings.filter((reading) => reading.section === title);
   }
 
+  function migrateLegacyProgress(data) {
+    const completedLegacy = new Set((data?.completed_indices ?? []).map(Number));
+    const migratedCompleted = Array.from(completedLegacy).flatMap((legacyIndex) => plan.legacyMigration?.[String(legacyIndex)] ?? []);
+    const lastLegacyIndex = Number(data?.last_index ?? 0);
+    const lastChildren = plan.legacyMigration?.[String(lastLegacyIndex)] ?? [0];
+    return {
+      completed: Array.from(new Set(migratedCompleted)).sort((left, right) => left - right),
+      lastIndex: completedLegacy.has(lastLegacyIndex) ? lastChildren.at(-1) : lastChildren[0],
+    };
+  }
+
   function showSignIn() {
     authError.textContent = "";
     authGate.hidden = false;
@@ -91,7 +102,7 @@
 
   function guestBanner() {
     if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading, but your completed assignments and reading place are saved and synced only after you sign in.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to save</button></aside>`;
+    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading task, but your completed tasks and reading place are saved and synced only after you sign in.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to save</button></aside>`;
   }
 
   function showView(name, focusMain = false) {
@@ -100,7 +111,9 @@
     render();
     if (focusMain) {
       document.getElementById("journey-main").focus({ preventScroll: true });
-      window.scrollTo({ top: document.querySelector(".journey-nav").offsetTop, behavior: "smooth" });
+      const hero = document.querySelector(".journey-hero");
+      const journeyTop = hero ? hero.getBoundingClientRect().bottom + window.scrollY : 0;
+      window.scrollTo({ top: journeyTop, behavior: "smooth" });
     }
   }
 
@@ -111,7 +124,7 @@
 
   function completionControl(reading) {
     if (!session) return `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`;
-    return `<label class="complete-toggle"><input type="checkbox" data-reading-progress="${reading.index}" ${completed.has(reading.index) ? "checked" : ""}><i></i><span>Reading complete</span></label>`;
+    return `<label class="complete-toggle"><input type="checkbox" data-reading-progress="${reading.index}" ${completed.has(reading.index) ? "checked" : ""}><i></i><span>Reading task complete</span></label>`;
   }
 
   function reviewFlag(reading) {
@@ -127,13 +140,13 @@
       <section aria-labelledby="readings-heading">
         <header class="view-heading">
           <div>
-            <p class="eyebrow">${escapeHTML(reading.section)} · READING ${reading.number} OF ${plan.readings.length}</p>
-            <h2 id="readings-heading">${escapeHTML(reading.reference)}</h2>
-            <p>Move at your own pace. Each numbered assignment stays together, while the chapter buttons open only one Bible chapter at a time.</p>
+            <p class="eyebrow">${escapeHTML(reading.section)} · READING TASK ${reading.number} OF ${plan.readings.length}</p>
+            <h2 id="readings-heading">${escapeHTML(reading.title)}</h2>
+            <p>${escapeHTML(reading.reference)}. Move at your own pace; every task contains no more than ten chapters, and each button opens only one Bible chapter at a time.</p>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button" type="button" data-reading-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
-            <span class="reading-number"><strong>Reading ${reading.number}</strong><small>${percent}% COMPLETE</small></span>
+            <span class="reading-number"><strong>Task ${reading.number}</strong><small>${percent}% COMPLETE</small></span>
             <button class="icon-button" type="button" data-reading-nav="next" aria-label="Next reading" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
           </div>
         </header>
@@ -142,13 +155,13 @@
           <article class="reading-card scripture-card">
             <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">SCRIPTURE READING</span></div>
             <h3>${escapeHTML(reading.reference)}</h3>
-            <p class="citation">Choose a chapter below. Each link opens only that chapter on Bible Gateway in the King James Version.</p>
+            <p class="citation">${reading.partCount > 1 ? `Part ${reading.partNumber} of ${reading.partCount} from the original assignment “${escapeHTML(reading.sourceReference)}.” ` : ""}Choose a chapter below. Each link opens only that chapter on Bible Gateway in the King James Version.</p>
             <div class="reading-actions">
               ${sourceTaskLinks(reading)}
               ${completionControl(reading)}
             </div>
             ${reviewFlag(reading)}
-            <details class="source-exact dark"><summary>View exact supplied assignment</summary><pre>${escapeHTML(reading.reference)}</pre></details>
+            <details class="source-exact dark"><summary>View original supplied assignment</summary><pre>${escapeHTML(reading.sourceReference)}</pre></details>
           </article>
 
           <aside class="chapter-side" aria-labelledby="reading-place-heading">
@@ -158,9 +171,9 @@
             <div class="side-progress">
               <div class="progress-track"><i style="width:${percent}%"></i></div>
               <strong>${completed.size} of ${plan.readings.length}</strong>
-              <small>READINGS COMPLETE · ${percent}%</small>
+              <small>READING TASKS COMPLETE · ${percent}%</small>
             </div>
-            ${session ? `<button class="button button-primary" type="button" data-reading-index="${next.index}">Continue with reading ${next.number}</button>` : `<button class="button button-primary" type="button" data-require-sign-in>Sign in with Google to sync</button>`}
+            ${session ? `<button class="button button-primary" type="button" data-reading-index="${next.index}">Continue next task</button>` : `<button class="button button-primary" type="button" data-require-sign-in>Sign in with Google to sync</button>`}
             <button class="button button-secondary" type="button" data-view-shortcut="journey">View the full journey</button>
           </aside>
         </div>
@@ -176,14 +189,14 @@
       return `<article class="book-section">
         <button class="book-summary" type="button" data-section="${escapeHTML(section.title)}" aria-expanded="${open}">
           <span class="book-badge">${String(section.number).padStart(2, "0")}</span>
-          <span><h3>${escapeHTML(section.title)}</h3><p>Readings ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "assignment" : "assignments"}</p></span>
+          <span><h3>${escapeHTML(section.title)}</h3><p>Tasks ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "task" : "tasks"}</p></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${completeCount} OF ${readings.length} COMPLETE</small></span>
         </button>
-        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${completed.has(reading.index) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>Reading ${reading.number}</strong><small>${escapeHTML(reading.reference)}</small></span><em>Open →</em></button>`).join("")}</div>` : ""}
+        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${completed.has(reading.index) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Open →</em></button>`).join("")}</div>` : ""}
       </article>`;
     }).join("");
 
-    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2><p>All 150 assignments are preserved in their supplied order. Expand a section and choose any numbered reading.</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
+    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2><p>All ${plan.originalReadingCount} supplied assignments remain in their exact order and are now organized into ${plan.readings.length} manageable, named reading tasks.</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
   }
 
   function renderProgress() {
@@ -196,7 +209,7 @@
       return `<div class="book-progress-row"><header><span>${escapeHTML(section.title)}</span><span>${count} / ${readings.length}</span></header><div class="progress-track"><i style="width:${sectionPercent}%"></i></div></div>`;
     }).join("");
 
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "This progress is connected to the same signed-in record used by the Try Jesus app." : "Sign in with Google whenever you want this progress saved and synced across the website and app."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${completed.size}</strong><span>Readings complete</span></article><article class="stat-card"><strong>${plan.readings.length - completed.size}</strong><span>Readings remaining</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${plan.sections.length}</strong><span>Story sections</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING</p><h3>Reading ${next.number}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "This progress is connected to the same signed-in record used by the Try Jesus app." : "Sign in with Google whenever you want this progress saved and synced across the website and app."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${completed.size}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${plan.readings.length - completed.size}</strong><span>Tasks remaining</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${plan.sections.length}</strong><span>Story sections</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
   }
 
   function render() {
@@ -266,8 +279,29 @@
       .eq("plan_id", CONFIG.planId)
       .maybeSingle();
     if (error) throw error;
-    completed = new Set((data?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.readings.length));
-    lastIndex = normalizeIndex(data?.last_index ?? 0);
+    let memberData = data;
+    if (!memberData && plan.legacyPlanId) {
+      const { data: legacyData, error: legacyError } = await db.from("reading_plan_progress")
+        .select("completed_indices,last_index,updated_at")
+        .eq("user_id", session.user.id)
+        .eq("plan_id", plan.legacyPlanId)
+        .maybeSingle();
+      if (legacyError) throw legacyError;
+      if (legacyData) {
+        const migrated = migrateLegacyProgress(legacyData);
+        memberData = { completed_indices: migrated.completed, last_index: migrated.lastIndex, updated_at: new Date().toISOString() };
+        const { error: migrationError } = await db.from("reading_plan_progress").upsert({
+          user_id: session.user.id,
+          plan_id: CONFIG.planId,
+          completed_indices: memberData.completed_indices,
+          last_index: memberData.last_index,
+          updated_at: memberData.updated_at,
+        }, { onConflict: "user_id,plan_id" });
+        if (migrationError) throw migrationError;
+      }
+    }
+    completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.readings.length));
+    lastIndex = normalizeIndex(memberData?.last_index ?? 0);
     currentIndex = lastIndex;
     activeSection = currentReading().section;
     setSync("Synced with the app", "synced");
@@ -410,7 +444,7 @@
       if (!response.ok) throw new Error(`Reading plan could not be loaded (${response.status}).`);
       plan = await response.json();
       const indicesAreValid = plan.readings?.every((reading, index) => reading.index === index && reading.number === index + 1 && reading.bibleTasks?.length);
-      if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== 150 || !indicesAreValid) throw new Error("Reading plan validation failed.");
+      if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 309 || !indicesAreValid) throw new Error("Reading plan validation failed.");
       document.getElementById("hero-reading-count").textContent = plan.readings.length;
       document.getElementById("hero-section-count").textContent = plan.sections.length;
       activeSection = plan.readings[0].section;

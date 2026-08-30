@@ -4,9 +4,9 @@ The static route is `/chronbible/`. It uses the same Supabase project, Google id
 
 ## Shared sync contract
 
-- Plan ID: `chronological-bible-order-v1`
+- Plan ID: `chronological-bible-order-v2` (automatically migrates saved progress from `chronological-bible-order-v1`)
 - Table: `public.reading_plan_progress`
-- Completion values: zero-based reading indices `0` through `149`
+- Completion values: zero-based reading-task indices `0` through `308`
 - Current place: `last_index`
 
 The table and row-level security policies are defined in `tryjesusjourney/supabase/sql/app-upgrade.sql` and are already used by the mobile app.
