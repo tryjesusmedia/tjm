@@ -108,6 +108,6 @@ assert.doesNotMatch(app, /Scripture complete|Companion complete/);
 assert.match(principleTools, /create_conflict_principle/);
 assert.match(app, /principleManager\.renderCreateNumberField/);
 assert.match(app, /principleManager\.renderReadingPrinciple/);
-for (const feature of ["update_conflict_principle", "move_conflict_principle", "bulk_update_conflict_principles", "Export spreadsheet", "Go to reading", "data-principle-menu"]) assert.match(principleTools, new RegExp(feature));
+for (const feature of ["update_conflict_principle", "move_conflict_principle", "bulk_update_conflict_principles", "Download spreadsheet", "Go to reading", "data-principle-menu", "data-principle-search-next"]) assert.match(principleTools, new RegExp(feature));
 
 console.log("Conflict journey validation passed: 265 readings, 1696 individually trackable chapters, editable grouped principles, no unresolved review flags, and safe outbound links.");
