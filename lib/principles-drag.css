@@ -1,259 +1,372 @@
-.principle-mindmap-help {
-  margin: 0 0 14px;
-  padding: 12px 14px;
+/* Unified Principles Mind Map interaction and presentation. */
+.tjm-v4-map-controls {
+  margin: 14px 0 8px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  border: 1px dashed rgba(49,30,51,.2);
+  border: 1px solid rgba(49, 30, 51, .15);
   border-radius: 14px;
-  background: rgba(255,255,255,.62);
-  color: #6f646b;
-  font-size: 10px;
-  line-height: 1.5;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 8px 24px rgba(49, 30, 51, .06);
 }
-.principle-mindmap-help > div:first-child { min-width: 0; display: grid; gap: 2px; }
-.principle-mindmap-help strong { color: var(--plum); font-size: 11px; }
-.mindmap-legend { display: flex; flex-wrap: wrap; gap: 7px; flex: 0 0 auto; }
-.mindmap-legend span { padding: 6px 9px; border-radius: 999px; font-size: 8px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
-.mindmap-legend .legend-group { border: 1px solid rgba(111,72,104,.28); background: #eadbe8; color: #4b2c47; }
-.mindmap-legend .legend-principle { border: 1px solid rgba(190,145,44,.32); background: #fff1c9; color: #725413; }
-
-.principle-arena-scroll {
-  width: 100%;
-  height: min(72vh, 820px);
-  min-height: 520px;
-  overflow: auto;
-  overscroll-behavior: contain;
-  border: 1px solid rgba(49,30,51,.14);
-  border-radius: 22px;
-  background: #faf5eb;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.75);
-  -webkit-overflow-scrolling: touch;
-}
-.principle-mindmap-arena {
-  position: relative;
-  display: block !important;
-  min-width: 1500px;
-  min-height: 980px;
-  padding: 0 !important;
-  background-image:
-    linear-gradient(rgba(49,30,51,.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(49,30,51,.045) 1px, transparent 1px),
-    radial-gradient(circle at 22% 18%, rgba(238,189,74,.08), transparent 26%),
-    radial-gradient(circle at 78% 68%, rgba(111,72,104,.07), transparent 28%);
-  background-size: 32px 32px, 32px 32px, auto, auto;
-  touch-action: pan-x pan-y;
-}
-.principle-mindmap-arena > .mindmap-node {
-  position: absolute;
-  width: 310px;
-  min-height: 142px;
-  margin: 0 !important;
-  overflow: visible;
-  touch-action: none;
-  transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease, opacity .16s ease;
-}
-.principle-mindmap-arena > .mindmap-node.is-group-node {
-  border-color: rgba(111,72,104,.42);
-  background: #eadbe8;
-  box-shadow: 0 12px 32px rgba(49,30,51,.11);
-}
-.principle-mindmap-arena > .mindmap-node.is-single-node {
-  border-color: rgba(190,145,44,.45);
-  background: #fff1c9;
-  box-shadow: 0 12px 30px rgba(110,79,15,.10);
-}
-.principle-mindmap-arena > .mindmap-node::after {
-  content: "hold + move";
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  z-index: 4;
-  padding: 3px 7px;
-  border-radius: 999px;
-  background: rgba(49,30,51,.08);
-  color: rgba(49,30,51,.6);
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-.principle-mindmap-arena > .is-group-node .principle-group-summary { background: rgba(255,255,255,.25); }
-.principle-mindmap-arena > .is-single-node .principle-group-summary { background: rgba(255,255,255,.20); }
-.principle-mindmap-arena .principle-group-summary { min-height: 104px; padding: 20px 20px 14px; }
-.principle-mindmap-arena .principle-group-summary:hover { background: rgba(255,255,255,.36); }
-.principle-mindmap-arena .principle-group-title { font-size: 26px; }
-.principle-mindmap-arena .principle-first-line { font-size: 22px; }
-.principle-mindmap-arena > .mindmap-node.is-dragging {
-  opacity: .96;
-  border-color: var(--gold);
-  box-shadow: 0 28px 70px rgba(35,20,36,.3);
-  transform: rotate(.4deg) scale(1.015);
-  transition: none;
-}
-
-.mindmap-circle-bar {
-  width: auto !important;
-  margin: 0 14px 13px;
-  padding: 10px;
-  display: flex !important;
-  flex-wrap: wrap;
-  gap: 7px;
-  border: 1px solid rgba(49,30,51,.12);
-  border-radius: 13px;
-  background: rgba(255,255,255,.44);
-}
-.mindmap-principle-circle {
-  min-width: 39px !important;
-  height: 39px !important;
-  padding: 0 9px !important;
-  cursor: grab !important;
-  touch-action: none;
-  transition: transform .14s ease, box-shadow .14s ease, opacity .14s ease;
-}
-.mindmap-principle-circle:active { cursor: grabbing !important; }
-.mindmap-principle-circle:hover,
-.mindmap-principle-circle:focus-visible { transform: translateY(-2px); }
-.mindmap-principle-circle.is-circle-drag-source { opacity: .3; }
-.mindmap-principle-circle.is-circle-drop-target { outline: 4px solid rgba(238,189,74,.48); outline-offset: 3px; transform: scale(1.12); }
-.mindmap-circle-ghost {
-  position: fixed;
-  z-index: 120;
-  transform: translate(-50%,-50%) scale(1.12);
-  pointer-events: none;
-  box-shadow: 0 12px 28px rgba(36,20,37,.28);
-}
-
-.mindmap-empty-group {
-  border-style: dashed !important;
-  background: #e7d8e6 !important;
-}
-.mindmap-empty-group-card {
-  min-height: 142px;
-  padding: 23px 20px 18px;
+.tjm-v4-map-controls > div:first-child {
+  min-width: 0;
   display: grid;
-  align-content: center;
-  gap: 8px;
+  gap: 2px;
+}
+.tjm-v4-map-controls strong {
   color: var(--plum);
+  font-family: var(--serif);
+  font-size: 18px;
 }
-.mindmap-empty-group-card small { color: var(--plum-3); font-size: 8px; font-weight: 800; letter-spacing: .11em; }
-.mindmap-empty-group-card strong { font-family: var(--serif); font-size: 28px; line-height: 1.05; }
-.mindmap-empty-group-card span { color: #786c73; font-size: 10px; line-height: 1.45; }
-
-.mindmap-node.is-drop-target {
-  border-color: var(--gold) !important;
-  box-shadow: 0 0 0 5px rgba(238,189,74,.24), 0 20px 48px rgba(49,30,51,.16) !important;
-  transform: scale(1.018);
-}
-.mindmap-node.is-drop-target::before {
-  content: "Drop here to add";
-  position: absolute;
-  z-index: 10;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-  padding: 9px 13px;
-  border-radius: 999px;
-  background: var(--plum);
-  color: var(--gold-light);
-  box-shadow: 0 8px 24px rgba(49,30,51,.24);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.principle-drag-active,
-.principle-drag-active * {
-  user-select: none !important;
-  -webkit-user-select: none !important;
-}
-
-.mindmap-back-icon {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(49,30,51,.16);
-  border-radius: 50%;
-  background: var(--white);
-  color: var(--plum);
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: 700;
-  box-shadow: 0 8px 22px rgba(49,30,51,.07);
-}
-.focused-toolbar-row { justify-content: flex-start !important; }
-.focused-toolbar-row .principles-toolbar-wrap { margin-left: auto; }
-
-.mindmap-group-drag-help {
-  margin: -5px 0 0;
-  padding: 9px 12px;
-  border: 1px dashed rgba(49,30,51,.16);
-  border-radius: 11px;
-  background: rgba(255,255,255,.54);
-  color: #776b72;
+.tjm-v4-map-controls span {
+  color: #756a71;
   font-size: 9px;
   line-height: 1.45;
 }
-.mindmap-detail-draggable { touch-action: pan-y; }
-.mindmap-detail-draggable.is-dragging-detail {
-  opacity: .96;
-  border-color: var(--gold);
-  box-shadow: 0 24px 58px rgba(35,20,36,.25);
+.tjm-v4-zoom-buttons {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.mindmap-detail-placeholder {
-  border: 2px dashed rgba(111,72,104,.3);
-  border-radius: 17px;
-  background: rgba(111,72,104,.06);
+.tjm-v4-zoom-buttons button {
+  min-width: 42px;
+  min-height: 40px;
+  padding: 7px 10px;
+  border: 1px solid rgba(49, 30, 51, .18);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--plum);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 800;
 }
-.principle-detail-card.is-drop-before::before,
-.principle-detail-card.is-drop-after::after {
-  content: "";
-  position: absolute;
-  z-index: 12;
-  left: 10px;
-  right: 10px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--gold);
-  box-shadow: 0 0 0 3px rgba(238,189,74,.18);
+.tjm-v4-zoom-buttons button[data-v4-zoom="reset"] {
+  min-width: 64px;
+  font-size: 9px;
 }
-.principle-detail-card.is-drop-before::before { top: -11px; }
-.principle-detail-card.is-drop-after::after { bottom: -11px; }
+.tjm-v4-zoom-buttons button:focus-visible {
+  outline: 3px solid rgba(238, 189, 74, .48);
+  outline-offset: 2px;
+}
 
-.mindmap-create-dialog form { display: grid; gap: 14px; }
-.mindmap-create-dialog textarea { min-height: 145px; }
-.mindmap-create-dialog .field { display: grid; gap: 7px; }
-.mindmap-create-dialog .field label { color: var(--plum); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.mindmap-create-dialog .field input,
-.mindmap-create-dialog .field textarea {
+.tjm-v4-map-viewport {
+  position: relative;
   width: 100%;
-  padding: 11px 12px;
-  border: 1px solid rgba(49,30,51,.18);
-  border-radius: 11px;
-  background: var(--paper);
-  color: var(--ink);
+  min-height: 620px;
+  overflow: hidden !important;
+  border: 1px solid rgba(49, 30, 51, .15);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(49, 30, 51, .10) 1px, transparent 1.4px),
+    #faf7ef;
+  background-size: 28px 28px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .72);
+  overscroll-behavior: contain;
+  touch-action: none;
+  cursor: grab;
 }
-.mindmap-create-dialog .field small,
-.mindmap-form-note { margin: 0; color: #786c73; font-size: 9px; line-height: 1.5; }
+.tjm-v4-map-viewport:active { cursor: grabbing; }
+.tjm-v4-map-canvas {
+  position: relative !important;
+  display: block !important;
+  min-width: 100%;
+  min-height: 100%;
+  padding: 0 !important;
+  gap: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  transform-origin: 0 0;
+  will-change: transform;
+}
 
-@media (max-width: 720px) {
-  .principle-mindmap-help { align-items: flex-start; flex-direction: column; }
-  .principle-arena-scroll { height: 66vh; min-height: 470px; border-radius: 17px; }
-  .principle-mindmap-arena { min-width: 1250px; min-height: 900px; }
-  .principle-mindmap-arena > .mindmap-node { width: 280px; }
-  .mindmap-legend { width: 100%; }
+/* Main Mind Map nodes. */
+.tjm-v4-main-canvas > .tjm-v4-map-node {
+  position: absolute !important;
+  width: 330px;
+  min-height: 76px;
+  margin: 0 !important;
+  overflow: visible;
+  touch-action: none;
+  cursor: grab;
+  transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
 }
-@media (pointer: coarse) {
-  .principle-mindmap-arena > .mindmap-node::after { opacity: .76; }
-  .mindmap-principle-circle { min-width: 44px !important; height: 44px !important; }
+.tjm-v4-main-canvas > .tjm-v4-map-node:active { cursor: grabbing; }
+.tjm-v4-group-node {
+  border-color: rgba(89, 57, 92, .35) !important;
+  border-left: 5px solid #6f4868 !important;
+  background: #f1e4ef !important;
+  box-shadow: 0 12px 28px rgba(49, 30, 51, .10) !important;
 }
+.tjm-v4-single-node {
+  border-color: rgba(196, 145, 45, .45) !important;
+  border-left: 5px solid #c58b25 !important;
+  background: #fff5d9 !important;
+  box-shadow: 0 10px 24px rgba(105, 72, 20, .10) !important;
+}
+.tjm-v4-map-node.tjm-v4-dragging,
+.tjm-v4-group-card.tjm-v4-dragging {
+  z-index: 1000 !important;
+  border-color: var(--gold) !important;
+  box-shadow: 0 26px 64px rgba(49, 30, 51, .28) !important;
+  transition: none !important;
+}
+
+/* A lone principle is just its permanent number and a short preview. */
+.tjm-v4-compact-single {
+  width: 270px !important;
+  min-height: 58px !important;
+  overflow: hidden !important;
+}
+.tjm-v4-compact-single > :not(.tjm-v4-single-preview) {
+  display: none !important;
+}
+.tjm-v4-single-preview {
+  width: 100%;
+  min-height: 58px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: #493d44;
+  text-align: left;
+  cursor: pointer;
+}
+.tjm-v4-single-preview > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  color: #493d44;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+.tjm-v4-single-preview .principle-circle {
+  flex: 0 0 auto;
+  min-width: 39px;
+  height: 39px;
+  cursor: grab;
+}
+.tjm-v4-single-preview:focus-visible {
+  outline: 3px solid rgba(238, 189, 74, .52);
+  outline-offset: 2px;
+}
+
+/* Group node circles are both open controls and drag handles. */
+.tjm-v4-circle-bar {
+  position: relative;
+  z-index: 4;
+  padding-top: 3px;
+}
+.tjm-v4-circle-bar .principle-circle,
+[data-v4-principle-id] {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tjm-v4-circle-dragging {
+  position: relative;
+  z-index: 1100 !important;
+  pointer-events: none;
+  cursor: grabbing !important;
+  box-shadow: 0 12px 28px rgba(49, 30, 51, .34) !important;
+  transition: none !important;
+}
+
+/* Open group: its own independent, zoomable and pannable Mind Map. */
+.tjm-v4-group-viewport {
+  min-height: 620px;
+}
+.tjm-v4-group-canvas {
+  position: relative !important;
+  display: block !important;
+  min-width: 1600px;
+  min-height: 1100px;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+.tjm-v4-hidden-group-circles,
+.tjm-v4-hidden-navigation,
+.tjm-v4-group-viewport .principle-inner-drag-help,
+.tjm-v4-group-viewport .mindmap-group-drag-help {
+  display: none !important;
+}
+.tjm-v4-group-card {
+  position: absolute !important;
+  width: 300px;
+  min-height: 66px;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(84, 52, 81, .32) !important;
+  border-left: 5px solid #6f4868 !important;
+  border-radius: 17px !important;
+  background: #f1e5ef !important;
+  box-shadow: 0 9px 24px rgba(49, 30, 51, .09) !important;
+  touch-action: none;
+  transition: width .16s ease, box-shadow .16s ease;
+}
+.tjm-v4-card-summary {
+  width: 100%;
+  min-height: 66px;
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 0;
+  background: transparent;
+  color: #493d44;
+  text-align: left;
+  cursor: grab;
+}
+.tjm-v4-card-summary > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.23;
+}
+.tjm-v4-card-summary .principle-circle {
+  flex: 0 0 auto;
+  min-width: 39px;
+  height: 39px;
+}
+.tjm-v4-card-summary:focus-visible {
+  outline: 3px solid rgba(238, 189, 74, .48);
+  outline-offset: -3px;
+}
+
+/* Collapsed cards show only the number and first line. */
+.tjm-v4-group-card:not(.tjm-v4-expanded) > header,
+.tjm-v4-group-card:not(.tjm-v4-expanded) > p,
+.tjm-v4-group-card:not(.tjm-v4-expanded) > .reference-chips,
+.tjm-v4-group-card:not(.tjm-v4-expanded) > .principle-source,
+.tjm-v4-group-card:not(.tjm-v4-expanded) > .principle-edit-form,
+.tjm-v4-group-card:not(.tjm-v4-expanded) > .principle-reading-group {
+  display: none !important;
+}
+
+/* A short tap expands the full principle at the exact same map position. */
+.tjm-v4-group-card.tjm-v4-expanded {
+  width: 390px;
+  padding: 0 18px 18px !important;
+  overflow: visible;
+  background: #f7edf5 !important;
+  box-shadow: 0 18px 42px rgba(49, 30, 51, .18) !important;
+}
+.tjm-v4-group-card.tjm-v4-expanded > .tjm-v4-card-summary {
+  width: calc(100% + 36px);
+  margin: 0 -18px 8px;
+  padding-inline: 18px;
+  border-bottom: 1px solid rgba(49, 30, 51, .11);
+}
+.tjm-v4-group-card.tjm-v4-expanded > header { display: flex !important; }
+.tjm-v4-group-card.tjm-v4-expanded > p { display: block !important; }
+.tjm-v4-group-card.tjm-v4-expanded > .reference-chips { display: flex !important; }
+.tjm-v4-group-card.tjm-v4-expanded > .principle-source,
+.tjm-v4-group-card.tjm-v4-expanded > .principle-reading-group { display: block !important; }
+.tjm-v4-group-card.tjm-v4-expanded > .principle-edit-form { display: grid !important; }
+
+/* The old shared drag layer must not add competing handles or transforms. */
+.tjm-v4-map-viewport .principle-group-window::after,
+.tjm-v4-map-viewport .principle-detail-card::after,
+.tjm-v4-map-viewport .principle-drag-help,
+.tjm-v4-map-viewport .principle-inner-drag-help,
+.tjm-v4-map-viewport .principle-drag-placeholder,
+.tjm-v4-map-viewport .principle-inner-drag-placeholder {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .tjm-v4-map-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .tjm-v4-zoom-buttons { align-self: stretch; justify-content: flex-end; }
+  .tjm-v4-map-viewport { min-height: 540px; border-radius: 15px; }
+  .tjm-v4-main-canvas > .tjm-v4-map-node { width: 292px; }
+  .tjm-v4-compact-single { width: 235px !important; }
+  .tjm-v4-group-card { width: 260px; }
+  .tjm-v4-group-card.tjm-v4-expanded { width: 330px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .principle-mindmap-arena > .mindmap-node,
-  .mindmap-principle-circle { transition: none; }
+  .tjm-v4-map-node,
+  .tjm-v4-group-card {
+    transition: none !important;
+  }
+}
+
+.tjm-v4-empty-group {
+  width: 300px !important;
+  min-height: 120px !important;
+  border: 2px dashed rgba(111, 72, 104, .45) !important;
+  border-left: 5px solid #6f4868 !important;
+  background: rgba(241, 228, 239, .82) !important;
+}
+.tjm-v4-empty-group-copy {
+  min-height: 116px;
+  padding: 18px;
+  display: grid;
+  align-content: center;
+  gap: 7px;
+}
+.tjm-v4-empty-group-copy small {
+  color: #6f4868;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.tjm-v4-empty-group-copy strong {
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: 24px;
+}
+.tjm-v4-empty-group-copy span {
+  color: #756a71;
+  font-size: 10px;
+}
+.tjm-v4-create-overlay { z-index: 1200; }
+.tjm-v4-create-dialog { max-width: 560px; }
+.tjm-v4-create-dialog input,
+.tjm-v4-create-dialog textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tjm-v4-back-button {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(49, 30, 51, .16);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--plum);
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 800;
+}
+.tjm-v4-back-button:focus-visible {
+  outline: 3px solid rgba(238, 189, 74, .5);
+  outline-offset: 2px;
+}
+.tjm-v4-group-node > .tjm-v4-circle-bar {
+  width: auto;
+  padding: 0 22px 18px;
 }
