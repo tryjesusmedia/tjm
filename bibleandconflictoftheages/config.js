@@ -6,8 +6,13 @@ window.TJM_CONFLICT_CONFIG = Object.freeze({
   supabasePublishableKey: "sb_publishable_bOxmjg6RWmwfw7i7o_YhTg_zOjUt0p6",
 });
 
-// Install the Mind Map gesture layer before the shared Principles handlers.
-// It owns pan/zoom/freeform movement so drag releases cannot fall through to reading navigation.
-document.write('<link rel="stylesheet" href="../lib/principles-mindmap-v2.css?v=20260902-3">');
-document.write('<link rel="stylesheet" href="../lib/principles-mindmap-v3.css?v=20260902-1">');
-document.write('<script src="../lib/principles-mindmap-v3.js?v=20260902-2"><\/script>');
+// Load one unified Mind Map runtime before the page's shared Principles handlers.
+document.write('<link rel="stylesheet" href="../lib/principles-drag.css?v=20260902-4">');
+document.write('<script src="../lib/principles-mindmap-v4-part-01.js?v=20260902-4"><\/script>');
+document.write('<script src="../lib/principles-mindmap-v4-part-02.js?v=20260902-4"><\/script>');
+document.write('<script src="../lib/principles-mindmap-v4-part-03.js?v=20260902-4"><\/script>');
+document.write('<script src="../lib/principles-mindmap-v4-part-04.js?v=20260902-4"><\/script>');
+document.write('<script src="../lib/principles-mindmap-v4-part-05.js?v=20260902-4"><\/script>');
+document.write('<script src="../lib/principles-mindmap-v4-part-06.js?v=20260902-4"><\/script>');
+document.write('<script src="../lib/principles-mindmap-v4-part-07.js?v=20260902-4"><\/script>');
+document.write('<script src="../lib/principles-mindmap-v4-boot.js?v=20260902-4"><\/script>');
