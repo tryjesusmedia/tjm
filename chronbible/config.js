@@ -8,6 +8,5 @@ window.TJM_CHRONBIBLE_CONFIG = Object.freeze({
 
 // Install the Mind Map gesture layer before the shared Principles handlers.
 // It owns pan/zoom/freeform movement so drag releases cannot fall through to reading navigation.
-document.write('<link rel="stylesheet" href="../lib/principles-mindmap-v2.css?v=20260902-2">');
-document.write('<script src="../lib/principles-mindmap-v2.js?v=20260902-2"><\/script>');
-document.write('<script src="../lib/principles-mindmap-copy.js?v=20260902-1"><\/script>');
+document.write('<link rel="stylesheet" href="../lib/principles-mindmap-v2.css?v=20260902-3">');
+document.write('<script src="../lib/principles-mindmap-v3.js?v=20260902-1"><\/script>');
