@@ -1,4 +1,5 @@
-.principle-drag-help {
+.principle-drag-help,
+.principle-inner-drag-help {
   margin: 0 0 14px;
   padding: 11px 13px;
   display: flex;
@@ -11,13 +12,18 @@
   font-size: 10px;
   line-height: 1.45;
 }
-.principle-drag-help strong { color: var(--plum); }
-.principle-group-window.is-touch-movable {
+.principle-drag-help strong,
+.principle-inner-drag-help strong { color: var(--plum); }
+.principle-inner-drag-help { margin-top: 2px; background: rgba(238,189,74,.08); }
+
+.principle-group-window.is-touch-movable,
+.principle-detail-card.is-touch-movable-principle {
   position: relative;
   touch-action: pan-y;
   transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, opacity .16s ease;
 }
-.principle-group-window.is-touch-movable::after {
+.principle-group-window.is-touch-movable::after,
+.principle-detail-card.is-touch-movable-principle::after {
   content: "hold + drag";
   position: absolute;
   top: 8px;
@@ -32,23 +38,36 @@
   text-transform: uppercase;
   pointer-events: none;
 }
-.principle-group-window.is-dragging {
+.principle-detail-card.is-touch-movable-principle::after { top: 6px; right: 7px; }
+
+.principle-group-window.is-dragging,
+.principle-detail-card.is-dragging {
   opacity: .96;
   border-color: rgba(238,189,74,.82);
   box-shadow: 0 25px 60px rgba(35,20,36,.28);
   transition: none;
 }
+.principle-detail-card.is-dragging { background: #f3e7f1; }
+
 .principle-drag-active,
 .principle-drag-active * {
   user-select: none !important;
   -webkit-user-select: none !important;
 }
-.principle-drag-placeholder {
+
+.principle-drag-placeholder,
+.principle-inner-drag-placeholder {
   min-height: 72px;
   border: 2px dashed rgba(111,72,104,.3);
   border-radius: 22px;
   background: rgba(111,72,104,.05);
 }
+.principle-inner-drag-placeholder {
+  margin-top: 12px;
+  border-radius: 17px;
+  background: rgba(238,189,74,.08);
+}
+
 .principle-group-window.is-drop-target {
   border-color: var(--gold) !important;
   box-shadow: 0 0 0 4px rgba(238,189,74,.22), 0 15px 36px rgba(49,30,51,.13);
@@ -72,8 +91,11 @@
   text-transform: uppercase;
   pointer-events: none;
 }
+
 .principle-group-window.is-drop-before::before,
-.principle-group-window.is-drop-after::after {
+.principle-group-window.is-drop-after::after,
+.principle-detail-card.is-principle-drop-before::before,
+.principle-detail-card.is-principle-drop-after::after {
   content: "";
   position: absolute;
   z-index: 6;
@@ -85,11 +107,16 @@
   box-shadow: 0 0 0 3px rgba(238,189,74,.18);
   pointer-events: none;
 }
-.principle-group-window.is-drop-before::before { top: -10px; }
-.principle-group-window.is-drop-after::after { bottom: -10px; }
+.principle-group-window.is-drop-before::before,
+.principle-detail-card.is-principle-drop-before::before { top: -10px; }
+.principle-group-window.is-drop-after::after,
+.principle-detail-card.is-principle-drop-after::after { bottom: -10px; }
+
 @media (pointer: coarse) {
-  .principle-group-window.is-touch-movable::after { opacity: .72; }
+  .principle-group-window.is-touch-movable::after,
+  .principle-detail-card.is-touch-movable-principle::after { opacity: .72; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .principle-group-window.is-touch-movable { transition: none; }
+  .principle-group-window.is-touch-movable,
+  .principle-detail-card.is-touch-movable-principle { transition: none; }
 }
