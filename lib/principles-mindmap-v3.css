@@ -1,0 +1,19 @@
+.tjm-group-map-node.tjm-v3-dragging,
+.mindmap-node.tjm-v3-dragging {
+  z-index: 999 !important;
+  box-shadow: 0 20px 48px rgba(49,30,51,.24) !important;
+}
+.tjm-v3-circle-dragging {
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 10px 22px rgba(49,30,51,.28);
+  cursor: grabbing !important;
+}
+.tjm-map-viewport,
+.tjm-group-map-viewport { overscroll-behavior: contain; }
+.tjm-map-controls button:focus-visible,
+.tjm-single-preview:focus-visible,
+.tjm-group-card-summary:focus-visible {
+  outline: 3px solid rgba(238,189,74,.5);
+  outline-offset: 2px;
+}
