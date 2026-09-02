@@ -1,0 +1,207 @@
+.tjm-map-controls {
+  margin: 12px 0 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid rgba(49,30,51,.14);
+  border-radius: 12px;
+  background: rgba(255,255,255,.76);
+}
+.tjm-map-controls > span {
+  color: var(--plum);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.tjm-map-controls > div { display: flex; align-items: center; gap: 6px; }
+.tjm-map-controls button {
+  min-width: 42px;
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid rgba(49,30,51,.16);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--plum);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+}
+.tjm-map-controls button[data-map-zoom="reset"] { min-width: 62px; font-size: 9px; }
+
+.tjm-map-viewport,
+.tjm-group-map-viewport {
+  position: relative;
+  overflow: hidden !important;
+  min-height: 620px;
+  border: 1px solid rgba(49,30,51,.14);
+  border-radius: 18px;
+  background:
+    linear-gradient(rgba(49,30,51,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49,30,51,.035) 1px, transparent 1px),
+    #faf7f0;
+  background-size: 28px 28px;
+  touch-action: none;
+  cursor: grab;
+}
+.tjm-map-viewport:active,
+.tjm-group-map-viewport:active { cursor: grabbing; }
+.tjm-map-canvas {
+  position: relative;
+  will-change: transform;
+}
+
+/* Main Mind Map: a standalone principle is intentionally compact. */
+.tjm-standalone-compact {
+  width: 250px !important;
+  min-height: 56px !important;
+  overflow: visible !important;
+  border-color: rgba(196,145,45,.42) !important;
+  background: #fff7df !important;
+}
+.tjm-standalone-compact > :not(.tjm-single-preview) { display: none !important; }
+.tjm-single-preview {
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: #493d44;
+  text-align: left;
+  cursor: pointer;
+}
+.tjm-single-preview > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  color: #493d44;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.tjm-single-preview .principle-circle {
+  flex: 0 0 auto;
+  min-width: 38px;
+  height: 38px;
+  cursor: grab;
+}
+
+/* Open group = its own freeform, pannable Mind Map. */
+.tjm-group-map-viewport { min-height: 590px; }
+.tjm-group-map-canvas {
+  position: relative !important;
+  display: block !important;
+  min-width: 1200px;
+  min-height: 780px;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  will-change: transform;
+}
+.tjm-group-map-node {
+  position: absolute !important;
+  width: 275px;
+  min-height: 64px;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(86,57,91,.28) !important;
+  border-left: 4px solid #6f4868 !important;
+  border-radius: 15px !important;
+  background: #f3e8f1 !important;
+  box-shadow: 0 7px 18px rgba(49,30,51,.08) !important;
+  transition: width .15s ease, box-shadow .15s ease;
+  touch-action: none;
+}
+.tjm-group-map-node.tjm-v2-dragging {
+  z-index: 999 !important;
+  box-shadow: 0 18px 42px rgba(49,30,51,.22) !important;
+}
+.tjm-group-card-summary {
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: transparent;
+  color: #493d44;
+  text-align: left;
+  cursor: grab;
+}
+.tjm-group-card-summary > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.tjm-group-card-summary .principle-circle {
+  flex: 0 0 auto;
+  min-width: 38px;
+  height: 38px;
+}
+.tjm-group-map-node:not(.is-group-card-expanded) > header,
+.tjm-group-map-node:not(.is-group-card-expanded) > p,
+.tjm-group-map-node:not(.is-group-card-expanded) > .reference-chips,
+.tjm-group-map-node:not(.is-group-card-expanded) > .principle-source,
+.tjm-group-map-node:not(.is-group-card-expanded) > .principle-edit-form,
+.tjm-group-map-node:not(.is-group-card-expanded) > .principle-reading-group { display: none !important; }
+.tjm-group-map-node.is-group-card-expanded {
+  width: 360px;
+  padding: 0 16px 16px !important;
+  overflow: visible;
+  background: #f6edf4 !important;
+  box-shadow: 0 15px 34px rgba(49,30,51,.16) !important;
+}
+.tjm-group-map-node.is-group-card-expanded > .tjm-group-card-summary {
+  margin: 0 -16px 8px;
+  width: calc(100% + 32px);
+  padding-inline: 16px;
+  border-bottom: 1px solid rgba(49,30,51,.1);
+}
+.tjm-group-map-node.is-group-card-expanded > header,
+.tjm-group-map-node.is-group-card-expanded > p,
+.tjm-group-map-node.is-group-card-expanded > .reference-chips,
+.tjm-group-map-node.is-group-card-expanded > .principle-source,
+.tjm-group-map-node.is-group-card-expanded > .principle-edit-form,
+.tjm-group-map-node.is-group-card-expanded > .principle-reading-group { display: initial; }
+.tjm-group-map-node.is-group-card-expanded > header { display: flex; }
+.tjm-group-map-node.is-group-card-expanded > p { display: block; }
+
+.tjm-v2-circle-dragging {
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 8px 20px rgba(49,30,51,.24);
+}
+
+/* The older focused-list drag affordances are superseded by the map interaction. */
+.tjm-group-map-viewport .principle-inner-drag-help,
+.tjm-group-map-viewport .mindmap-group-drag-help,
+.tjm-group-map-node::after { display: none !important; }
+
+@media (max-width: 700px) {
+  .tjm-map-viewport,
+  .tjm-group-map-viewport { min-height: 520px; border-radius: 14px; }
+  .tjm-standalone-compact { width: 220px !important; }
+  .tjm-group-map-node { width: 245px; }
+  .tjm-group-map-node.is-group-card-expanded { width: 320px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tjm-group-map-node { transition: none; }
+}
