@@ -1,0 +1,95 @@
+.principle-drag-help {
+  margin: 0 0 14px;
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px dashed rgba(49,30,51,.2);
+  border-radius: 13px;
+  background: rgba(255,255,255,.58);
+  color: #6f646b;
+  font-size: 10px;
+  line-height: 1.45;
+}
+.principle-drag-help strong { color: var(--plum); }
+.principle-group-window.is-touch-movable {
+  position: relative;
+  touch-action: pan-y;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, opacity .16s ease;
+}
+.principle-group-window.is-touch-movable::after {
+  content: "hold + drag";
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(49,30,51,.06);
+  color: rgba(49,30,51,.55);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.principle-group-window.is-dragging {
+  opacity: .96;
+  border-color: rgba(238,189,74,.82);
+  box-shadow: 0 25px 60px rgba(35,20,36,.28);
+  transition: none;
+}
+.principle-drag-active,
+.principle-drag-active * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+.principle-drag-placeholder {
+  min-height: 72px;
+  border: 2px dashed rgba(111,72,104,.3);
+  border-radius: 22px;
+  background: rgba(111,72,104,.05);
+}
+.principle-group-window.is-drop-target {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 4px rgba(238,189,74,.22), 0 15px 36px rgba(49,30,51,.13);
+  transform: scale(1.015);
+}
+.principle-group-window.is-drop-target::before {
+  content: "Drop here to group";
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: var(--gold-light);
+  box-shadow: 0 8px 24px rgba(49,30,51,.24);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.principle-group-window.is-drop-before::before,
+.principle-group-window.is-drop-after::after {
+  content: "";
+  position: absolute;
+  z-index: 6;
+  left: 12px;
+  right: 12px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(238,189,74,.18);
+  pointer-events: none;
+}
+.principle-group-window.is-drop-before::before { top: -10px; }
+.principle-group-window.is-drop-after::after { bottom: -10px; }
+@media (pointer: coarse) {
+  .principle-group-window.is-touch-movable::after { opacity: .72; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .principle-group-window.is-touch-movable { transition: none; }
+}
