@@ -1,0 +1,32 @@
+name: Validate Mind Map
+
+on:
+  pull_request:
+    paths:
+      - "lib/principles-mindmap-v4-*.js"
+      - "lib/principles-drag.css"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-mindmap-v4.mjs"
+  push:
+    branches:
+      - "fix/mind-map-order-zoom-circle-drag"
+    paths:
+      - "lib/principles-mindmap-v4-*.js"
+      - "lib/principles-drag.css"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-mindmap-v4.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/validate-mindmap-v4.mjs
