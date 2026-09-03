@@ -7,6 +7,7 @@ const paths = {
   css: "lib/principles-folders-flow.css",
   conflictConfig: "bibleandconflictoftheages/config.js",
   chronConfig: "chronbible/config.js",
+  migration: "supabase/migrations/20260903190000_principle_names.sql",
 };
 
 const source = Object.fromEntries(await Promise.all(
@@ -19,7 +20,16 @@ assert.match(source.module, /@xyflow\/react@12\.11\.3/);
 assert.match(source.module, /New Folder #/);
 assert.match(source.module, /Remove from Folder/);
 assert.match(source.module, /Add to Folder/);
-assert.match(source.module, /Rename Folder/);
+assert.match(source.module, /Hold to rename folder/);
+assert.match(source.module, /Duplicate/);
+assert.match(source.module, /Principle name/);
+assert.match(source.module, /set_conflict_principle_name/);
+assert.match(source.module, /tjmMindMapOverlay/);
+assert.match(source.module, /Create New Folder/);
+assert.match(source.module, /Find a Principle/);
+assert.doesNotMatch(source.module, /Related principle numbers/);
+assert.match(source.migration, /add column if not exists principle_name text/);
+assert.match(source.migration, /where id = p_principle_id and user_id = current_user_id/);
 assert.match(source.module, /Close Mind Map/);
 assert.match(source.module, /Open Mind Map/);
 assert.match(source.module, /tjm-fm-persistent-toggle/);
