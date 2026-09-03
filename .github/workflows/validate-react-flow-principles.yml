@@ -11,6 +11,8 @@ on:
       - "bibleandconflictoftheages/config.js"
       - "chronbible/config.js"
       - "scripts/validate-react-flow-principles.mjs"
+      - "scripts/test-react-flow-browser.mjs"
+      - "scripts/react-flow-smoke.html"
       - ".github/workflows/validate-react-flow-principles.yml"
   push:
     branches: [main]
@@ -23,12 +25,14 @@ on:
       - "bibleandconflictoftheages/config.js"
       - "chronbible/config.js"
       - "scripts/validate-react-flow-principles.mjs"
+      - "scripts/test-react-flow-browser.mjs"
+      - "scripts/react-flow-smoke.html"
 
 permissions:
   contents: read
 
 jobs:
-  validate:
+  source-validation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,3 +41,13 @@ jobs:
           node-version: 22
       - name: Validate React Flow source and integration
         run: node scripts/validate-react-flow-principles.mjs
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.55.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Playwright package
+        run: npm install --no-save playwright@1.55.0
+      - name: Exercise the Mind Map in Chromium
+        run: node scripts/test-react-flow-browser.mjs
