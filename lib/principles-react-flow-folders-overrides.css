@@ -4,6 +4,10 @@
   transform: translateX(-50%);
 }
 
+.tjm-folder-map-overlay {
+  bottom: max(76px, calc(env(safe-area-inset-bottom) + 68px));
+}
+
 .tjm-folder-sticky-header {
   position: sticky;
   top: 0;
@@ -14,5 +18,9 @@
     left: 50%;
     right: auto;
     transform: translateX(-50%);
+  }
+
+  .tjm-folder-map-overlay {
+    bottom: max(67px, calc(env(safe-area-inset-bottom) + 61px));
   }
 }
