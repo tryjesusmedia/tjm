@@ -55,7 +55,7 @@ try {
   const overlayPosition = await page.locator(".tjm-folder-map-overlay").evaluate((element) => getComputedStyle(element).position);
   const headerPosition = await page.locator(".tjm-folder-sticky-header").evaluate((element) => getComputedStyle(element).position);
   assert.equal(overlayPosition, "fixed");
-  assert.equal(headerPosition, "relative");
+  assert.equal(headerPosition, "sticky");
   const frameBox = await page.locator(".tjm-folder-map-frame").boundingBox();
   assert.ok(frameBox && frameBox.x >= 5 && frameBox.y >= 5);
   assert.ok(frameBox.x + frameBox.width <= 1275 && frameBox.y + frameBox.height <= 895);
