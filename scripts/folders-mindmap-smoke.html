@@ -14,7 +14,11 @@
   </style>
 </head>
 <body>
-  <nav class="journey-nav"><button class="active" data-view="principles">Principles</button></nav>
+  <nav class="journey-nav">
+    <button class="active" data-view="readings">Readings</button>
+    <button data-view="journey">Journey</button>
+    <button data-view="progress">Progress</button>
+  </nav>
   <span id="sync-status"></span>
   <div id="toast-region" class="toast-region"></div>
   <div id="view-root"><section class="principles-view"><h2>Legacy fallback</h2></section></div>
@@ -95,6 +99,12 @@
         goToReadingById: (id) => { window.__wentToReading = id; },
       },
     };
+    document.querySelector('.journey-nav').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-view]');
+      if (!button) return;
+      document.querySelectorAll('[data-view]').forEach((item) => item.classList.toggle('active', item === button));
+      document.querySelector('#view-root').innerHTML = `<section data-current-view="${button.dataset.view}">${button.textContent}</section>`;
+    });
   </script>
   <script type="module" src="../lib/principles-folders-flow.mjs"></script>
 </body>

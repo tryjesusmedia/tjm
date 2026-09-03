@@ -57,7 +57,7 @@
     setSync,
     showSignIn,
     rerender: render,
-    showPrinciples: () => showView("principles", true),
+    showPrinciples: openPrinciplesMap,
     goToReadingById: (readingId) => {
       const index = plan.readings.findIndex((reading) => reading.id === resolveReadingId(readingId));
       if (index >= 0) goToReading(index, "readings");
@@ -272,6 +272,7 @@ function taskGroupComplete(reading, kind) {
   }
 
   function showView(name, focusMain = false) {
+    if (name === "principles") { openPrinciplesMap(); return; }
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
@@ -447,7 +448,7 @@ function taskGroupComplete(reading, kind) {
     return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING JOURNEY</p><h2 id="progress-heading">Progress</h2><p>${session ? "Your completion state is saved to your account and available on every signed-in device." : "This preview starts at zero. Sign in to save your completion state across devices."}</p></div></header>
       <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
       <div class="progress-layout"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details></article>
-      <article class="progress-panel"><h3>Your principles</h3><p>Your ${principles.length} private ${principles.length === 1 ? "principle is" : "principles are"} organized in the Principles tab.</p><button class="button button-primary" type="button" data-view-shortcut="principles">Open Principles</button></article></div>
+      <article class="progress-panel"><h3>Your principles</h3><p>Your ${principles.length} private ${principles.length === 1 ? "principle is" : "principles are"} organized in your Principles Map.</p><button class="button button-primary" type="button" data-view-shortcut="principles">Open Principles Map</button></article></div>
     </section>`;
   }
 
@@ -473,6 +474,13 @@ function taskGroupComplete(reading, kind) {
     else if (activeView === "progress") content = renderProgress();
     else content = principleManager.renderTab();
     root.innerHTML = `${guestBanner()}${content}`;
+    window.dispatchEvent(new CustomEvent("tjm-principles-updated", {
+      detail: { planId: CONFIG.planId, rows: principles },
+    }));
+  }
+
+  function openPrinciplesMap() {
+    window.dispatchEvent(new CustomEvent("tjm-open-principles-map"));
   }
 
   function migrateLegacyChapterProgress() {
@@ -766,6 +774,7 @@ function taskGroupComplete(reading, kind) {
     else if (target.dataset.dayNav) goToReading(currentIndex + (target.dataset.dayNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex) goToReading(Number(target.dataset.readingIndex));
     else if (target.dataset.book) { activeBook = activeBook === target.dataset.book ? "" : target.dataset.book; render(); }
+    else if (target.dataset.viewShortcut === "principles") openPrinciplesMap();
     else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.dataset.sharePrinciple) { selectedMembersPrincipleId = target.dataset.sharePrinciple; showView("members", true); }
     else if (target.dataset.findPrinciple) { principleSearch = String(target.dataset.findPrinciple); showView("progress", true); setTimeout(() => document.getElementById(`principle-${target.dataset.findPrinciple}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0); }

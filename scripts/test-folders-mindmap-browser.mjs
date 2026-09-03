@@ -46,13 +46,29 @@ try {
   const windowBox = await page.locator(".tjm-fm-window").boundingBox();
   assert.ok(windowBox && windowBox.x > 0 && windowBox.y > 0);
   assert.ok(windowBox.x + windowBox.width < 1280 && windowBox.y + windowBox.height < 900);
+  assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
+  assert.equal(await page.getByRole("button", { name: "Principles", exact: true }).count(), 0);
   assert.equal(await page.getByText("Group led by", { exact: false }).count(), 0);
   assert.equal(await page.getByText("New Folder #1", { exact: true }).count(), 1);
   assert.equal(await page.locator('[data-fm-folder-id="g1"] .tjm-fm-node-menu').count(), 0);
   assert.equal(await page.locator('[data-fm-empty-folder-id] .tjm-fm-node-menu').count(), 0);
 
+  // The fixed launcher and open map survive every page-tab change.
+  const launcher = page.locator(".tjm-fm-persistent-toggle");
+  await launcher.click();
+  await page.waitForSelector(".tjm-fm-window", { state: "detached" });
+  assert.equal((await launcher.textContent())?.trim(), "Open Principles Map");
+  await page.getByRole("button", { name: "Journey", exact: true }).click();
+  assert.equal(await launcher.count(), 1);
+  await launcher.click();
+  await page.waitForSelector(".tjm-fm-window");
+  await page.getByRole("button", { name: "Progress", exact: true }).click();
+  assert.equal(await page.locator(".tjm-fm-window").count(), 1);
+  await page.getByRole("button", { name: "Readings", exact: true }).click();
+  assert.equal(await launcher.count(), 1);
+
   // The main menu has exactly the requested three actions and acts as a modal.
-  await page.getByRole("button", { name: "Mind Map menu", exact: true }).click();
+  await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
   assert.deepEqual(await page.locator('.tjm-fm-context-menu [role="menu"] button').allTextContents(), [
     "Create New Folder", "Create New Principle", "Find a Principle",
   ]);
@@ -62,7 +78,7 @@ try {
   assert.equal(await page.evaluate(() => document.body.style.overflow), "");
 
   // Search lists every matching folder and principle from the main map.
-  await page.getByRole("button", { name: "Mind Map menu", exact: true }).click();
+  await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
   await page.getByRole("menuitem", { name: "Find a Principle", exact: true }).click();
   await page.getByLabel("Search all folders and principles", { exact: true }).fill("grace");
   assert.equal(await page.getByRole("button", { name: /#12 · Principle #12/ }).count(), 1);
@@ -71,6 +87,8 @@ try {
 
   // A folder menu has only the requested actions; Back dismisses it first.
   await page.getByRole("button", { name: "Folder menu", exact: true }).click();
+  assert.equal(await page.locator('.tjm-fm-window-actions [aria-label="Close Principles Map"]').count(), 0);
+  assert.equal((await launcher.textContent())?.trim(), "Close Principles Map");
   assert.deepEqual(await page.locator('.tjm-fm-context-menu [role="menu"] button').allTextContents(), [
     "New Principle", "Delete Folder", "Find a Principle",
   ]);
@@ -147,7 +165,7 @@ try {
   // The same interface initializes for the chronological journey.
   await page.goto(`http://127.0.0.1:${address.port}/scripts/folders-mindmap-smoke.html?chron=1`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
-  await page.getByRole("button", { name: "Mind Map menu", exact: true }).click();
+  await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
   assert.equal(await page.getByRole("menuitem", { name: "Find a Principle", exact: true }).count(), 1);
 
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);
