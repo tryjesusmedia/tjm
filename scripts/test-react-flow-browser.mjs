@@ -73,7 +73,7 @@ try {
   // must never call the reading-navigation callback.
   await standalone.locator(".tjm-rf-preview").click();
   const handle = standalone.locator(".rf-node-drag-handle");
-  const flowNode = standalone.locator("xpath=ancestor::div[contains(@class,'react-flow__node')]");
+  const flowNode = page.getByTestId("rf__node-principle:p3");
   const beforeTransform = await flowNode.evaluate((element) => element.style.transform);
   const box = await handle.boundingBox();
   assert.ok(box, "The principle drag handle should be visible");
