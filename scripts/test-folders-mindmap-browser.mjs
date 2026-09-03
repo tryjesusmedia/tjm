@@ -51,7 +51,7 @@ import assert from "node:assert/strict";import http from "node:http";import { re
   ]);
   await page.getByRole("menuitem", { name: "Duplicate", exact: true }).click();
   assert.equal(await page.getByLabel("Principle number", { exact: true }).inputValue(), "");
-  assert.equal(await page.getByLabel("Principle", { exact: true }).inputValue(), "Grace changes how we see both God and one another.");
+  assert.equal(await page.locator('textarea[name="principle-body"]').inputValue(), "Grace changes how we see both God and one another.");
   await page.getByLabel("Principle number", { exact: true }).fill("90");
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.waitForTimeout(100);
@@ -72,7 +72,7 @@ import assert from "node:assert/strict";import http from "node:http";import { re
   await page.getByRole("menuitem", { name: "New Principle", exact: true }).click();
   await page.getByLabel("Principle number", { exact: true }).fill("56");
   await page.getByLabel("Principle name", { exact: true }).fill("Created here");
-  await page.getByLabel("Principle", { exact: true }).fill("A new in-folder discovery.");
+  await page.locator('textarea[name="principle-body"]').fill("A new in-folder discovery.");
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.waitForSelector('[data-fm-principle-id] .tjm-fm-principle-preview strong:text-is("Created here")');
 
@@ -112,3 +112,4 @@ import assert from "node:assert/strict";import http from "node:http";import { re
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);
   console.log("Folder Mind Map browser smoke test passed.");
 } finally {  await browser.close();  await new Promise((resolve) => server.close(resolve));}
+
