@@ -4,13 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflow/react@12.11.3/dist/style.css">
-  <link rel="stylesheet" href="../lib/principles-react-flow.css">
+  <link rel="stylesheet" href="../lib/principles-react-flow-folders.css">
+  <link rel="stylesheet" href="../lib/principles-react-flow-folders-overrides.css">
   <style>
     :root { --serif: Georgia, serif; }
-    body { margin: 0; padding: 24px; font-family: Arial, sans-serif; background: #f3e8d0; }
+    body { min-height: 2400px; margin: 0; padding: 24px; font-family: Arial, sans-serif; background: linear-gradient(#f3e8d0, #fffdf9); }
     #view-root { max-width: 1180px; margin: auto; }
     .eyebrow { color: #6f4868; font-size: 10px; font-weight: 800; letter-spacing: .1em; }
-    .toast-region { position: fixed; right: 15px; bottom: 15px; }
+    .toast-region { position: fixed; z-index: 12000; right: 15px; top: 15px; }
+    .background-copy { max-width: 760px; margin: 1200px auto 0; font-size: 24px; }
   </style>
 </head>
 <body>
@@ -20,6 +22,7 @@
   <div id="view-root">
     <section class="principles-view"><h2>Legacy Principles fallback</h2></section>
   </div>
+  <p class="background-copy">The page remains scrollable behind the fixed Mind Map.</p>
 
   <script>
     window.TJM_CONFLICT_CONFIG = {
@@ -44,8 +47,14 @@
         body: "Prayer makes room to listen before reacting to pressure.",
         cross_reference_numbers: [], group_id: null, group_title: null,
       },
+      {
+        id: "p4", reading_id: "r4", principle_number: 31,
+        body: "Hope keeps faith moving when the next step is not visible.",
+        cross_reference_numbers: [], group_id: "g2", group_title: null,
+      },
     ];
     let deleted = [];
+    let folderSequence = 50;
 
     const rpc = async (name, args) => {
       if (name === "update_conflict_principle") {
@@ -59,7 +68,7 @@
       }
       if (name === "create_conflict_principle") {
         const created = {
-          id: `p${rows.length + 1}`,
+          id: `p${rows.length + deleted.length + 1}`,
           reading_id: args.p_reading_id,
           principle_number: args.p_principle_number,
           body: args.p_body,
@@ -85,16 +94,16 @@
         return { data: rows, error: null };
       }
       if (name === "move_conflict_principles") {
-        const movingId = args.p_principle_ids[0];
+        const ids = new Set(args.p_principle_ids || []);
         if (args.p_mode === "standalone") {
-          rows = rows.map((row) => row.id === movingId ? { ...row, group_id: null, group_title: null } : row);
+          rows = rows.map((row) => ids.has(row.id) ? { ...row, group_id: null, group_title: null } : row);
         } else if (args.p_mode === "new") {
-          const groupId = `g${Date.now()}`;
-          rows = rows.map((row) => row.id === movingId ? { ...row, group_id: groupId, group_title: args.p_group_title || null } : row);
+          const groupId = `g${folderSequence++}`;
+          rows = rows.map((row) => ids.has(row.id) ? { ...row, group_id: groupId, group_title: args.p_group_title || null } : row);
         } else {
           const target = rows.find((row) => row.id === args.p_target_principle_id);
-          const groupId = target.group_id || `g${Date.now()}`;
-          rows = rows.map((row) => row.id === movingId || row.id === target.id ? { ...row, group_id: groupId } : row);
+          const groupId = target.group_id || `g${folderSequence++}`;
+          rows = rows.map((row) => ids.has(row.id) || row.id === target.id ? { ...row, group_id: groupId } : row);
         }
         return { data: rows, error: null };
       }
@@ -106,7 +115,7 @@
       controller: {},
       options: {
         planId: "bible-conflict-ages-v1",
-        getSession: () => ({ user: { id: "browser-smoke-user" } }),
+        getSession: () => ({ user: { id: "browser-folder-smoke-user" } }),
         getPrinciples: () => rows,
         setPrinciples: (next) => { rows = next; },
         getDeletedPrinciples: () => deleted,
@@ -115,6 +124,7 @@
           { id: "r1", title: "Genesis 1" },
           { id: "r2", title: "Genesis 2" },
           { id: "r3", title: "Genesis 3" },
+          { id: "r4", title: "Genesis 4" },
         ],
         readingLabel: (reading) => reading.title,
         getDb: () => ({ rpc }),
@@ -125,6 +135,6 @@
       },
     };
   </script>
-  <script type="module" src="../lib/principles-react-flow.mjs"></script>
+  <script type="module" src="../lib/principles-react-flow-folders.mjs"></script>
 </body>
 </html>
