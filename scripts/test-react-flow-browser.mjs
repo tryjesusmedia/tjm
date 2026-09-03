@@ -65,6 +65,7 @@ try {
   await editor.locator('button[type="submit"]').click();
   await editor.waitFor({ state: "detached" });
   await page.waitForFunction(() => document.querySelector('[data-rf-principle-id="p3"]')?.classList.contains("is-expanded"));
+  await page.waitForFunction(() => document.querySelector('[data-rf-principle-id="p3"] .tjm-rf-expanded-body > p')?.textContent.includes("creates calm space"));
   assert.match(await standalone.locator(".tjm-rf-expanded-body > p").innerText(), /creates calm space/);
   assert.equal(await page.evaluate(() => window.__wentToReading), undefined);
 
