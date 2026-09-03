@@ -91,7 +91,7 @@ assert.equal(websitePlan.readings.at(-1).bibleReference, "Revelation 21; 22");
 assert.match(websitePlan.readings.at(-1).commentaryCitation, /GC 662-678/);
 
 for (const label of ["Readings", "Journey", "Progress", "Principles", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
-assert.match(html, /data-view="principles"/);
+assert.doesNotMatch(html, /data-view="principles"/);
 assert.doesNotMatch(html, /data-view="members"/);
 assert.doesNotMatch(html, />\s*(?:Today|Calendar)\s*</i);
 assert.doesNotMatch(app, /["'`]Day \$\{/);

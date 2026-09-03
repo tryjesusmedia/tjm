@@ -7,6 +7,10 @@ const paths = {
   css: "lib/principles-folders-flow.css",
   conflictConfig: "bibleandconflictoftheages/config.js",
   chronConfig: "chronbible/config.js",
+  conflictIndex: "bibleandconflictoftheages/index.html",
+  chronIndex: "chronbible/index.html",
+  conflictApp: "bibleandconflictoftheages/app.js",
+  chronApp: "chronbible/app.js",
   migration: "supabase/migrations/20260903190000_principle_names.sql",
 };
 
@@ -30,8 +34,17 @@ assert.match(source.module, /Find a Principle/);
 assert.doesNotMatch(source.module, /Related principle numbers/);
 assert.match(source.migration, /add column if not exists principle_name text/);
 assert.match(source.migration, /where id = p_principle_id and user_id = current_user_id/);
-assert.match(source.module, /Close Mind Map/);
-assert.match(source.module, /Open Mind Map/);
+assert.match(source.module, /Close Principles Map/);
+assert.match(source.module, /Open Principles Map/);
+assert.match(source.module, /document\.body\.append\(host\)/);
+assert.match(source.module, /!currentFolder && html`<button[^`]+Close Principles Map/);
+for (const index of [source.conflictIndex, source.chronIndex]) {
+  assert.doesNotMatch(index, /data-view="principles"/);
+}
+for (const app of [source.conflictApp, source.chronApp]) {
+  assert.match(app, /tjm-open-principles-map/);
+  assert.match(app, /tjm-principles-updated/);
+}
 assert.match(source.module, /tjm-fm-persistent-toggle/);
 assert.match(source.module, /tjm-fm-sticky-header/);
 assert.match(source.module, /translateExtent=\$\{translateExtent\}/);

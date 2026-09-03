@@ -46,7 +46,7 @@
     setSync,
     showSignIn,
     rerender: render,
-    showPrinciples: () => showView("principles", true),
+    showPrinciples: openPrinciplesMap,
     goToReadingById: (readingId) => {
       const index = plan.readings.findIndex((reading) => reading.id === readingId);
       if (index >= 0) goToReading(index, "readings");
@@ -157,6 +157,7 @@
   }
 
   function showView(name, focusMain = false) {
+    if (name === "principles") { openPrinciplesMap(); return; }
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
@@ -266,7 +267,7 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress is synced across your signed-in devices." : "Sign in with Google whenever you want progress and principles saved across devices."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}<button class="button button-secondary" type="button" data-view-shortcut="principles">Open Principles</button></aside></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress is synced across your signed-in devices." : "Sign in with Google whenever you want progress and principles saved across devices."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}<button class="button button-secondary" type="button" data-view-shortcut="principles">Open Principles Map</button></aside></div></section>`;
   }
 
   function renderMembers() {
@@ -289,6 +290,13 @@
     else if (activeView === "progress") content = renderProgress();
     else content = principleManager.renderTab();
     root.innerHTML = `${activeView === "progress" ? "" : guestBanner()}${content}`;
+    window.dispatchEvent(new CustomEvent("tjm-principles-updated", {
+      detail: { planId: CONFIG.planId, rows: principles },
+    }));
+  }
+
+  function openPrinciplesMap() {
+    window.dispatchEvent(new CustomEvent("tjm-open-principles-map"));
   }
 
   async function persistProgress(previousCompleted, previousLastIndex) {
@@ -517,7 +525,8 @@
     else if (target.dataset.section !== undefined) {
       activeSection = activeSection === target.dataset.section ? "" : target.dataset.section;
       render();
-    } else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
+    } else if (target.dataset.viewShortcut === "principles") openPrinciplesMap();
+    else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.dataset.sharePrinciple) { selectedMembersPrincipleId = target.dataset.sharePrinciple; showView("members", true); }
     else if (target.dataset.findPrinciple) { principleSearch = String(target.dataset.findPrinciple); showView("progress", true); setTimeout(() => document.getElementById(`principle-${target.dataset.findPrinciple}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0); }
   });

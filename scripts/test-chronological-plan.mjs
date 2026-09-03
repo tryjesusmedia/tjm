@@ -33,7 +33,7 @@ assert.deepEqual(plan.readings.filter((reading) => reading.sourceNumber === 2).m
 assert.deepEqual(plan.readings.filter((reading) => reading.sourceNumber === 150).map((reading) => reading.title), ["The Revelation of Jesus Christ", "The Seven Churches", "The Throne, the Lamb, and the Scroll", "The Seals", "The Trumpets and Two Witnesses", "The Dragon, the Beasts, and the Lamb", "The Seven Bowls", "Babylon's Fall", "Christ's Victory and Final Judgment", "New Jerusalem and Eternal Restoration"]);
 assert.match(html, /GOOGLE SIGN-IN IS OPTIONAL/);
 assert.match(html, /Progress and principles can only be saved and synced after you sign in/);
-assert.match(html, /data-view="principles"/);
+assert.doesNotMatch(html, /data-view="principles"/);
 assert.doesNotMatch(html, /data-view="members"/);
 assert.match(app, /reading_plan_progress/);
 assert.match(app, /data-chapter-progress/);
