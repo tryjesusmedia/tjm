@@ -96,7 +96,19 @@ jobs:
           replacements = {
               'assert.equal(websitePlan.readings.length, 265);': 'assert.equal(websitePlan.readings.length, 264);',
               '{ PP: 67, PK: 60, DA: 82, AA: 44, GC: 12 }': '{ PP: 66, PK: 60, DA: 82, AA: 44, GC: 12 }',
+              'assert.equal(Object.keys(egwLinkMap).length, websitePlan.readings.filter((reading) => reading.commentaryCitation).length);': '''const expectedEgwLinkKeys = new Set(websitePlan.readings.flatMap((reading) =>
+            reading.sourceKey === "PP:1+2"
+              ? ["PP:1", "PP:2"]
+              : reading.commentaryCitation ? [reading.sourceKey] : []));
+          assert.equal(Object.keys(egwLinkMap).length, expectedEgwLinkKeys.size);
+          assert.deepEqual(new Set(Object.keys(egwLinkMap)), expectedEgwLinkKeys);''',
               '  assert.equal(reading.id, `coa-${String(index + 1).padStart(3, "0")}`);': '  assert.match(reading.id, /^coa-\\d{3}$/);',
+              '    assert.deepEqual(reading.commentaryTasks, egwLinkMap[reading.sourceKey].chapters);': '''    const mappedEgwLinks = reading.sourceKey === "PP:1+2"
+                ? { ...egwLinkMap["PP:1"], chapters: [...egwLinkMap["PP:1"].chapters, ...egwLinkMap["PP:2"].chapters] }
+                : egwLinkMap[reading.sourceKey];
+              assert.deepEqual(reading.commentaryTasks.map(({ legacyProgressIndex, ...task }) => task), mappedEgwLinks.chapters);''',
+              '    assert.equal(commentary.href, egwLinkMap[reading.sourceKey].url);': '    assert.equal(commentary.href, mappedEgwLinks.url);',
+              '    assert.equal(egwLinkMap[reading.sourceKey].query, expectedQuery);': '    assert.equal(mappedEgwLinks.query, expectedQuery);',
               'Conflict journey validation passed: 265 readings, 1696 individually trackable chapters': 'Conflict journey validation passed: 264 readings, 1696 individually trackable chapters',
           }
           for old, new in replacements.items():
