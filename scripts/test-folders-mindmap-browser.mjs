@@ -44,8 +44,9 @@ try {
   // Standalone principle menus offer Edit, Add to Folder, Delete.
   await page.locator('[data-fm-principle-id="p3"] .tjm-fm-node-menu').click();
   assert.deepEqual(await page.locator(".tjm-fm-context-menu button").allTextContents(), ["Edit", "Add to Folder", "Delete"]);
-  await page.mouse.click(20, 20);
-  await page.waitForSelector(".tjm-fm-context-menu", { state: "detached" });
+  await page.waitForTimeout(75);
+  await page.locator(".tjm-fm-sticky-header").click({ position: { x: 10, y: 10 } });
+  await page.waitForSelector(".tjm-fm-context-menu", { state: "detached", timeout: 5_000 });
 
   // No principle-on-principle filing: overlapping two principle nodes never invokes move_conflict_principles.
   const sourceHandle = page.locator('[data-fm-principle-id="p3"] .fm-node-drag-handle');
