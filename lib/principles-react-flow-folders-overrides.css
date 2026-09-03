@@ -12,6 +12,10 @@
   bottom: max(76px, calc(env(safe-area-inset-bottom) + 68px));
 }
 
+.tjm-folder-map-frame {
+  box-sizing: border-box;
+}
+
 .tjm-folder-sticky-header {
   position: sticky;
   top: 0;
