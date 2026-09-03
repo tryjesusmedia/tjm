@@ -51,7 +51,7 @@
     setPrinciples: (nextPrinciples) => { principles = nextPrinciples; },
     getDeletedPrinciples: () => deletedPrinciples,
     setDeletedPrinciples: (nextPrinciples) => { deletedPrinciples = nextPrinciples; },
-    getReadings: () => plan?.readings || [],
+    getReadings: () => readingsWithAliases(),
     escapeHTML,
     toast,
     setSync,
@@ -59,13 +59,35 @@
     rerender: render,
     showPrinciples: () => showView("principles", true),
     goToReadingById: (readingId) => {
-      const index = plan.readings.findIndex((reading) => reading.id === readingId);
+      const index = plan.readings.findIndex((reading) => reading.id === resolveReadingId(readingId));
       if (index >= 0) goToReading(index, "readings");
     },
     readingLabel: (reading) => companionIdentity(reading),
   });
 
-  function escapeHTML(value = "") {
+  function resolveReadingId(readingId) {
+  return plan?.readingAliases?.[readingId] || readingId;
+}
+
+function readingIdsFor(readingId) {
+  return [
+    readingId,
+    ...Object.entries(plan?.readingAliases || {})
+      .filter(([, targetId]) => targetId === readingId)
+      .map(([aliasId]) => aliasId),
+  ];
+}
+
+function readingsWithAliases() {
+  const readings = plan?.readings || [];
+  const aliases = Object.entries(plan?.readingAliases || {}).map(([aliasId, targetId]) => {
+    const target = readings.find((reading) => reading.id === targetId);
+    return target ? { ...target, id: aliasId, aliasOf: targetId } : null;
+  }).filter(Boolean);
+  return [...readings, ...aliases];
+}
+
+function escapeHTML(value = "") {
     return String(value)
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
@@ -131,14 +153,30 @@
   }
 
   function prepareChapterProgressIndex() {
-    chapterTaskCount = 0;
-    for (const reading of plan.readings) {
-      for (const task of reading.bibleTasks ?? []) task.progressIndex = chapterTaskCount++;
-      for (const task of reading.commentaryTasks ?? []) task.progressIndex = chapterTaskCount++;
-    }
-  }
+  const tasks = plan.readings.flatMap((reading) => [
+    ...(reading.bibleTasks ?? []),
+    ...(reading.commentaryTasks ?? []),
+  ]);
+  const reserved = new Set(tasks
+    .map((task) => task.legacyProgressIndex)
+    .filter((index) => Number.isInteger(index) && index >= 0));
+  let nextIndex = 0;
+  let maximumIndex = -1;
 
-  function taskGroupComplete(reading, kind) {
+  for (const task of tasks) {
+    if (Number.isInteger(task.legacyProgressIndex) && task.legacyProgressIndex >= 0) {
+      task.progressIndex = task.legacyProgressIndex;
+    } else {
+      while (reserved.has(nextIndex)) nextIndex += 1;
+      task.progressIndex = nextIndex;
+      nextIndex += 1;
+    }
+    maximumIndex = Math.max(maximumIndex, task.progressIndex);
+  }
+  chapterTaskCount = maximumIndex + 1;
+}
+
+function taskGroupComplete(reading, kind) {
     const tasks = kind === "bible" ? reading.bibleTasks : reading.commentaryTasks;
     const hasAssignment = kind === "bible" ? reading.bibleReference : reading.commentaryCitation;
     return !hasAssignment || (tasks?.length > 0 && tasks.every((task) => chapterCompleted.has(task.progressIndex)));
@@ -222,7 +260,7 @@
 
   function defaultReadingIndex() {
     if (settings?.last_reading_id) {
-      const last = plan.readings.findIndex((reading) => reading.id === settings.last_reading_id);
+      const last = plan.readings.findIndex((reading) => reading.id === resolveReadingId(settings.last_reading_id));
       if (last >= 0 && !readingComplete(plan.readings[last])) return last;
     }
     const firstIncomplete = plan.readings.findIndex((reading) => !readingComplete(reading));
@@ -282,7 +320,8 @@
 
   function renderReadings() {
     const reading = currentReading();
-    const readingPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
+    const readingIds = new Set(readingIdsFor(reading.id));
+    const readingPrinciples = principles.filter((principle) => readingIds.has(principle.reading_id));
     const scriptureActions = sourceTaskLinks(reading, "bible", reading.bibleTasks);
     const commentaryActions = sourceTaskLinks(reading, "commentary", reading.commentaryTasks);
     const commentaryPages = companionPageSummary(reading);

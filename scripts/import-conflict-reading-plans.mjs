@@ -264,16 +264,52 @@ function argsByCode() {
 
 const input = argsByCode();
 const sourceTexts = Object.fromEntries(await Promise.all(Object.entries(input).map(async ([code, file]) => [code, await readFile(file, "utf8")])));
-const rawReadings = [
+const parsedReadings = [
   ...parsePP(sourceTexts.PP),
   ...parsePK(sourceTexts.PK),
   ...parseDA(sourceTexts.DA),
   ...parseAA(sourceTexts.AA),
   ...parseGC(sourceTexts.GC),
-];
-
-const readings = rawReadings.map((reading, index) => ({
+].map((reading, index) => ({
   id: `coa-${String(index + 1).padStart(3, "0")}`,
+  ...reading,
+}));
+
+function combineOpeningPpReadings(items) {
+  const [first, second, ...remaining] = items;
+  if (first?.sourceKey !== "PP:1" || second?.sourceKey !== "PP:2") {
+    throw new Error("The first two Patriarchs and Prophets assignments could not be identified.");
+  }
+  return [
+    {
+      ...first,
+      sourceBlock: 1,
+      sourceKey: "PP:1+2",
+      sourceEntry: "Gen 1; 2\nCh 1—Why was Sin Permitted? PP 33-43\nCh 2—The Creation PP 44-51",
+      originalSourceEntry: `${first.sourceEntry}\n\n${second.sourceEntry}`,
+      correctionApplied: true,
+      heading: "",
+      title: "Why was Sin Permitted? · The Creation",
+      bibleReference: "Gen 1; 2",
+      bibleQuery: "Gen 1; 2",
+      bibleUrl: second.bibleUrl,
+      bibleTasks: second.bibleTasks.map((task, index) => ({ ...task, legacyProgressIndex: index + 1 })),
+      commentaryCitation: "Ch 1—Why was Sin Permitted? PP 33-43 · Ch 2—The Creation PP 44-51",
+      commentaryPageStart: 33,
+      commentaryPageEnd: 51,
+      commentaryUrl: first.commentaryUrl,
+      commentaryTasks: [
+        { ...first.commentaryTasks[0], legacyProgressIndex: 0 },
+        { ...second.commentaryTasks[0], legacyProgressIndex: 3 },
+      ],
+      reviewNote: null,
+    },
+    ...remaining,
+  ];
+}
+
+const rawReadings = combineOpeningPpReadings(parsedReadings);
+const readings = rawReadings.map((reading, index) => ({
   day: index + 1,
   ...reading,
 }));
@@ -286,6 +322,7 @@ const payload = {
   sourcePolicy: "Pairings and order follow the five supplied plans. Owner-approved corrections are applied while each changed source block is retained in originalSourceEntry for auditability; any future ambiguity must be flagged rather than silently corrected.",
   generatedAt: new Date().toISOString(),
   sourceHashes: Object.fromEntries(Object.entries(sourceTexts).map(([code, text]) => [code, createHash("sha256").update(text).digest("hex")])),
+  readingAliases: { "coa-002": "coa-001" },
   books: Object.entries(bookMeta).map(([code, meta]) => ({
     code,
     ...meta,
