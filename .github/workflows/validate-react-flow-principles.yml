@@ -39,8 +39,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate React Flow source and integration
-        run: node scripts/validate-react-flow-principles.mjs
+      - name: Validate the active React Flow generation
+        run: |
+          if grep -q 'principles-react-flow.mjs' bibleandconflictoftheages/config.js && \
+             grep -q 'principles-react-flow.mjs' chronbible/config.js; then
+            node scripts/validate-react-flow-principles.mjs
+          else
+            echo "The original React Flow generation is inactive; the Folder Mind Map workflow validates the active runtime."
+          fi
 
   browser-smoke:
     runs-on: ubuntu-latest
@@ -49,5 +55,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install matching Playwright package
         run: npm install --no-save playwright@1.55.0
-      - name: Exercise the Mind Map in Chromium
-        run: node scripts/test-react-flow-browser.mjs
+      - name: Exercise the active React Flow generation in Chromium
+        run: |
+          if grep -q 'principles-react-flow.mjs' bibleandconflictoftheages/config.js && \
+             grep -q 'principles-react-flow.mjs' chronbible/config.js; then
+            node scripts/test-react-flow-browser.mjs
+          else
+            echo "The original React Flow generation is inactive; the Folder Mind Map workflow runs the browser test."
+          fi
