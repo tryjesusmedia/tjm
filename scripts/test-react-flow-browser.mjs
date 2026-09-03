@@ -48,7 +48,7 @@ try {
   await page.waitForSelector(".tjm-rf-host .react-flow", { timeout: 45_000 });
 
   assert.equal(await page.locator("#view-root > .principles-view").evaluate((element) => element.classList.contains("tjm-rf-original-hidden")), true);
-  assert.equal(await page.locator('[data-rf-group-id="g1"]').count(), 1);
+  assert.equal(await page.locator('.tjm-rf-group-node[data-rf-group-id="g1"]').count(), 1);
   assert.equal(await page.locator('[data-rf-principle-id="p3"]').count(), 1);
   assert.match(await page.locator('[data-rf-principle-id="p3"] .tjm-rf-preview').innerText(), /^Prayer makes room/);
   assert.equal(await page.getByText("Mind Map Arena", { exact: true }).count(), 0);
@@ -85,7 +85,7 @@ try {
   assert.notEqual(afterTransform, beforeTransform);
   assert.equal(await page.evaluate(() => window.__wentToReading), undefined);
 
-  await page.locator('[data-rf-group-id="g1"] .tjm-rf-group-open').click();
+  await page.locator('.tjm-rf-group-node[data-rf-group-id="g1"] .tjm-rf-group-open').click();
   await page.waitForFunction(() => document.querySelector("#tjm-rf-heading")?.textContent === "Grace");
   assert.equal(await page.locator('.tjm-rf-flow-wrap [data-rf-principle-id="p1"]').count(), 1);
   assert.equal(await page.locator('.tjm-rf-flow-wrap [data-rf-principle-id="p2"]').count(), 1);
