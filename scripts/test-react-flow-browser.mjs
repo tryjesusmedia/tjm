@@ -56,7 +56,9 @@ try {
   const standalone = page.locator('[data-rf-principle-id="p3"]');
   await standalone.locator(".tjm-rf-preview").click();
   await page.waitForFunction(() => document.querySelector('[data-rf-principle-id="p3"]')?.classList.contains("is-expanded"));
-  assert.match(await standalone.locator(".tjm-rf-expanded-body > p").innerText(), /listen before reacting/);
+  const standaloneBody = standalone.locator(".tjm-rf-expanded-body > p");
+  await standaloneBody.waitFor({ state: "visible" });
+  assert.match(await standaloneBody.textContent(), /listen before reacting/);
 
   await standalone.locator(".tjm-rf-expanded-actions button", { hasText: "Edit" }).click();
   const editor = page.locator(".tjm-rf-editor-sheet");
@@ -66,7 +68,7 @@ try {
   await editor.waitFor({ state: "detached" });
   await page.waitForFunction(() => document.querySelector('[data-rf-principle-id="p3"]')?.classList.contains("is-expanded"));
   await page.waitForFunction(() => document.querySelector('[data-rf-principle-id="p3"] .tjm-rf-expanded-body > p')?.textContent.includes("creates calm space"));
-  assert.match(await standalone.locator(".tjm-rf-expanded-body > p").innerText(), /creates calm space/);
+  assert.match(await standaloneBody.textContent(), /creates calm space/);
   assert.equal(await page.evaluate(() => window.__wentToReading), undefined);
 
   // A drag starts only from the circled number. It changes node position and
@@ -94,6 +96,7 @@ try {
   const groupedPrinciple = page.locator('.tjm-rf-flow-wrap [data-rf-principle-id="p1"]');
   await groupedPrinciple.locator(".tjm-rf-preview").click();
   await page.waitForFunction(() => document.querySelector('.tjm-rf-flow-wrap [data-rf-principle-id="p1"]')?.classList.contains("is-expanded"));
+  await groupedPrinciple.locator(".tjm-rf-expanded-body > p").waitFor({ state: "visible" });
   await groupedPrinciple.locator(".tjm-rf-expanded-actions button", { hasText: "Edit" }).click();
   await page.locator(".tjm-rf-editor-sheet").waitFor();
   await page.locator(".tjm-rf-editor-sheet button", { hasText: "Cancel" }).click();
