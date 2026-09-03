@@ -1,0 +1,29 @@
+name: Validate Conflict Reading Plan
+
+on:
+  pull_request:
+    paths:
+      - "bibleandconflictoftheages/data/readings.json"
+      - "scripts/import-conflict-reading-plans.mjs"
+      - "scripts/validate-combined-first-reading.mjs"
+      - ".github/workflows/validate-conflict-reading-plan.yml"
+  push:
+    branches: [main]
+    paths:
+      - "bibleandconflictoftheages/data/readings.json"
+      - "scripts/import-conflict-reading-plans.mjs"
+      - "scripts/validate-combined-first-reading.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate combined opening assignment and stable IDs
+        run: node scripts/validate-combined-first-reading.mjs
