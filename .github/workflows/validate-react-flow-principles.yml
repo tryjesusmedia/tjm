@@ -1,0 +1,53 @@
+name: Validate React Flow Principles
+
+on:
+  pull_request:
+    paths:
+      - "lib/principles-react-flow.mjs"
+      - "lib/principles-react-flow-bridge.js"
+      - "lib/principles-react-flow.css"
+      - "lib/principles-drag.js"
+      - "lib/principles-drag-guard.js"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-react-flow-principles.mjs"
+      - "scripts/test-react-flow-browser.mjs"
+      - "scripts/react-flow-smoke.html"
+      - ".github/workflows/validate-react-flow-principles.yml"
+  push:
+    branches: [main]
+    paths:
+      - "lib/principles-react-flow.mjs"
+      - "lib/principles-react-flow-bridge.js"
+      - "lib/principles-react-flow.css"
+      - "lib/principles-drag.js"
+      - "lib/principles-drag-guard.js"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-react-flow-principles.mjs"
+      - "scripts/test-react-flow-browser.mjs"
+      - "scripts/react-flow-smoke.html"
+
+permissions:
+  contents: read
+
+jobs:
+  source-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate React Flow source and integration
+        run: node scripts/validate-react-flow-principles.mjs
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.55.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Playwright package
+        run: npm install --no-save playwright@1.55.0
+      - name: Exercise the Mind Map in Chromium
+        run: node scripts/test-react-flow-browser.mjs
