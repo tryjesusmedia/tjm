@@ -1,0 +1,13 @@
+.tjm-folder-map-toggle {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 760px) {
+  .tjm-folder-map-toggle {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
