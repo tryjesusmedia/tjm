@@ -4,6 +4,10 @@
   transform: translateX(-50%);
 }
 
+.tjm-folder-map-toggle > span {
+  display: inline-grid;
+}
+
 .tjm-folder-map-overlay {
   bottom: max(76px, calc(env(safe-area-inset-bottom) + 68px));
 }
