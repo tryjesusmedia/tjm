@@ -4,15 +4,17 @@ on:
   pull_request:
     paths:
       - "lib/principles-mindmap-v4-*.js"
+      - "lib/principles-mindmap-ux-guard.js"
       - "lib/principles-drag.css"
       - "bibleandconflictoftheages/config.js"
       - "chronbible/config.js"
       - "scripts/validate-mindmap-v4.mjs"
   push:
     branches:
-      - "fix/mind-map-order-zoom-circle-drag"
+      - "main"
     paths:
       - "lib/principles-mindmap-v4-*.js"
+      - "lib/principles-mindmap-ux-guard.js"
       - "lib/principles-drag.css"
       - "bibleandconflictoftheages/config.js"
       - "chronbible/config.js"
@@ -30,3 +32,4 @@ jobs:
         with:
           node-version: "20"
       - run: node scripts/validate-mindmap-v4.mjs
+      - run: node --check lib/principles-mindmap-ux-guard.js

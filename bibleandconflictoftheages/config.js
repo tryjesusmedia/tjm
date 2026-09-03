@@ -8,6 +8,8 @@ window.TJM_CONFLICT_CONFIG = Object.freeze({
 
 // Load one unified Mind Map runtime before the page's shared Principles handlers.
 document.write('<link rel="stylesheet" href="../lib/principles-drag.css?v=20260902-4">');
+// Register boundary and short-tap handling before the main Mind Map runtime.
+document.write('<script src="../lib/principles-mindmap-ux-guard.js?v=20260902-1"><\/script>');
 document.write('<script src="../lib/principles-mindmap-v4-part-01.js?v=20260902-4"><\/script>');
 document.write('<script src="../lib/principles-mindmap-v4-part-02.js?v=20260902-4"><\/script>');
 document.write('<script src="../lib/principles-mindmap-v4-part-03.js?v=20260902-4"><\/script>');
