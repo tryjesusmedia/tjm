@@ -38,6 +38,7 @@ const baseURL = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const errors = [];
+const normalizedText = async (locator) => (await locator.innerText()).replace(/\s+/g, " ").trim();
 page.on("pageerror", (error) => errors.push(error.message));
 page.on("console", (message) => {
   if (message.type() === "error") errors.push(message.text());
@@ -48,7 +49,7 @@ try {
   await page.waitForSelector(".tjm-folder-map-frame .react-flow", { timeout: 45_000 });
 
   assert.equal(await page.locator("#view-root > .principles-view").evaluate((element) => element.classList.contains("tjm-rf-original-hidden")), true);
-  assert.equal(await page.locator(".tjm-folder-map-toggle").innerText(), "×Close Mind Map");
+  assert.equal(await normalizedText(page.locator(".tjm-folder-map-toggle")), "× Close Mind Map");
   assert.equal(await page.evaluate(() => getComputedStyle(document.body).overflow === "hidden"), false);
   assert.ok(await page.evaluate(() => document.documentElement.scrollHeight > innerHeight * 2));
 
@@ -75,7 +76,7 @@ try {
   // continue scrolling behind it.
   await page.locator(".tjm-folder-map-toggle").click();
   await page.waitForSelector(".tjm-folder-map-overlay", { state: "detached" });
-  assert.equal(await page.locator(".tjm-folder-map-toggle").innerText(), "⌘Open Mind Map");
+  assert.equal(await normalizedText(page.locator(".tjm-folder-map-toggle")), "⌘ Open Mind Map");
   await page.evaluate(() => window.scrollTo(0, 650));
   assert.equal(await page.evaluate(() => Math.round(window.scrollY)), 650);
   await page.locator(".tjm-folder-map-toggle").click();
