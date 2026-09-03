@@ -1,4 +1,5 @@
 /* Floating React Flow Mind Map with folder terminology. */
+.tjm-fm-shell * { box-sizing: border-box; }
 .tjm-rf-original-hidden {
   display: none !important;
 }
@@ -49,7 +50,7 @@
 
 .tjm-fm-persistent-toggle {
   position: fixed;
-  z-index: 12050;
+  z-index: 12300;
   right: max(14px, env(safe-area-inset-right));
   bottom: max(14px, env(safe-area-inset-bottom));
   min-height: 48px;
@@ -791,3 +792,24 @@
     transition: none;
   }
 }
+
+/* Modal menus stay above the map; the persistent close button stays available. */
+.tjm-fm-menu-layer { align-items: center; justify-content: center; }
+.tjm-fm-context-menu {
+  position: relative;
+  width: min(360px, 100%);
+  max-height: calc(100dvh - 110px);
+  overflow: auto;
+}
+.tjm-fm-context-menu [role="menu"] { display: grid; }
+.tjm-fm-context-menu button { min-height: 44px; font-size: 14px; }
+.tjm-fm-context-menu [data-close-dialog] { border-bottom: 1px solid #e9dfe5; }
+.tjm-fm-folder-title { border: 0; padding: 5px 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tjm-fm-folder-title, .tjm-fm-folder-open { touch-action: none; user-select: none; -webkit-touch-callout: none; }
+.tjm-fm-identity-fields { display: grid; grid-template-columns: minmax(90px, .7fr) minmax(0, 1.5fr); gap: 12px; }
+.tjm-fm-identity-fields input { min-width: 0; }
+.tjm-fm-principle-preview small { display: block; font: 9px Arial, sans-serif; color: #756970; margin-bottom: 4px; }
+.tjm-fm-principle-preview strong { display: block; overflow: hidden; text-overflow: ellipsis; }
+.tjm-fm-search-results { margin-top: 16px; max-height: 52dvh; overflow: auto; }
+.tjm-fm-window { min-height: 0; }
+.tjm-fm-dialog-layer { padding-bottom: 80px; }

@@ -20,23 +20,30 @@
   <div id="view-root"><section class="principles-view"><h2>Legacy fallback</h2></section></div>
 
   <script>
-    window.TJM_CONFLICT_CONFIG = {
-      planId: "bible-conflict-ages-v1",
+    const params = new URLSearchParams(location.search);
+    const planId = params.has('chron') ? 'chronological-bible-order-v3' : 'bible-conflict-ages-v1';
+    window[params.has('chron') ? 'TJM_CHRONBIBLE_CONFIG' : 'TJM_CONFLICT_CONFIG'] = {
+      planId,
       supabaseUrl: "https://example.invalid",
       supabasePublishableKey: "test",
     };
 
-    let rows = [
+    const rowsKey = `smoke-rows:${planId}`;
+    let rows = JSON.parse(localStorage.getItem(rowsKey) || 'null') || [
       { id: "p1", reading_id: "r1", principle_number: 12, body: "Grace changes how we see both God and one another.", cross_reference_numbers: [], group_id: "g1", group_title: null },
       { id: "p2", reading_id: "r2", principle_number: 4, body: "Trust grows when truth is practiced in ordinary decisions.", cross_reference_numbers: [12], group_id: "g1", group_title: null },
       { id: "p3", reading_id: "r3", principle_number: 27, body: "Prayer makes room to listen before reacting to pressure.", cross_reference_numbers: [], group_id: null, group_title: null },
       { id: "p4", reading_id: "r4", principle_number: 31, body: "Patience creates room for wisdom to become visible.", cross_reference_numbers: [], group_id: null, group_title: null },
     ];
-    let deleted = [];
+    let deleted = [{ id: 'deleted-90', principle_number: 90, deleted_at: '2026-09-01T00:00:00Z' }];
     window.__rpcCalls = [];
 
     const rpc = async (name, args) => {
       window.__rpcCalls.push({ name, args });
+      if (name === 'set_conflict_principle_name') {
+        if (params.has('namefail')) return { data: null, error: { code: 'PGRST202', message: 'Naming migration not installed' } };
+        rows = rows.map((row) => row.id === args.p_principle_id ? { ...row, principle_name: args.p_name } : row);
+      } else
       if (name === "update_conflict_principle") {
         rows = rows.map((row) => row.id === args.p_principle_id ? { ...row, principle_number: args.p_principle_number, body: args.p_body, cross_reference_numbers: args.p_cross_reference_numbers } : row);
       } else if (name === "rename_conflict_principle_group") {
@@ -59,10 +66,13 @@
           rows = rows.map((row) => ids.has(row.id) ? { ...row, group_id: target.group_id, group_title: target.group_title } : row);
         }
       } else if (name === "create_conflict_principle") {
-        const created = { id: `p${rows.length + 1}`, reading_id: args.p_reading_id, principle_number: args.p_principle_number, body: args.p_body, cross_reference_numbers: args.p_cross_reference_numbers, group_id: null, group_title: null };
+        if ([...rows, ...deleted].some((row) => row.principle_number === args.p_principle_number)) return { data: null, error: { message: 'Number already in use' } };
+        const created = { id: crypto.randomUUID(), reading_id: args.p_reading_id, principle_number: args.p_principle_number, body: args.p_body, cross_reference_numbers: args.p_cross_reference_numbers, group_id: null, group_title: null };
         rows = [...rows, created];
+        localStorage.setItem(rowsKey, JSON.stringify(rows));
         return { data: created, error: null };
       }
+      localStorage.setItem(rowsKey, JSON.stringify(rows));
       return { data: rows, error: null };
     };
 
@@ -70,7 +80,7 @@
       version: 1,
       controller: {},
       options: {
-        planId: "bible-conflict-ages-v1",
+        planId,
         getSession: () => ({ user: { id: "smoke-user" } }),
         getPrinciples: () => rows,
         setPrinciples: (next) => { rows = next; },
