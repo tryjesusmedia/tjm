@@ -1,4 +1,45 @@
-import assert from "node:assert/strict";import http from "node:http";import { readFile, stat } from "node:fs/promises";import { extname, join, normalize } from "node:path";import { chromium } from "playwright";const root = process.cwd();const types = {  ".css": "text/css; charset=utf-8",  ".html": "text/html; charset=utf-8",  ".js": "text/javascript; charset=utf-8",  ".mjs": "text/javascript; charset=utf-8",};const server = http.createServer(async (request, response) => {  try {    const relative = normalize(decodeURIComponent(new URL(request.url, "http://localhost").pathname).replace(/^\/+/, ""));    if (relative.startsWith("..")) throw new Error("Invalid path");    let file = join(root, relative || "scripts/folders-mindmap-smoke.html");    if ((await stat(file)).isDirectory()) file = join(file, "index.html");    response.writeHead(200, {      "content-type": types[extname(file)] || "application/octet-stream",      "cache-control": "no-store",    });    response.end(await readFile(file));  } catch (_error) {    response.writeHead(404);    response.end("Not found");  }});await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));const address = server.address();const browser = await chromium.launch({ headless: true });const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });const errors = [];page.on("pageerror", (error) => errors.push(error.message));page.on("console", (message) => {  if (message.type() === "error") errors.push(message.text());});try {
+import assert from "node:assert/strict";
+import http from "node:http";
+import { readFile, stat } from "node:fs/promises";
+import { extname, join, normalize } from "node:path";
+import { chromium } from "playwright";
+
+const root = process.cwd();
+const types = {
+  ".css": "text/css; charset=utf-8",
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
+};
+
+const server = http.createServer(async (request, response) => {
+  try {
+    const relative = normalize(decodeURIComponent(new URL(request.url, "http://localhost").pathname).replace(/^\/+/, ""));
+    if (relative.startsWith("..")) throw new Error("Invalid path");
+    let file = join(root, relative || "scripts/folders-mindmap-smoke.html");
+    if ((await stat(file)).isDirectory()) file = join(file, "index.html");
+    response.writeHead(200, {
+      "content-type": types[extname(file)] || "application/octet-stream",
+      "cache-control": "no-store",
+    });
+    response.end(await readFile(file));
+  } catch (_error) {
+    response.writeHead(404);
+    response.end("Not found");
+  }
+});
+
+await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+const address = server.address();
+const browser = await chromium.launch({ headless: true });
+const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+const errors = [];
+page.on("pageerror", (error) => errors.push(error.message));
+page.on("console", (message) => {
+  if (message.type() === "error") errors.push(message.text());
+});
+
+try {
   await page.goto(`http://127.0.0.1:${address.port}/scripts/folders-mindmap-smoke.html`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
 
@@ -111,5 +152,9 @@ import assert from "node:assert/strict";import http from "node:http";import { re
 
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);
   console.log("Folder Mind Map browser smoke test passed.");
-} finally {  await browser.close();  await new Promise((resolve) => server.close(resolve));}
+} finally {
+  await browser.close();
+  await new Promise((resolve) => server.close(resolve));
+}
+
 
