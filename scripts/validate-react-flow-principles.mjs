@@ -91,7 +91,7 @@ assert.equal(bodyBlocks.some((match) => /\boverflow\s*:\s*hidden\b/i.test(match[
   "The page body must remain scrollable behind the fixed Mind Map.");
 assert.match(source.overrides, /left:\s*50%/);
 assert.match(source.overrides, /\.tjm-folder-sticky-header\s*\{[\s\S]*?position:\s*sticky/);
-assert.match(source.language, /\bgroups\b/);
-assert.match(source.language, /folders/);
+assert.ok(source.language.includes("/\\bgroups\\b/g"), "Fallback copy should replace plural group terminology.");
+assert.ok(source.language.includes('"folders"'), "Fallback copy should use folder terminology.");
 
 console.log("Folder-based React Flow Mind Map source validation passed.");
