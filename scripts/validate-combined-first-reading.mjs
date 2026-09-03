@@ -57,6 +57,9 @@ assert.match(appSource, /function resolveReadingId\(readingId\)/);
 assert.match(appSource, /function readingIdsFor\(readingId\)/);
 assert.match(appSource, /getReadings:\s*\(\)\s*=>\s*readingsWithAliases\(\)/);
 assert.match(appSource, /legacyProgressIndex/);
+assert.doesNotMatch(appSource, /plan\.readings\.length !== 265/);
+assert.match(appSource, /declaredReadingCount/);
+assert.match(appSource, /CONFIG\.siteUrl \|\|/);
 assert.match(importerSource, /function combineOpeningPpReadings\(items\)/);
 assert.match(importerSource, /readingAliases:\s*\{\s*"coa-002":\s*"coa-001"\s*\}/);
 
