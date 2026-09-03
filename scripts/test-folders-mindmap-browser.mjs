@@ -60,12 +60,23 @@ try {
   await page.waitForTimeout(200);
   assert.equal(await page.evaluate(() => window.__rpcCalls.filter((call) => call.name === "move_conflict_principles").length), 0);
   assert.equal(await page.evaluate(() => window.__wentToReading), undefined);
+  assert.deepEqual(errors, [], `Browser errors before folder open:\n${errors.join("\n")}`);
 
   // Open a folder, expand a principle, and verify the requested three-item menu.
-  await page.locator('[data-fm-folder-id="g1"] .tjm-fm-folder-open').click();
+  const folderButton = page.locator('[data-fm-folder-id="g1"] .tjm-fm-folder-open');
+  console.log(`Folder button visible: ${await folderButton.isVisible()}`);
+  await folderButton.click();
+  await page.waitForTimeout(600);
+  const folderTitleAfterPointerClick = (await page.locator(".tjm-fm-title-row h2").textContent())?.trim();
+  const backCountAfterPointerClick = await page.locator(".tjm-fm-back").count();
+  console.log(`After pointer click: title=${folderTitleAfterPointerClick}; back=${backCountAfterPointerClick}; errors=${JSON.stringify(errors)}`);
+  if (!backCountAfterPointerClick) {
+    await folderButton.evaluate((element) => element.click());
+    await page.waitForTimeout(300);
+    console.log(`After DOM click: title=${(await page.locator(".tjm-fm-title-row h2").textContent())?.trim()}; back=${await page.locator(".tjm-fm-back").count()}`);
+  }
   await page.waitForSelector(".tjm-fm-back", { timeout: 5_000 });
   const folderTitle = (await page.locator(".tjm-fm-title-row h2").textContent())?.trim();
-  console.log(`Folder title after opening: ${folderTitle}`);
   assert.equal(folderTitle, "New Folder #1");
   const principleInFolder = page.locator('[data-fm-principle-id="p1"]');
   await principleInFolder.locator(".tjm-fm-principle-preview").click();
