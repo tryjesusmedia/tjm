@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflow/react@12.11.3/dist/style.css">
+  <link rel="stylesheet" href="../lib/principles-react-flow.css">
+  <style>
+    :root { --serif: Georgia, serif; }
+    body { margin: 0; padding: 24px; font-family: Arial, sans-serif; background: #f3e8d0; }
+    #view-root { max-width: 1180px; margin: auto; }
+    .eyebrow { color: #6f4868; font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+    .toast-region { position: fixed; right: 15px; bottom: 15px; }
+  </style>
+</head>
+<body>
+  <nav class="journey-nav"><button class="active" data-view="principles">Principles</button></nav>
+  <span id="sync-status"></span>
+  <div id="toast-region" class="toast-region"></div>
+  <div id="view-root">
+    <section class="principles-view"><h2>Legacy Principles fallback</h2></section>
+  </div>
+
+  <script>
+    window.TJM_CONFLICT_CONFIG = {
+      planId: "bible-conflict-ages-v1",
+      supabaseUrl: "https://example.invalid",
+      supabasePublishableKey: "test",
+    };
+
+    let rows = [
+      {
+        id: "p1", reading_id: "r1", principle_number: 12,
+        body: "Grace changes how we see both God and one another.",
+        cross_reference_numbers: [4], group_id: "g1", group_title: "Grace",
+      },
+      {
+        id: "p2", reading_id: "r2", principle_number: 4,
+        body: "Trust grows when truth is practiced in ordinary decisions.",
+        cross_reference_numbers: [12], group_id: "g1", group_title: "Grace",
+      },
+      {
+        id: "p3", reading_id: "r3", principle_number: 27,
+        body: "Prayer makes room to listen before reacting to pressure.",
+        cross_reference_numbers: [], group_id: null, group_title: null,
+      },
+    ];
+    let deleted = [];
+
+    const rpc = async (name, args) => {
+      if (name === "update_conflict_principle") {
+        rows = rows.map((row) => row.id === args.p_principle_id ? {
+          ...row,
+          principle_number: args.p_principle_number,
+          body: args.p_body,
+          cross_reference_numbers: args.p_cross_reference_numbers,
+        } : row);
+        return { data: rows, error: null };
+      }
+      if (name === "create_conflict_principle") {
+        const created = {
+          id: `p${rows.length + 1}`,
+          reading_id: args.p_reading_id,
+          principle_number: args.p_principle_number,
+          body: args.p_body,
+          cross_reference_numbers: args.p_cross_reference_numbers,
+          group_id: null,
+          group_title: null,
+        };
+        rows = [...rows, created];
+        return { data: created, error: null };
+      }
+      if (name === "rename_conflict_principle_group") {
+        rows = rows.map((row) => row.group_id === args.p_group_id ? { ...row, group_title: args.p_title } : row);
+        return { data: rows, error: null };
+      }
+      if (name === "dissolve_conflict_principle_group") {
+        rows = rows.map((row) => row.group_id === args.p_group_id ? { ...row, group_id: null, group_title: null } : row);
+        return { data: rows, error: null };
+      }
+      if (name === "soft_delete_conflict_principles") {
+        const ids = new Set(args.p_principle_ids);
+        deleted = [...deleted, ...rows.filter((row) => ids.has(row.id)).map((row) => ({ ...row, deleted_at: new Date().toISOString() }))];
+        rows = rows.filter((row) => !ids.has(row.id));
+        return { data: rows, error: null };
+      }
+      if (name === "move_conflict_principles") {
+        const movingId = args.p_principle_ids[0];
+        if (args.p_mode === "standalone") {
+          rows = rows.map((row) => row.id === movingId ? { ...row, group_id: null, group_title: null } : row);
+        } else if (args.p_mode === "new") {
+          const groupId = `g${Date.now()}`;
+          rows = rows.map((row) => row.id === movingId ? { ...row, group_id: groupId, group_title: args.p_group_title || null } : row);
+        } else {
+          const target = rows.find((row) => row.id === args.p_target_principle_id);
+          const groupId = target.group_id || `g${Date.now()}`;
+          rows = rows.map((row) => row.id === movingId || row.id === target.id ? { ...row, group_id: groupId } : row);
+        }
+        return { data: rows, error: null };
+      }
+      return { data: rows, error: null };
+    };
+
+    window.TJMReactFlowBridge = {
+      version: 1,
+      controller: {},
+      options: {
+        planId: "bible-conflict-ages-v1",
+        getSession: () => ({ user: { id: "browser-smoke-user" } }),
+        getPrinciples: () => rows,
+        setPrinciples: (next) => { rows = next; },
+        getDeletedPrinciples: () => deleted,
+        setDeletedPrinciples: (next) => { deleted = next; },
+        getReadings: () => [
+          { id: "r1", title: "Genesis 1" },
+          { id: "r2", title: "Genesis 2" },
+          { id: "r3", title: "Genesis 3" },
+        ],
+        readingLabel: (reading) => reading.title,
+        getDb: () => ({ rpc }),
+        setSync: (label) => { document.getElementById("sync-status").textContent = label; },
+        toast: (message) => { document.getElementById("toast-region").textContent = message; },
+        showSignIn: () => { window.__showedSignIn = true; },
+        goToReadingById: (id) => { window.__wentToReading = id; },
+      },
+    };
+  </script>
+  <script type="module" src="../lib/principles-react-flow.mjs"></script>
+</body>
+</html>
