@@ -1,0 +1,44 @@
+name: Validate Folder Mind Map
+
+on:
+  pull_request:
+    paths:
+      - "lib/principles-folders-flow.mjs"
+      - "lib/principles-folders-flow.css"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-folders-mindmap.mjs"
+      - "scripts/folders-mindmap-smoke.html"
+      - "scripts/test-folders-mindmap-browser.mjs"
+      - ".github/workflows/validate-folders-mindmap.yml"
+  push:
+    branches: [main]
+    paths:
+      - "lib/principles-folders-flow.mjs"
+      - "lib/principles-folders-flow.css"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-folders-mindmap.mjs"
+      - "scripts/folders-mindmap-smoke.html"
+      - "scripts/test-folders-mindmap-browser.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  source-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/validate-folders-mindmap.mjs
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.55.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install --no-save playwright@1.55.0
+      - run: node scripts/test-folders-mindmap-browser.mjs
