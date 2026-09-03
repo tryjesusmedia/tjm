@@ -38,6 +38,7 @@ import assert from "node:assert/strict";import http from "node:http";import { re
   assert.equal(await page.getByRole("button", { name: "Folder menu", exact: true }).count(), 1);
 
   // F2 is the keyboard counterpart of the same long-press folder rename action.
+  await page.locator('[data-fm-principle-id="p1"] .tjm-fm-principle-preview').click();
   await page.locator(".tjm-fm-folder-title").press("F2");
   assert.equal(await page.getByRole("dialog", { name: "Rename folder", exact: false }).count(), 1);
   await page.getByRole("button", { name: "×", exact: true }).click();
