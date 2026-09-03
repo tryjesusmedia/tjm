@@ -737,10 +737,17 @@ function taskGroupComplete(reading, kind) {
     authError.textContent = "";
     signInButton.disabled = true;
     signInButton.lastChild.textContent = " Connecting…";
-    const redirectTo = `${location.origin}${location.pathname}`;
-    const { error } = await db.auth.signInWithOAuth({ provider: "google", options: { redirectTo } });
-    if (error) {
-      authError.textContent = error.message;
+    try {
+      if (!db?.auth) throw new Error("The secure account service is still loading. Please refresh and try again.");
+      const redirectTo = CONFIG.siteUrl || `${location.origin}${location.pathname}`;
+      const { error } = await db.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo },
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error("Google sign-in", error);
+      authError.textContent = error?.message || "Google sign-in could not be started. Please refresh and try again.";
       signInButton.disabled = false;
       signInButton.lastChild.textContent = " Continue with Google";
     }
@@ -814,7 +821,15 @@ function taskGroupComplete(reading, kind) {
       const response = await fetch(PLAN_PATH, { cache: "no-cache" });
       if (!response.ok) throw new Error(`Reading plan could not be loaded (${response.status}).`);
       plan = await response.json();
-      if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== 265) throw new Error("Reading plan validation failed.");
+      const readingsAreValid = Array.isArray(plan.readings) && plan.readings.length > 0;
+    const declaredReadingCount = Array.isArray(plan.books)
+      ? plan.books.reduce((total, book) => total + (Number(book.readingCount) || 0), 0)
+      : readingsAreValid ? plan.readings.length : 0;
+    const readingSequenceIsValid = readingsAreValid
+      && declaredReadingCount === plan.readings.length
+      && new Set(plan.readings.map((reading) => reading.id)).size === plan.readings.length
+      && plan.readings.every((reading, index) => reading?.id && reading.day === index + 1);
+    if (plan.planId !== CONFIG.planId || !readingSequenceIsValid) throw new Error("Reading plan validation failed.");
       prepareChapterProgressIndex();
       if (chapterTaskCount !== 1696) throw new Error("Chapter progress validation failed.");
       document.getElementById("hero-reading-count").textContent = plan.readings.length;

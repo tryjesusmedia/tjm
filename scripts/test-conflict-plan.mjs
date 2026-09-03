@@ -8,14 +8,20 @@ const principleTools = await readFile(new URL("../lib/principles.js", import.met
 const egwLinkMap = JSON.parse(await readFile(new URL("./egw-reading-links.json", import.meta.url), "utf8"));
 
 assert.equal(websitePlan.planId, "bible-conflict-ages-v1");
-assert.equal(websitePlan.readings.length, 265);
-assert.deepEqual(Object.fromEntries(websitePlan.books.map((book) => [book.code, book.readingCount])), { PP: 67, PK: 60, DA: 82, AA: 44, GC: 12 });
+assert.equal(websitePlan.readings.length, 264);
+assert.deepEqual(Object.fromEntries(websitePlan.books.map((book) => [book.code, book.readingCount])), { PP: 66, PK: 60, DA: 82, AA: 44, GC: 12 });
 assert.equal(websitePlan.reviewQueue.length, 0);
-assert.equal(Object.keys(egwLinkMap).length, websitePlan.readings.filter((reading) => reading.commentaryCitation).length);
+assert.equal(new Set(websitePlan.readings.map((reading) => reading.id)).size, websitePlan.readings.length);
+const expectedEgwLinkKeys = new Set(websitePlan.readings.flatMap((reading) =>
+  reading.sourceKey === "PP:1+2"
+    ? ["PP:1", "PP:2"]
+    : reading.commentaryCitation ? [reading.sourceKey] : []));
+assert.equal(Object.keys(egwLinkMap).length, expectedEgwLinkKeys.size);
+assert.deepEqual(new Set(Object.keys(egwLinkMap)), expectedEgwLinkKeys);
 assert.equal(websitePlan.readings.reduce((count, reading) => count + reading.bibleTasks.length + reading.commentaryTasks.length, 0), 1696);
 
 for (const [index, reading] of websitePlan.readings.entries()) {
-  assert.equal(reading.id, `coa-${String(index + 1).padStart(3, "0")}`);
+  assert.match(reading.id, /^coa-\d{3}$/);
   assert.equal(reading.day, index + 1);
   assert.ok(reading.sourceEntry, `Reading ${reading.day} must preserve its supplied source block`);
   assert.ok(reading.bibleReference || reading.commentaryCitation, `Reading ${reading.day} must have at least one assignment`);
@@ -37,7 +43,10 @@ for (const [index, reading] of websitePlan.readings.entries()) {
   if (reading.commentaryCitation) {
     assert.ok(reading.commentaryTasks.length > 0, `Reading ${reading.day} must have chapter-level companion links`);
     assert.equal(reading.commentaryUrl, reading.commentaryTasks[0].url);
-    assert.deepEqual(reading.commentaryTasks, egwLinkMap[reading.sourceKey].chapters);
+    const mappedEgwLinks = reading.sourceKey === "PP:1+2"
+      ? { ...egwLinkMap["PP:1"], chapters: [...egwLinkMap["PP:1"].chapters, ...egwLinkMap["PP:2"].chapters] }
+      : egwLinkMap[reading.sourceKey];
+    assert.deepEqual(reading.commentaryTasks.map(({ legacyProgressIndex, ...task }) => task), mappedEgwLinks.chapters);
     for (const task of reading.commentaryTasks) {
       const commentary = new URL(task.url);
       assert.match(task.label, /^Read (?:Chapter \d+|Introduction)$/);
@@ -61,8 +70,8 @@ for (const [index, reading] of websitePlan.readings.entries()) {
     assert.equal(commentary.pathname, "/read");
     assert.match(commentary.searchParams.get("panels"), /^p\d+\.\d+$/);
     assert.equal(commentary.searchParams.get("index"), "0");
-    assert.equal(commentary.href, egwLinkMap[reading.sourceKey].url);
-    assert.equal(egwLinkMap[reading.sourceKey].query, expectedQuery);
+    assert.equal(commentary.href, mappedEgwLinks.url);
+    assert.equal(mappedEgwLinks.query, expectedQuery);
   } else {
     assert.deepEqual(reading.commentaryTasks, []);
     assert.equal(reading.commentaryUrl, null);
@@ -110,4 +119,4 @@ assert.match(app, /principleManager\.renderCreateNumberField/);
 assert.match(app, /principleManager\.renderReadingPrinciple/);
 for (const feature of ["update_conflict_principle", "move_conflict_principle", "bulk_update_conflict_principles", "Download spreadsheet", "Go to reading", "data-principle-menu", "data-principle-search-next"]) assert.match(principleTools, new RegExp(feature));
 
-console.log("Conflict journey validation passed: 265 readings, 1696 individually trackable chapters, editable grouped principles, no unresolved review flags, and safe outbound links.");
+console.log("Conflict journey validation passed: 264 readings, 1696 individually trackable chapters, editable grouped principles, no unresolved review flags, and safe outbound links.");
