@@ -101,6 +101,7 @@ try {
   );
   await page.locator(".tjm-fm-context-menu button", { hasText: "Remove from Folder" }).click();
   await page.waitForSelector(".tjm-fm-back", { state: "detached" });
+  await page.waitForSelector('[data-fm-principle-id="p1"]', { state: "visible", timeout: 5_000 });
   assert.equal(await page.locator('[data-fm-principle-id="p1"]').count(), 1);
 
   // The persistent button closes and reopens the map while the page scrolls behind it.
