@@ -44,8 +44,8 @@ try {
   // Standalone principle menus offer Edit, Add to Folder, Delete.
   await page.locator('[data-fm-principle-id="p3"] .tjm-fm-node-menu').click();
   assert.deepEqual(await page.locator(".tjm-fm-context-menu button").allTextContents(), ["Edit", "Add to Folder", "Delete"]);
-  await page.keyboard.press("Escape");
   await page.mouse.click(20, 20);
+  await page.waitForSelector(".tjm-fm-context-menu", { state: "detached" });
 
   // No principle-on-principle filing: overlapping two principle nodes never invokes move_conflict_principles.
   const sourceHandle = page.locator('[data-fm-principle-id="p3"] .fm-node-drag-handle');
@@ -63,7 +63,10 @@ try {
 
   // Open a folder, expand a principle, and verify the requested three-item menu.
   await page.locator('[data-fm-folder-id="g1"] .tjm-fm-folder-open').click();
-  await page.waitForFunction(() => document.querySelector(".tjm-fm-title-row h2")?.textContent === "New Folder #1");
+  await page.waitForSelector(".tjm-fm-back", { timeout: 5_000 });
+  const folderTitle = (await page.locator(".tjm-fm-title-row h2").textContent())?.trim();
+  console.log(`Folder title after opening: ${folderTitle}`);
+  assert.equal(folderTitle, "New Folder #1");
   const principleInFolder = page.locator('[data-fm-principle-id="p1"]');
   await principleInFolder.locator(".tjm-fm-principle-preview").click();
   await page.waitForFunction(() => document.querySelector('[data-fm-principle-id="p1"]')?.classList.contains("is-expanded"));
@@ -73,7 +76,7 @@ try {
   assert.deepEqual(await page.locator(".tjm-fm-context-menu button").allTextContents(), ["Edit", "Remove from Folder", "Delete"]);
 
   await page.locator(".tjm-fm-context-menu button", { hasText: "Remove from Folder" }).click();
-  await page.waitForFunction(() => document.querySelector(".tjm-fm-title-row h2")?.textContent !== "New Folder #1");
+  await page.waitForSelector(".tjm-fm-back", { state: "detached" });
   assert.equal(await page.locator('[data-fm-principle-id="p1"]').count(), 1);
 
   // Persistent close/open control keeps the rest of the page scrollable.
