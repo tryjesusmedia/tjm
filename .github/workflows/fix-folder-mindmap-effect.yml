@@ -1,0 +1,44 @@
+name: Fix Folder Mind Map effect cleanup
+
+on:
+  push:
+    branches:
+      - feature/folder-mind-map
+    paths:
+      - ".github/workflows/fix-folder-mindmap-effect.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - name: Correct requestAnimationFrame effect cleanup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('lib/principles-folders-flow.mjs')
+          source = path.read_text()
+          old = '''    useEffect(() => requestAnimationFrame(() => updateNodeInternals(id)), [id, data.expanded, updateNodeInternals]);'''
+          new = '''    useEffect(() => {
+              const frame = requestAnimationFrame(() => updateNodeInternals(id));
+              return () => cancelAnimationFrame(frame);
+            }, [id, data.expanded, updateNodeInternals]);'''
+          if old not in source:
+              raise SystemExit('Expected PrincipleNode effect was not found')
+          path.write_text(source.replace(old, new, 1))
+          PY
+          node --check lib/principles-folders-flow.mjs
+      - name: Commit the correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/principles-folders-flow.mjs
+          git commit -m "Fix Folder Mind Map effect cleanup"
+          git push origin "HEAD:${{ github.ref_name }}"
