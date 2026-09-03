@@ -1,0 +1,34 @@
+.tjm-folder-map-toggle {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+
+.tjm-folder-map-toggle > span {
+  display: inline-grid;
+}
+
+.tjm-folder-map-overlay {
+  bottom: max(76px, calc(env(safe-area-inset-bottom) + 68px));
+}
+
+.tjm-folder-map-frame {
+  box-sizing: border-box;
+}
+
+.tjm-folder-sticky-header {
+  position: sticky;
+  top: 0;
+}
+
+@media (max-width: 760px) {
+  .tjm-folder-map-toggle {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .tjm-folder-map-overlay {
+    bottom: max(67px, calc(env(safe-area-inset-bottom) + 61px));
+  }
+}

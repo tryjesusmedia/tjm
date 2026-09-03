@@ -3,9 +3,11 @@ name: Validate React Flow Principles
 on:
   pull_request:
     paths:
-      - "lib/principles-react-flow.mjs"
+      - "lib/principles-react-flow-folders.mjs"
+      - "lib/principles-react-flow-folders.css"
+      - "lib/principles-react-flow-folders-overrides.css"
+      - "lib/principles-folder-language.js"
       - "lib/principles-react-flow-bridge.js"
-      - "lib/principles-react-flow.css"
       - "lib/principles-drag.js"
       - "lib/principles-drag-guard.js"
       - "bibleandconflictoftheages/config.js"
@@ -17,9 +19,11 @@ on:
   push:
     branches: [main]
     paths:
-      - "lib/principles-react-flow.mjs"
+      - "lib/principles-react-flow-folders.mjs"
+      - "lib/principles-react-flow-folders.css"
+      - "lib/principles-react-flow-folders-overrides.css"
+      - "lib/principles-folder-language.js"
       - "lib/principles-react-flow-bridge.js"
-      - "lib/principles-react-flow.css"
       - "lib/principles-drag.js"
       - "lib/principles-drag-guard.js"
       - "bibleandconflictoftheages/config.js"
@@ -39,7 +43,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate React Flow source and integration
+      - name: Validate folder terminology and React Flow integration
         run: node scripts/validate-react-flow-principles.mjs
 
   browser-smoke:
@@ -49,5 +53,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install matching Playwright package
         run: npm install --no-save playwright@1.55.0
-      - name: Exercise the Mind Map in Chromium
+      - name: Exercise folders, the fixed map, editing, and removal in Chromium
         run: node scripts/test-react-flow-browser.mjs
