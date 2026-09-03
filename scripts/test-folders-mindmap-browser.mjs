@@ -67,15 +67,15 @@ try {
   console.log(`Folder button visible: ${await folderButton.isVisible()}`);
   await folderButton.click();
   await page.waitForTimeout(600);
-  const folderTitleAfterPointerClick = (await page.locator(".tjm-fm-title-row h2").textContent())?.trim();
-  const backCountAfterPointerClick = await page.locator(".tjm-fm-back").count();
-  console.log(`After pointer click: title=${folderTitleAfterPointerClick}; back=${backCountAfterPointerClick}; errors=${JSON.stringify(errors)}`);
-  if (!backCountAfterPointerClick) {
-    await folderButton.evaluate((element) => element.click());
-    await page.waitForTimeout(300);
-    console.log(`After DOM click: title=${(await page.locator(".tjm-fm-title-row h2").textContent())?.trim()}; back=${await page.locator(".tjm-fm-back").count()}`);
-  }
-  await page.waitForSelector(".tjm-fm-back", { timeout: 5_000 });
+  const titleCountAfterClick = await page.locator(".tjm-fm-title-row h2").count();
+  const backCountAfterClick = await page.locator(".tjm-fm-back").count();
+  const windowCountAfterClick = await page.locator(".tjm-fm-window").count();
+  const hostCountAfterClick = await page.locator(".tjm-fm-host").count();
+  const bodyTextAfterClick = (await page.locator("body").innerText()).slice(0, 1200);
+  console.log(`After click: titleCount=${titleCountAfterClick}; back=${backCountAfterClick}; window=${windowCountAfterClick}; host=${hostCountAfterClick}; errors=${JSON.stringify(errors)}; body=${JSON.stringify(bodyTextAfterClick)}`);
+  assert.equal(windowCountAfterClick, 1, "The floating Mind Map window should remain mounted after opening a folder.");
+  assert.equal(titleCountAfterClick, 1, `The sticky title should remain mounted. Browser errors: ${errors.join(" | ")}`);
+  assert.equal(backCountAfterClick, 1, `Opening a folder should show the Back button. Browser errors: ${errors.join(" | ")}`);
   const folderTitle = (await page.locator(".tjm-fm-title-row h2").textContent())?.trim();
   assert.equal(folderTitle, "New Folder #1");
   const principleInFolder = page.locator('[data-fm-principle-id="p1"]');
