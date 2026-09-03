@@ -86,8 +86,11 @@ for (const selector of [
 
 assert.match(source.css, /\.tjm-folder-map-overlay\s*\{[\s\S]*?position:\s*fixed/);
 assert.match(source.css, /\.tjm-folder-map-frame\s*\{[\s\S]*?border:\s*3px solid #311e33/);
-assert.doesNotMatch(source.css, /body\s*\{[\s\S]*?overflow:\s*hidden/);
+const bodyBlocks = [...source.css.matchAll(/(?:^|})\s*body(?:[\s.#:[>+~][^{]*)?\{([^}]*)\}/gim)];
+assert.equal(bodyBlocks.some((match) => /\boverflow\s*:\s*hidden\b/i.test(match[1])), false,
+  "The page body must remain scrollable behind the fixed Mind Map.");
 assert.match(source.overrides, /left:\s*50%/);
+assert.match(source.overrides, /\.tjm-folder-sticky-header\s*\{[\s\S]*?position:\s*sticky/);
 assert.match(source.language, /\bgroups\b/);
 assert.match(source.language, /folders/);
 
