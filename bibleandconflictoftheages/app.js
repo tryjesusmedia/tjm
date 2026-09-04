@@ -314,7 +314,7 @@ function taskGroupComplete(reading, kind) {
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
     return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
       const taskTitle = kind === "commentary" && task.title ? task.title : task.label;
-      const linkLabel = kind === "commentary" ? "Open on EGW Writings" : task.label;
+      const linkLabel = kind === "commentary" ? taskTitle.replace(/^Read\s+/i, "") : task.label;
       return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "Bible Gateway"}">${escapeHTML(linkLabel)} <span>↗</span></a></div>`;
     }).join("")}</div>`;
   }
@@ -350,17 +350,12 @@ function taskGroupComplete(reading, kind) {
             ${principleManager.renderReadingReturnLink(reading.id)}
             <p class="eyebrow">YOUR PRIVATE DISCOVERY</p>
             <h3 id="principle-heading">What principles do you see after this reading?</h3>
-            <p>Write one principle at a time. It receives a permanent number you can connect to discoveries anywhere else in the journey.</p>
+            <p>Write one principle at a time. It receives a permanent number so you can organize your discoveries throughout the journey.</p>
             <form id="principle-form">
               ${principleManager.renderCreateNumberField()}
               <div class="field">
                 <label for="principle-body">The principle I see</label>
                 <textarea id="principle-body" maxlength="2000" required placeholder="In my own words…"></textarea>
-              </div>
-              <div class="field">
-                <label for="cross-references">Related principle numbers</label>
-                <input id="cross-references" inputmode="numeric" maxlength="120" placeholder="12, 19, 42">
-                <small>Separate numbers with commas. Existing numbers become clickable connections.</small>
               </div>
               <div class="panel-actions"><button class="button button-primary" type="submit">Save principle</button></div>
             </form>
@@ -371,8 +366,8 @@ function taskGroupComplete(reading, kind) {
           </aside>` : `
           <aside class="principle-panel" aria-labelledby="principle-heading">
             <p class="eyebrow">YOUR PRIVATE DISCOVERY</p>
-            <h3 id="principle-heading">Save numbered principles and cross-references</h3>
-            <p>You can read the entire journey without an account. Sign in with Google when you want to save your own numbered discoveries and connect them across readings.</p>
+            <h3 id="principle-heading">Save numbered principles from your reading</h3>
+            <p>You can read the entire journey without an account. Sign in with Google when you want to save and organize your own numbered discoveries.</p>
             <button class="button button-primary" type="button" data-require-sign-in>Sign in to save principles</button>
           </aside>`;
 
