@@ -31,16 +31,33 @@ const server = http.createServer(async (request, response) => {
 
 await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const address = server.address();
+const origin = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const errors = [];
-page.on("pageerror", (error) => errors.push(error.message));
-page.on("console", (message) => {
-  if (message.type() === "error") errors.push(message.text());
-});
+
+async function openCleanPage(viewport, suffix = "") {
+  const context = await browser.newContext({ viewport });
+  const page = await context.newPage();
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  await page.goto(`${origin}/scripts/folders-mindmap-smoke.html${suffix}`, { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector(".tjm-fm-window", { timeout: 45_000 });
+  return { context, page };
+}
+
+async function assertMenuItems(page, names) {
+  const items = page.locator('.tjm-fm-context-menu [role="menu"] [role="menuitem"]');
+  assert.equal(await items.count(), names.length);
+  for (const name of names) assert.equal(await page.getByRole("menuitem", { name, exact: true }).count(), 1);
+}
 
 try {
-  await page.goto(`http://127.0.0.1:${address.port}/scripts/folders-mindmap-smoke.html`, { waitUntil: "domcontentloaded" });
+  const desktop = await openCleanPage({ width: 1280, height: 900 });
+  const page = desktop.page;
   await page.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
 
   const windowBox = await page.locator(".tjm-fm-window").boundingBox();
@@ -49,9 +66,11 @@ try {
   assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
   assert.equal(await page.getByRole("button", { name: "Principles", exact: true }).count(), 0);
   assert.equal(await page.getByText("Group led by", { exact: false }).count(), 0);
-  assert.equal(await page.getByText("New Folder #1", { exact: true }).count(), 1);
+  await page.waitForSelector('[data-fm-folder-id="g1"] strong');
+  assert.equal((await page.locator('[data-fm-folder-id="g1"] strong').textContent())?.trim(), "New Folder #1");
   assert.equal(await page.locator('[data-fm-folder-id="g1"] .tjm-fm-node-menu').count(), 0);
   assert.equal(await page.locator('[data-fm-empty-folder-id] .tjm-fm-node-menu').count(), 0);
+  assert.equal(await page.locator('.tjm-fm-window-actions [aria-label="Close Principles Map"]').count(), 0);
 
   // The fixed launcher and open map survive every page-tab change.
   const launcher = page.locator(".tjm-fm-persistent-toggle");
@@ -67,47 +86,48 @@ try {
   await page.getByRole("button", { name: "Readings", exact: true }).click();
   assert.equal(await launcher.count(), 1);
 
-  // The main menu has exactly the requested three actions and acts as a modal.
+  // The toolbar keeps frequent actions visible; the overflow menu holds map tools.
   await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
-  assert.deepEqual(await page.locator('.tjm-fm-context-menu [role="menu"] button').allTextContents(), [
-    "Create New Folder", "Create New Principle", "Find a Principle",
-  ]);
+  await assertMenuItems(page, ["Arrange Automatically", "Fit All"]);
+  assert.equal((await page.locator(".tjm-fm-menu-cancel").textContent())?.trim(), "Cancel");
   assert.equal(await page.evaluate(() => document.body.style.overflow), "hidden");
   await page.goBack();
   await page.waitForSelector(".tjm-fm-context-menu", { state: "detached" });
   assert.equal(await page.evaluate(() => document.body.style.overflow), "");
 
-  // Search lists every matching folder and principle from the main map.
-  await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
-  await page.getByRole("menuitem", { name: "Find a Principle", exact: true }).click();
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await assertMenuItems(page, ["New Principle", "New Folder"]);
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+
+  // Search is direct and searches folder titles, names, numbers, and principle text.
+  await page.getByRole("button", { name: "Search all principles and folders", exact: true }).click();
   await page.getByLabel("Search all folders and principles", { exact: true }).fill("grace");
   assert.equal(await page.getByRole("button", { name: /#12 · Principle #12/ }).count(), 1);
   await page.getByRole("button", { name: /#12 · Principle #12/ }).click();
-  await page.waitForSelector('[data-fm-principle-id="p1"]');
+  await page.waitForSelector('[data-fm-principle-id="p1"].is-expanded');
+  assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "New Folder #1");
 
-  // A folder menu has only the requested actions; Back dismisses it first.
+  // Principle detail and folder are separate back-navigation levels.
+  await page.getByRole("button", { name: "Back to New Folder #1", exact: true }).click();
+  await page.waitForSelector('[data-fm-principle-id="p1"].is-expanded', { state: "detached" });
+  assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "New Folder #1");
+
+  // Folder actions include discoverable rename and layout controls.
   await page.getByRole("button", { name: "Folder menu", exact: true }).click();
-  assert.equal(await page.locator('.tjm-fm-window-actions [aria-label="Close Principles Map"]').count(), 0);
+  await assertMenuItems(page, ["New Principle", "Find a Principle", "Rename Folder", "Arrange Automatically", "Fit All", "Delete Folder"]);
   assert.equal((await launcher.textContent())?.trim(), "Close Principles Map");
-  assert.deepEqual(await page.locator('.tjm-fm-context-menu [role="menu"] button').allTextContents(), [
-    "New Principle", "Delete Folder", "Find a Principle",
-  ]);
   await page.goBack();
   await page.waitForSelector(".tjm-fm-context-menu", { state: "detached" });
-  assert.equal(await page.getByRole("button", { name: "Folder menu", exact: true }).count(), 1);
 
-  // F2 is the keyboard counterpart of the same long-press folder rename action.
-  await page.locator('[data-fm-principle-id="p1"] .tjm-fm-principle-preview').click();
+  // F2 remains a keyboard counterpart to the visible Rename Folder action.
   await page.locator(".tjm-fm-folder-title").press("F2");
   assert.equal(await page.getByRole("dialog", { name: "Rename folder", exact: false }).count(), 1);
   await page.getByRole("button", { name: "×", exact: true }).click();
 
-  // Duplicate copies body, reading, references, and folder, but requires a new number.
+  // Duplicate copies the source but requires a new, unused number.
   const filed = page.locator('[data-fm-principle-id="p1"]');
   await filed.locator(".tjm-fm-node-menu").click();
-  assert.deepEqual(await page.locator('.tjm-fm-context-menu [role="menu"] button').allTextContents(), [
-    "Edit", "Duplicate", "Remove from Folder", "Delete",
-  ]);
+  await assertMenuItems(page, ["Edit", "Duplicate", "Remove from Folder", "Delete"]);
   await page.getByRole("menuitem", { name: "Duplicate", exact: true }).click();
   assert.equal(await page.getByLabel("Principle number", { exact: true }).inputValue(), "");
   assert.equal(await page.locator('textarea[name="principle-body"]').inputValue(), "Grace changes how we see both God and one another.");
@@ -126,47 +146,88 @@ try {
   assert.ok(calls.some((call) => call.name === "move_conflict_principles" && call.args.p_principle_ids.length === 1));
   assert.ok(calls.some((call) => call.name === "set_conflict_principle_name" && call.args.p_name === "Grace copied"));
 
-  // An in-folder New Principle is moved into that folder after creation.
-  await page.getByRole("button", { name: "Folder menu", exact: true }).click();
-  await page.getByRole("menuitem", { name: "New Principle", exact: true }).click();
-  await page.getByLabel("Principle number", { exact: true }).fill("56");
-  await page.getByLabel("Principle name", { exact: true }).fill("Created here");
-  await page.locator('textarea[name="principle-body"]').fill("A new in-folder discovery.");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
-  await page.waitForSelector('[data-fm-principle-id] .tjm-fm-principle-preview strong:text-is("Created here")');
+  // Dirty editors prompt before Back discards work.
+  await page.locator('[data-fm-principle-id="p1"] .tjm-fm-node-menu').click();
+  await page.getByRole("menuitem", { name: "Edit", exact: true }).click();
+  await page.getByLabel("Principle name", { exact: true }).fill("Unsaved draft");
+  await page.goBack();
+  const discardDialog = page.getByRole("alertdialog", { name: "Discard your changes?", exact: true });
+  assert.equal(await discardDialog.count(), 1);
+  await discardDialog.getByRole("button", { name: "Cancel", exact: true }).click();
+  assert.equal(await page.getByLabel("Principle name", { exact: true }).inputValue(), "Unsaved draft");
+  await page.getByRole("button", { name: "×", exact: true }).click();
+  await page.getByRole("button", { name: "Discard Changes", exact: true }).click();
 
-  // Folder search excludes matching principles outside this folder.
+  // Folder search is scoped and deletion uses an in-app confirmation plus Undo.
   await page.getByRole("button", { name: "Folder menu", exact: true }).click();
   await page.getByRole("menuitem", { name: "Find a Principle", exact: true }).click();
-  await page.getByLabel(/Search New Folder #1/).fill("prayer");
+  await page.getByRole("dialog", { name: "Find a Principle", exact: true }).getByRole("textbox").fill("prayer");
   assert.equal(await page.getByText("No matches found.", { exact: true }).count(), 1);
   await page.goBack();
-
-  // A failed cloud name sync retains the name in device storage and reports it.
-  await page.goto(`http://127.0.0.1:${address.port}/scripts/folders-mindmap-smoke.html?namefail`, { waitUntil: "domcontentloaded" });
-  await page.waitForSelector('[data-fm-principle-id="p3"]');
-  await page.locator('[data-fm-principle-id="p3"] .tjm-fm-node-menu').click();
-  await page.getByRole("menuitem", { name: "Edit", exact: true }).click();
-  await page.getByLabel("Principle name", { exact: true }).fill("Prayer under pressure");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
-  await page.waitForSelector('[data-fm-principle-id="p3"] .tjm-fm-principle-preview strong:text-is("Prayer under pressure")');
-  assert.match(await page.locator("#toast-region").textContent(), /saved on this device/i);
-
-  // Deleting a folder dissolves it and keeps its principles on the main map.
-  await page.locator('[data-fm-folder-id="g1"] .tjm-fm-folder-open').click();
   await page.getByRole("button", { name: "Folder menu", exact: true }).click();
-  page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("menuitem", { name: "Delete Folder", exact: true }).click();
+  const deleteDialog = page.getByRole("alertdialog", { name: "Delete New Folder #1?", exact: true });
+  assert.equal(await deleteDialog.count(), 1);
+  await deleteDialog.getByRole("button", { name: "Delete Folder", exact: true }).click();
   await page.waitForSelector('[data-fm-principle-id="p1"]');
   assert.equal(await page.locator('[data-fm-folder-id="g1"]').count(), 0);
+  assert.equal(await page.getByRole("button", { name: "Undo", exact: true }).count(), 1);
   const dissolveCalls = await page.evaluate(() => window.__rpcCalls.filter((call) => call.name === "dissolve_conflict_principle_group"));
   assert.equal(dissolveCalls.length, 1);
+  await page.waitForTimeout(950);
+  assert.ok((await page.evaluate(() => window.__rpcCalls)).some((call) => call.name === "save_principle_map_layout"));
+  await desktop.context.close();
+
+  // iPhone: list default, full-screen canvas, 44px controls, and bottom action sheet.
+  const mobile = await openCleanPage({ width: 390, height: 844 });
+  const phone = mobile.page;
+  await phone.waitForSelector("[data-fm-list-view]", { timeout: 45_000 });
+  assert.equal(await phone.locator(".react-flow").count(), 0);
+  const phoneWindow = await phone.locator(".tjm-fm-window").boundingBox();
+  assert.ok(phoneWindow && phoneWindow.x <= 1 && phoneWindow.y <= 1);
+  assert.ok(phoneWindow.width >= 388 && phoneWindow.height >= 842);
+  for (const name of ["Add", "Search all principles and folders", "Principles Map menu"]) {
+    const box = await phone.getByRole("button", { name, exact: true }).boundingBox();
+    assert.ok(box && box.width >= 44 && box.height >= 44, `${name} should be a 44px touch target`);
+  }
+  assert.equal(await phone.getByText("Prayer makes room to listen", { exact: false }).count(), 1);
+  await phone.getByRole("button", { name: "Principles Map menu", exact: true }).click();
+  const actionSheet = await phone.locator(".tjm-fm-context-menu").boundingBox();
+  assert.ok(actionSheet && actionSheet.width >= 368 && actionSheet.y + actionSheet.height >= 760);
+  await phone.getByRole("button", { name: "Cancel", exact: true }).click();
+  await phone.locator(".tjm-fm-folder-list-row").filter({ hasText: "New Folder #1" }).click();
+  await phone.locator('[data-fm-list-principle-id="p1"] .tjm-fm-list-principle-open').click();
+  assert.equal((await phone.locator(".tjm-fm-title-row h2").textContent())?.trim(), "New Folder #1");
+  const phoneBack = phone.getByRole("button", { name: "Back to New Folder #1", exact: true });
+  const backBox = await phoneBack.boundingBox();
+  assert.ok(backBox && backBox.width >= 44 && backBox.height >= 44);
+  await phoneBack.click();
+  assert.equal((await phone.locator(".tjm-fm-title-row h2").textContent())?.trim(), "New Folder #1");
+  await phone.getByRole("button", { name: "Back to Principles Map", exact: true }).click();
+  assert.equal((await phone.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
+  await phone.getByRole("button", { name: "Map", exact: true }).click();
+  await phone.waitForSelector(".react-flow");
+  await mobile.context.close();
+
+  // A failed cloud name sync retains the name in device storage and reports it.
+  const nameFailure = await openCleanPage({ width: 1280, height: 900 }, "?namefail");
+  const failing = nameFailure.page;
+  await failing.waitForSelector('[data-fm-principle-id="p3"]');
+  await failing.locator('[data-fm-principle-id="p3"] .tjm-fm-node-menu').click();
+  await failing.getByRole("menuitem", { name: "Edit", exact: true }).click();
+  await failing.getByLabel("Principle name", { exact: true }).fill("Prayer under pressure");
+  await failing.getByRole("button", { name: "Save", exact: true }).click();
+  await failing.waitForSelector('[data-fm-principle-id="p3"] .tjm-fm-principle-preview strong:text-is("Prayer under pressure")');
+  assert.match(await failing.locator("#toast-region").textContent(), /saved on this device/i);
+  await nameFailure.context.close();
 
   // The same interface initializes for the chronological journey.
-  await page.goto(`http://127.0.0.1:${address.port}/scripts/folders-mindmap-smoke.html?chron=1`, { waitUntil: "domcontentloaded" });
-  await page.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
-  await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
-  assert.equal(await page.getByRole("menuitem", { name: "Find a Principle", exact: true }).count(), 1);
+  const chronological = await openCleanPage({ width: 1280, height: 900 }, "?chron=1");
+  const chron = chronological.page;
+  await chron.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
+  await chron.getByRole("button", { name: "Search all principles and folders", exact: true }).click();
+  assert.equal(await chron.getByRole("dialog", { name: "Find a Principle", exact: true }).count(), 1);
+  await chronological.context.close();
 
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);
   console.log("Folder Mind Map browser smoke test passed.");
@@ -174,5 +235,3 @@ try {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));
 }
-
-

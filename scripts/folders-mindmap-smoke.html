@@ -40,10 +40,16 @@
       { id: "p4", reading_id: "r4", principle_number: 31, body: "Patience creates room for wisdom to become visible.", cross_reference_numbers: [], group_id: null, group_title: null },
     ];
     let deleted = [{ id: 'deleted-90', principle_number: 90, deleted_at: '2026-09-01T00:00:00Z' }];
+    let cloudLayout = {};
     window.__rpcCalls = [];
 
     const rpc = async (name, args) => {
       window.__rpcCalls.push({ name, args });
+      if (name === 'get_principle_map_layout') return { data: cloudLayout, error: null };
+      if (name === 'save_principle_map_layout') {
+        cloudLayout = args.p_layout;
+        return { data: cloudLayout, error: null };
+      }
       if (name === 'set_conflict_principle_name') {
         if (params.has('namefail')) return { data: null, error: { code: 'PGRST202', message: 'Naming migration not installed' } };
         rows = rows.map((row) => row.id === args.p_principle_id ? { ...row, principle_name: args.p_name } : row);

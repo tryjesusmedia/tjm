@@ -15,6 +15,7 @@ on:
       - "scripts/folders-mindmap-smoke.html"
       - "scripts/test-folders-mindmap-browser.mjs"
       - "supabase/migrations/20260903190000_principle_names.sql"
+      - "supabase/migrations/20260904210000_principles_map_layout.sql"
       - ".github/workflows/validate-folders-mindmap.yml"
   push:
     branches: [main]
@@ -31,6 +32,7 @@ on:
       - "scripts/folders-mindmap-smoke.html"
       - "scripts/test-folders-mindmap-browser.mjs"
       - "supabase/migrations/20260903190000_principle_names.sql"
+      - "supabase/migrations/20260904210000_principles_map_layout.sql"
 
 permissions:
   contents: read
