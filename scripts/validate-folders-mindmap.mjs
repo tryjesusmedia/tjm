@@ -11,7 +11,8 @@ const paths = {
   chronIndex: "chronbible/index.html",
   conflictApp: "bibleandconflictoftheages/app.js",
   chronApp: "chronbible/app.js",
-  migration: "supabase/migrations/20260903190000_principle_names.sql",
+  namesMigration: "supabase/migrations/20260903190000_principle_names.sql",
+  layoutMigration: "supabase/migrations/20260904210000_principles_map_layout.sql",
 };
 
 const source = Object.fromEntries(await Promise.all(
@@ -29,15 +30,30 @@ assert.match(source.module, /Duplicate/);
 assert.match(source.module, /Principle name/);
 assert.match(source.module, /set_conflict_principle_name/);
 assert.match(source.module, /tjmMindMapOverlay/);
-assert.match(source.module, /Create New Folder/);
+assert.match(source.module, /New Folder/);
+assert.match(source.module, /New Principle/);
 assert.match(source.module, /Find a Principle/);
+assert.match(source.module, /function ListView/);
+assert.match(source.module, /function ViewSwitch/);
+assert.match(source.module, /function useCompactLayout/);
+assert.match(source.module, /Arrange Automatically/);
+assert.match(source.module, /Fit All/);
+assert.match(source.module, /Rename Folder/);
+assert.match(source.module, /function ConfirmationSheet/);
+assert.match(source.module, /function UndoBar/);
+assert.match(source.module, /get_principle_map_layout/);
+assert.match(source.module, /save_principle_map_layout/);
 assert.doesNotMatch(source.module, /Related principle numbers/);
-assert.match(source.migration, /add column if not exists principle_name text/);
-assert.match(source.migration, /where id = p_principle_id and user_id = current_user_id/);
+assert.match(source.namesMigration, /add column if not exists principle_name text/);
+assert.match(source.namesMigration, /where id = p_principle_id and user_id = current_user_id/);
+assert.match(source.layoutMigration, /create table if not exists public\.conflict_principle_map_layouts/);
+assert.match(source.layoutMigration, /auth\.uid\(\) = user_id/);
+assert.match(source.layoutMigration, /function public\.get_principle_map_layout/);
+assert.match(source.layoutMigration, /function public\.save_principle_map_layout/);
 assert.match(source.module, /Close Principles Map/);
 assert.match(source.module, /Open Principles Map/);
 assert.match(source.module, /document\.body\.append\(host\)/);
-assert.match(source.module, /!currentFolder && html`<button[^`]+Close Principles Map/);
+assert.doesNotMatch(source.module, /aria-label="Close Principles Map"[^>]*>×/);
 for (const index of [source.conflictIndex, source.chronIndex]) {
   assert.doesNotMatch(index, /data-view="principles"/);
 }
@@ -72,5 +88,10 @@ assert.match(source.css, /\.tjm-fm-sticky-header[\s\S]*position:\s*sticky/);
 assert.match(source.css, /\.tjm-fm-floating-layer[\s\S]*pointer-events:\s*none/);
 assert.match(source.css, /\.tjm-fm-window[\s\S]*pointer-events:\s*auto/);
 assert.match(source.css, /\.tjm-fm-principle-bottom/);
+assert.match(source.css, /\.tjm-fm-list-view/);
+assert.match(source.css, /\.tjm-fm-view-switch/);
+assert.match(source.css, /\.tjm-fm-context-menu[\s\S]*position:\s*fixed/);
+assert.match(source.css, /@media \(max-width:\s*760px\)[\s\S]*\.tjm-fm-window[\s\S]*inset:\s*0/);
+assert.match(source.css, /\.tjm-fm-window-actions button[\s\S]*min-width:\s*44px/);
 
 console.log("Folder Mind Map source validation passed.");
