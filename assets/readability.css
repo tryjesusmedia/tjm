@@ -1,0 +1,47 @@
+/* Site-wide readability layer.
+   Keeps each page's premium colors and visual identity intact. */
+
+body {
+  font-size: 18px;
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(main, .lesson-main, .app-main, .legal-page, .page-main)
+  :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]) {
+  font-size: clamp(1.125rem, 1.08rem + .22vw, 1.25rem) !important;
+  line-height: 1.75 !important;
+}
+
+:where(main, .lesson-main, .app-main, .legal-page, .page-main)
+  p:not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]) {
+  max-width: 72ch;
+}
+
+:where(.button, .nav-button, .header-link, .text-link, button, input, select, textarea) {
+  font-size: max(1.05rem, 17px);
+}
+
+:where(.button, .nav-button, button) {
+  min-height: 48px;
+}
+
+:where(main, .lesson-main, .app-main, .legal-page, .page-main) :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+@media (max-width: 700px) {
+  :where(main, .lesson-main, .app-main, .legal-page, .page-main)
+    :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]) {
+    font-size: 1.125rem !important;
+    line-height: 1.72 !important;
+  }
+
+  :where(.button, .nav-button, button) {
+    width: 100%;
+    min-height: 54px;
+    white-space: normal;
+    text-align: center;
+  }
+}
