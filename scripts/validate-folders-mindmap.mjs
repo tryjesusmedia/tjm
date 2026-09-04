@@ -52,6 +52,8 @@ assert.match(source.layoutMigration, /function public\.get_principle_map_layout/
 assert.match(source.layoutMigration, /function public\.save_principle_map_layout/);
 assert.match(source.module, /Close Principles Map/);
 assert.match(source.module, /Open Principles Map/);
+assert.match(source.module, /mapOpen:\s*false/);
+assert.match(source.module, /\.\.\.current,\s*mapOpen:\s*false/);
 assert.match(source.module, /document\.body\.append\(host\)/);
 assert.doesNotMatch(source.module, /aria-label="Close Principles Map"[^>]*>×/);
 for (const index of [source.conflictIndex, source.chronIndex]) {
