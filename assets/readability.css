@@ -1,47 +1,290 @@
-/* Site-wide readability layer.
-   Keeps each page's premium colors and visual identity intact. */
+/*
+  Try Jesus Media — site-wide clarity and accessibility layer
+
+  This file intentionally loads after each page's local stylesheet. It keeps
+  the plum, gold, ivory, serif-heading visual system while applying one
+  readable set of type, control, focus, contrast, and mobile standards.
+*/
+
+:root {
+  --tjm-readable-ink: #302831;
+  --tjm-readable-muted: #5f5660;
+  --tjm-readable-ivory: #fffdf9;
+  --tjm-readable-gold: #eebd4a;
+  --tjm-readable-plum: #311e33;
+  --tjm-reading-width: 65ch;
+  --tjm-control-height: 52px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: 110px;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
 
 body {
-  font-size: 18px;
-  line-height: 1.7;
+  overflow-wrap: break-word;
+  font-size: 19px;
+  line-height: 1.72;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
-:where(main, .lesson-main, .app-main, .legal-page, .page-main)
-  :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]) {
-  font-size: clamp(1.125rem, 1.08rem + .22vw, 1.25rem) !important;
-  line-height: 1.75 !important;
+main,
+#app-main,
+.lesson-main,
+.page-main,
+.legal-page {
+  min-width: 0;
 }
 
-:where(main, .lesson-main, .app-main, .legal-page, .page-main)
-  p:not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]) {
-  max-width: 72ch;
+/* Comfortable reading measure and a consistent body size. Embedded marketing
+   forms are excluded so their provider-controlled layout remains intact. */
+:where(main, #app-main, .lesson-main, .page-main, .legal-page)
+  :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+  font-size: clamp(1.125rem, 1.075rem + .2vw, 1.25rem) !important;
+  line-height: 1.72 !important;
 }
 
-:where(.button, .nav-button, .header-link, .text-link, button, input, select, textarea) {
-  font-size: max(1.05rem, 17px);
+:where(main, #app-main, .lesson-main, .page-main, .legal-page)
+  p:not(.eyebrow):not(.microcopy):not([class*="meta"]):not([class*="caption"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+  max-width: var(--tjm-reading-width);
 }
 
-:where(.button, .nav-button, button) {
+/* Headings retain the editorial serif treatment but gain enough leading to
+   remain readable when a visitor enlarges the page. */
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) :where(h1, h2, h3) {
+  max-width: 24ch;
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) h1 {
+  line-height: .98 !important;
+}
+
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) h2 {
+  line-height: 1.03 !important;
+}
+
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) h3 {
+  line-height: 1.14 !important;
+}
+
+/* Small editorial labels remain premium, but are no longer fine print. */
+:where(main, #app-main, .lesson-main, .page-main, .legal-page)
+  :where(.eyebrow, [class*="kicker"], [class*="label"], [class*="meta"], [class*="caption"]) {
+  font-size: max(.875rem, 14px) !important;
+  line-height: 1.45 !important;
+}
+
+:where(main, #app-main, .lesson-main, .page-main, .legal-page)
+  :where(.microcopy, [class*="note"], small) {
+  font-size: max(.875rem, 14px) !important;
+  line-height: 1.55 !important;
+}
+
+/* Stronger text contrast without changing the brand palette. */
+:where(.section-dark, .lesson-shell, .hero-welcome, .result-wrap, .experience-section,
+  .request-section, .urgency-section, .continue-card, .dashboard-side-card.dark)
+  p:not(.eyebrow) {
+  color: rgba(255, 253, 249, .88) !important;
+}
+
+:where(.section-light, .section-cream, .story, .watch-section, .topics-section,
+  .faq-section, .legal-section, .topic-card, .benefit-card)
+  p:not(.eyebrow) {
+  color: var(--tjm-readable-muted) !important;
+}
+
+/* Body links look like links; navigation, cards, and buttons keep their own
+   component styling. */
+:where(main, #app-main, .lesson-main, .page-main, .legal-page)
+  :where(p, li, dd) a:not(.button):not(.primary-button):not(.secondary-button):not(.text-link):not(.next-card-link) {
+  text-decoration-thickness: .1em;
+  text-underline-offset: .2em;
+}
+
+/* Large, forgiving controls for mouse, touch, and reduced dexterity. */
+:where(.button, .primary-button, .secondary-button, .nav-button, .header-link,
+  .listen-button, .live-zoom-link, .channel-link, .lesson-return-link,
+  .social-link, .mobile-sticky, .nav-cta, input, select, textarea) {
+  min-height: var(--tjm-control-height);
+  font-size: max(1rem, 16px) !important;
+}
+
+:where(.button, .primary-button, .secondary-button, .nav-button, .live-zoom-link,
+  .channel-link, .lesson-return-link, .social-link, .mobile-sticky, .nav-cta) {
+  padding-block: 12px;
+  white-space: normal;
+  text-align: center;
+}
+
+:where(.site-nav a, .side-nav button, .bottom-nav button, summary) {
   min-height: 48px;
 }
 
-:where(main, .lesson-main, .app-main, .legal-page, .page-main) :where(h1, h2, h3) {
-  text-wrap: balance;
+:where(.site-nav a) {
+  display: inline-flex;
+  align-items: center;
+  font-size: max(.875rem, 14px) !important;
+  line-height: 1.35 !important;
+}
+
+summary {
+  padding-block: 16px;
+}
+
+input,
+select,
+textarea {
+  border-width: 2px !important;
+}
+
+/* The small guide-progress dots are supplemental navigation. Their spacing
+   and labels provide a usable target without turning them into large pills. */
+.lesson-dots button {
+  min-width: 28px !important;
+  min-height: 28px !important;
+}
+
+/* A clear focus ring works on both cream and plum surfaces. */
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--tjm-readable-gold) !important;
+  outline-offset: 4px !important;
+}
+
+/* Footer links should not become small again after the main content. */
+:where(.site-footer, .footer-inner) :where(p, a, span:not(.brand-mark):not(.brand-type)) {
+  font-size: max(.9375rem, 15px);
+  line-height: 1.55;
+}
+
+@media (max-width: 860px) {
+  .site-nav {
+    max-height: calc(100dvh - 96px);
+    overflow-y: auto;
+  }
+
+  .site-nav a {
+    width: 100%;
+    padding: 12px 14px !important;
+  }
 }
 
 @media (max-width: 700px) {
-  :where(main, .lesson-main, .app-main, .legal-page, .page-main)
-    :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]) {
-    font-size: 1.125rem !important;
-    line-height: 1.72 !important;
+  html {
+    scroll-padding-top: 92px;
   }
 
-  :where(.button, .nav-button, button) {
+  body {
+    font-size: 18px;
+  }
+
+  :where(main, #app-main, .lesson-main, .page-main, .legal-page)
+    :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+    font-size: 1.125rem !important;
+    line-height: 1.68 !important;
+  }
+
+  :where(.button, .primary-button, .secondary-button, .nav-button,
+    .live-zoom-link, .channel-link, .lesson-return-link, .mobile-sticky) {
     width: 100%;
-    min-height: 54px;
-    white-space: normal;
-    text-align: center;
+    min-height: 56px;
+    justify-content: center;
+  }
+
+  :where(.completion-actions, .hero-actions, .button-row, .shop-actions) {
+    gap: 14px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media print {
+  body {
+    color: #171418 !important;
+    background: #fff !important;
+    font-size: 12pt;
+  }
+
+  .site-header,
+  .page-progress,
+  .lesson-navigation,
+  .site-footer,
+  .toast,
+  .pk-launcher,
+  .pk-panel,
+  .completion-actions,
+  .hero-visual,
+  .lesson-shell-glow {
+    display: none !important;
+  }
+
+  .lesson-main,
+  .lesson-shell,
+  .lesson-panel,
+  .panel-copy,
+  .panel-copy-wide {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #171418 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .lesson-panel[hidden] {
+    display: block !important;
+  }
+
+  .lesson-panel + .lesson-panel {
+    margin-top: 36pt !important;
+    padding-top: 28pt !important;
+    border-top: 1px solid #bbb !important;
+  }
+
+  .lesson-panel :where(h1, h2, h3, p, li, strong, span, small, blockquote) {
+    color: #171418 !important;
+    text-shadow: none !important;
+  }
+
+  details,
+  details[open] {
+    display: block !important;
+  }
+
+  details > *:not(summary) {
+    display: block !important;
+  }
+
+  a {
+    color: #171418 !important;
   }
 }

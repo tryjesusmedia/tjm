@@ -19,7 +19,7 @@ window.TJM_CONTENT = {
       headline: "You are not looking for hype. You are looking for truth.",
       body: "You are willing to consider faith, but you do not want to be manipulated into believing something merely because it sounds inspiring. You want evidence, consistency, and permission to ask the questions other people avoid.",
       start: "Your journey begins with the Bible’s most extraordinary claim: that God can reveal history before it happens.",
-      button: "Begin the Investigation"
+      button: "Begin the Bible Study"
     },
     achiever: {
       label: "YOUR SPIRITUAL COMPASS",
@@ -60,7 +60,7 @@ window.TJM_CONTENT = {
       id: "future",
       eyebrow: "7-DAY FLAGSHIP JOURNEY",
       title: "Can the Bible Really Reveal the Future?",
-      subtitle: "Investigate prophecy, history, and the God who claims to know the end from the beginning.",
+      subtitle: "Explore prophecy, history, and the God who claims to know the end from the beginning.",
       duration: "7 days • About 10 minutes a day",
       status: "available",
       accent: "gold",

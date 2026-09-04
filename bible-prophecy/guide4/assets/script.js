@@ -60,7 +60,7 @@
 
     const percentage = (current / total) * 100;
     if (progressBar) progressBar.style.width = `${percentage}%`;
-    if (panelCount) panelCount.textContent = `${current} OF ${total}`;
+    if (panelCount) panelCount.textContent = `STEP ${current} OF ${total}`;
 
     [...(dotsWrap?.children || [])].forEach((dot, index) => {
       const active = index + 1 === current;
@@ -79,7 +79,7 @@
     stopSpeech();
 
     if (scroll) document.getElementById("lesson")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (announce && current > 1) showToast(`Section ${current} of ${total}`);
+    if (announce && current > 1) showToast(`Step ${current} of ${total}`);
   };
 
   function goTo(index, options = {}) {

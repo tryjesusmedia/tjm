@@ -840,6 +840,34 @@ main li {
   align-self: center;
 }
 
+.form-intro {
+  width: min(680px, 100%);
+  margin: 0 auto 18px;
+  padding: 0 8px;
+  color: var(--white);
+  text-align: left;
+}
+
+.form-intro strong,
+.form-intro span {
+  display: block;
+}
+
+.form-intro strong {
+  color: var(--ivory);
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.form-intro span {
+  margin-top: 8px;
+  color: rgba(255, 253, 249, .78);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
 @media (max-width: 760px) {
   body {
     font-size: 17px;
@@ -855,10 +883,250 @@ main li {
     gap: 44px;
   }
 
+  .form-intro {
+    text-align: center;
+  }
+
   .button {
     width: 100%;
     min-height: 58px;
     padding-inline: 22px;
     text-align: center;
+  }
+}
+
+/* =========================================================
+   Utility pages: privacy, confirmation, and not-found
+   ========================================================= */
+
+.privacy-page,
+.subpage {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 8% 18%, rgba(238, 189, 74, .09), transparent 24%),
+    var(--cream);
+}
+
+.privacy-hero {
+  padding: 92px 0 72px;
+  color: var(--white);
+  background:
+    radial-gradient(circle at 82% 10%, rgba(238, 189, 74, .15), transparent 28%),
+    linear-gradient(135deg, var(--midnight-plum), var(--plum));
+}
+
+.privacy-hero-inner {
+  max-width: 900px;
+}
+
+.privacy-hero h1 {
+  margin-bottom: 20px;
+}
+
+.privacy-hero p:not(.eyebrow) {
+  max-width: 65ch;
+  color: rgba(255, 253, 249, .88);
+}
+
+.privacy-updated {
+  font-weight: 700;
+}
+
+.privacy-layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 290px) minmax(0, 1fr);
+  gap: 42px;
+  align-items: start;
+  padding-block: 64px 90px;
+}
+
+.privacy-toc {
+  position: sticky;
+  top: 112px;
+  max-height: calc(100dvh - 135px);
+  overflow-y: auto;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255, 253, 249, .9);
+  box-shadow: 0 18px 48px rgba(49, 30, 51, .08);
+}
+
+.privacy-toc-title {
+  margin: 0 0 12px;
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.privacy-toc nav {
+  display: grid;
+  gap: 5px;
+}
+
+.privacy-toc a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 7px 9px;
+  border-radius: 9px;
+  color: var(--tjm-readable-muted, #5f5660);
+  font-size: .9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.privacy-toc a:hover {
+  color: var(--plum);
+  background: rgba(238, 189, 74, .13);
+}
+
+.legal-document {
+  min-width: 0;
+  padding: clamp(28px, 5vw, 58px);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.legal-intro {
+  margin-bottom: 42px;
+  padding: 24px;
+  border-left: 5px solid var(--gold);
+  border-radius: 0 16px 16px 0;
+  background: #f8f0df;
+}
+
+.legal-section {
+  padding-top: 38px;
+  border-top: 1px solid var(--border);
+}
+
+.legal-section + .legal-section {
+  margin-top: 38px;
+}
+
+.legal-section h2 {
+  margin-bottom: 22px;
+  color: var(--plum);
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+.legal-section h3,
+.legal-section h4 {
+  margin: 30px 0 10px;
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  line-height: 1.2;
+}
+
+.legal-list {
+  padding-left: 1.35em;
+}
+
+.subpage .section {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 54px 0;
+}
+
+.thank-you-card {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: clamp(30px, 6vw, 68px);
+  border: 1px solid rgba(238, 189, 74, .3);
+  border-radius: 30px;
+  background: rgba(255, 253, 249, .96);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.thank-you-card > p:not(.eyebrow) {
+  margin-inline: auto;
+}
+
+.thank-you-card h1 {
+  margin-bottom: 22px;
+  color: var(--plum);
+}
+
+.final-mark {
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 22px;
+}
+
+.final-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.next-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 34px;
+  text-align: left;
+}
+
+.next-steps article {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--cream);
+}
+
+.next-steps article > span {
+  color: #946407;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.next-steps h2 {
+  margin: 14px 0 8px;
+  font-size: 1.8rem;
+}
+
+.next-steps p {
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .privacy-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .privacy-toc {
+    position: relative;
+    top: auto;
+    max-height: 330px;
+  }
+}
+
+@media (max-width: 700px) {
+  .privacy-hero {
+    padding: 64px 0 54px;
+  }
+
+  .privacy-layout {
+    gap: 24px;
+    padding-block: 28px 60px;
+  }
+
+  .legal-document,
+  .thank-you-card {
+    padding: 26px 20px;
+    border-radius: 22px;
+  }
+
+  .next-steps {
+    grid-template-columns: 1fr;
   }
 }

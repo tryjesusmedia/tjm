@@ -257,7 +257,7 @@
           <div class="hero-welcome-copy">
             <p class="eyebrow gold">A PRIVATE GUIDED BIBLE JOURNEY</p>
             <h1 class="display">Before You Reject Jesus, <em>Meet Him for Yourself.</em></h1>
-            <p class="lead">Investigate the evidence. Ask the questions you have carried. Experience the teachings of Jesus. Decide what you believe for yourself.</p>
+            <p class="lead">Explore the evidence, ask honest questions, and experience the teachings of Jesus. Decide what you believe for yourself.</p>
             <div class="hero-actions">
               <button class="button button-primary" data-go="intro">Begin My Private Journey <span>→</span></button>
               ${state.progress.future.length ? '<button class="button button-light" data-resume>Continue Where I Left Off</button>' : '<button class="button button-light" data-go="compass">Show Me How It Works</button>'}
@@ -377,13 +377,21 @@
     const journeys = CONTENT.journeys.slice(1).map(journeyCardHTML).join("");
     appMain.innerHTML = `
       <div class="page wide">
+        <section class="community-banner" aria-label="Join the WhatsApp family chat">
+          <div>
+            <p class="eyebrow gold">YOU DO NOT HAVE TO STUDY ALONE</p>
+            <h2 class="display">Join the WhatsApp Family Chat.</h2>
+            <p>Ask questions, share what is on your heart, and connect with the Try Jesus Media family.</p>
+          </div>
+          <a class="button button-primary" href="${CONFIG.WHATSAPP_URL}" target="_blank" rel="noopener noreferrer">Join the WhatsApp Group</a>
+        </section>
         <div class="dashboard-hero">
           <section class="continue-card">
             <span class="journey-label"><span class="pulse-dot"></span> YOUR NEXT REVELATION</span>
             <h1 class="display">${next.title}</h1>
             <p class="summary">${next.teaser}</p>
             <div class="progress-row"><div class="progress-track"><span style="width:${progress}%"></span></div><small>${progress}% complete</small></div>
-            <button class="button button-primary" data-go="lesson/${next.id}">${completedCount() ? "Continue the Investigation" : "Start Day One"} →</button>
+            <button class="button button-primary" data-go="lesson/${next.id}">${completedCount() ? "Continue the Bible Study" : "Begin the Bible Study"} →</button>
           </section>
           <div class="side-stack">
             <article class="dashboard-side-card dark">
@@ -405,7 +413,7 @@
           <div><small>${CONFIG.THURSDAY_TIME.toUpperCase()}</small><h3>${live.headline}</h3><p>${live.copy}</p></div>
           <a class="button button-primary" data-live href="${CONFIG.LIVE_DISCUSSION_URL}" target="_blank" rel="noopener">${live.button}</a>
         </section>
-        <div class="section-head"><div><h2>Continue Exploring</h2><p>One clear next step—not a wall of random content.</p></div><button data-go="journeys">View all journeys →</button></div>
+        <div class="section-head"><div><h2>Choose Another Bible Study</h2><p>Choose one clear question and move at your own pace.</p></div><button data-go="journeys">View all Bible studies →</button></div>
         <div class="journey-grid">${journeys}</div>
       </div>`;
   }
@@ -435,9 +443,9 @@
     }).join("");
     appMain.innerHTML = `
       <div class="page">
-        <header class="section-head" style="align-items:center;margin-top:0"><div><p class="eyebrow">GUIDED BIBLE JOURNEYS</p><h2 style="font-size:clamp(3rem,6vw,5rem)">Choose the Question Beneath Your Question.</h2><p>Explore Scripture thoughtfully, examine evidence honestly, and move at your own pace.</p></div></header>
+        <header class="section-head" style="align-items:center;margin-top:0"><div><p class="eyebrow">GUIDED BIBLE STUDIES</p><h2 style="font-size:clamp(3rem,6vw,5rem)">Choose a Bible Question to Explore.</h2><p>Read Scripture, consider the evidence, and move at your own pace.</p></div></header>
         <div class="journey-grid">${all}</div>
-        <section class="live-banner"><div><small>THURSDAY LIVE DISCUSSION</small><h3>Written guides can begin the investigation. Conversation can take it deeper.</h3><p>Bring your questions, keep your camera off, or simply listen.</p></div><a class="button button-primary" data-live href="${CONFIG.LIVE_DISCUSSION_URL}" target="_blank" rel="noopener">Join the Discussion</a></section>
+        <section class="live-banner"><div><small>THURSDAY LIVE DISCUSSION</small><h3>Bible guides can start the conversation. Zoom can take it deeper.</h3><p>Bring your questions, keep your camera off, or simply listen.</p></div><a class="button button-primary" data-live href="${CONFIG.LIVE_DISCUSSION_URL}" target="_blank" rel="noopener">Join the Zoom Discussion</a></section>
       </div>`;
   }
 
@@ -462,7 +470,7 @@
           <div><p class="eyebrow gold">${journey.eyebrow}</p><h1 class="display">${journey.title}</h1><p>${journey.subtitle}</p><div class="progress-row"><div class="progress-track"><span style="width:${percentComplete()}%"></span></div><small>${completedCount()} of ${journey.lessons.length} complete</small></div></div>
           <img class="journey-seal" src="assets/logo-512.png" alt="">
         </section>
-        <div class="section-head"><div><h2>Your Seven-Day Investigation</h2><p>Each lesson opens one question and prepares the next.</p></div></div>
+        <div class="section-head"><div><h2>Your Seven-Day Bible Study</h2><p>Each day explores one question and prepares the next.</p></div></div>
         <div class="lesson-list">${rows}</div>
       </div>`;
   }
@@ -478,8 +486,8 @@
     const selectedDecision = state.decisions[lesson.id] || "";
     const evidenceHTML = lesson.evidence?.length ? `
       <section class="content-section">
-        <p class="eyebrow">EVIDENCE VAULT</p><h2>Do Not Take Our Word for It.</h2><p>Explore the historical setting and source material connected to this lesson.</p>
-        <div class="evidence-list">${lesson.evidence.map(item => `<article class="evidence-item"><small>${item.source}</small><h3>${item.title}</h3><p>${item.description}</p><a href="${item.url}" target="_blank" rel="noopener">Examine the source →</a></article>`).join("")}</div>
+        <p class="eyebrow">SOURCES AND EVIDENCE</p><h2>See the Sources for Yourself.</h2><p>Explore the historical setting and source material connected to this lesson.</p>
+        <div class="evidence-list">${lesson.evidence.map(item => `<article class="evidence-item"><small>${item.source}</small><h3>${item.title}</h3><p>${item.description}</p><a href="${item.url}" target="_blank" rel="noopener">View the source →</a></article>`).join("")}</div>
       </section>` : "";
     const practicesHTML = lesson.practices?.length ? `
       <section class="content-section"><p class="eyebrow">CHOOSE ONE FAITH EXPERIMENT</p><h2>Try What Jesus Taught.</h2><div class="practice-grid">${lesson.practices.map((practice, i) => `<label class="practice-option"><input type="radio" name="practice" value="${escapeHTML(practice)}"><span>${practice}</span></label>`).join("")}</div></section>` : "";
@@ -648,6 +656,7 @@
       <div class="page">
         <header class="section-head" style="align-items:center;margin-top:0"><div><p class="eyebrow">YOUR NEXT STEPS</p><h2 style="font-size:clamp(3rem,6vw,5rem)">Continue the Journey Beyond the Screen.</h2></div></header>
         <div class="more-grid">
+          <article class="more-card dark"><div class="more-icon">◉</div><p class="eyebrow gold">WHATSAPP FAMILY CHAT</p><h2>Stay connected between Bible discussions.</h2><p>Ask questions, receive updates, and connect with the Try Jesus Media family.</p><a class="button button-primary" href="${CONFIG.WHATSAPP_URL}" target="_blank" rel="noopener noreferrer">Join the WhatsApp Group</a></article>
           <article class="more-card dark"><div class="more-icon">●</div><p class="eyebrow gold">LIVE THURSDAY</p><h2>A real question deserves a real conversation.</h2><p>Join the live online Bible discussion. Participate, listen quietly, or keep your camera off.</p><a class="button button-primary" data-live href="${CONFIG.LIVE_DISCUSSION_URL}" target="_blank" rel="noopener">Join Through the Welcome Page</a></article>
           <article class="more-card"><div class="more-icon">◆</div><p class="eyebrow">PROGRAMS & RESOURCES</p><h2>Knowing what is true is powerful. Living it is transformational.</h2><p>Explore additional Try Jesus Media programs and resources hosted on Fourthwall.</p><button class="button button-dark" data-fourthwall>Explore the Collection</button></article>
           <article class="more-card"><div class="more-icon">⇩</div><p class="eyebrow">INSTALL THE APP</p><h2>Take your journey with you.</h2><p>Save progress, keep private notes, and return with one tap.</p>${state.installed ? '<span class="locked-badge">APP INSTALLED</span>' : '<button class="button button-dark" data-install-app>Install the Free App</button>'}</article>

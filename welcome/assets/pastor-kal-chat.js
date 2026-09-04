@@ -60,7 +60,7 @@
   send.setAttribute("aria-label", "Send question");
   form.append(input, send);
   const disclaimer = el("div", "pk-disclaimer");
-  disclaimer.innerHTML = 'This Pastor Kal is an AI chat bot. If you\'d like to contact the real human Pastor Kal, join the WhatsApp family chat <a href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM" target="_blank" rel="noopener noreferrer">here</a>.';
+  disclaimer.innerHTML = 'This Pastor Kal is an AI chat bot. If you\'d like to contact the real human Pastor Kal, join the WhatsApp family chat <a href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM" target="_blank" rel="noopener noreferrer">here</a>.<span class="pk-safety">This chatbot is not for emergencies or professional medical advice.</span>';
   footer.append(form, disclaimer);
 
   panel.append(header, body, footer);

@@ -1217,6 +1217,13 @@ button:focus-visible {
   letter-spacing: .035em;
 }
 
+.local-meeting-date {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, .82);
+  font-size: 11px;
+  font-weight: 600;
+}
+
 .meeting-details {
   position: relative;
 

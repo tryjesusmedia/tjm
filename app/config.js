@@ -3,8 +3,9 @@ window.TJM_CONFIG = {
   APP_URL: "https://tryjesusmedia.com/app/",
   WEBSITE_URL: "https://tryjesusmedia.com/",
   LIVE_DISCUSSION_URL: "https://tryjesusmedia.com/welcome",
+  WHATSAPP_URL: "https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM",
   // Replace this one value with the exact Fourthwall storefront or collection URL.
   FOURTHWALL_URL: "https://try-jesus-new-york-shop.fourthwall.com/",
-  SUPPORT_EMAIL: "",
+  SUPPORT_EMAIL: "info@tryjesusmedia.com",
   THURSDAY_TIME: "Thursdays • 8:00 PM ET"
 };

@@ -82,6 +82,7 @@
     const minutesElement = document.getElementById('countdownMinutes');
     const secondsElement = document.getElementById('countdownSeconds');
     const dateElement = document.getElementById('nextMeetingDate');
+    const localDateElement = document.getElementById('localMeetingDate');
 
     const zonedPartsFormatter = new Intl.DateTimeFormat('en-US', {
       timeZone,
@@ -96,6 +97,15 @@
 
     const displayFormatter = new Intl.DateTimeFormat('en-US', {
       timeZone,
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+
+    const localDisplayFormatter = new Intl.DateTimeFormat(undefined, {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
@@ -166,7 +176,8 @@
     };
 
     let nextMeeting = getNextMeeting();
-    if (dateElement) dateElement.textContent = displayFormatter.format(nextMeeting);
+    if (dateElement) dateElement.textContent = `Eastern time: ${displayFormatter.format(nextMeeting)}`;
+    if (localDateElement) localDateElement.textContent = `Your local time: ${localDisplayFormatter.format(nextMeeting)}`;
 
     const twoDigits = (value) => String(value).padStart(2, '0');
 
@@ -177,7 +188,8 @@
       if (remaining <= 0) {
         nextMeeting = getNextMeeting(new Date(now.getTime() + 1000));
         remaining = nextMeeting.getTime() - now.getTime();
-        if (dateElement) dateElement.textContent = displayFormatter.format(nextMeeting);
+        if (dateElement) dateElement.textContent = `Eastern time: ${displayFormatter.format(nextMeeting)}`;
+        if (localDateElement) localDateElement.textContent = `Your local time: ${localDisplayFormatter.format(nextMeeting)}`;
       }
 
       const totalSeconds = Math.max(0, Math.floor(remaining / 1000));
