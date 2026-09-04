@@ -66,7 +66,8 @@ try {
   assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
   assert.equal(await page.getByRole("button", { name: "Principles", exact: true }).count(), 0);
   assert.equal(await page.getByText("Group led by", { exact: false }).count(), 0);
-  await page.waitForSelector('[data-fm-folder-id="g1"] strong');
+  await page.waitForFunction(() =>
+    document.querySelector('[data-fm-folder-id="g1"] strong')?.textContent?.trim() === "New Folder #1");
   assert.equal((await page.locator('[data-fm-folder-id="g1"] strong').textContent())?.trim(), "New Folder #1");
   assert.equal(await page.locator('[data-fm-folder-id="g1"] .tjm-fm-node-menu').count(), 0);
   assert.equal(await page.locator('[data-fm-empty-folder-id] .tjm-fm-node-menu').count(), 0);
