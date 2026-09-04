@@ -1,4 +1,4 @@
-const CACHE = "try-jesus-journey-v1.0.0";
+const CACHE = "try-jesus-journey-v1.0.1";
 const CORE = [
   "./",
   "./index.html",

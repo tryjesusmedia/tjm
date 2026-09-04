@@ -709,7 +709,7 @@
   });
 
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=20260904-2").catch(() => {}));
   }
 
   if (!location.hash) history.replaceState(null, "", `#/${state.onboarded ? "home" : "welcome"}`);
