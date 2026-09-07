@@ -1,0 +1,735 @@
+/*
+  Try Jesus Media guide reader
+
+  A shared, mobile-first interaction layer for all 19 Bible studies. The
+  individual guide artwork remains intact; this file makes the controls,
+  reading measure, navigation, dialogs, and disclosure panels consistent.
+*/
+
+:root {
+  --guide-reader-size: 1.22rem;
+  --guide-ui-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Manrope, sans-serif;
+  --guide-surface: rgba(255, 253, 249, .92);
+  --guide-surface-strong: #fffdf9;
+  --guide-border: rgba(49, 30, 51, .14);
+  --guide-ink: #281d29;
+  --guide-muted: #675e68;
+  --guide-gold: #eebd4a;
+  --guide-plum: #311e33;
+}
+
+body.guide-reader-enhanced {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(238, 189, 74, .13), transparent 24rem),
+    radial-gradient(circle at 92% 38%, rgba(86, 48, 90, .08), transparent 30rem),
+    linear-gradient(180deg, #fbf8f2 0%, #f4eee4 100%);
+}
+
+.guide-reader-enhanced .site-header {
+  border-bottom-color: rgba(49, 30, 51, .1);
+  background: rgba(255, 253, 249, .82);
+  backdrop-filter: saturate(160%) blur(24px);
+  -webkit-backdrop-filter: saturate(160%) blur(24px);
+}
+
+.guide-reader-enhanced .lesson-main {
+  width: min(1120px, calc(100% - 32px));
+  padding-top: clamp(28px, 5vw, 58px);
+}
+
+.guide-reader-enhanced .lesson-shell {
+  border-radius: 34px;
+  box-shadow:
+    0 32px 90px rgba(34, 18, 36, .18),
+    inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+
+.guide-reader-enhanced .lesson-topline {
+  min-height: 52px;
+  padding-inline: clamp(20px, 4vw, 36px);
+  font-family: var(--guide-ui-font);
+  font-size: .75rem !important;
+  letter-spacing: .1em;
+}
+
+.guide-reader-enhanced .lesson-progress {
+  margin-inline: clamp(20px, 4vw, 36px);
+  height: 7px;
+  background: rgba(255, 255, 255, .11);
+}
+
+.guide-reader-enhanced .lesson-progress span {
+  transition: width .28s ease;
+}
+
+/* Reader tools mirror the simple, tactile controls used by the Indigenous
+   Podcast guides while retaining Try Jesus Media's plum-and-gold palette. */
+.guide-reader-toolbar {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px 22px;
+  margin: 18px clamp(20px, 4vw, 36px) 2px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .055);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+  font-family: var(--guide-ui-font);
+}
+
+.guide-reader-text-controls,
+.guide-reader-utility-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.guide-reader-utility-controls {
+  justify-content: flex-end;
+}
+
+.guide-reader-text-label {
+  margin-right: 3px;
+  color: rgba(255, 255, 255, .76);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.guide-reader-control,
+.guide-reader-toolbar .listen-button {
+  min-width: 54px;
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 14px;
+  color: #fffdf9;
+  background: rgba(255, 255, 255, .075);
+  box-shadow: none;
+  font-family: var(--guide-ui-font);
+  font-size: 1rem !important;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: none;
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+}
+
+.guide-reader-control:hover,
+.guide-reader-toolbar .listen-button:hover {
+  border-color: rgba(238, 189, 74, .7);
+  background: rgba(238, 189, 74, .11);
+  transform: translateY(-1px);
+}
+
+.guide-reader-control[aria-pressed="true"],
+.guide-reader-toolbar .listen-button[aria-pressed="true"] {
+  color: var(--guide-plum);
+  border-color: var(--guide-gold);
+  background: var(--guide-gold);
+}
+
+.guide-reader-control:disabled {
+  cursor: default;
+  opacity: .42;
+  transform: none;
+}
+
+.guide-reader-size-button {
+  width: 54px;
+  padding-inline: 8px;
+  font-size: 1.12rem !important;
+}
+
+.guide-reader-toolbar .listen-button {
+  background: #fffdf9;
+  color: var(--guide-plum);
+}
+
+.guide-reader-toolbar .listen-icon {
+  color: #a06b08;
+}
+
+.guide-reader-status {
+  grid-column: 1 / -1;
+  min-height: 1.4em;
+  margin: -2px 2px 0;
+  color: rgba(255, 255, 255, .58);
+  font-size: .86rem !important;
+  line-height: 1.4 !important;
+}
+
+.guide-reader-enhanced .panel-stage {
+  margin-top: 4px;
+}
+
+.guide-reader-enhanced .lesson-panel {
+  padding: clamp(38px, 6vw, 66px);
+  animation-duration: .3s;
+}
+
+/* Keep the expressive cover typography, then use a calmer app-reader face
+   inside the study itself. */
+.guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .panel-copy > h2,
+.guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .panel-copy > h3 {
+  max-width: 21ch;
+  font-family: var(--guide-ui-font);
+  font-weight: 780;
+  letter-spacing: -.035em;
+  line-height: 1.07 !important;
+}
+
+.guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .panel-copy > h2 {
+  font-size: clamp(2.3rem, 5vw, 4.5rem);
+}
+
+body.guide-reader-enhanced #lesson #panelStage .lesson-panel:not([data-panel="1"])
+  :where(p, li):not(.eyebrow):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="note"]):not(small) {
+  font-family: var(--guide-ui-font);
+  font-size: var(--guide-reader-size) !important;
+  line-height: 1.72 !important;
+}
+
+.guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .panel-copy > p,
+.guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .panel-copy-wide > p {
+  max-width: 67ch;
+}
+
+body.guide-reader-enhanced #panelStage .lesson-panel:not([data-panel="1"]) .panel-lead {
+  max-width: 58ch;
+  color: rgba(255, 255, 255, .92);
+  line-height: 1.62 !important;
+}
+
+.guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .gold-quote {
+  font-size: clamp(1.65rem, 3.2vw, 2.35rem);
+  line-height: 1.16;
+}
+
+.guide-reader-enhanced .eyebrow {
+  font-family: var(--guide-ui-font);
+  font-size: .78rem !important;
+  line-height: 1.4 !important;
+}
+
+/* Expandable supporting information becomes a roomy disclosure window. */
+.guide-reader-enhanced .evidence-drawer {
+  margin-top: 22px;
+  border-color: rgba(255, 255, 255, .17);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .055);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
+}
+
+.guide-reader-enhanced .evidence-drawer summary {
+  min-height: 64px;
+  padding: 12px 20px;
+  font-family: var(--guide-ui-font);
+  font-size: 1rem !important;
+  line-height: 1.35 !important;
+}
+
+.guide-reader-enhanced .evidence-drawer summary i {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(238, 189, 74, .12);
+}
+
+.guide-reader-enhanced .evidence-drawer[open] summary {
+  background: rgba(255, 255, 255, .035);
+}
+
+.guide-reader-enhanced .drawer-content {
+  padding: clamp(20px, 4vw, 30px);
+}
+
+/* Numbered, direct navigation replaces hard-to-hit progress dots. */
+.guide-reader-enhanced .lesson-navigation {
+  min-height: 92px;
+  grid-template-columns: minmax(130px, auto) 1fr minmax(130px, auto);
+  gap: 14px;
+  padding: 18px clamp(20px, 4vw, 36px);
+  background: rgba(8, 5, 9, .2);
+}
+
+.guide-reader-enhanced .nav-button {
+  min-height: 54px;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-family: var(--guide-ui-font);
+  font-size: 1rem !important;
+}
+
+.guide-reader-enhanced .lesson-dots {
+  gap: 6px;
+}
+
+.guide-reader-enhanced .lesson-dots button {
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 11px;
+  color: rgba(255, 255, 255, .72);
+  background: rgba(255, 255, 255, .055);
+  font-family: var(--guide-ui-font);
+  font-size: .83rem;
+  font-weight: 720;
+}
+
+.guide-reader-enhanced .lesson-dots button.is-active {
+  width: 36px;
+  color: var(--guide-plum);
+  border-color: var(--guide-gold);
+  border-radius: 11px;
+  background: var(--guide-gold);
+}
+
+/* Optional private notes use the same native disclosure pattern as the
+   reference reader and remain local to the browser. */
+.guide-reader-notes {
+  width: min(100%, 960px);
+  margin: 22px auto 0;
+  overflow: hidden;
+  border: 1px solid var(--guide-border);
+  border-radius: 20px;
+  color: var(--guide-ink);
+  background: var(--guide-surface);
+  box-shadow: 0 16px 46px rgba(34, 18, 36, .08);
+}
+
+.guide-reader-notes summary {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 20px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--guide-ui-font);
+  font-size: 1.05rem;
+  font-weight: 720;
+}
+
+.guide-reader-notes summary::-webkit-details-marker {
+  display: none;
+}
+
+.guide-reader-notes summary::after {
+  content: "+";
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--guide-plum);
+  background: rgba(238, 189, 74, .22);
+  font-size: 1.25rem;
+  transition: transform .2s ease;
+}
+
+.guide-reader-notes[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.guide-reader-notes-content {
+  padding: 0 20px 20px;
+}
+
+.guide-reader-notes label {
+  display: block;
+  margin-bottom: 9px;
+  font-family: var(--guide-ui-font);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.guide-reader-notes textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  padding: 16px;
+  border: 1px solid rgba(49, 30, 51, .28) !important;
+  border-radius: 14px;
+  color: var(--guide-ink);
+  background: var(--guide-surface-strong);
+  font-family: var(--guide-ui-font);
+  font-size: 1.05rem !important;
+  line-height: 1.6;
+}
+
+.guide-reader-notes-status {
+  margin: 8px 0 0;
+  color: var(--guide-muted);
+  font-family: var(--guide-ui-font);
+  font-size: .88rem !important;
+}
+
+/* Contents and key-points windows behave like iOS sheets on small screens. */
+.guide-reader-dialog {
+  width: min(680px, calc(100% - 28px));
+  max-height: min(82dvh, 760px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(49, 30, 51, .14);
+  border-radius: 26px;
+  color: var(--guide-ink);
+  background: rgba(255, 253, 249, .97);
+  box-shadow: 0 34px 110px rgba(24, 12, 26, .34);
+  font-family: var(--guide-ui-font);
+}
+
+.guide-reader-dialog::backdrop {
+  background: rgba(20, 12, 21, .58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.guide-reader-dialog-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--guide-border);
+  background: rgba(255, 253, 249, .92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.guide-reader-dialog-header h2 {
+  margin: 0;
+  color: var(--guide-ink);
+  font-family: var(--guide-ui-font);
+  font-size: 1.35rem;
+  line-height: 1.2 !important;
+}
+
+.guide-reader-dialog-close {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 1px solid var(--guide-border);
+  border-radius: 14px;
+  color: var(--guide-plum);
+  background: #fff;
+  font-family: var(--guide-ui-font);
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.guide-reader-dialog-body {
+  max-height: calc(82dvh - 85px);
+  padding: 16px 20px 22px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.guide-reader-section-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-reader-section-list li {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--guide-border);
+}
+
+.guide-reader-section-list li:last-child {
+  border-bottom: 0;
+}
+
+.guide-reader-section-link {
+  width: 100%;
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px;
+  border: 0;
+  color: var(--guide-ink);
+  background: transparent;
+  text-align: left;
+  font-family: var(--guide-ui-font);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.guide-reader-section-link:hover {
+  color: var(--guide-plum);
+  background: rgba(238, 189, 74, .08);
+}
+
+.guide-reader-section-number {
+  color: #91630c;
+  font-size: .82rem;
+  font-weight: 780;
+}
+
+.guide-reader-section-link[aria-current="step"] {
+  font-weight: 760;
+}
+
+.guide-reader-section-link[aria-current="step"]::after {
+  content: "Current";
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: var(--guide-plum);
+  background: rgba(238, 189, 74, .34);
+  font-size: .72rem;
+  font-weight: 760;
+}
+
+.guide-reader-key-points {
+  color: var(--guide-ink);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.guide-reader-key-points :where(h1, h2, h3) {
+  color: var(--guide-plum) !important;
+  font-family: var(--guide-ui-font) !important;
+  font-size: clamp(1.7rem, 5vw, 2.35rem) !important;
+  line-height: 1.12 !important;
+}
+
+.guide-reader-key-points :where(p, li) {
+  color: var(--guide-ink) !important;
+  font-family: var(--guide-ui-font) !important;
+  font-size: 1.08rem !important;
+  line-height: 1.65 !important;
+}
+
+.guide-reader-key-points :where(article, aside, div) {
+  position: static !important;
+  width: auto !important;
+  min-height: 0 !important;
+  margin-block: 12px !important;
+  transform: none !important;
+}
+
+@media (max-width: 820px) {
+  .guide-reader-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-reader-utility-controls {
+    justify-content: flex-start;
+  }
+
+  .guide-reader-status {
+    grid-column: 1;
+  }
+
+  .guide-reader-enhanced .panel-grid,
+  .guide-reader-enhanced .hero-panel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-reader-enhanced .lesson-navigation {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .guide-reader-enhanced .lesson-dots {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    order: -1;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --guide-reader-size: 1.18rem;
+  }
+
+  .guide-reader-enhanced .site-header {
+    min-height: 68px;
+    padding-inline: 14px;
+  }
+
+  .guide-reader-enhanced .page-progress {
+    top: 68px;
+  }
+
+  .guide-reader-enhanced .brand-mark {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .guide-reader-enhanced .header-actions {
+    gap: 7px;
+  }
+
+  .guide-reader-enhanced .header-link {
+    min-height: 44px;
+    padding: 6px 8px;
+    font-size: .9rem !important;
+  }
+
+  .guide-reader-enhanced .lesson-main {
+    width: min(100% - 18px, 1120px);
+    padding: 24px 0 34px;
+  }
+
+  .guide-reader-enhanced .lesson-shell {
+    border-radius: 26px;
+  }
+
+  .guide-reader-enhanced .lesson-topline {
+    min-height: 62px;
+    align-items: flex-start;
+    padding-top: 15px;
+    padding-bottom: 12px;
+    font-size: .69rem !important;
+    line-height: 1.4;
+  }
+
+  .guide-reader-toolbar {
+    margin: 16px 14px 0;
+    padding: 13px;
+    border-radius: 18px;
+  }
+
+  .guide-reader-text-controls {
+    display: grid;
+    grid-template-columns: 1fr 54px 54px;
+    width: 100%;
+  }
+
+  .guide-reader-utility-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .guide-reader-utility-controls .guide-reader-control,
+  .guide-reader-utility-controls .listen-button {
+    width: 100%;
+  }
+
+  .guide-reader-enhanced .lesson-panel {
+    padding: 34px 20px 38px;
+  }
+
+  .guide-reader-enhanced .lesson-panel[data-panel="1"] h1 {
+    font-size: clamp(2.75rem, 14vw, 4rem);
+    line-height: .94 !important;
+  }
+
+  .guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .panel-copy > h2 {
+    max-width: none;
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+
+  .guide-reader-enhanced .lesson-panel:not([data-panel="1"]) .gold-quote {
+    padding: 24px 20px 24px 52px;
+    font-size: 1.72rem;
+  }
+
+  body.guide-reader-enhanced #lesson #panelStage .lesson-panel:not([data-panel="1"])
+    :where(p, li):not(.eyebrow):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="note"]):not(small) {
+    line-height: 1.68 !important;
+  }
+
+  .guide-reader-enhanced .evidence-drawer summary {
+    padding-inline: 16px;
+    font-size: .96rem !important;
+  }
+
+  .guide-reader-enhanced .lesson-navigation {
+    min-height: 0;
+    padding: 16px 14px 18px;
+  }
+
+  .guide-reader-enhanced .nav-button {
+    width: 100%;
+    min-height: 58px;
+  }
+
+  .guide-reader-enhanced .lesson-dots button {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  .guide-reader-notes {
+    border-radius: 18px;
+  }
+
+  .guide-reader-dialog {
+    width: calc(100% - 12px);
+    max-height: 92dvh;
+    margin: auto auto 6px;
+    border-radius: 26px 26px 18px 18px;
+  }
+
+  .guide-reader-dialog-body {
+    max-height: calc(92dvh - 85px);
+    padding-inline: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .guide-reader-enhanced .brand-type {
+    display: none;
+  }
+
+  .guide-reader-utility-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-reader-enhanced .lesson-navigation {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-reader-enhanced .lesson-dots {
+    grid-column: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-reader-enhanced .lesson-panel,
+  .guide-reader-control,
+  .guide-reader-notes summary::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media print {
+  .guide-reader-toolbar,
+  .guide-reader-notes,
+  .guide-reader-dialog {
+    display: none !important;
+  }
+}
