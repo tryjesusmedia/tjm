@@ -288,3 +288,671 @@ textarea {
     color: #171418 !important;
   }
 }
+
+/* =========================================================
+   Bible guide reader — calm, premium, senior-friendly layer
+   ========================================================= */
+
+.guide-reader-page {
+  --tjm-guide-copy: 1.2rem;
+  padding-bottom: 0;
+}
+
+html[data-guide-text-size="small"] .guide-reader-page {
+  --tjm-guide-copy: 1.075rem;
+}
+
+html[data-guide-text-size="default"] .guide-reader-page {
+  --tjm-guide-copy: 1.2rem;
+}
+
+html[data-guide-text-size="large"] .guide-reader-page {
+  --tjm-guide-copy: 1.35rem;
+}
+
+.guide-reader-page .lesson-shell {
+  isolation: isolate;
+}
+
+.guide-reader-page .lesson-panel :where(p, li, dd),
+.guide-reader-page .drawer-content p,
+.guide-reader-page .drawer-list,
+.guide-reader-page .contrast-card li,
+.guide-reader-page .discovery-summary li,
+.guide-reader-page .reflection-card p,
+.guide-reader-page .next-lesson-card p,
+.guide-reader-page .discussion-invite p {
+  max-width: 65ch;
+  font-size: var(--tjm-guide-copy) !important;
+  line-height: 1.72 !important;
+}
+
+.guide-reader-page .lesson-panel :where(
+  .story-rail,
+  .history-timeline,
+  .scripture-path,
+  .diagnosis-grid,
+  .comparison-grid,
+  .prophet-pattern-grid,
+  .interpretation-list,
+  .authority-profile,
+  .clue-ledger
+) strong {
+  font-size: max(1.0625rem, calc(var(--tjm-guide-copy) * .9)) !important;
+  line-height: 1.42 !important;
+}
+
+.guide-reader-page .lesson-panel :where(
+  .story-rail,
+  .history-timeline,
+  .scripture-path,
+  .diagnosis-grid,
+  .comparison-grid,
+  .prophet-pattern-grid,
+  .interpretation-list,
+  .authority-profile,
+  .clue-ledger
+) p {
+  color: rgba(255, 253, 249, .86) !important;
+}
+
+.guide-reader-page .lesson-shell :where(
+  .source-links a span,
+  .source-links a small,
+  .study-chips span,
+  .insight-band span,
+  .question-callout small,
+  .discovery-summary > span,
+  .reflection-card small,
+  .next-lesson-card > span,
+  .discussion-invite > div > span
+) {
+  font-size: max(.9375rem, 15px) !important;
+  line-height: 1.5 !important;
+}
+
+.guide-reader-page .source-links a {
+  min-height: 58px;
+  padding: 13px 15px;
+}
+
+.guide-reader-page .source-links a small,
+.guide-reader-page .save-note,
+.guide-reader-page .lesson-topline,
+.guide-reader-page .lesson-shell :where(.drawer-note, [class*="note"]) {
+  color: rgba(255, 253, 249, .78) !important;
+}
+
+.guide-reader-page .lesson-topline {
+  min-height: 54px;
+  font-size: .9375rem !important;
+  letter-spacing: .075em;
+}
+
+.guide-reader-page .panel-copy,
+.guide-reader-page .panel-copy-wide {
+  width: 100%;
+}
+
+.guide-reader-page h1 {
+  font-size: clamp(3rem, 6vw, 4.875rem);
+  line-height: 1 !important;
+}
+
+.guide-reader-page h2 {
+  font-size: clamp(2.5rem, 5.2vw, 4.25rem);
+  line-height: 1.05 !important;
+}
+
+.guide-reader-page :where(.header-link, .listen-button) {
+  min-height: 46px;
+  font-size: .9375rem !important;
+}
+
+.guide-reader-toolbar {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .035);
+}
+
+.guide-text-controls,
+.guide-audio-speed,
+.guide-reader-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-text-controls > span,
+.guide-audio-speed {
+  color: rgba(255, 253, 249, .82);
+  font-size: .9375rem;
+  font-weight: 700;
+}
+
+.guide-text-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 10px;
+  color: var(--tjm-readable-ivory);
+  background: rgba(255, 255, 255, .055);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.guide-text-controls button[aria-pressed="true"] {
+  border-color: var(--tjm-readable-gold);
+  color: var(--tjm-readable-plum);
+  background: var(--tjm-readable-gold);
+}
+
+.guide-audio-speed select {
+  min-height: 44px;
+  padding: 0 34px 0 12px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 10px;
+  color: var(--tjm-readable-ivory);
+  background: #311e33;
+  font-size: 1rem !important;
+}
+
+.guide-reader-links {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.guide-reader-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 13px;
+  border-radius: 999px;
+  color: rgba(255, 253, 249, .9);
+  font-size: .9375rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(238, 189, 74, .7);
+  text-underline-offset: .22em;
+}
+
+.guide-reader-links a:last-child {
+  border: 1px solid rgba(238, 189, 74, .5);
+  color: var(--tjm-readable-gold);
+  text-decoration: none;
+}
+
+.guide-outline,
+.guide-glossary {
+  position: relative;
+  z-index: 3;
+  margin: 16px 28px 0;
+  overflow: hidden;
+  border: 1px solid rgba(238, 189, 74, .28);
+  border-radius: 17px;
+  background: rgba(8, 4, 9, .19);
+}
+
+.guide-glossary {
+  margin-top: 10px;
+}
+
+.guide-outline summary,
+.guide-glossary summary {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 18px;
+  color: var(--tjm-readable-ivory);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.guide-outline summary::-webkit-details-marker,
+.guide-glossary summary::-webkit-details-marker {
+  display: none;
+}
+
+.guide-outline summary span:last-child,
+.guide-glossary summary span:last-child {
+  color: var(--tjm-readable-gold);
+  font-size: 1.3rem;
+  transition: transform .2s ease;
+}
+
+.guide-outline[open] summary span:last-child,
+.guide-glossary[open] summary span:last-child {
+  transform: rotate(45deg);
+}
+
+.guide-outline ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 4px 16px 18px;
+  list-style: none;
+}
+
+.guide-outline button {
+  width: 100%;
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 12px;
+  color: rgba(255, 253, 249, .88);
+  background: rgba(255, 255, 255, .04);
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.guide-outline button > span {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--tjm-readable-gold);
+  background: rgba(238, 189, 74, .1);
+  font-family: Georgia, serif;
+  font-weight: 700;
+}
+
+.guide-outline button.is-current {
+  border-color: rgba(238, 189, 74, .72);
+  background: rgba(238, 189, 74, .1);
+}
+
+.guide-glossary dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 4px 18px 20px;
+}
+
+.guide-glossary dl > div {
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.guide-glossary dt {
+  color: var(--tjm-readable-gold);
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.guide-glossary dd {
+  margin: 6px 0 0;
+  color: rgba(255, 253, 249, .86);
+  font-size: 1rem !important;
+  line-height: 1.58 !important;
+}
+
+.main-point {
+  margin-top: 32px;
+  padding: 23px 25px;
+  border: 1px solid rgba(238, 189, 74, .5);
+  border-radius: 18px;
+  color: #311e33;
+  background: linear-gradient(145deg, #fffdf9, #f3e8d0);
+  box-shadow: 0 16px 38px rgba(8, 4, 9, .18);
+}
+
+.main-point > span {
+  display: block;
+  color: #8b5c00;
+  font-size: .9375rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.main-point p {
+  margin: 9px 0 0 !important;
+  color: #403641 !important;
+  font-size: var(--tjm-guide-copy) !important;
+  font-weight: 600;
+  line-height: 1.62 !important;
+}
+
+.guide-reader-page .evidence-drawer > summary {
+  font-size: 1rem !important;
+  line-height: 1.45 !important;
+}
+
+.guide-reader-page .lesson-navigation {
+  min-height: 92px;
+  display: grid !important;
+  grid-template-columns: minmax(175px, .8fr) minmax(220px, 1.4fr) minmax(210px, .9fr);
+  gap: 14px;
+  padding: 14px 28px;
+  background: rgba(8, 4, 9, .32);
+}
+
+.guide-reader-page .lesson-dots {
+  display: none;
+}
+
+.guide-section-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: rgba(255, 253, 249, .76);
+  text-align: center;
+}
+
+.guide-section-status span {
+  color: var(--tjm-readable-gold);
+  font-size: .875rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.guide-section-status strong {
+  max-width: 32ch;
+  color: var(--tjm-readable-ivory);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.guide-reader-page .nav-button {
+  min-height: 56px;
+  padding: 10px 18px;
+  border-color: rgba(255, 255, 255, .2);
+  color: var(--tjm-readable-ivory);
+  font-size: 1rem !important;
+}
+
+.guide-reader-page .nav-next {
+  border-color: var(--tjm-readable-gold);
+  color: #211323;
+  background: linear-gradient(135deg, #f7d983, #eebd4a);
+}
+
+.mobile-guide-navigation {
+  display: none;
+}
+
+/* Guide library status and actions */
+#bible-guides .guide-item {
+  min-height: 104px;
+  padding: 16px;
+}
+
+#bible-guides .guide-item-copy strong {
+  font-size: clamp(1.2rem, 1.1rem + .25vw, 1.4rem) !important;
+  line-height: 1.22 !important;
+}
+
+#bible-guides .guide-item-copy > small {
+  margin-top: 7px;
+  color: rgba(255, 253, 249, .82);
+  font-size: 1rem !important;
+  line-height: 1.58 !important;
+}
+
+.guide-item-meta {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 13px;
+}
+
+.guide-item-status,
+.guide-item-action {
+  font-size: .9375rem !important;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.guide-item-status {
+  color: rgba(255, 253, 249, .76);
+}
+
+.guide-item-action {
+  min-height: 42px;
+  display: inline-flex !important;
+  align-items: center;
+  padding: 7px 14px;
+  border: 1px solid rgba(238, 189, 74, .62);
+  border-radius: 999px;
+  color: #211323;
+  background: #eebd4a;
+}
+
+#bible-guides .journey-label,
+#bible-guides .journey-toggle {
+  font-size: .9375rem !important;
+  line-height: 1.45 !important;
+}
+
+#bible-guides .journey-card p {
+  color: rgba(255, 253, 249, .86) !important;
+}
+
+#bible-guides .journey-summary {
+  min-height: 310px;
+}
+
+@media (max-width: 940px) {
+  .guide-reader-toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .guide-reader-links {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .guide-outline ol,
+  .guide-glossary dl {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .guide-reader-page {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .guide-reader-page .site-header {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding-block: 8px;
+  }
+
+  .guide-reader-page .header-actions {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .guide-reader-page .page-progress {
+    top: 116px;
+  }
+
+  .guide-reader-page .lesson-main {
+    padding-top: 18px;
+  }
+
+  .guide-reader-page h1 {
+    font-size: clamp(2.65rem, 12vw, 3.85rem);
+  }
+
+  .guide-reader-page h2 {
+    font-size: clamp(2.15rem, 10vw, 3.3rem);
+  }
+
+  .guide-reader-page .lesson-topline {
+    display: grid;
+    justify-items: start;
+    gap: 3px;
+    padding: 10px 16px;
+  }
+
+  .guide-reader-toolbar {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .guide-text-controls,
+  .guide-audio-speed {
+    justify-content: space-between;
+  }
+
+  .guide-reader-links {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .guide-reader-links a {
+    min-height: 52px;
+    border: 1px solid rgba(255, 255, 255, .16);
+  }
+
+  .guide-outline,
+  .guide-glossary {
+    margin-inline: 16px;
+  }
+
+  .guide-outline ol {
+    padding-inline: 10px;
+  }
+
+  .guide-reader-page .lesson-panel {
+    padding: 36px 20px 38px;
+  }
+
+  .guide-reader-page .lesson-navigation {
+    display: none !important;
+  }
+
+  .mobile-guide-navigation {
+    position: fixed;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: 10px;
+    z-index: 1900;
+    min-height: 72px;
+    display: grid;
+    grid-template-columns: minmax(92px, 1fr) auto minmax(92px, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 9px;
+    border: 1px solid rgba(238, 189, 74, .48);
+    border-radius: 20px;
+    color: #fffdf9;
+    background: rgba(28, 17, 29, .96);
+    box-shadow: 0 18px 48px rgba(10, 5, 11, .4);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-guide-navigation button {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 14px;
+    color: #fffdf9;
+    background: rgba(255, 255, 255, .06);
+    font-size: .9375rem;
+    font-weight: 800;
+  }
+
+  .mobile-guide-navigation .mobile-guide-next {
+    border-color: #eebd4a;
+    color: #211323;
+    background: #eebd4a;
+  }
+
+  .mobile-guide-navigation button:disabled {
+    opacity: .42;
+  }
+
+  .mobile-guide-status {
+    min-width: 52px;
+    color: #f7d983;
+    font-size: .875rem;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  #bible-guides .guide-item {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    padding: 17px 14px;
+  }
+
+  #bible-guides .guide-item > b {
+    display: none;
+  }
+
+  .guide-item-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .guide-item-action {
+    min-height: 46px;
+    justify-content: center;
+  }
+
+  #bible-guides .journey-summary {
+    min-height: 0;
+  }
+}
+
+@media print {
+  .guide-reader-toolbar,
+  .guide-outline,
+  .guide-glossary,
+  .mobile-guide-navigation {
+    display: none !important;
+  }
+
+  .guide-reader-page .lesson-panel :where(p, li, dd),
+  .guide-reader-page .drawer-content p,
+  .guide-reader-page .drawer-list {
+    max-width: none;
+    font-size: 14pt !important;
+    line-height: 1.55 !important;
+  }
+
+  .main-point {
+    break-inside: avoid;
+    border: 2px solid #311e33 !important;
+    box-shadow: none !important;
+  }
+}

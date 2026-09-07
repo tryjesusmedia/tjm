@@ -125,7 +125,7 @@
     if (!text) return;
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.94;
+    utterance.rate = Number.parseFloat(localStorage.getItem("tjm-guide-audio-rate") || "0.94");
     utterance.pitch = 1;
     utterance.onend = stopSpeech;
     utterance.onerror = stopSpeech;
