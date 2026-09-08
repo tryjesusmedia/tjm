@@ -1,0 +1,54 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+
+const files = {
+  index: "bibleandconflictoftheages/index.html",
+  heroCss: "bibleandconflictoftheages/hero-readability.css",
+  textCss: "lib/principles-text-size.css",
+  textJs: "lib/principles-text-size.js",
+  conflictConfig: "bibleandconflictoftheages/config.js",
+  chronConfig: "chronbible/config.js",
+};
+
+const source = Object.fromEntries(await Promise.all(
+  Object.entries(files).map(async ([key, path]) => [key, await readFile(path, "utf8")]),
+));
+
+execFileSync(process.execPath, ["--check", files.textJs], { stdio: "inherit" });
+
+assert.match(source.index, /hero-readability\.css\?v=20260908-1/);
+assert.match(source.index, /class="hero-intro-lead"/);
+assert.match(source.index, /<details class="hero-intro-more">/);
+assert.match(source.index, /<summary>Read more about this journey<\/summary>/);
+assert.doesNotMatch(source.index, /<details class="hero-intro-more"\s+open/);
+assert.match(source.index, /class="hero-intro-more-content"/);
+
+assert.match(source.heroCss, /\.journey-hero \.hero-intro > \.hero-intro-lead/);
+assert.match(source.heroCss, /font-size:\s*clamp\(1\.15rem/);
+assert.match(source.heroCss, /\.hero-intro-more\[open\]/);
+assert.match(source.heroCss, /min-height:\s*58px/);
+
+for (const config of [source.conflictConfig, source.chronConfig]) {
+  assert.match(config, /principles-text-size\.css\?v=20260908-1/);
+  assert.match(config, /principles-text-size\.js\?v=20260908-1/);
+}
+
+assert.match(source.textJs, /tjm-principles-text-size/);
+assert.match(source.textJs, /tjm-guide-text-size/);
+assert.match(source.textJs, /data-principles-text-size/);
+assert.match(source.textJs, /MutationObserver/);
+assert.match(source.textJs, /aria-pressed/);
+assert.match(source.textJs, /A−/);
+assert.match(source.textJs, /A\+/);
+
+assert.match(source.textCss, /data-principles-text-size="small"/);
+assert.match(source.textCss, /data-principles-text-size="default"/);
+assert.match(source.textCss, /data-principles-text-size="large"/);
+assert.match(source.textCss, /\.tjm-fm-principle-body > p/);
+assert.match(source.textCss, /\.tjm-fm-list-principle-detail > p/);
+assert.match(source.textCss, /\.tjm-fm-editor textarea/);
+assert.match(source.textCss, /\.tjm-fm-folder-open strong/);
+assert.match(source.textCss, /\.tjm-fm-text-controls button\[aria-pressed="true"\]/);
+
+console.log("Readable journey introduction and adjustable Principles typography validation passed.");
