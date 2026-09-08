@@ -1,0 +1,123 @@
+/* Senior-friendly introduction for The Bible & Conflict of the Ages journey. */
+.journey-hero .hero-intro {
+  max-width: 68ch;
+  margin-top: 30px;
+  gap: 18px;
+}
+
+.journey-hero .hero-intro > .hero-intro-lead {
+  max-width: 65ch;
+  margin: 0;
+  color: rgba(255, 253, 249, .94);
+  font-size: clamp(1.15rem, 1.08rem + .28vw, 1.3rem);
+  line-height: 1.68;
+}
+
+.journey-hero .hero-intro > .hero-intro-lead strong {
+  color: #fffdf9;
+}
+
+.hero-intro-more {
+  max-width: 65ch;
+  overflow: hidden;
+  border: 1px solid rgba(238, 189, 74, .34);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .045);
+}
+
+.hero-intro-more > summary {
+  min-height: 58px;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #f7d985;
+  cursor: pointer;
+  font-size: max(1rem, 16px);
+  font-weight: 800;
+  line-height: 1.4;
+  list-style: none;
+}
+
+.hero-intro-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.hero-intro-more > summary::after {
+  content: "+";
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(238, 189, 74, .45);
+  border-radius: 50%;
+  color: #eebd4a;
+  font-size: 1.35rem;
+  line-height: 1;
+  transition: transform .2s ease;
+}
+
+.hero-intro-more[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+.hero-intro-more > summary:hover,
+.hero-intro-more > summary:focus-visible {
+  background: rgba(238, 189, 74, .08);
+}
+
+.hero-intro-more-content {
+  padding: 2px 18px 19px;
+  display: grid;
+  gap: 16px;
+  border-top: 1px solid rgba(238, 189, 74, .18);
+}
+
+.journey-hero .hero-intro-more-content p {
+  max-width: 65ch;
+  margin: 0;
+  color: rgba(243, 232, 208, .88);
+  font-size: clamp(1.075rem, 1.03rem + .18vw, 1.18rem);
+  line-height: 1.7;
+}
+
+.journey-hero .hero-intro-more-content em {
+  color: #f7d985;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.journey-hero .hero-intro-more-content .hero-blessing {
+  padding-left: 17px;
+  border-left: 3px solid rgba(238, 189, 74, .66);
+  color: rgba(255, 253, 249, .94);
+}
+
+@media (max-width: 760px) {
+  .journey-hero .hero-intro {
+    margin-top: 24px;
+  }
+
+  .journey-hero .hero-intro > .hero-intro-lead,
+  .journey-hero .hero-intro-more-content p {
+    font-size: 1.125rem;
+    line-height: 1.68;
+  }
+
+  .hero-intro-more > summary {
+    min-height: 62px;
+    padding: 14px 15px;
+  }
+
+  .hero-intro-more-content {
+    padding: 4px 15px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-intro-more > summary::after {
+    transition: none;
+  }
+}
