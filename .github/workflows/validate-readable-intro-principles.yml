@@ -1,0 +1,51 @@
+name: Validate Readable Intro and Principles Typography
+
+on:
+  pull_request:
+    paths:
+      - "bibleandconflictoftheages/index.html"
+      - "bibleandconflictoftheages/config.js"
+      - "bibleandconflictoftheages/hero-readability.css"
+      - "chronbible/config.js"
+      - "lib/principles-text-size.css"
+      - "lib/principles-text-size.js"
+      - "scripts/validate-readable-intro-and-principles.mjs"
+      - "scripts/readable-intro-principles-smoke.html"
+      - "scripts/test-readable-intro-principles-browser.mjs"
+      - ".github/workflows/validate-readable-intro-principles.yml"
+  push:
+    branches: [main]
+    paths:
+      - "bibleandconflictoftheages/index.html"
+      - "bibleandconflictoftheages/config.js"
+      - "bibleandconflictoftheages/hero-readability.css"
+      - "chronbible/config.js"
+      - "lib/principles-text-size.css"
+      - "lib/principles-text-size.js"
+      - "scripts/validate-readable-intro-and-principles.mjs"
+      - "scripts/readable-intro-principles-smoke.html"
+      - "scripts/test-readable-intro-principles-browser.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  source-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate source integration
+        run: node scripts/validate-readable-intro-and-principles.mjs
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.55.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Playwright package
+        run: npm install --no-save playwright@1.55.0
+      - name: Test expandable intro and persistent text sizing
+        run: node scripts/test-readable-intro-principles-browser.mjs
