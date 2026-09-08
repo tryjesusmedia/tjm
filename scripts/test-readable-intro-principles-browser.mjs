@@ -68,9 +68,10 @@ try {
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "large");
 
   await page.reload({ waitUntil: "domcontentloaded" });
-  await page.locator(".tjm-fm-text-controls").waitFor({ state: "visible" });
+  const reloadedControls = page.locator(".tjm-fm-text-controls");
+  await reloadedControls.waitFor({ state: "visible" });
   assert.equal(await page.locator("html").getAttribute("data-principles-text-size"), "large");
-  assert.equal(await page.locator('[data-principles-text-size="large"]').getAttribute("aria-pressed"), "true");
+  assert.equal(await reloadedControls.locator('[data-principles-text-size="large"]').getAttribute("aria-pressed"), "true");
 
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);
   console.log("Readable introduction and Principles text-size browser test passed.");
