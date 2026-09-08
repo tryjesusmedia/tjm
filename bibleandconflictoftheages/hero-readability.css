@@ -11,6 +11,7 @@
   color: rgba(255, 253, 249, .94);
   font-size: clamp(1.15rem, 1.08rem + .28vw, 1.3rem);
   line-height: 1.68;
+  text-wrap: pretty;
 }
 
 .journey-hero .hero-intro > .hero-intro-lead strong {
@@ -81,6 +82,7 @@
   color: rgba(243, 232, 208, .88);
   font-size: clamp(1.075rem, 1.03rem + .18vw, 1.18rem);
   line-height: 1.7;
+  text-wrap: pretty;
 }
 
 .journey-hero .hero-intro-more-content em {
