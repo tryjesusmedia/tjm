@@ -3,7 +3,8 @@ import { readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 
 const files = {
-  index: "bibleandconflictoftheages/index.html",
+  conflictIndex: "bibleandconflictoftheages/index.html",
+  chronIndex: "chronbible/index.html",
   heroCss: "bibleandconflictoftheages/hero-readability.css",
   textCss: "lib/principles-text-size.css",
   textJs: "lib/principles-text-size.js",
@@ -17,12 +18,14 @@ const source = Object.fromEntries(await Promise.all(
 
 execFileSync(process.execPath, ["--check", files.textJs], { stdio: "inherit" });
 
-assert.match(source.index, /hero-readability\.css\?v=20260908-1/);
-assert.match(source.index, /class="hero-intro-lead"/);
-assert.match(source.index, /<details class="hero-intro-more">/);
-assert.match(source.index, /<summary>Read more about this journey<\/summary>/);
-assert.doesNotMatch(source.index, /<details class="hero-intro-more"\s+open/);
-assert.match(source.index, /class="hero-intro-more-content"/);
+assert.match(source.conflictIndex, /hero-readability\.css\?v=20260908-1/);
+assert.match(source.conflictIndex, /config\.js\?v=20260908-1/);
+assert.match(source.conflictIndex, /class="hero-intro-lead"/);
+assert.match(source.conflictIndex, /<details class="hero-intro-more">/);
+assert.match(source.conflictIndex, /<summary>Read more about this journey<\/summary>/);
+assert.doesNotMatch(source.conflictIndex, /<details class="hero-intro-more"\s+open/);
+assert.match(source.conflictIndex, /class="hero-intro-more-content"/);
+assert.match(source.chronIndex, /config\.js\?v=20260908-1/);
 
 assert.match(source.heroCss, /\.journey-hero \.hero-intro > \.hero-intro-lead/);
 assert.match(source.heroCss, /font-size:\s*clamp\(1\.15rem/);
