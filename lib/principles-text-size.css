@@ -1,0 +1,278 @@
+/* Adjustable, senior-friendly typography for both Principles Maps. */
+:root {
+  --tjm-principles-copy: 1.18rem;
+  --tjm-principles-name: 1.22rem;
+  --tjm-principles-detail: 1.22rem;
+  --tjm-principles-meta: 1rem;
+  --tjm-principles-folder: 1.7rem;
+}
+
+html[data-principles-text-size="small"] {
+  --tjm-principles-copy: 1.02rem;
+  --tjm-principles-name: 1.08rem;
+  --tjm-principles-detail: 1.08rem;
+  --tjm-principles-meta: .92rem;
+  --tjm-principles-folder: 1.5rem;
+}
+
+html[data-principles-text-size="default"] {
+  --tjm-principles-copy: 1.18rem;
+  --tjm-principles-name: 1.22rem;
+  --tjm-principles-detail: 1.22rem;
+  --tjm-principles-meta: 1rem;
+  --tjm-principles-folder: 1.7rem;
+}
+
+html[data-principles-text-size="large"] {
+  --tjm-principles-copy: 1.32rem;
+  --tjm-principles-name: 1.4rem;
+  --tjm-principles-detail: 1.38rem;
+  --tjm-principles-meta: 1.08rem;
+  --tjm-principles-folder: 1.95rem;
+}
+
+.tjm-fm-workspace-toolbar {
+  flex-wrap: wrap;
+}
+
+.tjm-fm-text-controls {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.tjm-fm-text-controls > span {
+  margin-right: 2px;
+  color: #5f5660;
+  font-size: max(.9375rem, 15px);
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.tjm-fm-text-controls button {
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0 9px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(49, 30, 51, .2);
+  border-radius: 10px;
+  background: #fff;
+  color: #311e33;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.tjm-fm-text-controls button:hover {
+  border-color: #eebd4a;
+  background: #fffaf0;
+}
+
+.tjm-fm-text-controls button[aria-pressed="true"] {
+  border-color: #311e33;
+  background: #311e33;
+  color: #ffe8a9;
+  box-shadow: 0 0 0 3px rgba(238, 189, 74, .22);
+}
+
+.tjm-fm-text-controls button:focus-visible {
+  outline: 3px solid #eebd4a;
+  outline-offset: 3px;
+}
+
+/* Principle cards: readable names, previews, and expanded text. */
+.tjm-fm-principle-preview {
+  display: grid !important;
+  gap: 4px;
+  white-space: normal !important;
+}
+
+.tjm-fm-principle-preview > strong,
+.tjm-fm-list-principle-open > strong {
+  display: block;
+  overflow: hidden;
+  color: #311e33;
+  font-size: var(--tjm-principles-name) !important;
+  font-weight: 750 !important;
+  line-height: 1.25 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tjm-fm-principle-preview > span,
+.tjm-fm-list-principle-open > span {
+  display: block;
+  overflow: hidden;
+  color: #50454d;
+  font-size: var(--tjm-principles-copy) !important;
+  font-weight: 550 !important;
+  line-height: 1.42 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tjm-fm-principle-body > p,
+.tjm-fm-list-principle-detail > p {
+  font-size: var(--tjm-principles-detail) !important;
+  line-height: 1.68 !important;
+}
+
+.tjm-fm-principle-body > small,
+.tjm-fm-list-principle-open > small,
+.tjm-fm-reading-link,
+.tjm-fm-reference-row button {
+  font-size: var(--tjm-principles-meta) !important;
+  line-height: 1.45 !important;
+}
+
+.tjm-fm-number-handle,
+.tjm-fm-list-number,
+.tjm-fm-mini-number {
+  font-size: max(var(--tjm-principles-meta), .95rem) !important;
+}
+
+/* Folder cards and list rows. */
+.tjm-fm-folder-open strong,
+.tjm-fm-folder-list-row strong {
+  font-size: var(--tjm-principles-folder) !important;
+  line-height: 1.14 !important;
+}
+
+.tjm-fm-folder-open span,
+.tjm-fm-folder-list-row small,
+.tjm-fm-workspace-toolbar > span {
+  font-size: var(--tjm-principles-meta) !important;
+  line-height: 1.45 !important;
+}
+
+.tjm-fm-list-section h3 {
+  font-size: calc(var(--tjm-principles-folder) * .88) !important;
+  line-height: 1.2 !important;
+}
+
+.tjm-fm-list-empty,
+.tjm-fm-empty-message {
+  font-size: var(--tjm-principles-copy) !important;
+  line-height: 1.55 !important;
+}
+
+/* Search, menus, and editors should not fall back to fine print. */
+.tjm-fm-context-menu button,
+.tjm-fm-choice-list button,
+.tjm-fm-check-list label,
+.tjm-fm-form-actions button {
+  font-size: max(1rem, var(--tjm-principles-meta)) !important;
+  line-height: 1.4 !important;
+}
+
+.tjm-fm-choice-list button strong,
+.tjm-fm-search-results button strong {
+  font-size: var(--tjm-principles-name) !important;
+  line-height: 1.3 !important;
+}
+
+.tjm-fm-choice-list button span,
+.tjm-fm-search-results button span,
+.tjm-fm-search-results p,
+.tjm-fm-small-dialog p {
+  font-size: var(--tjm-principles-meta) !important;
+  line-height: 1.55 !important;
+}
+
+.tjm-fm-editor label,
+.tjm-fm-small-dialog label {
+  font-size: var(--tjm-principles-meta) !important;
+  line-height: 1.4 !important;
+}
+
+.tjm-fm-editor input,
+.tjm-fm-small-dialog input {
+  min-height: 50px;
+  font-size: max(1rem, var(--tjm-principles-copy)) !important;
+}
+
+.tjm-fm-editor textarea {
+  min-height: 240px;
+  font-size: var(--tjm-principles-detail) !important;
+  line-height: 1.62 !important;
+}
+
+.tjm-fm-title-row h2,
+.tjm-fm-title-row .tjm-fm-folder-title {
+  font-size: clamp(1.75rem, 3.2vw, 2.65rem) !important;
+  line-height: 1.08 !important;
+}
+
+/* Give enlarged text enough room while keeping cards compact and movable. */
+html[data-principles-text-size="small"] .tjm-fm-node {
+  width: 310px;
+}
+
+html[data-principles-text-size="default"] .tjm-fm-node {
+  width: 342px;
+}
+
+html[data-principles-text-size="large"] .tjm-fm-node {
+  width: 382px;
+}
+
+html[data-principles-text-size="small"] .tjm-fm-principle.is-expanded {
+  width: 390px;
+}
+
+html[data-principles-text-size="default"] .tjm-fm-principle.is-expanded {
+  width: 455px;
+}
+
+html[data-principles-text-size="large"] .tjm-fm-principle.is-expanded {
+  width: 520px;
+}
+
+@media (max-width: 760px) {
+  .tjm-fm-workspace-toolbar {
+    align-items: flex-start;
+    gap: 9px 12px;
+  }
+
+  .tjm-fm-text-controls {
+    order: 3;
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 2px;
+  }
+
+  .tjm-fm-text-controls > span {
+    margin-right: auto;
+  }
+
+  .tjm-fm-text-controls button {
+    min-width: 46px;
+    min-height: 46px;
+  }
+
+  html[data-principles-text-size="small"] .tjm-fm-node,
+  html[data-principles-text-size="default"] .tjm-fm-node,
+  html[data-principles-text-size="large"] .tjm-fm-node {
+    width: min(330px, calc(100vw - 54px));
+  }
+
+  html[data-principles-text-size="small"] .tjm-fm-principle.is-expanded,
+  html[data-principles-text-size="default"] .tjm-fm-principle.is-expanded,
+  html[data-principles-text-size="large"] .tjm-fm-principle.is-expanded {
+    width: min(390px, calc(100vw - 42px));
+  }
+
+  .tjm-fm-principle-body,
+  .tjm-fm-list-principle-detail {
+    padding-inline: 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tjm-fm-text-controls button {
+    transition: none;
+  }
+}

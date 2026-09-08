@@ -45,6 +45,9 @@ async function openCleanPage(viewport, suffix = "") {
   await page.goto(`${origin}/scripts/folders-mindmap-smoke.html${suffix}`, { waitUntil: "domcontentloaded" });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: "domcontentloaded" });
+  const launcher = page.locator(".tjm-fm-persistent-toggle");
+  await launcher.waitFor({ state: "visible", timeout: 45_000 });
+  if ((await launcher.textContent())?.trim() === "Open Principles Map") await launcher.click();
   await page.waitForSelector(".tjm-fm-window", { timeout: 45_000 });
   return { context, page };
 }
