@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://tryjesusmedia.com/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://tryjesusmedia.com/bibleandconflictoftheages/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://tryjesusmedia.com/chronbible/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://tryjesusmedia.com/privacy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://tryjesusmedia.com/</loc></url>
+  <url><loc>https://tryjesusmedia.com/guides/</loc></url>
+  <url><loc>https://tryjesusmedia.com/chronbible/</loc></url>
+  <url><loc>https://tryjesusmedia.com/bibleandconflictoftheages/</loc></url>
+  <url><loc>https://tryjesusmedia.com/privacy</loc></url>
+  <url><loc>https://tryjesusmedia.com/account-deletion/</loc></url>
+  <url><loc>https://tryjesusmedia.com/get-to-know-jesus/</loc></url>
+  <url><loc>https://tryjesusmedia.com/bible-prophecy/</loc></url>
 </urlset>

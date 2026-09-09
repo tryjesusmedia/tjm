@@ -15,3 +15,10 @@
 
 /chronbible/*
   Cache-Control: public, max-age=0, must-revalidate
+
+# Development fixtures and app include fragments are not search landing pages.
+/scripts/*
+  X-Robots-Tag: noindex
+
+/app/integration/*
+  X-Robots-Tag: noindex

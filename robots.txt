@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+# Keep pages crawlable so search engines can read their noindex directives.
 Sitemap: https://tryjesusmedia.com/sitemap.xml
