@@ -22,3 +22,10 @@
 
 /app/integration/*
   X-Robots-Tag: noindex
+
+# Printed-guide offers are shared directly with selected recipients.
+/guides
+  X-Robots-Tag: noindex, noimageindex
+
+/guides/*
+  X-Robots-Tag: noindex, noimageindex
