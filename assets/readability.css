@@ -298,18 +298,6 @@ textarea {
   padding-bottom: 0;
 }
 
-html[data-guide-text-size="small"] .guide-reader-page {
-  --tjm-guide-copy: 1.075rem;
-}
-
-html[data-guide-text-size="default"] .guide-reader-page {
-  --tjm-guide-copy: 1.2rem;
-}
-
-html[data-guide-text-size="large"] .guide-reader-page {
-  --tjm-guide-copy: 1.35rem;
-}
-
 .guide-reader-page .lesson-shell {
   isolation: isolate;
 }
@@ -450,10 +438,90 @@ html[data-guide-text-size="large"] .guide-reader-page {
   font-weight: 800;
 }
 
-.guide-text-controls button[aria-pressed="true"] {
-  border-color: var(--tjm-readable-gold);
-  color: var(--tjm-readable-plum);
-  background: var(--tjm-readable-gold);
+.guide-text-controls button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.guide-text-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Let enlarged guide text reflow instead of being clipped by fixed tracks. */
+.guide-reader-page :where(.lesson-panel, .lesson-panel *, .header-actions,
+  .lesson-topline *, .guide-reader-toolbar > *, .guide-outline *, .guide-glossary *) {
+  min-width: 0;
+}
+
+.guide-reader-page .lesson-panel :where(h1, h2, h3, p, strong, em, span, a, li) {
+  overflow-wrap: anywhere;
+}
+
+.guide-reader-page .lesson-topline span {
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-reader-page,
+  .guide-reader-page * {
+    transition: none !important;
+  }
+}
+
+.guide-reader-page :where(.header-actions, .guide-text-controls, .guide-audio-speed) {
+  flex-wrap: wrap;
+}
+
+.guide-reader-page .guide-reader-toolbar {
+  grid-template-columns: minmax(0, auto) minmax(0, auto) minmax(0, 1fr);
+}
+
+html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
+  [class*="-card-front"], [class*="-card-back"]) {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  margin-block: 16px;
+  transform: none;
+}
+
+@media (max-width: 940px) {
+  .guide-reader-page .guide-reader-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .guide-reader-page .guide-reader-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-guide-text-enlarged="true"] .guide-reader-page .mobile-guide-navigation {
+    position: static;
+    margin: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  html[data-guide-text-enlarged="true"] .guide-reader-page .mobile-guide-status {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .guide-reader-page .mobile-guide-navigation button {
+    min-width: 0;
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
 }
 
 .guide-audio-speed select {
@@ -935,6 +1003,10 @@ html[data-guide-text-size="large"] .guide-reader-page {
 }
 
 @media print {
+  .guide-reader-page {
+    --tjm-guide-scale: 1 !important;
+  }
+
   .guide-reader-toolbar,
   .guide-outline,
   .guide-glossary,

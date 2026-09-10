@@ -12,6 +12,31 @@
 
   const cleanText = (value = '') => value.replace(/\s+/g, ' ').trim();
 
+  // Scale the original declarations, preserving each guide's cascade, heading
+  // hierarchy and responsive sizes. Inherited text then scales exactly once,
+  // including content revealed later. The local sheets are loaded before us.
+  const prepareGuideTextScaling = () => {
+    const scaleRules = (rules) => {
+      [...rules].forEach((rule) => {
+        // Keep the existing large-print layout independent of screen settings.
+        if (rule.media?.mediaText.includes('print')) return;
+        if (rule.cssRules) scaleRules(rule.cssRules);
+        if (!rule.selectorText || !rule.style) return;
+        const size = rule.style.getPropertyValue('font-size');
+        if (!size || /^(inherit|initial|unset|revert|revert-layer|0)$/.test(size)) return;
+        // The rem basis must remain unscaled to avoid multiplying it twice.
+        if (rule.selectorText.split(',').some((selector) => /^(html|:root)$/.test(selector.trim()))) return;
+        if (size.includes('--tjm-guide-scale')) return;
+        rule.style.setProperty('font-size', `calc((${size}) * var(--tjm-guide-scale, 1))`, rule.style.getPropertyPriority('font-size'));
+      });
+    };
+    [...document.styleSheets].forEach((sheet) => {
+      // Cross-origin font-provider sheets contain font faces, not guide sizes.
+      if (sheet.href && new URL(sheet.href).origin !== window.location.origin) return;
+      scaleRules(sheet.cssRules);
+    });
+  };
+
   const enhanceGuideLibrary = () => {
     const library = document.getElementById('bible-guides');
     if (!library) return;
@@ -104,8 +129,13 @@
     const sectionNames = panels.map(getSectionName);
     const isProphecyGuide = shell.classList.contains('prophecy-shell');
 
-    const preferredSize = safeStorage.get('tjm-guide-text-size') || 'default';
-    document.documentElement.dataset.guideTextSize = ['small', 'default', 'large'].includes(preferredSize) ? preferredSize : 'default';
+    const sizeCount = 40;
+    const defaultSize = 5;
+    const preferredSize = safeStorage.get('tjm-guide-text-size');
+    const legacySizes = { small: 3, default: defaultSize, large: 8 };
+    const savedSize = legacySizes[preferredSize] ?? Number(preferredSize);
+    let textSize = Number.isInteger(savedSize) && savedSize >= 1 && savedSize <= sizeCount ? savedSize : defaultSize;
+    prepareGuideTextScaling();
 
     const toolbar = document.createElement('div');
     toolbar.className = 'guide-reader-toolbar';
@@ -113,9 +143,9 @@
     toolbar.innerHTML = `
       <div class="guide-text-controls" role="group" aria-label="Text size">
         <span>Text size</span>
-        <button type="button" data-text-size="small" aria-label="Use smaller text">A−</button>
-        <button type="button" data-text-size="default" aria-label="Use standard text">A</button>
-        <button type="button" data-text-size="large" aria-label="Use larger text">A+</button>
+        <button type="button" data-text-size="decrease" aria-label="Decrease text size">A−</button>
+        <button type="button" data-text-size="increase" aria-label="Increase text size">A+</button>
+        <span class="guide-text-status" role="status" aria-live="polite" aria-atomic="true"></span>
       </div>
       <label class="guide-audio-speed">Listen speed
         <select id="guideAudioSpeed" aria-label="Audio reading speed">
@@ -133,18 +163,23 @@
     shell.insertBefore(toolbar, stage);
 
     const sizeButtons = [...toolbar.querySelectorAll('[data-text-size]')];
-    const updateSizeButtons = () => {
+    const applyTextSize = () => {
+      // Forty distinct settings: 80% through 275%, in five-percent steps.
+      const percentage = 80 + (textSize - 1) * 5;
+      document.body.style.setProperty('--tjm-guide-scale', String(percentage / 100));
+      document.documentElement.dataset.guideTextSize = String(textSize);
+      document.documentElement.dataset.guideTextEnlarged = String(percentage > 100);
+      toolbar.querySelector('.guide-text-status').textContent = `Text size ${textSize} of ${sizeCount}, ${percentage} percent`;
       sizeButtons.forEach((button) => {
-        button.setAttribute('aria-pressed', String(button.dataset.textSize === document.documentElement.dataset.guideTextSize));
+        button.disabled = button.dataset.textSize === 'decrease' ? textSize === 1 : textSize === sizeCount;
       });
     };
-    updateSizeButtons();
+    applyTextSize();
     sizeButtons.forEach((button) => {
       button.addEventListener('click', () => {
-        const size = button.dataset.textSize;
-        document.documentElement.dataset.guideTextSize = size;
-        safeStorage.set('tjm-guide-text-size', size);
-        updateSizeButtons();
+        textSize = Math.max(1, Math.min(sizeCount, textSize + (button.dataset.textSize === 'increase' ? 1 : -1)));
+        safeStorage.set('tjm-guide-text-size', String(textSize));
+        applyTextSize();
       });
     });
 
