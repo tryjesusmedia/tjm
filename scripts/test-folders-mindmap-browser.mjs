@@ -206,7 +206,9 @@ try {
   const textControlsBox = await phone.locator(".tjm-fm-text-controls").boundingBox();
   assert.ok(viewSwitchBox && textControlsBox && textControlsBox.y >= viewSwitchBox.y + viewSwitchBox.height);
   assert.ok(textControlsBox.x >= phoneWindow.x && textControlsBox.x + textControlsBox.width <= phoneWindow.x + phoneWindow.width);
-  for (const name of ["Use smaller Principles text", "Use standard Principles text", "Use larger Principles text"]) {
+  assert.equal(await phone.locator(".tjm-fm-text-controls button").count(), 2);
+  assert.equal(await phone.getByRole("button", { name: "Use standard Principles text", exact: true }).count(), 0);
+  for (const name of ["Use smaller Principles text", "Use larger Principles text"]) {
     const box = await phone.getByRole("button", { name, exact: true }).boundingBox();
     assert.ok(box && box.width >= 48 && box.height >= 48, `${name} should remain inside a 48px control`);
   }

@@ -20,19 +20,6 @@
   gap: 7px;
 }
 
-.tjm-fm-text-controls > span {
-  margin-right: 2px;
-  color: #5f5660;
-  font-size: max(.9375rem, 15px);
-  font-weight: 750;
-  line-height: 1.35;
-}
-
-.tjm-fm-text-controls output {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
 .tjm-fm-text-controls button {
   min-width: 42px;
   min-height: 42px;
@@ -61,13 +48,6 @@
   color: rgba(49, 30, 51, .38);
   box-shadow: none;
   cursor: default;
-}
-
-.tjm-fm-text-controls button[aria-pressed="true"] {
-  border-color: #311e33;
-  background: #311e33;
-  color: #ffe8a9;
-  box-shadow: 0 0 0 3px rgba(238, 189, 74, .22);
 }
 
 .tjm-fm-text-controls button:focus-visible {
@@ -114,6 +94,7 @@
 
 .tjm-fm-principle-body > small,
 .tjm-fm-list-principle-open > small,
+.tjm-fm-principle-bottom button,
 .tjm-fm-reading-link,
 .tjm-fm-reference-row button {
   font-size: var(--tjm-principles-meta) !important;
@@ -134,15 +115,9 @@
 }
 
 .tjm-fm-folder-open span,
-.tjm-fm-folder-list-row small,
-.tjm-fm-workspace-toolbar > span {
+.tjm-fm-folder-list-row small {
   font-size: var(--tjm-principles-meta) !important;
   line-height: 1.45 !important;
-}
-
-.tjm-fm-list-section h3 {
-  font-size: calc(var(--tjm-principles-folder) * .88) !important;
-  line-height: 1.2 !important;
 }
 
 .tjm-fm-list-empty,
@@ -218,10 +193,6 @@
     width: 100%;
     justify-content: flex-end;
     padding-top: 2px;
-  }
-
-  .tjm-fm-text-controls > span {
-    margin-right: auto;
   }
 
   .tjm-fm-text-controls button {
