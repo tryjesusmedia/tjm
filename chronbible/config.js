@@ -10,7 +10,7 @@ window.TJM_CHRONBIBLE_CONFIG = Object.freeze({
 // controller. The legacy Principles view remains a fallback if the module/CDN
 // cannot load.
 document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflow/react@12.11.3/dist/style.css">');
-document.write('<link rel="stylesheet" href="../lib/principles-folders-flow.css?v=20260904-1">');
+document.write('<link rel="stylesheet" href="../lib/principles-folders-flow.css?v=20260910-1">');
 document.write('<link rel="stylesheet" href="../lib/principles-text-size.css?v=20260910-3">');
 document.write('<link rel="stylesheet" href="../lib/reading-principle-names.css?v=20260909-1">');
 document.write('<link rel="stylesheet" href="../lib/reading-plan-copy-mobile-map-fix.css?v=20260910-2">');

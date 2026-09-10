@@ -47,7 +47,7 @@ main,
 /* Comfortable reading measure and a consistent body size. Embedded marketing
    forms are excluded so their provider-controlled layout remains intact. */
 :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-  :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+  :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not(.tjm-fm-principle-body-text):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
   font-size: clamp(1.125rem, 1.075rem + .2vw, 1.25rem) !important;
   line-height: 1.72 !important;
 }
@@ -188,7 +188,7 @@ textarea {
   }
 
   :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-    :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+    :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not(.tjm-fm-principle-body-text):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
     font-size: 1.125rem !important;
     line-height: 1.68 !important;
   }

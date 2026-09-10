@@ -107,6 +107,7 @@ try {
     previousSize = nextSize;
   }
   const maximumSize = previousSize;
+  assert.ok(maximumSize >= 40, `Maximum principle body text should exceed 40px; got ${maximumSize}px.`);
   assert.equal(await reloadedIncrease.isDisabled(), true);
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "39");
   assert.ok(Number.parseFloat(await page.getByRole("button", { name: "Open reading", exact: true }).evaluate((element) => getComputedStyle(element).fontSize)) > defaultMapReadingSize);

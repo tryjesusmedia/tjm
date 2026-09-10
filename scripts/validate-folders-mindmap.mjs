@@ -84,6 +84,7 @@ assert.doesNotMatch(source.module, /Group led by #/);
 assert.doesNotMatch(source.module, /location\.reload\(|window\.location\.reload\(/);
 
 for (const config of [source.conflictConfig, source.chronConfig]) {
+  assert.match(config, /principles-folders-flow\.css\?v=20260910-1/);
   assert.match(config, /principles-folders-flow\.css/);
   assert.match(config, /principles-folders-flow\.mjs/);
   assert.match(config, /principles-react-flow-bridge\.js/);
@@ -91,7 +92,9 @@ for (const config of [source.conflictConfig, source.chronConfig]) {
 }
 
 assert.match(source.css, /\.tjm-fm-floating-layer[\s\S]*position:\s*fixed/);
+assert.match(source.css, /\.tjm-fm-floating-layer\s*\{[^}]*inset:\s*0;/);
 assert.match(source.css, /\.tjm-fm-window[\s\S]*border:\s*2px solid/);
+assert.match(source.css, /\.tjm-fm-window\s*\{[^}]*width:\s*100%/);
 assert.match(source.css, /\.tjm-fm-sticky-header[\s\S]*position:\s*sticky/);
 assert.match(source.css, /\.tjm-fm-floating-layer[\s\S]*pointer-events:\s*none/);
 assert.match(source.css, /\.tjm-fm-window[\s\S]*pointer-events:\s*auto/);
