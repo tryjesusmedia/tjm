@@ -141,19 +141,20 @@
     toolbar.className = 'guide-reader-toolbar';
     toolbar.setAttribute('aria-label', 'Reading tools');
     toolbar.innerHTML = `
-      <div class="guide-text-controls" role="group" aria-label="Text size">
-        <span>Text size</span>
-        <button type="button" data-text-size="decrease" aria-label="Decrease text size">A−</button>
-        <button type="button" data-text-size="increase" aria-label="Increase text size">A+</button>
-        <span class="guide-text-status" role="status" aria-live="polite" aria-atomic="true"></span>
+      <div class="guide-reading-controls">
+        <div class="guide-text-controls" role="group" aria-label="Text size">
+          <button type="button" data-text-size="decrease" aria-label="Decrease text size">A−</button>
+          <button type="button" data-text-size="increase" aria-label="Increase text size">A+</button>
+          <span class="guide-text-status" role="status" aria-live="polite" aria-atomic="true"></span>
+        </div>
+        <label class="guide-audio-speed"><span>Listen speed</span>
+          <select id="guideAudioSpeed" aria-label="Audio reading speed">
+            <option value="0.82">Slower</option>
+            <option value="0.94">Normal</option>
+            <option value="1.1">Faster</option>
+          </select>
+        </label>
       </div>
-      <label class="guide-audio-speed">Listen speed
-        <select id="guideAudioSpeed" aria-label="Audio reading speed">
-          <option value="0.82">Slower</option>
-          <option value="0.94">Normal</option>
-          <option value="1.1">Faster</option>
-        </select>
-      </label>
       <div class="guide-reader-links">
         <a href="/welcome/#bible-guides">Save &amp; Finish Later</a>
         <a href="/welcome/#bible-guides">Return to Bible Guides</a>
