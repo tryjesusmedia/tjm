@@ -5,30 +5,8 @@
   --tjm-principles-detail: 1.22rem;
   --tjm-principles-meta: 1rem;
   --tjm-principles-folder: 1.7rem;
-}
-
-html[data-principles-text-size="small"] {
-  --tjm-principles-copy: 1.02rem;
-  --tjm-principles-name: 1.08rem;
-  --tjm-principles-detail: 1.08rem;
-  --tjm-principles-meta: .92rem;
-  --tjm-principles-folder: 1.5rem;
-}
-
-html[data-principles-text-size="default"] {
-  --tjm-principles-copy: 1.18rem;
-  --tjm-principles-name: 1.22rem;
-  --tjm-principles-detail: 1.22rem;
-  --tjm-principles-meta: 1rem;
-  --tjm-principles-folder: 1.7rem;
-}
-
-html[data-principles-text-size="large"] {
-  --tjm-principles-copy: 1.32rem;
-  --tjm-principles-name: 1.4rem;
-  --tjm-principles-detail: 1.38rem;
-  --tjm-principles-meta: 1.08rem;
-  --tjm-principles-folder: 1.95rem;
+  --tjm-principles-node-width: 342px;
+  --tjm-principles-expanded-width: 455px;
 }
 
 .tjm-fm-workspace-toolbar {
@@ -50,6 +28,11 @@ html[data-principles-text-size="large"] {
   line-height: 1.35;
 }
 
+.tjm-fm-text-controls output {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .tjm-fm-text-controls button {
   min-width: 42px;
   min-height: 42px;
@@ -69,6 +52,15 @@ html[data-principles-text-size="large"] {
 .tjm-fm-text-controls button:hover {
   border-color: #eebd4a;
   background: #fffaf0;
+}
+
+.tjm-fm-text-controls button:disabled,
+.tjm-fm-text-controls button:disabled:hover {
+  border-color: rgba(49, 30, 51, .14);
+  background: rgba(255, 255, 255, .64);
+  color: rgba(49, 30, 51, .38);
+  box-shadow: none;
+  cursor: default;
 }
 
 .tjm-fm-text-controls button[aria-pressed="true"] {
@@ -207,28 +199,12 @@ html[data-principles-text-size="large"] {
 }
 
 /* Give enlarged text enough room while keeping cards compact and movable. */
-html[data-principles-text-size="small"] .tjm-fm-node {
-  width: 310px;
+.tjm-fm-node {
+  width: var(--tjm-principles-node-width);
 }
 
-html[data-principles-text-size="default"] .tjm-fm-node {
-  width: 342px;
-}
-
-html[data-principles-text-size="large"] .tjm-fm-node {
-  width: 382px;
-}
-
-html[data-principles-text-size="small"] .tjm-fm-principle.is-expanded {
-  width: 390px;
-}
-
-html[data-principles-text-size="default"] .tjm-fm-principle.is-expanded {
-  width: 455px;
-}
-
-html[data-principles-text-size="large"] .tjm-fm-principle.is-expanded {
-  width: 520px;
+.tjm-fm-principle.is-expanded {
+  width: var(--tjm-principles-expanded-width);
 }
 
 @media (max-width: 760px) {
@@ -253,15 +229,11 @@ html[data-principles-text-size="large"] .tjm-fm-principle.is-expanded {
     min-height: 46px;
   }
 
-  html[data-principles-text-size="small"] .tjm-fm-node,
-  html[data-principles-text-size="default"] .tjm-fm-node,
-  html[data-principles-text-size="large"] .tjm-fm-node {
+  .tjm-fm-node {
     width: min(330px, calc(100vw - 54px));
   }
 
-  html[data-principles-text-size="small"] .tjm-fm-principle.is-expanded,
-  html[data-principles-text-size="default"] .tjm-fm-principle.is-expanded,
-  html[data-principles-text-size="large"] .tjm-fm-principle.is-expanded {
+  .tjm-fm-principle.is-expanded {
     width: min(390px, calc(100vw - 42px));
   }
 
