@@ -58,6 +58,19 @@ async function assertMenuItems(page, names) {
   for (const name of names) assert.equal(await page.getByRole("menuitem", { name, exact: true }).count(), 1);
 }
 
+async function readFlowViewport(page) {
+  return page.locator(".react-flow__viewport").evaluate((element) => {
+    const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
+    return { x: matrix.e, y: matrix.f, zoom: matrix.a };
+  });
+}
+
+function assertViewportPreserved(before, after, message) {
+  for (const key of ["x", "y", "zoom"]) {
+    assert.ok(Math.abs(before[key] - after[key]) < 0.02, `${message}: ${key} changed from ${before[key]} to ${after[key]}.`);
+  }
+}
+
 try {
   // The four frequent controls share one row, and the real map summary/body both scale.
   const sizingDesktop = await openCleanPage({ width: 1280, height: 900 });
@@ -74,8 +87,15 @@ try {
 
   const sizingNode = sizingPage.locator('[data-fm-principle-id="p3"]');
   const summaryText = sizingNode.locator(".tjm-fm-principle-summary-text");
+  const initialViewport = await readFlowViewport(sizingPage);
+  await sizingPage.locator(".react-flow__controls-zoomout").click();
+  await sizingPage.waitForTimeout(120);
+  const manualViewport = await readFlowViewport(sizingPage);
+  assert.ok(manualViewport.zoom < initialViewport.zoom, "The manual zoom-out control should change the map zoom.");
   await sizingNode.locator(".tjm-fm-principle-preview").click();
   await sizingNode.locator(".tjm-fm-principle-body-text").waitFor({ state: "visible" });
+  await sizingPage.waitForTimeout(240);
+  assertViewportPreserved(manualViewport, await readFlowViewport(sizingPage), "Opening a principle should preserve the desktop map camera");
   const bodyText = sizingNode.locator(".tjm-fm-principle-body-text");
   const readingButton = sizingNode.getByRole("button", { name: "Go to reading", exact: true });
   const fontSize = (locator) => locator.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize));
@@ -83,6 +103,8 @@ try {
   const initialBodySize = await fontSize(bodyText);
   const initialReadingSize = await fontSize(readingButton);
   await sizingPage.getByRole("button", { name: "Use larger Principles text", exact: true }).click();
+  await sizingPage.waitForTimeout(240);
+  assertViewportPreserved(manualViewport, await readFlowViewport(sizingPage), "Changing text size should preserve the desktop map camera");
   assert.ok(await fontSize(summaryText) > initialSummarySize, "The center summary text should grow.");
   assert.ok(await fontSize(bodyText) > initialBodySize, "The expanded center body text should grow.");
   assert.ok(await fontSize(readingButton) > initialReadingSize, "The reading action should grow.");
@@ -307,14 +329,17 @@ try {
     pointerEvents: getComputedStyle(pane).pointerEvents,
     touchAction: getComputedStyle(pane).touchAction,
   })), { pointerEvents: "all", touchAction: "none" });
+  const phoneInitialViewport = await readFlowViewport(phone);
+  await phone.locator(".react-flow__controls-zoomin").click();
+  await phone.waitForTimeout(120);
+  const phoneManualViewport = await readFlowViewport(phone);
+  assert.ok(phoneManualViewport.zoom > phoneInitialViewport.zoom, "The mobile zoom-in control should change the map zoom.");
   const phoneMapPrinciple = phone.locator('[data-fm-principle-id="p3"]');
   await phoneMapPrinciple.locator(".tjm-fm-principle-preview").click();
   const phoneMapBody = phoneMapPrinciple.locator(".tjm-fm-principle-body-text");
   await phoneMapBody.waitFor({ state: "visible" });
-  await phone.waitForFunction(() => {
-    const viewport = document.querySelector(".react-flow__viewport");
-    return viewport && new DOMMatrixReadOnly(getComputedStyle(viewport).transform).a >= 0.99;
-  });
+  await phone.waitForTimeout(240);
+  assertViewportPreserved(phoneManualViewport, await readFlowViewport(phone), "Opening a principle should preserve the mobile map camera");
   const effectiveTypography = (locator) => locator.evaluate((element) => {
     const viewport = element.closest(".react-flow")?.querySelector(".react-flow__viewport");
     const zoom = viewport ? new DOMMatrixReadOnly(getComputedStyle(viewport).transform).a : 1;
@@ -323,15 +348,16 @@ try {
   });
   const initialMapBody = await effectiveTypography(phoneMapBody);
   await phone.getByRole("button", { name: "Use larger Principles text", exact: true }).click();
+  await phone.waitForTimeout(240);
+  assertViewportPreserved(phoneManualViewport, await readFlowViewport(phone), "Changing text size should preserve the mobile map camera");
   const largerMapBody = await effectiveTypography(phoneMapBody);
   assert.ok(largerMapBody.screenPixels > initialMapBody.screenPixels, "A+ should enlarge the body text on screen in Map view.");
   await phone.evaluate(() => window.TJMPrinciplesTextSize.set(window.TJMPrinciplesTextSize.max));
   await phone.waitForFunction(() => document.documentElement.dataset.principlesTextStep === "39");
   const largestMapBody = await effectiveTypography(phoneMapBody);
   const largestReadingAction = await effectiveTypography(phoneMapPrinciple.getByRole("button", { name: "Go to reading", exact: true }));
-  assert.ok(largestMapBody.zoom >= 0.99, "Opening a principle should keep the map at a readable zoom.");
-  assert.ok(largestMapBody.screenPixels >= 40, `Largest body text should render at 40px or more; received ${largestMapBody.screenPixels}.`);
-  assert.ok(largestReadingAction.screenPixels >= 32, `Largest reading action should render at 32px or more; received ${largestReadingAction.screenPixels}.`);
+  assert.ok(largestMapBody.cssPixels >= 40, `Largest body text should use 40px CSS text or more; received ${largestMapBody.cssPixels}.`);
+  assert.ok(largestReadingAction.cssPixels >= 32, `Largest reading action should use 32px CSS text or more; received ${largestReadingAction.cssPixels}.`);
   const mapDetail = phoneMapPrinciple.locator(".tjm-fm-principle-body");
   const mapScrollState = await mapDetail.evaluate((element) => ({
     clientHeight: element.clientHeight,
