@@ -64,7 +64,15 @@ try {
   assert.equal(await increase.isDisabled(), false);
 
   const principleBody = page.locator(".tjm-fm-principle-body > p");
+  const listPrincipleBody = page.locator(".tjm-fm-list-principle-detail > p");
+  const mapReadingButton = page.getByRole("button", { name: "Open reading", exact: true });
+  const listReadingButton = page.getByRole("button", { name: "Go to reading", exact: true });
+  const folderHeading = page.getByRole("heading", { name: "Principles in this folder", exact: true });
   const defaultSize = Number.parseFloat(await principleBody.evaluate((element) => getComputedStyle(element).fontSize));
+  const defaultListBodySize = Number.parseFloat(await listPrincipleBody.evaluate((element) => getComputedStyle(element).fontSize));
+  const defaultMapReadingSize = Number.parseFloat(await mapReadingButton.evaluate((element) => getComputedStyle(element).fontSize));
+  const defaultListReadingSize = Number.parseFloat(await listReadingButton.evaluate((element) => getComputedStyle(element).fontSize));
+  const fixedFolderHeadingSize = Number.parseFloat(await folderHeading.evaluate((element) => getComputedStyle(element).fontSize));
   assert.ok(defaultSize >= 18, `Default principle text should be at least 18px; got ${defaultSize}px.`);
 
   let previousSize = defaultSize;
@@ -75,6 +83,10 @@ try {
     assert.ok(nextSize > previousSize, `Tap ${expectedStep - 6} should increase text from ${previousSize}px; got ${nextSize}px.`);
     previousSize = nextSize;
   }
+  assert.ok(Number.parseFloat(await listPrincipleBody.evaluate((element) => getComputedStyle(element).fontSize)) > defaultListBodySize);
+  assert.ok(Number.parseFloat(await mapReadingButton.evaluate((element) => getComputedStyle(element).fontSize)) > defaultMapReadingSize);
+  assert.ok(Number.parseFloat(await listReadingButton.evaluate((element) => getComputedStyle(element).fontSize)) > defaultListReadingSize);
+  assert.equal(Number.parseFloat(await folderHeading.evaluate((element) => getComputedStyle(element).fontSize)), fixedFolderHeadingSize);
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "9");
 
   await page.reload({ waitUntil: "domcontentloaded" });
@@ -87,7 +99,7 @@ try {
   assert.equal(await reloadedControls.locator("button").count(), 2);
 
   previousSize = Number.parseFloat(await reloadedBody.evaluate((element) => getComputedStyle(element).fontSize));
-  for (let expectedStep = 10; expectedStep <= 19; expectedStep += 1) {
+  for (let expectedStep = 10; expectedStep <= 39; expectedStep += 1) {
     await reloadedIncrease.click();
     assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), String(expectedStep));
     const nextSize = Number.parseFloat(await reloadedBody.evaluate((element) => getComputedStyle(element).fontSize));
@@ -96,13 +108,16 @@ try {
   }
   const maximumSize = previousSize;
   assert.equal(await reloadedIncrease.isDisabled(), true);
-  assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "19");
+  assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "39");
+  assert.ok(Number.parseFloat(await page.getByRole("button", { name: "Open reading", exact: true }).evaluate((element) => getComputedStyle(element).fontSize)) > defaultMapReadingSize);
+  assert.ok(Number.parseFloat(await page.getByRole("button", { name: "Go to reading", exact: true }).evaluate((element) => getComputedStyle(element).fontSize)) > defaultListReadingSize);
+  assert.equal(Number.parseFloat(await page.getByRole("heading", { name: "Principles in this folder", exact: true }).evaluate((element) => getComputedStyle(element).fontSize)), fixedFolderHeadingSize);
 
   await reloadedDecrease.click();
-  assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "18");
+  assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "38");
   previousSize = Number.parseFloat(await reloadedBody.evaluate((element) => getComputedStyle(element).fontSize));
   assert.ok(previousSize < maximumSize, "One minus tap should reduce the maximum text size by one step.");
-  for (let expectedStep = 17; expectedStep >= 0; expectedStep -= 1) {
+  for (let expectedStep = 37; expectedStep >= 0; expectedStep -= 1) {
     await reloadedDecrease.click();
     assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), String(expectedStep));
     const nextSize = Number.parseFloat(await reloadedBody.evaluate((element) => getComputedStyle(element).fontSize));
@@ -111,6 +126,9 @@ try {
   }
   assert.equal(await reloadedDecrease.isDisabled(), true);
   assert.ok(previousSize < defaultSize, `Minimum text (${previousSize}px) should be smaller than default (${defaultSize}px).`);
+  assert.ok(Number.parseFloat(await page.getByRole("button", { name: "Open reading", exact: true }).evaluate((element) => getComputedStyle(element).fontSize)) < defaultMapReadingSize);
+  assert.ok(Number.parseFloat(await page.getByRole("button", { name: "Go to reading", exact: true }).evaluate((element) => getComputedStyle(element).fontSize)) < defaultListReadingSize);
+  assert.equal(Number.parseFloat(await page.getByRole("heading", { name: "Principles in this folder", exact: true }).evaluate((element) => getComputedStyle(element).fontSize)), fixedFolderHeadingSize);
 
   await page.evaluate(() => window.TJMPrinciplesTextSize.reset());
   assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "6");
@@ -124,7 +142,7 @@ try {
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "10");
 
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);
-  console.log("Readable introduction and 20-step Principles text-size browser test passed.");
+  console.log("Readable introduction and 40-step Principles text-size browser test passed.");
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));

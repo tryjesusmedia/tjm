@@ -39,7 +39,7 @@ for (const config of [source.conflictConfig, source.chronConfig]) {
 
 assert.match(source.textJs, /tjm-principles-text-size/);
 assert.match(source.textJs, /tjm-guide-text-size/);
-assert.match(source.textJs, /const STEP_COUNT = 20/);
+assert.match(source.textJs, /const STEP_COUNT = 40/);
 assert.match(source.textJs, /const MAX_STEP = STEP_COUNT - 1/);
 assert.match(source.textJs, /principlesTextStep/);
 assert.match(source.textJs, /MutationObserver/);
@@ -58,6 +58,10 @@ assert.match(source.textCss, /--tjm-principles-node-width/);
 assert.match(source.textCss, /--tjm-principles-expanded-width/);
 assert.match(source.textCss, /\.tjm-fm-principle-body > p/);
 assert.match(source.textCss, /\.tjm-fm-list-principle-detail > p/);
+assert.match(source.textCss, /\.tjm-fm-principle-bottom button/);
+assert.match(source.textCss, /\.tjm-fm-reading-link/);
+assert.doesNotMatch(source.textCss, /\.tjm-fm-list-section h3/);
+assert.doesNotMatch(source.textCss, /\.tjm-fm-workspace-toolbar > span/);
 assert.match(source.textCss, /\.tjm-fm-editor textarea/);
 assert.match(source.textCss, /\.tjm-fm-folder-open strong/);
 assert.doesNotMatch(source.textCss, /\.tjm-fm-text-controls button\[aria-pressed="true"\]/);

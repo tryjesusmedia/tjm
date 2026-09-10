@@ -94,6 +94,7 @@
 
 .tjm-fm-principle-body > small,
 .tjm-fm-list-principle-open > small,
+.tjm-fm-principle-bottom button,
 .tjm-fm-reading-link,
 .tjm-fm-reference-row button {
   font-size: var(--tjm-principles-meta) !important;
@@ -114,15 +115,9 @@
 }
 
 .tjm-fm-folder-open span,
-.tjm-fm-folder-list-row small,
-.tjm-fm-workspace-toolbar > span {
+.tjm-fm-folder-list-row small {
   font-size: var(--tjm-principles-meta) !important;
   line-height: 1.45 !important;
-}
-
-.tjm-fm-list-section h3 {
-  font-size: calc(var(--tjm-principles-folder) * .88) !important;
-  line-height: 1.2 !important;
 }
 
 .tjm-fm-list-empty,
