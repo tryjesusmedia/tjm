@@ -5,6 +5,7 @@ on:
     paths:
       - "lib/principles-folders-flow.mjs"
       - "lib/principles-folders-flow.css"
+      - "assets/readability.css"
       - "lib/reading-plan-copy-mobile-map-fix.css"
       - "lib/reading-plan-copy-mobile-map-fix.js"
       - "bibleandconflictoftheages/config.js"
@@ -25,6 +26,7 @@ on:
     paths:
       - "lib/principles-folders-flow.mjs"
       - "lib/principles-folders-flow.css"
+      - "assets/readability.css"
       - "lib/reading-plan-copy-mobile-map-fix.css"
       - "lib/reading-plan-copy-mobile-map-fix.js"
       - "bibleandconflictoftheages/config.js"

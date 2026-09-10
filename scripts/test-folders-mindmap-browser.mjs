@@ -97,8 +97,8 @@ try {
   assert.equal(await page.locator(".tjm-fm-text-controls").count(), 1);
 
   const windowBox = await page.locator(".tjm-fm-window").boundingBox();
-  assert.ok(windowBox && windowBox.x > 0 && windowBox.y > 0);
-  assert.ok(windowBox.x + windowBox.width < 1280 && windowBox.y + windowBox.height < 900);
+  assert.ok(windowBox && Math.abs(windowBox.x) < 1 && Math.abs(windowBox.y) < 1);
+  assert.ok(Math.abs(windowBox.width - 1280) < 1 && Math.abs(windowBox.height - 900) < 1, "The desktop Principles Map should fill the viewport.");
   assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
   assert.equal(await page.getByRole("button", { name: "Principles", exact: true }).count(), 0);
   assert.equal(await page.getByText("Group led by", { exact: false }).count(), 0);
@@ -121,10 +121,14 @@ try {
   assert.equal(await launcher.count(), 1);
   await launcher.click();
   await page.waitForSelector(".tjm-fm-window");
+  await launcher.click();
+  await page.waitForSelector(".tjm-fm-window", { state: "detached" });
   await page.getByRole("button", { name: "Progress", exact: true }).click();
-  assert.equal(await page.locator(".tjm-fm-window").count(), 1);
+  assert.equal(await launcher.count(), 1);
   await page.getByRole("button", { name: "Readings", exact: true }).click();
   assert.equal(await launcher.count(), 1);
+  await launcher.click();
+  await page.waitForSelector(".tjm-fm-window");
 
   // The toolbar keeps frequent actions visible; the overflow menu holds map tools.
   await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
