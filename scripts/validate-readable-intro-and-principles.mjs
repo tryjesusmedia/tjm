@@ -19,13 +19,13 @@ const source = Object.fromEntries(await Promise.all(
 execFileSync(process.execPath, ["--check", files.textJs], { stdio: "inherit" });
 
 assert.match(source.conflictIndex, /hero-readability\.css\?v=20260908-1/);
-assert.match(source.conflictIndex, /config\.js\?v=20260910-2/);
+assert.match(source.conflictIndex, /config\.js\?v=20260910-3/);
 assert.match(source.conflictIndex, /class="hero-intro-lead"/);
 assert.match(source.conflictIndex, /<details class="hero-intro-more">/);
 assert.match(source.conflictIndex, /<summary>Read more about this journey<\/summary>/);
 assert.doesNotMatch(source.conflictIndex, /<details class="hero-intro-more"\s+open/);
 assert.match(source.conflictIndex, /class="hero-intro-more-content"/);
-assert.match(source.chronIndex, /config\.js\?v=20260910-2/);
+assert.match(source.chronIndex, /config\.js\?v=20260910-3/);
 
 assert.match(source.heroCss, /\.journey-hero \.hero-intro > \.hero-intro-lead/);
 assert.match(source.heroCss, /font-size:\s*clamp\(1\.15rem/);
@@ -33,8 +33,8 @@ assert.match(source.heroCss, /\.hero-intro-more\[open\]/);
 assert.match(source.heroCss, /min-height:\s*58px/);
 
 for (const config of [source.conflictConfig, source.chronConfig]) {
-  assert.match(config, /principles-text-size\.css\?v=20260910-2/);
-  assert.match(config, /principles-text-size\.js\?v=20260910-1/);
+  assert.match(config, /principles-text-size\.css\?v=20260910-3/);
+  assert.match(config, /principles-text-size\.js\?v=20260910-3/);
 }
 
 assert.match(source.textJs, /tjm-principles-text-size/);
@@ -49,6 +49,7 @@ assert.doesNotMatch(source.textJs, /data-principles-text-action="reset"/);
 assert.doesNotMatch(source.textJs, /data-principles-text-status/);
 assert.match(source.textJs, /decrease\.disabled = step <= MIN_STEP/);
 assert.match(source.textJs, /increase\.disabled = step >= MAX_STEP/);
+assert.match(source.textJs, /tjm-principles-text-size-change/);
 assert.match(source.textJs, /small: 3, default: DEFAULT_STEP, large: 10/);
 assert.match(source.textJs, /saved !== String\(step\)/);
 assert.match(source.textJs, /A−/);
@@ -70,5 +71,8 @@ assert.match(source.textCss, /\.tjm-fm-editor textarea/);
 assert.match(source.textCss, /\.tjm-fm-folder-open strong/);
 assert.doesNotMatch(source.textCss, /\.tjm-fm-text-controls button\[aria-pressed="true"\]/);
 assert.match(source.textCss, /\.tjm-fm-text-controls button:disabled/);
+assert.match(source.textCss, /--tjm-principles-card-max-height/);
+assert.match(source.textCss, /overflow-y:\s*auto/);
+assert.match(source.textCss, /touch-action:\s*pan-y/);
 
 console.log("Readable journey introduction and adjustable Principles typography validation passed.");

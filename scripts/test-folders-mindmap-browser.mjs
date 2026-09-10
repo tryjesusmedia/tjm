@@ -249,6 +249,29 @@ try {
   const phoneMapBox = await phone.getByRole("button", { name: "Map", exact: true }).boundingBox();
   assert.ok(phoneListBox.width > 44 && phoneMapBox.width > 44 && phoneListBox.height > 44 && phoneMapBox.height > 44);
   assert.equal(await phone.getByText("Prayer makes room to listen", { exact: false }).count(), 1);
+  const phoneListPrinciple = phone.locator('[data-fm-list-principle-id="p3"]');
+  await phoneListPrinciple.locator(".tjm-fm-list-principle-open").click();
+  const phoneListBody = phoneListPrinciple.locator(".tjm-fm-principle-body-text");
+  const phoneListBodySize = await phoneListBody.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize));
+  await phone.getByRole("button", { name: "Use larger Principles text", exact: true }).click();
+  assert.ok(
+    await phoneListBody.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) > phoneListBodySize,
+    "The body text should grow in the mobile list.",
+  );
+  await phone.evaluate(() => window.TJMPrinciplesTextSize.set(window.TJMPrinciplesTextSize.max));
+  await phone.waitForFunction(() => document.documentElement.dataset.principlesTextStep === "39");
+  const phoneListDetail = phoneListPrinciple.locator(".tjm-fm-list-principle-detail");
+  const listScrollState = await phoneListDetail.evaluate((element) => ({
+    clientHeight: element.clientHeight,
+    overflowY: getComputedStyle(element).overflowY,
+    scrollHeight: element.scrollHeight,
+  }));
+  assert.equal(listScrollState.overflowY, "auto");
+  assert.ok(listScrollState.scrollHeight > listScrollState.clientHeight, "Large list text should scroll inside its principle window.");
+  await phoneListDetail.evaluate((element) => { element.scrollTop = element.scrollHeight; });
+  assert.ok(await phoneListDetail.evaluate((element) => element.scrollTop) > 0);
+  await phone.evaluate(() => window.TJMPrinciplesTextSize.reset());
+  await phoneListPrinciple.locator(".tjm-fm-list-principle-open").click();
   await phone.getByRole("button", { name: "Principles Map menu", exact: true }).click();
   const actionSheet = await phone.locator(".tjm-fm-context-menu").boundingBox();
   assert.ok(actionSheet && actionSheet.width >= 368 && actionSheet.y + actionSheet.height >= 760);
@@ -270,6 +293,46 @@ try {
     pointerEvents: getComputedStyle(pane).pointerEvents,
     touchAction: getComputedStyle(pane).touchAction,
   })), { pointerEvents: "all", touchAction: "none" });
+  const phoneMapPrinciple = phone.locator('[data-fm-principle-id="p3"]');
+  await phoneMapPrinciple.locator(".tjm-fm-principle-preview").click();
+  const phoneMapBody = phoneMapPrinciple.locator(".tjm-fm-principle-body-text");
+  await phoneMapBody.waitFor({ state: "visible" });
+  await phone.waitForFunction(() => {
+    const viewport = document.querySelector(".react-flow__viewport");
+    return viewport && new DOMMatrixReadOnly(getComputedStyle(viewport).transform).a >= 0.99;
+  });
+  const effectiveTypography = (locator) => locator.evaluate((element) => {
+    const viewport = element.closest(".react-flow")?.querySelector(".react-flow__viewport");
+    const zoom = viewport ? new DOMMatrixReadOnly(getComputedStyle(viewport).transform).a : 1;
+    const cssPixels = Number.parseFloat(getComputedStyle(element).fontSize);
+    return { cssPixels, zoom, screenPixels: cssPixels * zoom };
+  });
+  const initialMapBody = await effectiveTypography(phoneMapBody);
+  await phone.getByRole("button", { name: "Use larger Principles text", exact: true }).click();
+  const largerMapBody = await effectiveTypography(phoneMapBody);
+  assert.ok(largerMapBody.screenPixels > initialMapBody.screenPixels, "A+ should enlarge the body text on screen in Map view.");
+  await phone.evaluate(() => window.TJMPrinciplesTextSize.set(window.TJMPrinciplesTextSize.max));
+  await phone.waitForFunction(() => document.documentElement.dataset.principlesTextStep === "39");
+  const largestMapBody = await effectiveTypography(phoneMapBody);
+  const largestReadingAction = await effectiveTypography(phoneMapPrinciple.getByRole("button", { name: "Go to reading", exact: true }));
+  assert.ok(largestMapBody.zoom >= 0.99, "Opening a principle should keep the map at a readable zoom.");
+  assert.ok(largestMapBody.screenPixels >= 40, `Largest body text should render at 40px or more; received ${largestMapBody.screenPixels}.`);
+  assert.ok(largestReadingAction.screenPixels >= 32, `Largest reading action should render at 32px or more; received ${largestReadingAction.screenPixels}.`);
+  const mapDetail = phoneMapPrinciple.locator(".tjm-fm-principle-body");
+  const mapScrollState = await mapDetail.evaluate((element) => ({
+    clientHeight: element.clientHeight,
+    overflowY: getComputedStyle(element).overflowY,
+    scrollHeight: element.scrollHeight,
+  }));
+  assert.equal(mapScrollState.overflowY, "auto");
+  assert.ok(mapScrollState.scrollHeight > mapScrollState.clientHeight, "Large map text should scroll inside its principle window.");
+  const mapCardBox = await phoneMapPrinciple.boundingBox();
+  const mapCanvasBox = await phone.locator(".tjm-fm-flow .react-flow").boundingBox();
+  assert.ok(mapCardBox && mapCanvasBox && mapCardBox.height <= mapCanvasBox.height - 24, "The expanded principle should stay within the map canvas.");
+  await mapDetail.evaluate((element) => { element.scrollTop = element.scrollHeight; });
+  assert.ok(await mapDetail.evaluate((element) => element.scrollTop) > 0);
+  const readingActionBox = await phoneMapPrinciple.getByRole("button", { name: "Go to reading", exact: true }).boundingBox();
+  assert.ok(readingActionBox && readingActionBox.y + readingActionBox.height <= mapCardBox.y + mapCardBox.height + 1);
   await mobile.context.close();
 
   // A failed cloud name sync retains the name in device storage and reports it.
