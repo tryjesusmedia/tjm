@@ -19,13 +19,13 @@ const source = Object.fromEntries(await Promise.all(
 execFileSync(process.execPath, ["--check", files.textJs], { stdio: "inherit" });
 
 assert.match(source.conflictIndex, /hero-readability\.css\?v=20260908-1/);
-assert.match(source.conflictIndex, /config\.js\?v=20260908-1/);
+assert.match(source.conflictIndex, /config\.js\?v=20260909-2/);
 assert.match(source.conflictIndex, /class="hero-intro-lead"/);
 assert.match(source.conflictIndex, /<details class="hero-intro-more">/);
 assert.match(source.conflictIndex, /<summary>Read more about this journey<\/summary>/);
 assert.doesNotMatch(source.conflictIndex, /<details class="hero-intro-more"\s+open/);
 assert.match(source.conflictIndex, /class="hero-intro-more-content"/);
-assert.match(source.chronIndex, /config\.js\?v=20260908-1/);
+assert.match(source.chronIndex, /config\.js\?v=20260909-2/);
 
 assert.match(source.heroCss, /\.journey-hero \.hero-intro > \.hero-intro-lead/);
 assert.match(source.heroCss, /font-size:\s*clamp\(1\.15rem/);

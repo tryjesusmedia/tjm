@@ -1,0 +1,166 @@
+/* Compact reading-assignment copy and mobile Principles Map viewport repair. */
+
+/* The user asked to remove helper copy beneath these fields. */
+.principle-number-field small,
+.principle-name-field small {
+  display: none !important;
+}
+
+/* Keep the reading-assignment form comfortable after the helper text is gone. */
+.principle-number-field,
+.principle-name-field {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 760px) {
+  /*
+    Use the visual viewport width rather than a potentially enlarged layout
+    viewport. This prevents the fixed Principles Map from extending beyond the
+    right side in mobile Chrome, Safari, embedded browsers, or large-text mode.
+  */
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .tjm-fm-host,
+  .tjm-fm-shell {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .tjm-fm-floating-layer {
+    right: auto !important;
+    left: var(--tjm-map-visual-left, 0px) !important;
+    width: var(--tjm-map-visual-width, 100vw) !important;
+    max-width: var(--tjm-map-visual-width, 100vw) !important;
+    padding: 4px !important;
+    box-sizing: border-box !important;
+  }
+
+  .tjm-fm-window {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    border: 2px solid #311e33 !important;
+    border-radius: 14px !important;
+  }
+
+  .tjm-fm-sticky-header,
+  .tjm-fm-map-body,
+  .tjm-fm-workspace-toolbar,
+  .tjm-fm-workspace-content,
+  .tjm-fm-flow,
+  .tjm-fm-flow > .react-flow,
+  .tjm-fm-list-view {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .tjm-fm-sticky-header {
+    overflow: hidden;
+  }
+
+  .tjm-fm-title-row {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow: hidden;
+  }
+
+  .tjm-fm-title-row h2,
+  .tjm-fm-title-row .tjm-fm-folder-title {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .tjm-fm-window-actions {
+    flex: 0 0 auto !important;
+    min-width: max-content;
+  }
+
+  /*
+    Put the List/Map switch and the text-size controls on separate rows. This
+    keeps A−, A, and A+ inside the visible width even with enlarged text.
+  */
+  .tjm-fm-workspace-toolbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    overflow: hidden !important;
+    padding-inline: 10px !important;
+  }
+
+  .tjm-fm-view-switch {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .tjm-fm-view-switch button {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .tjm-fm-text-controls {
+    order: initial !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) repeat(3, 48px) !important;
+    align-items: center !important;
+    justify-content: stretch !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .tjm-fm-text-controls > span {
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .tjm-fm-text-controls button {
+    width: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+  }
+
+  .tjm-fm-workspace-toolbar > span {
+    width: 100%;
+    min-width: 0;
+    white-space: normal !important;
+  }
+
+  /*
+    React Flow owns pan/zoom gestures. Explicitly keep the canvas and pane
+    touchable after mobile width correction.
+  */
+  .tjm-fm-flow {
+    overflow: hidden !important;
+    touch-action: none !important;
+    overscroll-behavior: contain !important;
+  }
+
+  .tjm-fm-flow .react-flow__renderer,
+  .tjm-fm-flow .react-flow__pane {
+    width: 100% !important;
+    height: 100% !important;
+    touch-action: none !important;
+  }
+
+  .tjm-fm-flow .react-flow__pane {
+    pointer-events: all !important;
+  }
+}
