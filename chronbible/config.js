@@ -13,7 +13,9 @@ document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflo
 document.write('<link rel="stylesheet" href="../lib/principles-folders-flow.css?v=20260904-1">');
 document.write('<link rel="stylesheet" href="../lib/principles-text-size.css?v=20260908-1">');
 document.write('<link rel="stylesheet" href="../lib/reading-principle-names.css?v=20260909-1">');
+document.write('<link rel="stylesheet" href="../lib/reading-plan-copy-mobile-map-fix.css?v=20260909-1">');
 document.write('<script defer src="../lib/principles-react-flow-bridge.js?v=20260903-2"><\/script>');
 document.write('<script defer src="../lib/reading-principle-names.js?v=20260909-1"><\/script>');
 document.write('<script type="module" src="../lib/principles-folders-flow.mjs?v=20260904-3"><\/script>');
 document.write('<script defer src="../lib/principles-text-size.js?v=20260908-1"><\/script>');
+document.write('<script defer src="../lib/reading-plan-copy-mobile-map-fix.js?v=20260909-1"><\/script>');

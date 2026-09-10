@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflow/react@12.11.3/dist/style.css">
   <link rel="stylesheet" href="../lib/principles-folders-flow.css">
+  <link rel="stylesheet" href="../lib/principles-text-size.css">
+  <link rel="stylesheet" href="../lib/reading-plan-copy-mobile-map-fix.css">
   <style>
     :root { --serif: Georgia, serif; }
     body { min-height: 2200px; margin: 0; padding: 24px; font-family: Arial, sans-serif; background: #f3e8d0; }
@@ -14,6 +16,11 @@
   </style>
 </head>
 <body>
+  <div id="copy-removal-fixture" hidden>
+    <small>Use any available whole number. Every principle number must be unique.</small>
+    <small>Give this principle a short, memorable name. Leave the automatic name unchanged.</small>
+    <p>Write one principle at a time. Choose any unused number to organize your discoveries throughout the journey.</p>
+  </div>
   <nav class="journey-nav">
     <button class="active" data-view="readings">Readings</button>
     <button data-view="journey">Journey</button>
@@ -113,5 +120,7 @@
     });
   </script>
   <script type="module" src="../lib/principles-folders-flow.mjs"></script>
+  <script defer src="../lib/principles-text-size.js"></script>
+  <script defer src="../lib/reading-plan-copy-mobile-map-fix.js"></script>
 </body>
 </html>

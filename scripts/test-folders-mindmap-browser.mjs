@@ -62,6 +62,8 @@ try {
   const desktop = await openCleanPage({ width: 1280, height: 900 });
   const page = desktop.page;
   await page.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
+  assert.equal(await page.locator("#copy-removal-fixture > *").count(), 0);
+  assert.equal(await page.locator(".tjm-fm-text-controls").count(), 1);
 
   const windowBox = await page.locator(".tjm-fm-window").boundingBox();
   assert.ok(windowBox && windowBox.x > 0 && windowBox.y > 0);
@@ -69,8 +71,11 @@ try {
   assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
   assert.equal(await page.getByRole("button", { name: "Principles", exact: true }).count(), 0);
   assert.equal(await page.getByText("Group led by", { exact: false }).count(), 0);
-  await page.waitForFunction(() =>
-    document.querySelector('[data-fm-folder-id="g1"] strong')?.textContent?.trim() === "New Folder #1");
+  await page.waitForFunction(
+    () => document.querySelector('[data-fm-folder-id="g1"] strong')?.textContent?.trim() === "New Folder #1",
+    undefined,
+    { timeout: 45_000 },
+  );
   assert.equal((await page.locator('[data-fm-folder-id="g1"] strong').textContent())?.trim(), "New Folder #1");
   assert.equal(await page.locator('[data-fm-folder-id="g1"] .tjm-fm-node-menu').count(), 0);
   assert.equal(await page.locator('[data-fm-empty-folder-id] .tjm-fm-node-menu').count(), 0);
@@ -182,17 +187,28 @@ try {
   assert.ok((await page.evaluate(() => window.__rpcCalls)).some((call) => call.name === "save_principle_map_layout"));
   await desktop.context.close();
 
-  // iPhone: list default, full-screen canvas, 44px controls, and bottom action sheet.
+  // iPhone: list default, a visual-viewport-safe canvas, accessible controls, and a bottom action sheet.
   const mobile = await openCleanPage({ width: 390, height: 844 });
   const phone = mobile.page;
   await phone.waitForSelector("[data-fm-list-view]", { timeout: 45_000 });
+  await phone.waitForSelector(".tjm-fm-text-controls");
   assert.equal(await phone.locator(".react-flow").count(), 0);
   const phoneWindow = await phone.locator(".tjm-fm-window").boundingBox();
-  assert.ok(phoneWindow && phoneWindow.x <= 1 && phoneWindow.y <= 1);
-  assert.ok(phoneWindow.width >= 388 && phoneWindow.height >= 842);
+  assert.ok(phoneWindow && phoneWindow.x >= 0 && phoneWindow.y >= 0);
+  assert.ok(phoneWindow.x + phoneWindow.width <= 390 && phoneWindow.y + phoneWindow.height <= 844);
+  assert.ok(phoneWindow.width >= 380 && phoneWindow.height >= 834);
+  assert.equal(await phone.evaluate(() => document.documentElement.style.getPropertyValue("--tjm-map-visual-width")), "390px");
   for (const name of ["Add", "Search all principles and folders", "Principles Map menu"]) {
     const box = await phone.getByRole("button", { name, exact: true }).boundingBox();
     assert.ok(box && box.width >= 44 && box.height >= 44, `${name} should be a 44px touch target`);
+  }
+  const viewSwitchBox = await phone.locator(".tjm-fm-view-switch").boundingBox();
+  const textControlsBox = await phone.locator(".tjm-fm-text-controls").boundingBox();
+  assert.ok(viewSwitchBox && textControlsBox && textControlsBox.y >= viewSwitchBox.y + viewSwitchBox.height);
+  assert.ok(textControlsBox.x >= phoneWindow.x && textControlsBox.x + textControlsBox.width <= phoneWindow.x + phoneWindow.width);
+  for (const name of ["Use smaller Principles text", "Use standard Principles text", "Use larger Principles text"]) {
+    const box = await phone.getByRole("button", { name, exact: true }).boundingBox();
+    assert.ok(box && box.width >= 48 && box.height >= 48, `${name} should remain inside a 48px control`);
   }
   assert.equal(await phone.getByText("Prayer makes room to listen", { exact: false }).count(), 1);
   await phone.getByRole("button", { name: "Principles Map menu", exact: true }).click();
@@ -211,6 +227,11 @@ try {
   assert.equal((await phone.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
   await phone.getByRole("button", { name: "Map", exact: true }).click();
   await phone.waitForSelector(".react-flow");
+  await phone.waitForFunction(() => localStorage.getItem("tjm-mobile-principles-map-width-repair-v1:bible-conflict-ages-v1") === "done");
+  assert.deepEqual(await phone.locator(".react-flow__pane").evaluate((pane) => ({
+    pointerEvents: getComputedStyle(pane).pointerEvents,
+    touchAction: getComputedStyle(pane).touchAction,
+  })), { pointerEvents: "all", touchAction: "none" });
   await mobile.context.close();
 
   // A failed cloud name sync retains the name in device storage and reports it.
