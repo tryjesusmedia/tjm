@@ -49,6 +49,7 @@ assert.match(source.textJs, /data-principles-text-action="increase"/);
 assert.match(source.textJs, /decrease\.disabled = step <= MIN_STEP/);
 assert.match(source.textJs, /increase\.disabled = step >= MAX_STEP/);
 assert.match(source.textJs, /small: 3, default: DEFAULT_STEP, large: 10/);
+assert.match(source.textJs, /saved !== String\(step\)/);
 assert.match(source.textJs, /A−/);
 assert.match(source.textJs, /A\+/);
 

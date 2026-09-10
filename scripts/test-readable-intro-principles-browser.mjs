@@ -130,6 +130,7 @@ try {
   await page.locator(".tjm-fm-text-controls").waitFor({ state: "visible" });
   assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "10");
   assert.equal((await page.locator("[data-principles-text-status]").textContent()).trim(), "11 of 20");
+  assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "10");
 
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);
   console.log("Readable introduction and 20-step Principles text-size browser test passed.");
