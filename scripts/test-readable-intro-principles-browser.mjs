@@ -53,14 +53,13 @@ try {
 
   const controls = page.locator(".tjm-fm-text-controls");
   await controls.waitFor({ state: "visible" });
-  assert.equal(await controls.locator("button").count(), 3);
+  assert.equal(await controls.locator("button").count(), 2);
   const decrease = controls.locator('[data-principles-text-action="decrease"]');
-  const reset = controls.locator('[data-principles-text-action="reset"]');
   const increase = controls.locator('[data-principles-text-action="increase"]');
-  const status = controls.locator("[data-principles-text-status]");
+  assert.equal(await controls.locator('[data-principles-text-action="reset"]').count(), 0);
+  assert.equal(await controls.locator("[data-principles-text-status]").count(), 0);
+  assert.equal(await controls.getByText(/Text size/i).count(), 0);
   assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "6");
-  assert.equal((await status.textContent()).trim(), "7 of 20");
-  assert.equal(await reset.getAttribute("aria-pressed"), "true");
   assert.equal(await decrease.isDisabled(), false);
   assert.equal(await increase.isDisabled(), false);
 
@@ -76,20 +75,16 @@ try {
     assert.ok(nextSize > previousSize, `Tap ${expectedStep - 6} should increase text from ${previousSize}px; got ${nextSize}px.`);
     previousSize = nextSize;
   }
-  assert.equal((await status.textContent()).trim(), "10 of 20");
-  assert.equal(await reset.getAttribute("aria-pressed"), "false");
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "9");
 
   await page.reload({ waitUntil: "domcontentloaded" });
   const reloadedControls = page.locator(".tjm-fm-text-controls");
   await reloadedControls.waitFor({ state: "visible" });
   const reloadedDecrease = reloadedControls.locator('[data-principles-text-action="decrease"]');
-  const reloadedReset = reloadedControls.locator('[data-principles-text-action="reset"]');
   const reloadedIncrease = reloadedControls.locator('[data-principles-text-action="increase"]');
-  const reloadedStatus = reloadedControls.locator("[data-principles-text-status]");
   const reloadedBody = page.locator(".tjm-fm-principle-body > p");
   assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "9");
-  assert.equal((await reloadedStatus.textContent()).trim(), "10 of 20");
+  assert.equal(await reloadedControls.locator("button").count(), 2);
 
   previousSize = Number.parseFloat(await reloadedBody.evaluate((element) => getComputedStyle(element).fontSize));
   for (let expectedStep = 10; expectedStep <= 19; expectedStep += 1) {
@@ -100,7 +95,6 @@ try {
     previousSize = nextSize;
   }
   const maximumSize = previousSize;
-  assert.equal((await reloadedStatus.textContent()).trim(), "20 of 20");
   assert.equal(await reloadedIncrease.isDisabled(), true);
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "19");
 
@@ -115,21 +109,18 @@ try {
     assert.ok(nextSize < previousSize, `Size ${expectedStep + 1} should be smaller than size ${expectedStep + 2}.`);
     previousSize = nextSize;
   }
-  assert.equal((await reloadedStatus.textContent()).trim(), "1 of 20");
   assert.equal(await reloadedDecrease.isDisabled(), true);
   assert.ok(previousSize < defaultSize, `Minimum text (${previousSize}px) should be smaller than default (${defaultSize}px).`);
 
-  await reloadedReset.click();
+  await page.evaluate(() => window.TJMPrinciplesTextSize.reset());
   assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "6");
-  assert.equal((await reloadedStatus.textContent()).trim(), "7 of 20");
-  assert.equal(await reloadedReset.getAttribute("aria-pressed"), "true");
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "6");
 
   await page.evaluate(() => localStorage.setItem("tjm-principles-text-size", "large"));
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.locator(".tjm-fm-text-controls").waitFor({ state: "visible" });
   assert.equal(await page.locator("html").getAttribute("data-principles-text-step"), "10");
-  assert.equal((await page.locator("[data-principles-text-status]").textContent()).trim(), "11 of 20");
+  assert.equal(await page.locator(".tjm-fm-text-controls button").count(), 2);
   assert.equal(await page.evaluate(() => localStorage.getItem("tjm-principles-text-size")), "10");
 
   assert.deepEqual(errors, [], `Browser errors:\n${errors.join("\n")}`);

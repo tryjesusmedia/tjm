@@ -116,17 +116,12 @@
     max-width: 100% !important;
     min-width: 0 !important;
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) repeat(3, 48px) !important;
+    grid-template-columns: repeat(2, 48px) !important;
     align-items: center !important;
-    justify-content: stretch !important;
+    justify-content: end !important;
     gap: 8px !important;
     overflow: visible !important;
     padding: 0 !important;
-  }
-
-  .tjm-fm-text-controls > span {
-    min-width: 0 !important;
-    margin: 0 !important;
   }
 
   .tjm-fm-text-controls button {

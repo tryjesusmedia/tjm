@@ -20,19 +20,6 @@
   gap: 7px;
 }
 
-.tjm-fm-text-controls > span {
-  margin-right: 2px;
-  color: #5f5660;
-  font-size: max(.9375rem, 15px);
-  font-weight: 750;
-  line-height: 1.35;
-}
-
-.tjm-fm-text-controls output {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
 .tjm-fm-text-controls button {
   min-width: 42px;
   min-height: 42px;
@@ -61,13 +48,6 @@
   color: rgba(49, 30, 51, .38);
   box-shadow: none;
   cursor: default;
-}
-
-.tjm-fm-text-controls button[aria-pressed="true"] {
-  border-color: #311e33;
-  background: #311e33;
-  color: #ffe8a9;
-  box-shadow: 0 0 0 3px rgba(238, 189, 74, .22);
 }
 
 .tjm-fm-text-controls button:focus-visible {
@@ -218,10 +198,6 @@
     width: 100%;
     justify-content: flex-end;
     padding-top: 2px;
-  }
-
-  .tjm-fm-text-controls > span {
-    margin-right: auto;
   }
 
   .tjm-fm-text-controls button {
