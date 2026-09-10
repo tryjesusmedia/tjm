@@ -23,7 +23,7 @@ for (const config of [source.conflict, source.chron]) {
 }
 
 for (const index of [source.conflictIndex, source.chronIndex]) {
-  assert.match(index, /config\.js\?v=20260909-2/);
+  assert.match(index, /config\.js\?v=20260909-3/);
 }
 
 assert.match(source.script, /Use any available whole number/);
