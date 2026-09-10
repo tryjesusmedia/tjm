@@ -187,6 +187,31 @@
 
 .tjm-fm-principle.is-expanded {
   width: var(--tjm-principles-expanded-width);
+  max-height: var(--tjm-principles-card-max-height, min(680px, calc(100dvh - 300px)));
+  display: flex;
+  flex-direction: column;
+}
+
+.tjm-fm-principle.is-expanded > .tjm-fm-principle-row {
+  flex: 0 0 auto;
+}
+
+.tjm-fm-principle.is-expanded > .tjm-fm-principle-body,
+.tjm-fm-list-principle-detail {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tjm-fm-principle.is-expanded > .tjm-fm-principle-body {
+  flex: 1 1 auto;
+  touch-action: pan-y;
+}
+
+.tjm-fm-list-principle-detail {
+  max-height: min(640px, 62dvh);
 }
 
 @media (max-width: 760px) {
