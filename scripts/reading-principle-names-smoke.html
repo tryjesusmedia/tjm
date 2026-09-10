@@ -28,7 +28,7 @@
   <script>
     window.__rpcCalls = [];
     let rows = [];
-    let editing = false;
+    let databaseRows = [];
 
     const rpc = async (name, args) => {
       window.__rpcCalls.push({ name, args });
@@ -44,23 +44,23 @@
           group_title: null,
           deleted_at: null,
         };
-        rows = [...rows, created];
+        databaseRows = [...databaseRows, created];
         return { data: created, error: null };
       }
       if (name === "update_conflict_principle") {
-        rows = rows.map((row) => row.id === args.p_principle_id ? {
+        databaseRows = databaseRows.map((row) => row.id === args.p_principle_id ? {
           ...row,
           principle_number: args.p_principle_number,
           body: args.p_body,
           cross_reference_numbers: args.p_cross_reference_numbers,
         } : row);
-        return { data: rows, error: null };
+        return { data: databaseRows, error: null };
       }
       if (name === "set_conflict_principle_name") {
-        rows = rows.map((row) => row.id === args.p_principle_id ? { ...row, principle_name: args.p_name } : row);
-        return { data: rows, error: null };
+        databaseRows = databaseRows.map((row) => row.id === args.p_principle_id ? { ...row, principle_name: args.p_name } : row);
+        return { data: databaseRows, error: null };
       }
-      return { data: rows, error: null };
+      return { data: databaseRows, error: null };
     };
 
     window.__options = {
