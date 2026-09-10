@@ -1,0 +1,47 @@
+name: Validate Reading Principle Names
+
+on:
+  pull_request:
+    paths:
+      - "lib/reading-principle-names.js"
+      - "lib/reading-principle-names.css"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-reading-principle-names.mjs"
+      - "scripts/reading-principle-names-smoke.html"
+      - "scripts/test-reading-principle-names-browser.mjs"
+      - ".github/workflows/validate-reading-principle-names.yml"
+  push:
+    branches: [main]
+    paths:
+      - "lib/reading-principle-names.js"
+      - "lib/reading-principle-names.css"
+      - "bibleandconflictoftheages/config.js"
+      - "chronbible/config.js"
+      - "scripts/validate-reading-principle-names.mjs"
+      - "scripts/reading-principle-names-smoke.html"
+      - "scripts/test-reading-principle-names-browser.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  source-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate source integration
+        run: node scripts/validate-reading-principle-names.mjs
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.55.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Playwright package
+        run: npm install --no-save playwright@1.55.0
+      - name: Test create and edit names from a reading
+        run: node scripts/test-reading-principle-names-browser.mjs

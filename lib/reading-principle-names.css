@@ -1,0 +1,86 @@
+/* Principle names inside individual reading assignments/tasks. */
+.principle-name-field {
+  width: min(100%, 560px);
+}
+
+.principle-name-field input {
+  width: 100%;
+  min-height: 54px;
+  padding: 12px 15px;
+  border: 2px solid rgba(49, 30, 51, .17);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .78);
+  color: var(--plum, #311e33);
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(1.125rem, 1.06rem + .22vw, 1.25rem);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.principle-name-field input:focus {
+  border-color: #eebd4a;
+  outline: 3px solid rgba(238, 189, 74, .26);
+  outline-offset: 2px;
+}
+
+.principle-name-field small {
+  display: block;
+  margin-top: 8px;
+  color: #776b73;
+  font-size: max(.9375rem, 15px) !important;
+  line-height: 1.55 !important;
+}
+
+.principle-mini-identity {
+  min-width: 0;
+  display: grid !important;
+  justify-items: start;
+  gap: 4px !important;
+}
+
+.principle-mini-identity > b {
+  color: var(--plum-3, #6f4868);
+  font-size: max(.875rem, 14px);
+  letter-spacing: .08em;
+}
+
+.principle-mini-identity > strong {
+  overflow: hidden;
+  max-width: 42ch;
+  color: var(--plum, #311e33);
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(1.25rem, 1.14rem + .35vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.18;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.principle-mini > header:has(.principle-mini-identity) {
+  align-items: flex-start;
+}
+
+@media (max-width: 700px) {
+  .principle-name-field {
+    max-width: none;
+  }
+
+  .principle-name-field input {
+    min-height: 58px;
+    font-size: 1.125rem;
+  }
+
+  .principle-mini > header:has(.principle-mini-identity) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .principle-mini > header:has(.principle-mini-identity) > span:last-child {
+    justify-content: flex-start;
+  }
+
+  .principle-mini-identity > strong {
+    max-width: 100%;
+    white-space: normal;
+  }
+}

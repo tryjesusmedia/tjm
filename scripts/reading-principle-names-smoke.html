@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../lib/principles.css">
+  <link rel="stylesheet" href="../lib/reading-principle-names.css">
+  <style>
+    :root { --plum: #311e33; --plum-3: #6f4868; --gold: #eebd4a; --serif: Georgia, serif; --sans: Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; background: #faf6ee; color: #171418; font-family: Arial, sans-serif; }
+    .principle-card { max-width: 680px; padding: 28px; border: 1px solid #d7c9b2; border-radius: 22px; background: #f3e8d0; }
+    .field { display: grid; gap: 8px; margin: 0 0 18px; }
+    .field label { color: #53484f; font-size: 14px; font-weight: 800; text-transform: uppercase; }
+    .field textarea { min-height: 150px; padding: 14px; border: 2px solid #d7cfd3; border-radius: 13px; font-size: 18px; }
+    .button { min-height: 48px; padding: 10px 16px; border: 0; border-radius: 10px; background: #eebd4a; font-weight: 800; }
+    .principle-mini { max-width: 680px; margin-top: 18px; padding: 18px; border-radius: 16px; background: #fff; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="principle-card">
+      <h1>Reading assignment</h1>
+      <div id="app"></div>
+    </section>
+  </main>
+
+  <script>
+    window.__rpcCalls = [];
+    let rows = [];
+    let databaseRows = [];
+
+    const rpc = async (name, args) => {
+      window.__rpcCalls.push({ name, args });
+      if (name === "create_conflict_principle") {
+        const created = {
+          id: "principle-one",
+          reading_id: args.p_reading_id,
+          principle_number: args.p_principle_number,
+          principle_name: null,
+          body: args.p_body,
+          cross_reference_numbers: args.p_cross_reference_numbers,
+          group_id: null,
+          group_title: null,
+          deleted_at: null,
+        };
+        databaseRows = [...databaseRows, created];
+        return { data: created, error: null };
+      }
+      if (name === "update_conflict_principle") {
+        databaseRows = databaseRows.map((row) => row.id === args.p_principle_id ? {
+          ...row,
+          principle_number: args.p_principle_number,
+          body: args.p_body,
+          cross_reference_numbers: args.p_cross_reference_numbers,
+        } : row);
+        return { data: databaseRows, error: null };
+      }
+      if (name === "set_conflict_principle_name") {
+        databaseRows = databaseRows.map((row) => row.id === args.p_principle_id ? { ...row, principle_name: args.p_name } : row);
+        return { data: databaseRows, error: null };
+      }
+      return { data: databaseRows, error: null };
+    };
+
+    window.__options = {
+      planId: "smoke-plan",
+      exportFilename: "smoke",
+      escapeHTML(value) {
+        return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+      },
+      getPrinciples: () => rows,
+      setPrinciples: (next) => { rows = next; },
+      getDeletedPrinciples: () => [],
+      setDeletedPrinciples: () => {},
+      getDb: () => ({ rpc }),
+      getSession: () => ({ user: { id: "smoke-user" } }),
+      getReadings: () => [{ id: "reading-one", title: "Genesis 1" }],
+      readingLabel: (reading) => reading.title,
+      setSync: () => {},
+      toast: (message) => { window.__lastToast = message; },
+      showSignIn: () => {},
+      showPrinciples: () => {},
+      goToReadingById: () => {},
+      rerender: () => window.__render(),
+    };
+  </script>
+  <script src="../lib/principles.js"></script>
+  <script src="../lib/reading-principle-names.js"></script>
+  <script>
+    window.__controller = window.TJMPrinciples.createController(window.__options);
+
+    window.__render = () => {
+      const create = rows.length ? "" : `<form id="principle-form">
+        ${window.__controller.renderCreateNumberField()}
+        <div class="field"><label for="principle-body">The principle I see</label><textarea id="principle-body" required></textarea></div>
+        <button class="button" type="submit">Save principle</button>
+      </form>`;
+      const saved = rows.map((row) => window.__controller.renderReadingPrinciple(row)).join("");
+      document.getElementById("app").innerHTML = create + saved;
+    };
+
+    document.addEventListener("submit", (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      if (form.id === "principle-form") {
+        event.preventDefault();
+        window.__controller.createFromForm(form, "reading-one");
+      } else if (window.__controller.handleSubmit(form)) {
+        event.preventDefault();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      const target = event.target.closest("button");
+      if (target) window.__controller.handleClick(target);
+    });
+
+    window.__render();
+  </script>
+</body>
+</html>
