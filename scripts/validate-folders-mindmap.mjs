@@ -40,6 +40,8 @@ assert.match(source.module, /className="tjm-fm-principle-body-text"/);
 assert.match(source.module, /tjm-principles-text-size-change/);
 assert.match(source.module, /--tjm-principles-card-max-height/);
 assert.match(source.module, /Math\.max\(1, Number\(currentViewport\?\.zoom\)/);
+assert.match(source.module, /<\$\{Controls\} position="bottom-left"/);
+assert.match(source.module, /<\$\{MiniMap\} position="top-right"/);
 assert.match(source.module, /function useCompactLayout/);
 assert.match(source.module, /Arrange Automatically/);
 assert.match(source.module, /Fit All/);
@@ -85,6 +87,7 @@ assert.doesNotMatch(source.module, /location\.reload\(|window\.location\.reload\
 
 for (const config of [source.conflictConfig, source.chronConfig]) {
   assert.match(config, /principles-folders-flow\.css\?v=20260910-1/);
+  assert.match(config, /principles-folders-flow\.mjs\?v=20260910-4/);
   assert.match(config, /principles-folders-flow\.css/);
   assert.match(config, /principles-folders-flow\.mjs/);
   assert.match(config, /principles-react-flow-bridge\.js/);

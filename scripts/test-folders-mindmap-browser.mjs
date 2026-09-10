@@ -99,6 +99,11 @@ try {
   const windowBox = await page.locator(".tjm-fm-window").boundingBox();
   assert.ok(windowBox && Math.abs(windowBox.x) < 1 && Math.abs(windowBox.y) < 1);
   assert.ok(Math.abs(windowBox.width - 1280) < 1 && Math.abs(windowBox.height - 900) < 1, "The desktop Principles Map should fill the viewport.");
+  const desktopMapNavigation = await page.locator(".react-flow__controls").boundingBox();
+  const desktopMapToggle = await page.locator(".tjm-fm-persistent-toggle").boundingBox();
+  assert.ok(desktopMapNavigation && desktopMapToggle);
+  assert.ok(desktopMapNavigation.x < windowBox.x + windowBox.width / 2, "Desktop map navigation should sit on the left.");
+  assert.ok(desktopMapNavigation.x + desktopMapNavigation.width < desktopMapToggle.x, "Desktop map navigation must not overlap the map toggle.");
   assert.equal((await page.locator(".tjm-fm-title-row h2").textContent())?.trim(), "Principles Map");
   assert.equal(await page.getByRole("button", { name: "Principles", exact: true }).count(), 0);
   assert.equal(await page.getByText("Group led by", { exact: false }).count(), 0);
@@ -293,6 +298,11 @@ try {
   await phone.getByRole("button", { name: "Map", exact: true }).click();
   await phone.waitForSelector(".react-flow");
   await phone.waitForFunction(() => localStorage.getItem("tjm-mobile-principles-map-width-repair-v1:bible-conflict-ages-v1") === "done");
+  const phoneMapNavigation = await phone.locator(".react-flow__controls").boundingBox();
+  const phoneMapToggle = await phone.locator(".tjm-fm-persistent-toggle").boundingBox();
+  assert.ok(phoneMapNavigation && phoneMapToggle);
+  assert.ok(phoneMapNavigation.x < phoneWindow.x + phoneWindow.width / 2, "Mobile map navigation should sit on the left.");
+  assert.ok(phoneMapNavigation.x + phoneMapNavigation.width < phoneMapToggle.x, "Mobile map navigation must not overlap the map toggle.");
   assert.deepEqual(await phone.locator(".react-flow__pane").evaluate((pane) => ({
     pointerEvents: getComputedStyle(pane).pointerEvents,
     touchAction: getComputedStyle(pane).touchAction,

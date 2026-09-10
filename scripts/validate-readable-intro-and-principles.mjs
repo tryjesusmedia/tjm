@@ -20,14 +20,14 @@ const source = Object.fromEntries(await Promise.all(
 execFileSync(process.execPath, ["--check", files.textJs], { stdio: "inherit" });
 
 assert.match(source.conflictIndex, /hero-readability\.css\?v=20260908-1/);
-assert.match(source.conflictIndex, /config\.js\?v=20260910-4/);
+assert.match(source.conflictIndex, /config\.js\?v=20260910-5/);
 assert.match(source.conflictIndex, /readability\.css\?v=20260910-1/);
 assert.match(source.conflictIndex, /class="hero-intro-lead"/);
 assert.match(source.conflictIndex, /<details class="hero-intro-more">/);
 assert.match(source.conflictIndex, /<summary>Read more about this journey<\/summary>/);
 assert.doesNotMatch(source.conflictIndex, /<details class="hero-intro-more"\s+open/);
 assert.match(source.conflictIndex, /class="hero-intro-more-content"/);
-assert.match(source.chronIndex, /config\.js\?v=20260910-4/);
+assert.match(source.chronIndex, /config\.js\?v=20260910-5/);
 assert.match(source.chronIndex, /readability\.css\?v=20260910-1/);
 
 assert.match(source.globalCss, /:not\(\.tjm-fm-principle-body-text\)/);
@@ -39,6 +39,7 @@ assert.match(source.heroCss, /min-height:\s*58px/);
 
 for (const config of [source.conflictConfig, source.chronConfig]) {
   assert.match(config, /principles-folders-flow\.css\?v=20260910-1/);
+  assert.match(config, /principles-folders-flow\.mjs\?v=20260910-4/);
   assert.match(config, /principles-text-size\.css\?v=20260910-3/);
   assert.match(config, /principles-text-size\.js\?v=20260910-3/);
 }
