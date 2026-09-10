@@ -35,6 +35,8 @@ assert.match(source.module, /New Principle/);
 assert.match(source.module, /Find a Principle/);
 assert.match(source.module, /function ListView/);
 assert.match(source.module, /function ViewSwitch/);
+assert.match(source.module, /className="tjm-fm-principle-summary-text"/);
+assert.match(source.module, /className="tjm-fm-principle-body-text"/);
 assert.match(source.module, /function useCompactLayout/);
 assert.match(source.module, /Arrange Automatically/);
 assert.match(source.module, /Fit All/);

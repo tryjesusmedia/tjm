@@ -19,13 +19,13 @@ const source = Object.fromEntries(await Promise.all(
 execFileSync(process.execPath, ["--check", files.textJs], { stdio: "inherit" });
 
 assert.match(source.conflictIndex, /hero-readability\.css\?v=20260908-1/);
-assert.match(source.conflictIndex, /config\.js\?v=20260910-1/);
+assert.match(source.conflictIndex, /config\.js\?v=20260910-2/);
 assert.match(source.conflictIndex, /class="hero-intro-lead"/);
 assert.match(source.conflictIndex, /<details class="hero-intro-more">/);
 assert.match(source.conflictIndex, /<summary>Read more about this journey<\/summary>/);
 assert.doesNotMatch(source.conflictIndex, /<details class="hero-intro-more"\s+open/);
 assert.match(source.conflictIndex, /class="hero-intro-more-content"/);
-assert.match(source.chronIndex, /config\.js\?v=20260910-1/);
+assert.match(source.chronIndex, /config\.js\?v=20260910-2/);
 
 assert.match(source.heroCss, /\.journey-hero \.hero-intro > \.hero-intro-lead/);
 assert.match(source.heroCss, /font-size:\s*clamp\(1\.15rem/);
@@ -33,7 +33,7 @@ assert.match(source.heroCss, /\.hero-intro-more\[open\]/);
 assert.match(source.heroCss, /min-height:\s*58px/);
 
 for (const config of [source.conflictConfig, source.chronConfig]) {
-  assert.match(config, /principles-text-size\.css\?v=20260910-1/);
+  assert.match(config, /principles-text-size\.css\?v=20260910-2/);
   assert.match(config, /principles-text-size\.js\?v=20260910-1/);
 }
 
@@ -56,8 +56,12 @@ assert.match(source.textJs, /A\+/);
 
 assert.match(source.textCss, /--tjm-principles-node-width/);
 assert.match(source.textCss, /--tjm-principles-expanded-width/);
+assert.match(source.textCss, /flex-wrap:\s*nowrap/);
+assert.match(source.textCss, /\.tjm-fm-view-switch button[\s\S]*min-height:\s*44px/);
 assert.match(source.textCss, /\.tjm-fm-principle-body > p/);
 assert.match(source.textCss, /\.tjm-fm-list-principle-detail > p/);
+assert.match(source.textCss, /\.tjm-fm-principle-summary-text/);
+assert.match(source.textCss, /\.tjm-fm-principle-body-text/);
 assert.match(source.textCss, /\.tjm-fm-principle-bottom button/);
 assert.match(source.textCss, /\.tjm-fm-reading-link/);
 assert.doesNotMatch(source.textCss, /\.tjm-fm-list-section h3/);

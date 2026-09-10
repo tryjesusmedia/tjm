@@ -86,21 +86,19 @@
     min-width: max-content;
   }
 
-  /*
-    Put the List/Map switch and the text-size controls on separate rows. This
-    keeps A−, A, and A+ inside the visible width even with enlarged text.
-  */
+  /* Keep List, Map, A−, and A+ together as one compact control row. */
   .tjm-fm-workspace-toolbar {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    align-items: stretch !important;
-    gap: 10px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
     overflow: hidden !important;
     padding-inline: 10px !important;
   }
 
   .tjm-fm-view-switch {
-    width: 100% !important;
+    flex: 1 1 auto !important;
+    width: auto !important;
     max-width: 100% !important;
     min-width: 0 !important;
   }
@@ -108,34 +106,33 @@
   .tjm-fm-view-switch button {
     width: 100% !important;
     min-width: 0 !important;
+    min-height: 48px !important;
   }
 
   .tjm-fm-text-controls {
+    flex: 0 0 auto !important;
     order: initial !important;
-    width: 100% !important;
+    width: auto !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    display: grid !important;
-    grid-template-columns: repeat(2, 48px) !important;
+    display: flex !important;
     align-items: center !important;
-    justify-content: end !important;
-    gap: 8px !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
     overflow: visible !important;
     padding: 0 !important;
   }
 
   .tjm-fm-text-controls button {
-    width: 48px !important;
-    min-width: 48px !important;
-    max-width: 48px !important;
-    min-height: 48px !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    min-height: 44px !important;
     padding: 0 !important;
   }
 
   .tjm-fm-workspace-toolbar > span {
-    width: 100%;
-    min-width: 0;
-    white-space: normal !important;
+    display: none !important;
   }
 
   /*

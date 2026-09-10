@@ -18,12 +18,12 @@ const source = Object.fromEntries(await Promise.all(
 execFileSync(process.execPath, ["--check", files.script], { stdio: "inherit" });
 
 for (const config of [source.conflict, source.chron]) {
-  assert.match(config, /reading-plan-copy-mobile-map-fix\.css\?v=20260910-1/);
+  assert.match(config, /reading-plan-copy-mobile-map-fix\.css\?v=20260910-2/);
   assert.match(config, /reading-plan-copy-mobile-map-fix\.js\?v=20260909-1/);
 }
 
 for (const index of [source.conflictIndex, source.chronIndex]) {
-  assert.match(index, /config\.js\?v=20260910-1/);
+  assert.match(index, /config\.js\?v=20260910-2/);
 }
 
 assert.match(source.script, /Use any available whole number/);
@@ -39,8 +39,9 @@ assert.match(source.css, /\.principle-name-field small/);
 assert.match(source.css, /--tjm-map-visual-width/);
 assert.match(source.css, /overflow-x:\s*clip/);
 assert.match(source.css, /\.tjm-fm-text-controls/);
-assert.match(source.css, /grid-template-columns:\s*repeat\(2, 48px\)/);
-assert.doesNotMatch(source.css, /repeat\(3, 48px\)/);
+assert.match(source.css, /Keep List, Map, A−, and A\+ together as one compact control row/);
+assert.match(source.css, /display:\s*flex\s*!important/);
+assert.match(source.css, /width:\s*44px\s*!important/);
 assert.match(source.css, /\.react-flow__pane/);
 assert.match(source.css, /pointer-events:\s*all\s*!important/);
 

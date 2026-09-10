@@ -59,6 +59,37 @@ async function assertMenuItems(page, names) {
 }
 
 try {
+  // The four frequent controls share one row, and the real map summary/body both scale.
+  const sizingDesktop = await openCleanPage({ width: 1280, height: 900 });
+  const sizingPage = sizingDesktop.page;
+  await sizingPage.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
+  const listBox = await sizingPage.getByRole("button", { name: "List", exact: true }).boundingBox();
+  const mapBox = await sizingPage.getByRole("button", { name: "Map", exact: true }).boundingBox();
+  const smallerBox = await sizingPage.getByRole("button", { name: "Use smaller Principles text", exact: true }).boundingBox();
+  const largerBox = await sizingPage.getByRole("button", { name: "Use larger Principles text", exact: true }).boundingBox();
+  const centers = [listBox, mapBox, smallerBox, largerBox].map((box) => box.y + (box.height / 2));
+  assert.ok(Math.max(...centers) - Math.min(...centers) < 2, "List, Map, A−, and A+ should share one line.");
+  assert.ok(smallerBox.width < listBox.width && largerBox.width < mapBox.width);
+  assert.ok(smallerBox.height < listBox.height && largerBox.height < mapBox.height);
+
+  const sizingNode = sizingPage.locator('[data-fm-principle-id="p3"]');
+  const summaryText = sizingNode.locator(".tjm-fm-principle-summary-text");
+  await sizingNode.locator(".tjm-fm-principle-preview").click();
+  await sizingNode.locator(".tjm-fm-principle-body-text").waitFor({ state: "visible" });
+  const bodyText = sizingNode.locator(".tjm-fm-principle-body-text");
+  const readingButton = sizingNode.getByRole("button", { name: "Go to reading", exact: true });
+  const fontSize = (locator) => locator.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize));
+  const initialSummarySize = await fontSize(summaryText);
+  const initialBodySize = await fontSize(bodyText);
+  const initialReadingSize = await fontSize(readingButton);
+  await sizingPage.getByRole("button", { name: "Use larger Principles text", exact: true }).click();
+  assert.ok(await fontSize(summaryText) > initialSummarySize, "The center summary text should grow.");
+  assert.ok(await fontSize(bodyText) > initialBodySize, "The expanded center body text should grow.");
+  assert.ok(await fontSize(readingButton) > initialReadingSize, "The reading action should grow.");
+  await sizingPage.getByRole("button", { name: "Use smaller Principles text", exact: true }).click();
+  assert.equal(await sizingPage.locator("html").getAttribute("data-principles-text-step"), "6");
+  await sizingDesktop.context.close();
+
   const desktop = await openCleanPage({ width: 1280, height: 900 });
   const page = desktop.page;
   await page.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
@@ -204,14 +235,19 @@ try {
   }
   const viewSwitchBox = await phone.locator(".tjm-fm-view-switch").boundingBox();
   const textControlsBox = await phone.locator(".tjm-fm-text-controls").boundingBox();
-  assert.ok(viewSwitchBox && textControlsBox && textControlsBox.y >= viewSwitchBox.y + viewSwitchBox.height);
+  assert.ok(viewSwitchBox && textControlsBox);
+  assert.ok(Math.abs((textControlsBox.y + textControlsBox.height / 2) - (viewSwitchBox.y + viewSwitchBox.height / 2)) < 2);
+  assert.ok(textControlsBox.x >= viewSwitchBox.x + viewSwitchBox.width);
   assert.ok(textControlsBox.x >= phoneWindow.x && textControlsBox.x + textControlsBox.width <= phoneWindow.x + phoneWindow.width);
   assert.equal(await phone.locator(".tjm-fm-text-controls button").count(), 2);
   assert.equal(await phone.getByRole("button", { name: "Use standard Principles text", exact: true }).count(), 0);
   for (const name of ["Use smaller Principles text", "Use larger Principles text"]) {
     const box = await phone.getByRole("button", { name, exact: true }).boundingBox();
-    assert.ok(box && box.width >= 48 && box.height >= 48, `${name} should remain inside a 48px control`);
+    assert.ok(box && box.width === 44 && box.height === 44, `${name} should use the smaller 44px control`);
   }
+  const phoneListBox = await phone.getByRole("button", { name: "List", exact: true }).boundingBox();
+  const phoneMapBox = await phone.getByRole("button", { name: "Map", exact: true }).boundingBox();
+  assert.ok(phoneListBox.width > 44 && phoneMapBox.width > 44 && phoneListBox.height > 44 && phoneMapBox.height > 44);
   assert.equal(await phone.getByText("Prayer makes room to listen", { exact: false }).count(), 1);
   await phone.getByRole("button", { name: "Principles Map menu", exact: true }).click();
   const actionSheet = await phone.locator(".tjm-fm-context-menu").boundingBox();
