@@ -96,5 +96,16 @@ assert.match(html, /config\.js\?v=20260911-2/);
 assert.doesNotMatch(`${html}\n${app}`, /Bible highlights|highlights, and notes|keep notes/);
 assert.doesNotMatch(app, /CONFIG\.notesPlanId/);
 assert.doesNotMatch(app, /remain in their exact order/i);
+assert.match(html, /data-view="rewards"/);
+assert.match(html, /> Leaderboard</);
+assert.match(app, /const POINTS_PER_CHAPTER = 10/);
+assert.match(app, /\[1, 25, 100, 250, 500, 750, 1000, 1205\]/);
+assert.match(app, /completedChapters \* POINTS_PER_CHAPTER/);
+assert.match(app, /ensure_journey_profile/);
+assert.match(app, /reroll_journey_alias/);
+assert.match(app, /get_journey_leaderboard/);
+assert.match(app, /Points celebrate reading progress—not spiritual worth/);
+assert.match(app, /Only random aliases and reading totals are shown/);
+assert.doesNotMatch(app, /streak|demotion|loot box/i);
 
 console.log(`Chronological plan validated: ${plan.readings.length} named tasks, ${plan.chapterCount} individually trackable chapters, and KJV BibleGateway links across ${plan.sections.length} sections.`);

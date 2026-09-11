@@ -115,12 +115,113 @@
 .chronbible .next-reading-card .eyebrow { color: var(--gold); }
 .chronbible .next-reading-card .button { width: 100%; margin-top: 8px; }
 
+.chronbible .journey-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.chronbible .points-inline {
+  margin: 0 0 13px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(49,30,51,.14);
+  border-radius: 13px;
+  background: rgba(255,255,255,.5);
+}
+
+.chronbible .points-inline strong { color: var(--plum); font-family: var(--serif); font-size: 26px; }
+.chronbible .points-inline span { color: #746a72; font-size: 9px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.chronbible .reward-stat { border-color: rgba(166,114,31,.35); background: #fff3d2; }
+
+.chronbible .reward-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(310px, .92fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.chronbible .points-card,
+.chronbible .alias-card,
+.chronbible .milestone-panel,
+.chronbible .leaderboard-panel {
+  padding: 25px;
+  border: 1px solid var(--line-dark);
+  border-radius: 22px;
+  background: var(--white);
+}
+
+.chronbible .points-card { background: linear-gradient(145deg, var(--plum), #211522); color: var(--ivory); box-shadow: var(--shadow); }
+.chronbible .points-card .eyebrow { color: var(--gold); }
+.chronbible .points-card > strong { display: block; color: var(--gold-light); font-family: var(--serif); font-size: clamp(64px, 10vw, 104px); font-weight: 600; line-height: .8; }
+.chronbible .points-card > span { display: block; margin-top: 18px; color: rgba(243,232,208,.7); font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+.chronbible .reward-progress { margin-top: 28px; }
+.chronbible .reward-progress .progress-track { background: rgba(255,255,255,.13); }
+.chronbible .reward-progress small { display: block; margin-top: 9px; color: rgba(243,232,208,.72); font-size: 10px; line-height: 1.55; }
+
+.chronbible .alias-card h3,
+.chronbible .milestone-panel h3,
+.chronbible .leaderboard-panel h3 {
+  margin: 0;
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.chronbible .alias-card p:not(.eyebrow),
+.chronbible .leaderboard-panel header p {
+  color: #746a72;
+  font-size: 10px;
+  line-height: 1.65;
+}
+
+.chronbible .alias-card .button { width: 100%; margin-top: 7px; }
+.chronbible .alias-card > small { display: block; margin-top: 10px; color: #8a7f86; font-size: 8px; line-height: 1.5; }
+.chronbible .alias-card-guest { background: #fff3d2; }
+
+.chronbible .milestone-panel,
+.chronbible .leaderboard-panel { margin-top: 20px; }
+.chronbible .milestone-panel ul { margin: 20px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; list-style: none; }
+.chronbible .milestone { min-height: 88px; padding: 15px; display: grid; align-content: center; justify-items: center; gap: 7px; border: 1px solid var(--line-dark); border-radius: 15px; color: #91858d; text-align: center; }
+.chronbible .milestone span { width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid #c9bfae; border-radius: 50%; font-size: 12px; }
+.chronbible .milestone strong { font-size: 9px; line-height: 1.35; }
+.chronbible .milestone.earned { border-color: rgba(166,114,31,.34); background: #fff3d2; color: var(--plum); }
+.chronbible .milestone.earned span { border-color: var(--green); background: var(--green); color: #1d2722; font-weight: 900; }
+
+.chronbible .leaderboard-panel > header { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.chronbible .leaderboard-list { margin-top: 22px; display: grid; gap: 7px; }
+.chronbible .leaderboard-row { min-height: 66px; padding: 11px 14px; display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; align-items: center; gap: 12px; border: 1px solid var(--line-dark); border-radius: 14px; background: var(--paper); }
+.chronbible .leaderboard-row.is-current { border-color: rgba(166,114,31,.45); background: #fff3d2; box-shadow: 0 8px 22px rgba(49,30,51,.08); }
+.chronbible .leaderboard-rank { color: #8a7f86; font-family: var(--serif); font-size: 24px; font-weight: 700; }
+.chronbible .leaderboard-alias { min-width: 0; display: flex; align-items: center; gap: 9px; }
+.chronbible .leaderboard-alias strong { overflow: hidden; color: var(--plum); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.chronbible .leaderboard-alias small { padding: 4px 7px; border-radius: 999px; background: var(--plum); color: var(--gold-light); font-size: 7px; font-weight: 900; letter-spacing: .1em; }
+.chronbible .leaderboard-score { display: grid; justify-items: end; }
+.chronbible .leaderboard-score strong { color: #9a6d1f; font-size: 12px; }
+.chronbible .leaderboard-score small { margin-top: 3px; color: #887d84; font-size: 8px; }
+.chronbible .leaderboard-state { min-height: 180px; margin-top: 20px; display: grid; place-content: center; justify-items: center; gap: 9px; border: 1px dashed rgba(49,30,51,.2); border-radius: 16px; color: #7f747b; text-align: center; }
+.chronbible .leaderboard-state p { max-width: 520px; margin: 0; font-size: 10px; line-height: 1.6; }
+.chronbible .leaderboard-error { border-color: rgba(226,109,109,.38); color: #8b5252; }
+
 @media (max-width: 900px) {
   .chronbible .chapter-side { position: static; }
   .chronbible .progress-layout-wide { grid-template-columns: 1fr; }
+  .chronbible .reward-overview { grid-template-columns: 1fr; }
+  .chronbible .milestone-panel ul { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 680px) {
   .chronbible .hero-copy h1 { font-size: clamp(42px, 13vw, 62px); }
   .chronbible .chapter-side { padding: 20px; }
+  .chronbible .journey-nav button { padding-inline: 5px; font-size: .78rem; }
+  .chronbible .journey-nav button span { display: block; margin: 0 0 3px; }
+  .chronbible .points-card,
+  .chronbible .alias-card,
+  .chronbible .milestone-panel,
+  .chronbible .leaderboard-panel { padding: 20px 17px; }
+  .chronbible .leaderboard-panel > header { align-items: stretch; flex-direction: column; }
+  .chronbible .leaderboard-panel > header .button { width: 100%; }
+  .chronbible .leaderboard-row { grid-template-columns: 46px minmax(0, 1fr); }
+  .chronbible .leaderboard-score { grid-column: 2; justify-items: start; }
 }

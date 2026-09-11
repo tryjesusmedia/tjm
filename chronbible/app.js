@@ -3,6 +3,8 @@
 
   const CONFIG = window.TJM_CHRONBIBLE_CONFIG;
   const PLAN_PATH = "data/readings.json";
+  const POINTS_PER_CHAPTER = 10;
+  const REWARD_MILESTONES = Object.freeze([1, 25, 100, 250, 500, 750, 1000, 1205]);
   const root = document.getElementById("view-root");
   const loading = document.getElementById("loading-state");
   const authGate = document.getElementById("auth-gate");
@@ -25,6 +27,11 @@
   let activeView = "readings";
   let activeSection = "";
   let refreshTimer = null;
+  let journeyAlias = "";
+  let leaderboard = [];
+  let leaderboardLoaded = false;
+  let leaderboardLoading = false;
+  let leaderboardError = "";
 
   function escapeHTML(value = "") {
     return String(value)
@@ -74,6 +81,20 @@
 
   function percentComplete() {
     return Math.round((completed.size / plan.chapterCount) * 100);
+  }
+
+  function rewardSummary() {
+    const completedChapters = completed.size;
+    const nextMilestone = REWARD_MILESTONES.find((milestone) => completedChapters < milestone) ?? null;
+    const milestoneProgress = nextMilestone === null
+      ? 100
+      : Math.round((completedChapters / nextMilestone) * 100);
+    return {
+      completedChapters,
+      journeyPoints: completedChapters * POINTS_PER_CHAPTER,
+      nextMilestone,
+      milestoneProgress: Math.max(0, Math.min(100, milestoneProgress)),
+    };
   }
 
   function readingComplete(reading) {
@@ -131,6 +152,7 @@
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
+    if (name === "rewards" && session) void loadJourneyRewards();
     if (focusMain) {
       document.getElementById("journey-main").focus({ preventScroll: true });
       const hero = document.querySelector(".journey-hero");
@@ -153,6 +175,7 @@
     const reading = currentReading();
     const next = nextIncomplete();
     const percent = percentComplete();
+    const rewards = rewardSummary();
     return `
       <section aria-labelledby="readings-heading">
         <header class="view-heading">
@@ -187,8 +210,10 @@
               <strong>${completedTaskCount()} of ${plan.readings.length} tasks</strong>
               <small>${completed.size} OF ${plan.chapterCount} CHAPTERS COMPLETE · ${percent}%</small>
             </div>
+            <div class="points-inline"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></div>
             ${session ? `<button class="button button-primary" type="button" data-reading-index="${next.index}">Continue next task</button>` : `<button class="button button-primary" type="button" data-require-sign-in>Sign in with Google to sync</button>`}
             <button class="button button-secondary" type="button" data-view-shortcut="journey">View the full journey</button>
+            <button class="button button-secondary" type="button" data-view-shortcut="rewards">View leaderboard</button>
           </aside>
         </div>
       </section>`;
@@ -216,6 +241,7 @@
   function renderProgress() {
     const percent = percentComplete();
     const next = nextIncomplete();
+    const rewards = rewardSummary();
     const rows = plan.sections.map((section) => {
       const readings = sectionReadings(section.title);
       const count = readings.filter(readingComplete).length;
@@ -224,7 +250,37 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress is synced across your signed-in devices." : "Sign in with Google whenever you want your progress synced across devices."}</p></div></header>${guestBanner()}<div class="stat-grid stat-grid-three"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress and Journey Points are synced across your signed-in devices." : "Sign in with Google whenever you want your progress and Journey Points synced across devices."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button><button class="button button-secondary" type="button" data-view-shortcut="rewards">View Journey leaderboard</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
+  }
+
+  function renderMilestones(rewards) {
+    return REWARD_MILESTONES.map((milestone) => {
+      const earned = rewards.completedChapters >= milestone;
+      const label = milestone === plan.chapterCount ? "Journey complete" : `${milestone.toLocaleString()} chapters`;
+      return `<li class="milestone ${earned ? "earned" : ""}"><span aria-hidden="true">${earned ? "✓" : "◇"}</span><strong>${label}</strong></li>`;
+    }).join("");
+  }
+
+  function renderLeaderboardRows() {
+    if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Gathering the community…</strong></div>`;
+    if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-refresh-leaderboard>Try again</button></div>`;
+    if (!leaderboard.length) return `<div class="leaderboard-state"><strong>The journey is just beginning.</strong><p>Complete a chapter and return here to see the community.</p></div>`;
+    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} chapters</small></span></article>`).join("")}</div>`;
+  }
+
+  function renderRewards() {
+    const rewards = rewardSummary();
+    const myEntry = leaderboard.find((entry) => entry.is_current_user);
+    const nextLabel = rewards.nextMilestone === null
+      ? "You completed the full journey."
+      : rewards.nextMilestone === 1
+        ? "Complete your first chapter to reach your first milestone."
+        : `${rewards.nextMilestone - rewards.completedChapters} chapters to the ${rewards.nextMilestone.toLocaleString()}-chapter milestone.`;
+    const memberCard = session
+      ? `<article class="alias-card"><p class="eyebrow">YOUR COMMUNITY ALIAS</p><h3>${escapeHTML(journeyAlias || myEntry?.alias || "Preparing your alias…")}</h3><p>${myEntry ? `You are currently ranked #${myEntry.rank} among ${leaderboard.length} readers.` : "Your friendly random alias protects your real identity on the leaderboard."}</p><button class="button button-secondary" type="button" data-reroll-alias ${leaderboardLoading ? "disabled" : ""}>Change my alias</button><small>A new friendly alias is supplied at random. You can change only your own.</small></article>`
+      : `<article class="alias-card alias-card-guest"><p class="eyebrow">JOIN THE COMMUNITY</p><h3>Your progress stays yours.</h3><p>Sign in with Google to sync your points, receive a friendly random alias, and view the all-reader leaderboard.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></article>`;
+
+    return `<section aria-labelledby="rewards-heading" class="rewards-view"><header class="view-heading"><div><p class="eyebrow">JOURNEY POINTS</p><h2 id="rewards-heading">Celebrate steady progress.</h2><p>Each distinct completed chapter earns 10 Journey Points. Points celebrate reading progress—not spiritual worth.</p></div></header><div class="reward-overview"><article class="points-card"><p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} chapters complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article>${memberCard}</div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel"><header><div><p class="eyebrow">ALL READERS</p><h3>Journey leaderboard</h3><p>Only random aliases and reading totals are shown. Tied readers share the same rank.</p></div>${session ? `<button class="button button-secondary" type="button" data-refresh-leaderboard ${leaderboardLoading ? "disabled" : ""}>${leaderboardLoading ? "Refreshing…" : "Refresh"}</button>` : ""}</header>${session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>This keeps the reading community private while your local progress remains available without an account.</p></div>`}</article></section>`;
   }
 
   function render() {
@@ -233,8 +289,55 @@
     if (activeView === "readings") content = renderReadings();
     else if (activeView === "journey") content = renderJourney();
     else if (activeView === "progress") content = renderProgress();
+    else if (activeView === "rewards") content = renderRewards();
     else content = renderReadings();
-    root.innerHTML = `${activeView === "progress" ? "" : guestBanner()}${content}`;
+    root.innerHTML = `${activeView === "progress" || activeView === "rewards" ? "" : guestBanner()}${content}`;
+  }
+
+  async function loadJourneyRewards() {
+    if (!session || !db || leaderboardLoading) return;
+    leaderboardLoading = true;
+    leaderboardError = "";
+    if (activeView === "rewards") render();
+    try {
+      const [profileResult, leaderboardResult] = await Promise.all([
+        db.rpc("ensure_journey_profile"),
+        db.rpc("get_journey_leaderboard"),
+      ]);
+      if (profileResult.error) throw profileResult.error;
+      journeyAlias = String(profileResult.data || "");
+      if (leaderboardResult.error) throw leaderboardResult.error;
+      leaderboard = Array.isArray(leaderboardResult.data) ? leaderboardResult.data : [];
+      leaderboardLoaded = true;
+    } catch (error) {
+      leaderboardError = error.message || "Please try again in a moment.";
+    } finally {
+      leaderboardLoading = false;
+      if (activeView === "rewards") render();
+    }
+  }
+
+  async function rerollJourneyAlias() {
+    if (!session) {
+      showSignIn();
+      return;
+    }
+    if (!window.confirm("Replace your current leaderboard alias with a new random alias?")) return;
+    leaderboardLoading = true;
+    leaderboardError = "";
+    render();
+    const { data, error } = await db.rpc("reroll_journey_alias");
+    if (error) {
+      leaderboardLoading = false;
+      leaderboardError = error.message;
+      render();
+      return;
+    }
+    journeyAlias = String(data || "");
+    leaderboardLoading = false;
+    leaderboardLoaded = false;
+    await loadJourneyRewards();
+    toast(`Your new Journey alias is ${journeyAlias}.`);
   }
 
   async function persistProgress(previousCompleted, previousLastIndex) {
@@ -258,6 +361,7 @@
       return;
     }
     setSync("Synced with the app", "synced");
+    if (activeView === "rewards") await loadJourneyRewards();
   }
 
   async function goToReading(index, view = "readings") {
@@ -366,6 +470,7 @@
       if (document.visibilityState !== "visible" || !session) return;
       try {
         await loadMemberData();
+        if (activeView === "rewards") await loadJourneyRewards();
         render();
       } catch (error) {
         console.warn("Background sync", error.message);
@@ -383,6 +488,11 @@
       lastIndex = 0;
       activeSection = plan.readings[0].section;
       clearInterval(refreshTimer);
+      journeyAlias = "";
+      leaderboard = [];
+      leaderboardLoaded = false;
+      leaderboardLoading = false;
+      leaderboardError = "";
       authGate.hidden = guestBrowsing;
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
@@ -395,6 +505,7 @@
     try {
       await loadMemberData();
       render();
+      if (activeView === "rewards") await loadJourneyRewards();
       scheduleRefresh();
     } catch (error) {
       console.error(error);
@@ -432,6 +543,8 @@
       activeSection = activeSection === target.dataset.section ? "" : target.dataset.section;
       render();
     } else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
+    else if (target.hasAttribute("data-refresh-leaderboard")) loadJourneyRewards();
+    else if (target.hasAttribute("data-reroll-alias")) rerollJourneyAlias();
   });
 
   root.addEventListener("change", (event) => {
@@ -465,6 +578,7 @@
     if (document.visibilityState === "visible" && session) {
       try {
         await loadMemberData();
+        if (activeView === "rewards") await loadJourneyRewards();
         render();
       } catch (error) {
         console.warn(error.message);
