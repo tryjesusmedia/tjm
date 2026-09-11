@@ -1,0 +1,363 @@
+:root {
+  --ink: #ebe9de;
+  --ink-soft: #03101d;
+  --plum: #e5b55b;
+  --plum-2: #186059;
+  --plum-3: #298075;
+  --gold: #c79341;
+  --gold-light: #e5b55b;
+  --ivory: #ebe9de;
+  --paper: #010c18;
+  --paper-2: #03101d;
+  --white: #fdfaf2;
+  --muted: #a8ada5;
+  --green: #298075;
+  --line: rgba(235, 233, 222, .14);
+  --line-dark: rgba(235, 233, 222, .14);
+  --shadow: 0 24px 70px rgba(0, 4, 9, .42);
+}
+
+body,
+#journey-main,
+#view-root,
+.loading-state {
+  color: #ebe9de;
+  background-color: #010c18;
+}
+
+.site-header,
+.journey-nav,
+.site-footer,
+.account-menu,
+.toast {
+  color: #ebe9de;
+  background-color: #03101d;
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.journey-hero {
+  color: #ebe9de;
+  background: linear-gradient(110deg, rgba(1, 12, 24, .99), rgba(3, 16, 29, .97)), #010c18;
+}
+
+.journey-hero::after {
+  background: linear-gradient(90deg, transparent, #c79341, transparent);
+}
+
+.hero-glow,
+.hero-mark,
+.hero-stats span {
+  border-color: rgba(199, 147, 65, .28);
+}
+
+.hero-mark {
+  background-color: rgba(24, 96, 89, .16);
+  box-shadow: inset 0 1px rgba(235, 233, 222, .08);
+}
+
+.hero-copy h1,
+.hero-intro strong,
+.hero-mark strong,
+.brand,
+#profile-name {
+  color: #fdfaf2;
+}
+
+.hero-copy h1 em,
+.eyebrow,
+.journey-hero .eyebrow,
+.hero-stats strong,
+.hero-mark span,
+.hero-book-list small,
+.brand small,
+.header-sign-in {
+  color: #e5b55b;
+}
+
+.hero-intro p,
+.hero-mark p,
+.hero-book-list li,
+.hero-stats span,
+.sync-status,
+.site-footer p,
+.site-footer > small {
+  color: #a8ada5;
+}
+
+.hero-intro .hero-blessing,
+.hero-book-list {
+  border-color: rgba(199, 147, 65, .38);
+}
+
+.journey-nav {
+  background-color: rgba(3, 16, 29, .97);
+}
+
+.journey-nav button,
+.journey-nav button span {
+  color: #a8ada5;
+}
+
+.journey-nav button:hover,
+.journey-nav button.active,
+.journey-nav button.active span {
+  color: #e5b55b;
+}
+
+.journey-nav button.active {
+  border-bottom-color: #c79341;
+}
+
+.view-heading h2,
+.reading-number strong,
+.companion-card h3,
+.principle-panel h3,
+.principles-for-reading > strong,
+.book-summary h3,
+.stat-card strong,
+.progress-panel h3,
+.post-author strong,
+.reply b,
+.save-banner strong {
+  color: #fdfaf2;
+}
+
+.view-heading p:not(.eyebrow),
+.reading-number small,
+.companion-card .citation,
+.principle-panel > p,
+.field small,
+.book-summary p,
+.book-progress small,
+.journey-reading small,
+.journey-reading > em,
+.stat-card span,
+.book-progress-row header,
+.post-author small,
+.empty-card {
+  color: #a8ada5;
+}
+
+.icon-button,
+.companion-card,
+.principle-panel,
+.principle-mini,
+.book-section,
+.stat-card,
+.progress-panel,
+.principle-index-card,
+.member-post,
+.reply,
+.post-principle,
+.save-banner,
+.field textarea,
+.field input,
+.field select,
+.toolbar input,
+.toolbar select,
+.reply-form input {
+  color: #ebe9de;
+  background-color: #03101d;
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.scripture-card,
+.share-panel,
+.next-reading-card {
+  color: #ebe9de;
+  background: linear-gradient(145deg, #03101d, #09252a);
+  border-color: rgba(199, 147, 65, .28);
+}
+
+.companion-card .card-kicker span,
+.companion-chapter,
+.principle-number,
+.principle-mini b,
+.principle-index-card b,
+.post-principle b {
+  color: #e5b55b;
+}
+
+.principle-mini p,
+.principle-index-card p,
+.post-principle,
+.post-body,
+.reply,
+.review-item {
+  color: #ebe9de;
+}
+
+.book-summary,
+.journey-reading {
+  color: #ebe9de;
+  background-color: transparent;
+}
+
+.journey-reading:hover {
+  color: #ebe9de;
+  background-color: rgba(24, 96, 89, .14);
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.progress-track {
+  background-color: rgba(235, 233, 222, .14);
+}
+
+.progress-track i {
+  background: linear-gradient(90deg, #a3712d, #e5b55b);
+}
+
+.button-primary,
+.google-button,
+.profile-button > span:first-of-type,
+.profile-button img,
+.skip-link {
+  color: #010c18;
+  background-color: #c79341;
+}
+
+.button-primary:hover {
+  background-color: #e5b55b;
+}
+
+.button-secondary,
+.account-menu button,
+.guest-button {
+  color: #e5b55b;
+  background-color: transparent;
+  border-color: rgba(199, 147, 65, .42);
+}
+
+.field label,
+.toolbar label {
+  color: #a8ada5;
+}
+
+.source-exact pre {
+  color: #a8ada5;
+  background-color: rgba(235, 233, 222, .06);
+}
+
+.auth-gate {
+  background-color: rgba(1, 12, 24, .9);
+}
+
+.auth-card {
+  color: #ebe9de;
+  background: linear-gradient(145deg, #03101d, #09252a);
+  border-color: rgba(199, 147, 65, .34);
+}
+
+.auth-card h2 {
+  color: #fdfaf2;
+}
+
+.auth-card > p:not(.eyebrow) {
+  color: #a8ada5;
+}
+
+/* Principles Map — the same FaithCraft navy, teal, ivory and gold palette. */
+.tjm-fm-window,
+.tjm-fm-map-body,
+.tjm-fm-workspace-content,
+.tjm-fm-flow,
+.tjm-fm-flow .react-flow,
+.tjm-fm-list-view {
+  color: #ebe9de;
+  background-color: #010c18;
+}
+
+.tjm-fm-sticky-header,
+.tjm-fm-workspace-toolbar,
+.tjm-fm-context-menu,
+.tjm-fm-editor,
+.tjm-fm-small-dialog,
+.tjm-fm-list-section,
+.tjm-fm-folder-list,
+.tjm-fm-principle-list {
+  color: #ebe9de;
+  background-color: #03101d;
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.tjm-fm-flow {
+  border-color: #03101d;
+}
+
+.tjm-fm-flow::after,
+.tjm-fm-node,
+.tjm-fm-flow .react-flow__controls,
+.tjm-fm-flow .react-flow__minimap,
+.tjm-fm-folder-list-row,
+.tjm-fm-list-principle,
+.tjm-fm-view-switch,
+.tjm-fm-choice-list button {
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.tjm-fm-principle,
+.tjm-fm-folder,
+.tjm-fm-folder-list-row,
+.tjm-fm-list-principle,
+.tjm-fm-choice-list button,
+.tjm-fm-flow .react-flow__minimap {
+  color: #ebe9de;
+  background-color: #03101d;
+}
+
+.tjm-fm-folder,
+.tjm-fm-folder-list-row {
+  background-color: #09252a;
+}
+
+.tjm-fm-number-handle,
+.tjm-fm-mini-number,
+.tjm-fm-view-switch button.is-active,
+.tjm-fm-principle-bottom button,
+.tjm-fm-reading-link,
+.tjm-fm-form-actions .is-primary {
+  color: #010c18;
+  background-color: #c79341;
+}
+
+.tjm-fm-title-row h2,
+.tjm-fm-folder-open strong,
+.tjm-fm-principle-preview strong,
+.tjm-fm-list-principle-open strong,
+.tjm-fm-list-section h3,
+.tjm-fm-context-menu strong,
+.tjm-fm-editor h3,
+.tjm-fm-small-dialog h3 {
+  color: #fdfaf2;
+}
+
+.tjm-fm-principle-summary-text,
+.tjm-fm-folder-open span,
+.tjm-fm-list-principle-open small,
+.tjm-fm-choice-list span,
+.tjm-fm-list-empty {
+  color: #a8ada5;
+}
+
+.tjm-fm-window-actions button,
+.tjm-fm-back,
+.tjm-fm-node-menu,
+.tjm-fm-flow .react-flow__controls-button,
+.tjm-fm-reference-row button,
+.tjm-fm-context-menu button {
+  color: #e5b55b;
+}
+
+.tjm-fm-dialog-layer {
+  background-color: rgba(1, 12, 24, .72);
+}
+
+.tjm-fm-editor input,
+.tjm-fm-editor textarea,
+.tjm-fm-small-dialog input,
+.tjm-fm-small-dialog textarea,
+.tjm-fm-view-switch {
+  color: #ebe9de;
+  background-color: #010c18;
+  border-color: rgba(235, 233, 222, .14);
+}

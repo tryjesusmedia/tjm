@@ -158,3 +158,101 @@
   .chronbible .hero-copy h1 { font-size: clamp(42px, 13vw, 62px); }
   .chronbible .chapter-side { padding: 20px; }
 }
+
+/* Match the website Principles Map to the native Chron Bible map. */
+.chronbible .tjm-fm-window,
+.chronbible .tjm-fm-map-body,
+.chronbible .tjm-fm-workspace-content,
+.chronbible .tjm-fm-list-view,
+.chronbible .tjm-fm-flow,
+.chronbible .tjm-fm-flow .react-flow,
+.chronbible .tjm-fm-flow .react-flow__pane {
+  color: #f3e8d0 !important;
+  background: #171418 !important;
+}
+
+.chronbible .tjm-fm-window {
+  border-color: #eebd4a !important;
+}
+
+.chronbible .tjm-fm-sticky-header,
+.chronbible .tjm-fm-workspace-toolbar,
+.chronbible .tjm-fm-editor,
+.chronbible .tjm-fm-small-dialog,
+.chronbible .tjm-fm-context-menu,
+.chronbible .tjm-fm-page-placeholder,
+.chronbible .tjm-fm-list-section,
+.chronbible .tjm-fm-folder-list,
+.chronbible .tjm-fm-principle-list {
+  color: #f3e8d0 !important;
+  background: #211b22 !important;
+  border-color: rgba(238, 189, 74, .24) !important;
+}
+
+.chronbible .tjm-fm-shell button,
+.chronbible .tjm-fm-shell input,
+.chronbible .tjm-fm-shell textarea,
+.chronbible .tjm-fm-choice-list button,
+.chronbible .tjm-fm-folder-list-row,
+.chronbible .tjm-fm-list-principle,
+.chronbible .tjm-fm-node,
+.chronbible .tjm-fm-principle {
+  color: #f3e8d0 !important;
+  background: #2a222b !important;
+  border-color: rgba(238, 189, 74, .24) !important;
+}
+
+.chronbible .tjm-fm-folder,
+.chronbible .tjm-fm-folder-list-row {
+  color: #fff9ee !important;
+  background: #311e33 !important;
+}
+
+.chronbible .tjm-fm-number-handle,
+.chronbible .tjm-fm-list-number,
+.chronbible .tjm-fm-mini-number,
+.chronbible .tjm-fm-form-actions .is-primary,
+.chronbible .tjm-fm-page-placeholder button,
+.chronbible .tjm-fm-view-switch .is-active,
+.chronbible .tjm-fm-principle-bottom button,
+.chronbible .tjm-fm-reading-link {
+  color: #171418 !important;
+  background: #eebd4a !important;
+  border-color: #eebd4a !important;
+}
+
+.chronbible .tjm-fm-principle-summary-text,
+.chronbible .tjm-fm-list-empty,
+.chronbible .tjm-fm-workspace-toolbar > span,
+.chronbible .tjm-fm-shell small {
+  color: #bfb2c2 !important;
+}
+
+.chronbible .tjm-fm-reference-row button,
+.chronbible .tjm-fm-back,
+.chronbible .tjm-fm-window-actions button,
+.chronbible .tjm-fm-node-menu {
+  color: #eebd4a !important;
+}
+
+.chronbible .tjm-fm-dialog-layer,
+.chronbible .tjm-fm-menu-layer {
+  background: rgba(23, 20, 24, .82) !important;
+}
+
+.chronbible .tjm-fm-flow .react-flow__background pattern circle {
+  fill: rgba(238, 189, 74, .2) !important;
+}
+
+.chronbible .tjm-fm-flow .react-flow__controls,
+.chronbible .tjm-fm-flow .react-flow__minimap {
+  background: #211b22 !important;
+  border-color: rgba(238, 189, 74, .24) !important;
+}
+
+.chronbible .tjm-fm-flow .react-flow__controls-button,
+.chronbible .tjm-fm-flow .react-flow__controls-button svg {
+  color: #eebd4a !important;
+  fill: #eebd4a !important;
+  background: #2a222b !important;
+}

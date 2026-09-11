@@ -40,55 +40,66 @@
   const enhanceGuideLibrary = () => {
     const library = document.getElementById('bible-guides');
     if (!library) return;
+    library.classList.add('app-guide-library');
 
     const heading = library.querySelector('#guidesTitle');
-    if (heading) heading.innerHTML = 'Choose a Bible Guide<br><em>and Begin at Your Own Pace.</em>';
+    if (heading) heading.textContent = 'Bible Guides';
+
+    const eyebrow = library.querySelector('.section-heading > .eyebrow');
+    if (eyebrow) eyebrow.hidden = true;
 
     const headingCopy = library.querySelector('.section-heading > p:not(.eyebrow)');
     if (headingCopy) {
-      headingCopy.textContent = 'Choose the topic that matters to you. Each clear, Scripture-based guide takes about 10–16 minutes, and your place is saved on this device.';
+      headingCopy.textContent = 'Choose one of your two guide journeys. Your progress is saved separately for each set.';
     }
 
     library.querySelectorAll('.journey-card').forEach((journey) => {
+      const isJesus = journey.classList.contains('journey-jesus');
+      const guideCount = isJesus ? 10 : 9;
+      const label = journey.querySelector('.journey-label');
+      const title = journey.querySelector('.journey-summary h2');
       const copy = journey.querySelector('.journey-summary p');
-      if (copy && journey.classList.contains('journey-jesus')) {
-        copy.textContent = 'Ten warm, practical guides about Jesus, salvation, and everyday faith.';
-      }
-      if (copy && journey.classList.contains('journey-prophecy')) {
-        copy.textContent = 'Nine clear, step-by-step guides that make Bible prophecy easier to understand.';
-      }
-    });
+      const toggle = journey.querySelector('.journey-toggle');
+      const toggleCopy = toggle?.querySelector('span');
+      const guideItems = [...journey.querySelectorAll('.guide-item')];
 
-    library.querySelectorAll('.guide-item').forEach((item) => {
-      const match = item.getAttribute('href')?.match(/^\/(get-to-know-jesus|bible-prophecy)\/guide(\d+)\/?$/);
-      if (!match) return;
+      journey.querySelector('.journey-number')?.remove();
+      if (label) label.textContent = isJesus ? '10-GUIDE RELATIONSHIP JOURNEY' : '9-GUIDE PROPHECY JOURNEY';
+      if (title) title.textContent = isJesus ? 'Get to Know Jesus' : 'Bible Prophecy';
+      if (copy) copy.textContent = isJesus
+        ? 'Explore who God is, what Jesus has done, and what following Him means for your life.'
+        : 'Examine the Bible’s prophetic evidence, sequence, and meaning one guide at a time.';
 
-      const [, collection, guideNumber] = match;
-      const storageKey = collection === 'get-to-know-jesus'
-        ? `tjm-jesus-guide-${guideNumber}-progress`
-        : `tjm-bible-prophecy-guide-${guideNumber}-progress`;
-      const readingTimes = {
-        'get-to-know-jesus': [10, 10, 10, 10, 12, 13, 14, 15, 15, 16],
-        'bible-prophecy': [10, 10, 10, 12, 12, 12, 12, 12, 13]
+      const savedGuides = guideItems.map((item, index) => {
+        const value = Number.parseInt(safeStorage.get(`tjm-${isJesus ? 'jesus' : 'bible-prophecy'}-guide-${index + 1}-progress`) || '1', 10);
+        return { guide: index + 1, step: Number.isInteger(value) ? Math.max(1, Math.min(8, value)) : 1 };
+      }).filter((item) => item.step > 1);
+      const current = savedGuides.at(-1) || null;
+      const percent = current
+        ? Math.round((((current.guide - 1) + ((current.step - 1) / 7)) / guideCount) * 100)
+        : 0;
+
+      const progress = document.createElement('div');
+      progress.className = 'app-guide-progress';
+      progress.innerHTML = `<div><strong>${percent}% complete</strong>${current ? `<span>Guide ${current.guide} of ${guideCount}</span>` : ''}</div><div class="app-guide-progress-track"><span style="width:${percent}%"></span></div>`;
+      toggle?.before(progress);
+
+      if (toggleCopy) toggleCopy.textContent = journey.open ? 'Hide Guides' : 'See Guides';
+      const updateToggle = () => {
+        if (toggleCopy) toggleCopy.textContent = journey.open ? 'Hide Guides' : 'See Guides';
+        toggle?.setAttribute('aria-label', journey.open ? `Hide ${title?.textContent || ''} guides` : `See ${title?.textContent || ''} guides`);
       };
-      const readingTime = readingTimes[collection][Number.parseInt(guideNumber, 10) - 1];
-      const saved = Number.parseInt(safeStorage.get(storageKey) || '1', 10);
-      const validStep = Number.isInteger(saved) ? Math.max(1, Math.min(8, saved)) : 1;
-      const status = validStep >= 8
-        ? 'Completed on this device'
-        : validStep > 1
-          ? `Continue at section ${validStep} of 8`
-          : `About ${readingTime} minutes`;
-      const action = validStep >= 8 ? 'Review Guide' : validStep > 1 ? 'Continue Guide' : 'Begin Guide';
+      journey.addEventListener('toggle', updateToggle);
+      updateToggle();
 
-      const copy = item.querySelector('.guide-item-copy');
-      if (!copy || copy.querySelector('.guide-item-meta')) return;
-
-      const meta = document.createElement('span');
-      meta.className = 'guide-item-meta';
-      meta.innerHTML = `<span class="guide-item-status">${status}</span><span class="guide-item-action">${action}</span>`;
-      copy.appendChild(meta);
-      item.setAttribute('aria-label', `${cleanText(copy.querySelector('strong')?.textContent)}. ${status}. ${action}.`);
+      guideItems.forEach((item) => {
+        item.querySelector('.guide-item-copy > small')?.remove();
+        item.querySelector('.guide-item-meta')?.remove();
+        const arrow = item.querySelector(':scope > b');
+        if (arrow) arrow.textContent = '›';
+        const copyElement = item.querySelector('.guide-item-copy');
+        item.setAttribute('aria-label', `Open ${cleanText(copyElement?.querySelector('strong')?.textContent)}`);
+      });
     });
 
     if (window.location.hash === '#bible-guides') {

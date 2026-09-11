@@ -119,6 +119,12 @@
       document.querySelectorAll('[data-view]').forEach((item) => item.classList.toggle('active', item === button));
       document.querySelector('#view-root').innerHTML = `<section data-current-view="${button.dataset.view}">${button.textContent}</section>`;
     });
+    if (params.has('autoopen')) {
+      window.addEventListener('tjm-principles-bridge-ready', () => {
+        setTimeout(() => window.dispatchEvent(new CustomEvent('tjm-open-principles-map')), 50);
+      }, { once: true });
+      setTimeout(() => window.dispatchEvent(new CustomEvent('tjm-open-principles-map')), 900);
+    }
   </script>
   <script type="module" src="../lib/principles-folders-flow.mjs"></script>
   <script defer src="../lib/principles-text-size.js"></script>

@@ -1306,3 +1306,15 @@
   .tjm-fm-editor textarea { min-height: 180px; }
   .tjm-fm-persistent-toggle { min-height: 50px; }
 }
+
+/* The map is one vertically scrolling canvas. Its horizontal edges are fixed
+   to the visible border, while an open principle always paints above peers. */
+.tjm-fm-flow,
+.tjm-fm-flow .react-flow,
+.tjm-fm-flow .react-flow__viewport {
+  overflow-x: hidden;
+}
+
+.tjm-fm-flow .react-flow__node:has(.tjm-fm-principle.is-expanded) {
+  z-index: 1000 !important;
+}

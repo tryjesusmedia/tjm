@@ -91,8 +91,8 @@ for (const feature of ["update_conflict_principle", "move_conflict_principle", "
 assert.doesNotMatch(app, /View (?:original )?supplied assignment/i);
 assert.match(config, /planId: "chronological-bible-order-v4"/);
 assert.match(config, /notesPlanId: "chronological-bible-order-v3"/);
-assert.match(config, /principles-folders-flow\.mjs\?v=20260910-6/);
-assert.match(html, /config\.js\?v=20260910-8/);
+assert.match(config, /principles-folders-flow\.mjs\?v=20260911-1/);
+assert.match(html, /config\.js\?v=20260911-1/);
 assert.match(app, /CONFIG\.notesPlanId/);
 assert.match(principleMap, /CONFIG\?\.notesPlanId \|\| CONFIG\?\.planId/);
 assert.doesNotMatch(app, /remain in their exact order/i);

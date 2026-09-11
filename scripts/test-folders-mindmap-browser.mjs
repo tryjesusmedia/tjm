@@ -71,6 +71,11 @@ function assertViewportPreserved(before, after, message) {
   }
 }
 
+function assertZoomPreserved(before, after, message) {
+  assert.ok(Math.abs(before.zoom - after.zoom) < 0.02, `${message}: zoom changed from ${before.zoom} to ${after.zoom}.`);
+  assert.ok(Math.abs(after.x) < 0.02, `${message}: horizontal camera position should remain locked at 0, received ${after.x}.`);
+}
+
 try {
   // The four frequent controls share one row, and the real map summary/body both scale.
   const sizingDesktop = await openCleanPage({ width: 1280, height: 900 });
@@ -95,7 +100,11 @@ try {
   await sizingNode.locator(".tjm-fm-principle-preview").click();
   await sizingNode.locator(".tjm-fm-principle-body-text").waitFor({ state: "visible" });
   await sizingPage.waitForTimeout(240);
-  assertViewportPreserved(manualViewport, await readFlowViewport(sizingPage), "Opening a principle should preserve the desktop map camera");
+  const openedDesktopViewport = await readFlowViewport(sizingPage);
+  assertZoomPreserved(manualViewport, openedDesktopViewport, "Opening a principle should preserve desktop zoom while keeping its top visible");
+  const openedDesktopCard = await sizingNode.boundingBox();
+  const openedDesktopCanvas = await sizingPage.locator(".tjm-fm-flow .react-flow").boundingBox();
+  assert.ok(openedDesktopCard.y >= openedDesktopCanvas.y + 20, "An open desktop principle must keep its top inside the canvas.");
   const bodyText = sizingNode.locator(".tjm-fm-principle-body-text");
   const readingButton = sizingNode.getByRole("button", { name: "Go to reading", exact: true });
   const fontSize = (locator) => locator.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize));
@@ -104,7 +113,7 @@ try {
   const initialReadingSize = await fontSize(readingButton);
   await sizingPage.getByRole("button", { name: "Use larger Principles text", exact: true }).click();
   await sizingPage.waitForTimeout(240);
-  assertViewportPreserved(manualViewport, await readFlowViewport(sizingPage), "Changing text size should preserve the desktop map camera");
+  assertZoomPreserved(openedDesktopViewport, await readFlowViewport(sizingPage), "Changing text size should preserve the desktop map zoom");
   assert.ok(await fontSize(summaryText) > initialSummarySize, "The center summary text should grow.");
   assert.ok(await fontSize(bodyText) > initialBodySize, "The expanded center body text should grow.");
   assert.ok(await fontSize(readingButton) > initialReadingSize, "The reading action should grow.");
@@ -157,21 +166,19 @@ try {
   await launcher.click();
   await page.waitForSelector(".tjm-fm-window");
 
-  // The toolbar keeps frequent actions visible; the overflow menu holds map tools.
+  // Add and search live in the three-dot menu instead of crowding the header.
+  assert.equal(await page.locator(".tjm-fm-toolbar-add, .tjm-fm-toolbar-search").count(), 0);
   await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
-  await assertMenuItems(page, ["Arrange Automatically", "Fit All"]);
+  await assertMenuItems(page, ["New Principle", "New Folder", "Find a Principle", "Arrange Automatically", "Fit All"]);
   assert.equal((await page.locator(".tjm-fm-menu-cancel").textContent())?.trim(), "Cancel");
   assert.equal(await page.evaluate(() => document.body.style.overflow), "hidden");
   await page.goBack();
   await page.waitForSelector(".tjm-fm-context-menu", { state: "detached" });
   assert.equal(await page.evaluate(() => document.body.style.overflow), "");
 
-  await page.getByRole("button", { name: "Add", exact: true }).click();
-  await assertMenuItems(page, ["New Principle", "New Folder"]);
-  await page.getByRole("button", { name: "Cancel", exact: true }).click();
-
-  // Search is direct and searches folder titles, names, numbers, and principle text.
-  await page.getByRole("button", { name: "Search all principles and folders", exact: true }).click();
+  // Menu search covers folder titles, names, numbers, and principle text.
+  await page.getByRole("button", { name: "Principles Map menu", exact: true }).click();
+  await page.getByRole("menuitem", { name: "Find a Principle", exact: true }).click();
   await page.getByLabel("Search all folders and principles", { exact: true }).fill("grace");
   assert.equal(await page.getByRole("button", { name: /#12 · Principle #12/ }).count(), 1);
   await page.getByRole("button", { name: /#12 · Principle #12/ }).click();
@@ -260,7 +267,8 @@ try {
   assert.ok(phoneWindow.x + phoneWindow.width <= 390 && phoneWindow.y + phoneWindow.height <= 844);
   assert.ok(phoneWindow.width >= 380 && phoneWindow.height >= 834);
   assert.equal(await phone.evaluate(() => document.documentElement.style.getPropertyValue("--tjm-map-visual-width")), "390px");
-  for (const name of ["Add", "Search all principles and folders", "Principles Map menu"]) {
+  assert.equal(await phone.locator(".tjm-fm-toolbar-add, .tjm-fm-toolbar-search").count(), 0);
+  for (const name of ["Principles Map menu"]) {
     const box = await phone.getByRole("button", { name, exact: true }).boundingBox();
     assert.ok(box && box.width >= 44 && box.height >= 44, `${name} should be a 44px touch target`);
   }
@@ -339,7 +347,11 @@ try {
   const phoneMapBody = phoneMapPrinciple.locator(".tjm-fm-principle-body-text");
   await phoneMapBody.waitFor({ state: "visible" });
   await phone.waitForTimeout(240);
-  assertViewportPreserved(phoneManualViewport, await readFlowViewport(phone), "Opening a principle should preserve the mobile map camera");
+  const openedPhoneViewport = await readFlowViewport(phone);
+  assertZoomPreserved(phoneManualViewport, openedPhoneViewport, "Opening a principle should preserve mobile zoom while keeping its top visible");
+  const openedPhoneCard = await phoneMapPrinciple.boundingBox();
+  const openedPhoneCanvas = await phone.locator(".tjm-fm-flow .react-flow").boundingBox();
+  assert.ok(openedPhoneCard.y >= openedPhoneCanvas.y + 10, "An open mobile principle must keep its top inside the canvas.");
   const effectiveTypography = (locator) => locator.evaluate((element) => {
     const viewport = element.closest(".react-flow")?.querySelector(".react-flow__viewport");
     const zoom = viewport ? new DOMMatrixReadOnly(getComputedStyle(viewport).transform).a : 1;
@@ -349,7 +361,7 @@ try {
   const initialMapBody = await effectiveTypography(phoneMapBody);
   await phone.getByRole("button", { name: "Use larger Principles text", exact: true }).click();
   await phone.waitForTimeout(240);
-  assertViewportPreserved(phoneManualViewport, await readFlowViewport(phone), "Changing text size should preserve the mobile map camera");
+  assertZoomPreserved(openedPhoneViewport, await readFlowViewport(phone), "Changing text size should preserve the mobile map zoom");
   const largerMapBody = await effectiveTypography(phoneMapBody);
   assert.ok(largerMapBody.screenPixels > initialMapBody.screenPixels, "A+ should enlarge the body text on screen in Map view.");
   await phone.evaluate(() => window.TJMPrinciplesTextSize.set(window.TJMPrinciplesTextSize.max));
@@ -373,6 +385,9 @@ try {
   assert.ok(await mapDetail.evaluate((element) => element.scrollTop) > 0);
   const readingActionBox = await phoneMapPrinciple.getByRole("button", { name: "Go to reading", exact: true }).boundingBox();
   assert.ok(readingActionBox && readingActionBox.y + readingActionBox.height <= mapCardBox.y + mapCardBox.height + 1);
+  await phoneMapPrinciple.getByRole("button", { name: "Go to reading", exact: true }).click();
+  await phone.waitForSelector(".tjm-fm-window", { state: "detached" });
+  assert.equal(await phone.evaluate(() => window.__wentToReading), "r3");
   await mobile.context.close();
 
   // A failed cloud name sync retains the name in device storage and reports it.
@@ -391,7 +406,8 @@ try {
   const chronological = await openCleanPage({ width: 1280, height: 900 }, "?chron=1");
   const chron = chronological.page;
   await chron.waitForSelector(".tjm-fm-window .react-flow", { timeout: 45_000 });
-  await chron.getByRole("button", { name: "Search all principles and folders", exact: true }).click();
+  await chron.getByRole("button", { name: "Principles Map menu", exact: true }).click();
+  await chron.getByRole("menuitem", { name: "Find a Principle", exact: true }).click();
   assert.equal(await chron.getByRole("dialog", { name: "Find a Principle", exact: true }).count(), 1);
   await chronological.context.close();
 
