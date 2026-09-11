@@ -124,7 +124,7 @@
 
   function guestBanner() {
     if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading task and keep notes on this device. Sign in to sync chapter progress, highlights, and notes across devices.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
+    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading task. Sign in to sync your chapter progress across devices.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
   }
 
   function showView(name, focusMain = false) {
@@ -141,7 +141,7 @@
 
   function sourceTaskLinks(reading) {
     if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No chapter links available</button>`;
-    return `<div data-native-bible-group><div class="chapter-task-list" aria-label="Scripture chapter choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><button class="button button-primary source-task" type="button" data-native-bible-task="${escapeHTML(task.label)}" data-plan-id="${escapeHTML(CONFIG.planId)}" data-reading-id="${escapeHTML(reading.id)}">Read ${escapeHTML(task.label)}</button></div>`).join("")}</div><div class="nbr-inline-reader" data-native-bible-mount data-plan-id="${escapeHTML(CONFIG.planId)}" data-reading-id="${escapeHTML(reading.id)}"><p class="nbr-empty">Choose a chapter to read it here.</p></div></div>`;
+    return `<div class="chapter-task-list" aria-label="Scripture chapter choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" aria-label="Read ${escapeHTML(task.label)} on BibleGateway">Read ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
   }
 
   function reviewFlag(reading) {
@@ -224,8 +224,7 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    const highlightCount = window.TJMNativeBible?.getHighlights().length || 0;
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress, highlights, and notes are synced across your signed-in devices." : "Sign in with Google whenever you want progress, highlights, and notes synced across devices."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${highlightCount}</strong><span>Bible highlights</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress is synced across your signed-in devices." : "Sign in with Google whenever you want your progress synced across devices."}</p></div></header>${guestBanner()}<div class="stat-grid stat-grid-three"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
   }
 
   function render() {
@@ -236,7 +235,6 @@
     else if (activeView === "progress") content = renderProgress();
     else content = renderReadings();
     root.innerHTML = `${activeView === "progress" ? "" : guestBanner()}${content}`;
-    window.TJMNativeBible?.enhance(root);
   }
 
   async function persistProgress(previousCompleted, previousLastIndex) {
@@ -367,7 +365,7 @@
     refreshTimer = setInterval(async () => {
       if (document.visibilityState !== "visible" || !session) return;
       try {
-        await Promise.all([loadMemberData(), window.TJMNativeBible?.syncHighlights()]);
+        await loadMemberData();
         render();
       } catch (error) {
         console.warn("Background sync", error.message);
@@ -389,7 +387,6 @@
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
       render();
-      window.TJMNativeBible?.syncHighlights();
       return;
     }
     guestBrowsing = false;
@@ -398,7 +395,6 @@
     try {
       await loadMemberData();
       render();
-      await window.TJMNativeBible?.syncHighlights();
       scheduleRefresh();
     } catch (error) {
       console.error(error);
@@ -468,7 +464,7 @@
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState === "visible" && session) {
       try {
-        await Promise.all([loadMemberData(), window.TJMNativeBible?.syncHighlights()]);
+        await loadMemberData();
         render();
       } catch (error) {
         console.warn(error.message);
@@ -487,11 +483,10 @@
       const jobIsInPlace = plan.readings.slice(4, 9).every((reading) => reading.sourceNumber === 1)
         && plan.readings[3]?.reference === "Genesis 10-11"
         && plan.readings[9]?.reference === "Genesis 12-17";
-      if (plan.planId !== CONFIG.planId || plan.notesPlanId !== CONFIG.notesPlanId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.chapterCount !== 1205 || !indicesAreValid || !chaptersAreValid || !jobIsInPlace) throw new Error("Reading plan validation failed.");
+      if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.chapterCount !== 1205 || !indicesAreValid || !chaptersAreValid || !jobIsInPlace) throw new Error("Reading plan validation failed.");
       document.getElementById("hero-reading-count").textContent = plan.readings.length;
       document.getElementById("hero-section-count").textContent = plan.sections.length;
       activeSection = plan.readings[0].section;
-      window.TJMNativeBible.configure({ getDb: () => db, getSession: () => session, toast, planId: CONFIG.planId });
       loading.hidden = true;
       root.hidden = false;
       render();

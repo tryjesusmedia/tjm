@@ -5,17 +5,16 @@ The static route is `/chronbible/`. It uses the same Supabase project and Google
 ## Shared sync contract
 
 - Progress plan ID: `chronological-bible-order-v4`
-- Bible highlights and notes table: `public.bible_highlights`
 - Saved progress automatically migrates from chapter-based version 3, task-based version 2, and original-assignment version 1 records.
 - Table: `public.reading_plan_progress`
 - Completion values: zero-based chapter indices `0` through `1204`
 - Current place: `last_index`
-- The former principles map is no longer loaded by this experience. Its existing `chronological-bible-order-v3` records and the legacy discussion tables are intentionally retained so no user data is erased.
-- New highlights use chapter-text offsets shared by web and mobile; the exact contract and bundled-source details are documented in `assets/bible/README.md`.
+- Notes, principles, and highlighting are not loaded by this experience. Existing historical records remain in Supabase so no user data is erased.
+- Scripture buttons open their exact passage in the KJV on BibleGateway.
 
 `scripts/build-chronological-plan.mjs` writes identical generated plan data to `chronbible/data/readings.json` and `tryjesusjourney/data/chronologicalBiblePlan.json`. It also carries explicit chapter and reading-index maps so previous checkmarks and resume positions survive the Job reordering.
 
-The progress table and row-level security policies are defined in `tryjesusjourney/supabase/sql/app-upgrade.sql`. Apply `supabase/migrations/20260911000000_bible_highlights.sql` before launching the shared highlight-and-note sync.
+The progress table and row-level security policies are defined in `tryjesusjourney/supabase/sql/app-upgrade.sql`.
 
 ## Authentication configuration
 

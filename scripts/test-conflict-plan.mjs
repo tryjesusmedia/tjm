@@ -93,12 +93,11 @@ for (const label of ["Journey", "Progress", "Continue with Google", "Explore wit
 assert.doesNotMatch(html, /data-view="readings"/i);
 assert.doesNotMatch(html, /data-view="principles"/);
 assert.doesNotMatch(html, /data-view="members"/);
-assert.match(html, /native-bible-reader\.css/);
-assert.match(html, /native-bible-reader\.js/);
+assert.doesNotMatch(html, /native-bible-reader/);
 assert.doesNotMatch(html, />\s*(?:Today|Calendar)\s*</i);
 assert.doesNotMatch(app, /["'`]Day \$\{/);
 assert.match(app, /Viewing without an account/);
-assert.match(app, /Sign in to sync progress, highlights, and notes across devices/);
+assert.match(app, /Sign in to sync your progress across devices/);
 assert.match(app, /function companionPageSummary/);
 assert.match(app, /const PK_PAGE_RANGES = new Map/);
 assert.match(app, /kind === "commentary" \? taskTitle\.replace/);
@@ -110,9 +109,11 @@ assert.doesNotMatch(app, /Task \$\{reading\.day\} of \$\{plan\.readings\.length\
 assert.match(app, />Previous<\/button>/);
 assert.match(app, />Next<\/button>/);
 assert.match(app, /const scriptureCard = reading\.bibleReference \?/);
-assert.match(app, /data-native-bible-task/);
-assert.match(app, /TJMNativeBible\.configure/);
-assert.match(app, /data-open-source="commentary"/);
+assert.match(app, /href="\$\{escapeHTML\(task\.url\)\}"/);
+assert.match(app, /target="_blank" rel="noopener noreferrer"/);
+assert.match(app, /data-open-source="\$\{kind\}"/);
+assert.match(app, /BibleGateway/);
+assert.doesNotMatch(app, /data-native-bible-task|TJMNativeBible|nbr-inline-reader|Choose a Scripture passage to read it here/);
 assert.doesNotMatch(app, /Reading \$\{reading\.day\}/);
 assert.doesNotMatch(`${html}\n${app}`, /Ask Pastor Kal/i);
 assert.match(app, /conflict_reading_progress/);
@@ -122,5 +123,6 @@ assert.match(app, /reading_plan_progress/);
 assert.doesNotMatch(app, /View supplied source entry/i);
 assert.doesNotMatch(app, /Scripture complete|Companion complete/);
 assert.doesNotMatch(`${html}\n${app}`, /principles-folders|TJMPrinciples|principleManager/);
+assert.doesNotMatch(`${html}\n${app}`, /Bible highlights|highlights, and notes|keep notes|Your Bible notes/);
 
-console.log("Conflict journey validation passed: 264 readings, 1696 individually trackable chapters, native Scripture reading, external EGW links, and no unresolved review flags.");
+console.log("Conflict journey validation passed: 264 readings, 1696 individually trackable chapters, external KJV and EGW links, and no unresolved review flags.");

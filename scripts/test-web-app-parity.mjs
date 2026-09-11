@@ -2,14 +2,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(path, "utf8");
-const [rootPage, welcome, signup, guideScript, guideStyles, readerSource, readerStyles, conflictConfig, chronConfig, conflictTheme, conflictPage, conflictApp, conflictIntroStyles, chronPage, chronApp] = await Promise.all([
+const [rootPage, welcome, signup, guideScript, guideStyles, redirectPage, redirectSource, conflictConfig, chronConfig, conflictTheme, conflictPage, conflictApp, conflictIntroStyles, chronPage, chronApp, journeyStyles] = await Promise.all([
   read("index.html"),
   read("welcome/index.html"),
   read("signupcomplete/index.html"),
   read("assets/guide-experience.js"),
   read("assets/readability.css"),
-  read("lib/native-bible-reader.js"),
-  read("lib/native-bible-reader.css"),
+  read("bible-reader/index.html"),
+  read("bible-reader/app.js"),
   read("bibleandconflictoftheages/config.js"),
   read("chronbible/config.js"),
   read("bibleandconflictoftheages/faithcraft-theme.css"),
@@ -18,13 +18,14 @@ const [rootPage, welcome, signup, guideScript, guideStyles, readerSource, reader
   read("bibleandconflictoftheages/hero-readability.css"),
   read("chronbible/index.html"),
   read("chronbible/app.js"),
+  read("bibleandconflictoftheages/styles.css"),
 ]);
 
 for (const page of [welcome, signup]) {
   assert.doesNotMatch(page, />\s*Enter the Zoom Call\s*</);
   assert.equal((page.match(/https:\/\/us06web\.zoom\.us\/j\/4700414908/g) || []).length, 1);
   assert.match(page, /readability\.css\?v=20260911-1/);
-  assert.match(page, /guide-experience\.js\?v=20260911-1/);
+  assert.match(page, /guide-experience\.js\?v=20260911-2/);
 }
 
 for (const copy of [
@@ -39,33 +40,40 @@ for (const copy of [
 ]) assert.match(guideScript, new RegExp(copy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 
 assert.match(guideScript, /app-guide-progress-track/);
-assert.match(guideScript, /\/bible-reader\/\?reference=/);
+assert.match(guideScript, /openBibleLinksOnBibleGateway/);
+assert.match(guideScript, /searchParams\.set\('version', 'KJV'\)/);
+assert.match(guideScript, /target = '_blank'/);
+assert.doesNotMatch(guideScript, /\/bible-reader\/\?reference=|internalizeBibleLinks/);
 assert.match(guideStyles, /#bible-guides\.app-guide-library/);
 for (const color of ["#171418", "#311e33", "#eebd4a", "#2a222b", "#fff9ee"]) {
   assert.match(guideStyles.toLowerCase(), new RegExp(color));
 }
 
-assert.match(readerSource, /KJV/);
-assert.match(readerSource, /WEB/);
-assert.match(readerSource, /data-choose-highlight-color/);
-assert.match(readerSource, /bible_highlights/);
-assert.doesNotMatch(readerSource, /Select any words, then choose a highlight color\./);
-assert.match(readerSource, /Choose a highlight color/);
-assert.match(readerSource, /preserveContent: true/);
-assert.match(readerStyles, /\.nbr-notes-fab/);
-assert.match(readerStyles, /grid-template-columns:\s*1fr 1fr/);
+assert.match(redirectPage, /Opening BibleGateway/);
+assert.doesNotMatch(redirectPage, /native-bible-reader|notes|highlight|principles/i);
+assert.match(redirectSource, /https:\/\/www\.biblegateway\.com\/passage\//);
+assert.match(redirectSource, /searchParams\.set\("version", "KJV"\)/);
+assert.match(redirectSource, /location\.replace\(destination\.href\)/);
+assert.doesNotMatch(redirectSource, /TJMNativeBible|bible_highlights|notes|highlight|principles/i);
 
 assert.match(conflictConfig, /faithcraft-theme\.css\?v=20260911-1/);
 assert.doesNotMatch(chronConfig, /faithcraft-theme/);
 assert.match(conflictPage, /theme-color" content="#010c18"/);
 assert.match(chronPage, /theme-color" content="#241425"/);
-assert.match(chronPage, /styles\.css\?v=20260911-1/);
+assert.match(chronPage, /styles\.css\?v=20260911-2/);
 for (const page of [conflictPage, chronPage]) {
-  assert.match(page, /native-bible-reader\.js\?v=20260911-2/);
-  assert.match(page, /native-bible-reader\.css\?v=20260911-2/);
+  assert.doesNotMatch(page, /native-bible-reader/);
   assert.match(page, /class="faithcraft-credit" href="https:\/\/faithcraft\.agency\/" target="_blank" rel="noopener noreferrer">Powered by FaithCraft\.Agency<\/a>/);
   assert.doesNotMatch(page, /principles-folders|principles\.js|principles\.css/);
 }
+for (const app of [conflictApp, chronApp]) {
+  assert.match(app, /href="\$\{escapeHTML\(task\.url\)\}"/);
+  assert.doesNotMatch(app, /TJMNativeBible|data-native-bible-task|nbr-inline-reader|Bible highlights|Your Bible notes|highlights, and notes|keep notes/);
+}
+assert.match(journeyStyles, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+assert.match(journeyStyles, /\.journey-nav button[\s\S]*min-height:\s*78px[\s\S]*font-size:\s*1rem/);
+assert.match(journeyStyles, /\.stat-grid-three\s*\{\s*grid-template-columns:\s*repeat\(3, 1fr\)/);
+assert.match(journeyStyles, /\.progress-layout-single\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\)/);
 
 const disclosureStart = conflictPage.indexOf('<details class="hero-intro-more">');
 const disclosureEnd = conflictPage.indexOf("</details>", disclosureStart);
@@ -100,4 +108,4 @@ for (const color of ["#010c18", "#03101d", "#c79341", "#e5b55b", "#186059", "#29
   assert.match(conflictTheme.toLowerCase(), new RegExp(color));
 }
 
-console.log("Website/app parity validation passed for Bible Guides, native Bible reading, highlight notes, Zoom links, and the FaithCraft-only theme.");
+console.log("Website validation passed for Bible Guides, external KJV reading links, progress navigation, Zoom links, and the FaithCraft-only theme.");

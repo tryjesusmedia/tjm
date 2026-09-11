@@ -3,44 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, follow">
   <meta name="theme-color" content="#241425">
-  <meta name="description" content="Read Scripture in the King James Version or World English Bible without leaving Try Jesus Media.">
-  <link rel="icon" href="../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../lib/native-bible-reader.css?v=20260911-2">
-  <link rel="stylesheet" href="styles.css?v=20260911-1">
-  <title>Bible Reader | Try Jesus Media</title>
+  <title>Opening BibleGateway | Try Jesus Media</title>
 </head>
 <body>
-  <header class="reader-header">
-    <a class="reader-brand" href="/" aria-label="Try Jesus Media home"><img src="../assets/logo.png" alt="" width="50" height="50"><span><strong>TRY JESUS</strong><small>MEDIA</small></span></a>
-    <div class="reader-account">
-      <span id="reader-sync-status">Notes stay on this device</span>
-      <button type="button" id="reader-sign-in">Sign in to sync</button>
-      <button type="button" id="reader-sign-out" hidden>Sign out</button>
-    </div>
-  </header>
-
   <main>
-    <button class="reader-back" id="reader-back" type="button">← Back to the guide</button>
-    <section class="reader-hero">
-      <p>READ WITHOUT LEAVING TRY JESUS MEDIA</p>
-      <h1>Bible Reader</h1>
-      <form id="passage-form">
-        <label for="passage-input">Passage</label>
-        <div><input id="passage-input" name="reference" autocomplete="off" placeholder="John 3:16-17" required><button type="submit">Open passage</button></div>
-      </form>
-    </section>
-    <div class="nbr-inline-reader reader-mount" id="reader-mount" data-native-bible-mount data-plan-id="bible-guides" data-reading-id="standalone"></div>
+    <h1>Opening Scripture…</h1>
+    <p>The Try Jesus Media website now opens Scripture in the King James Version on BibleGateway.</p>
+    <p><a id="biblegateway-link" href="https://www.biblegateway.com/passage/?search=John%203%3A16-17&amp;version=KJV">Continue to BibleGateway</a></p>
   </main>
-
-  <div class="reader-toast" id="reader-toast" role="status" aria-live="polite"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" crossorigin="anonymous"></script>
-  <script src="../chronbible/config.js?v=20260911-1"></script>
-  <script src="../lib/native-bible-reader.js?v=20260911-2"></script>
-  <script src="app.js?v=20260911-1"></script>
+  <script src="app.js?v=20260911-2"></script>
 </body>
 </html>

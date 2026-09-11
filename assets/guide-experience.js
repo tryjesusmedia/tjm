@@ -12,21 +12,21 @@
 
   const cleanText = (value = '') => value.replace(/\s+/g, ' ').trim();
 
-  const internalizeBibleLinks = () => {
+  const openBibleLinksOnBibleGateway = () => {
     document.querySelectorAll('a[href*="biblegateway.com/passage"]').forEach((link) => {
       try {
-        const external = new URL(link.href);
-        const reference = external.searchParams.get('search');
-        if (!reference) return;
-        link.href = `/bible-reader/?reference=${encodeURIComponent(reference)}`;
-        link.removeAttribute('target');
-        link.removeAttribute('rel');
-        link.dataset.nativeBibleLink = 'true';
-        link.setAttribute('aria-label', `${cleanText(link.querySelector('span')?.textContent || reference)} — open in the Try Jesus Media Bible Reader`);
+        const destination = new URL(link.href);
+        destination.searchParams.set('version', 'KJV');
+        link.href = destination.href;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.removeAttribute('data-native-bible-link');
+        const reference = destination.searchParams.get('search') || cleanText(link.querySelector('span')?.textContent);
+        link.setAttribute('aria-label', `${reference} — read in the KJV on BibleGateway`);
         const detail = link.querySelector('small');
-        if (detail) detail.textContent = detail.textContent.replace(/\s*↗\s*$/, ' · Opens here');
+        if (detail && !/↗\s*$/.test(detail.textContent)) detail.textContent = `${detail.textContent.replace(/\s*·\s*Opens here\s*$/, '')} ↗`;
       } catch (_) {
-        // Leave malformed or non-passage links untouched.
+        // Leave malformed links untouched.
       }
     });
   };
@@ -346,7 +346,7 @@
 
   };
 
-  internalizeBibleLinks();
+  openBibleLinksOnBibleGateway();
   enhanceGuideLibrary();
   enhanceLesson();
 })();

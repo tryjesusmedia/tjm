@@ -99,7 +99,7 @@ function escapeHTML(value = "") {
 
   function guestBanner() {
     if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading and keep notes on this device. Sign in to sync progress, highlights, and notes across devices.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
+    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading. Sign in to sync your progress across devices.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
   }
 
   function prepareChapterProgressIndex() {
@@ -257,16 +257,11 @@ function taskGroupComplete(reading, kind) {
     const style = kind === "bible" ? "button-primary" : "button-secondary";
     const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
-    const taskList = `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
+    return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
       const taskTitle = kind === "commentary" && task.title ? task.title : task.label;
       const linkLabel = kind === "commentary" ? taskTitle.replace(/^Read\s+/i, "") : task.label;
-      const action = kind === "bible"
-        ? `<button class="button ${style} source-task" type="button" data-native-bible-task="${escapeHTML(task.label)}" data-plan-id="${escapeHTML(CONFIG.planId)}" data-reading-id="${escapeHTML(reading.id)}" data-open-source="bible" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} here">${escapeHTML(linkLabel)}</button>`
-        : `<a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="commentary" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on EGW Writings">${escapeHTML(linkLabel)} <span>↗</span></a>`;
-      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}>${action}</div>`;
+      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "BibleGateway"}">${escapeHTML(linkLabel)} <span aria-hidden="true">↗</span></a></div>`;
     }).join("")}</div>`;
-    if (kind === "commentary") return taskList;
-    return `<div data-native-bible-group>${taskList}<div class="nbr-inline-reader" data-native-bible-mount data-plan-id="${escapeHTML(CONFIG.planId)}" data-reading-id="${escapeHTML(reading.id)}"><p class="nbr-empty">Choose a Scripture passage to read it here.</p></div></div>`;
   }
 
   function renderReadings() {
@@ -307,7 +302,7 @@ function taskGroupComplete(reading, kind) {
         </header>
 
         <div class="readings-grid">
-          <div class="reading-stack nbr-full-width">
+          <div class="reading-stack reading-stack-full">
             ${scriptureCard}
             ${companionCard}
           </div>
@@ -354,9 +349,8 @@ function taskGroupComplete(reading, kind) {
     const bibleComplete = plan.readings.filter((reading) => reading.bibleReference && taskGroupComplete(reading, "bible")).length;
     const commentaryComplete = plan.readings.filter((reading) => reading.commentaryCitation && taskGroupComplete(reading, "commentary")).length;
     return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING JOURNEY</p><h2 id="progress-heading">Progress</h2><p>${session ? "Your completion state is saved to your account and available on every signed-in device." : "This preview starts at zero. Sign in to save your completion state across devices."}</p></div></header>
-      <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${window.TJMNativeBible?.getHighlights().length || 0}</strong><span>Bible highlights</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
-      <div class="progress-layout"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details></article>
-      <article class="progress-panel"><h3>Your Bible notes</h3><p>Use the floating Notes button to review every highlighted passage and private note.</p></article></div>
+      <div class="stat-grid stat-grid-three"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
+      <div class="progress-layout progress-layout-single"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details></article></div>
     </section>`;
   }
 
@@ -368,7 +362,6 @@ function taskGroupComplete(reading, kind) {
     else if (activeView === "progress") content = renderProgress();
     else content = renderReadings();
     root.innerHTML = `${guestBanner()}${content}`;
-    window.TJMNativeBible?.enhance(root);
   }
 
   function migrateLegacyChapterProgress() {
@@ -547,7 +540,6 @@ function taskGroupComplete(reading, kind) {
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
       render();
-      window.TJMNativeBible?.syncHighlights();
       return;
     }
     guestBrowsing = false;
@@ -556,7 +548,6 @@ function taskGroupComplete(reading, kind) {
     try {
       await loadMemberData();
       render();
-      await window.TJMNativeBible?.syncHighlights();
       scheduleRefresh();
     } catch (error) {
       console.error(error);
@@ -570,7 +561,7 @@ function taskGroupComplete(reading, kind) {
     clearInterval(refreshTimer);
     refreshTimer = setInterval(async () => {
       if (document.visibilityState !== "visible" || !session) return;
-      try { await Promise.all([loadMemberData(), window.TJMNativeBible?.syncHighlights()]); render(); } catch (error) { console.warn("Background sync", error.message); }
+      try { await loadMemberData(); render(); } catch (error) { console.warn("Background sync", error.message); }
     }, 60000);
   }
 
@@ -637,7 +628,7 @@ function taskGroupComplete(reading, kind) {
   headerSignIn.addEventListener("click", showSignIn);
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState === "visible" && session) {
-      try { await Promise.all([loadMemberData(), window.TJMNativeBible?.syncHighlights()]); render(); } catch (error) { console.warn(error.message); }
+      try { await loadMemberData(); render(); } catch (error) { console.warn(error.message); }
     }
   });
 
@@ -658,7 +649,6 @@ function taskGroupComplete(reading, kind) {
       prepareChapterProgressIndex();
       if (chapterTaskCount !== 1696) throw new Error("Chapter progress validation failed.");
       document.getElementById("hero-reading-count").textContent = plan.readings.length;
-      window.TJMNativeBible.configure({ getDb: () => db, getSession: () => session, toast, planId: CONFIG.planId });
       loading.hidden = true;
       root.hidden = false;
       render();

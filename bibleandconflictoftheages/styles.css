@@ -191,25 +191,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   top: 0;
   padding: 0 max(16px, calc((100% - 1100px) / 2));
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   border-bottom: 1px solid var(--line-dark);
   background: rgba(251,246,234,.96);
   backdrop-filter: blur(15px);
 }
 .journey-nav button {
-  min-height: 68px;
+  min-height: 78px;
   border: 0;
-  border-bottom: 3px solid transparent;
+  border-bottom: 4px solid transparent;
   background: transparent;
   color: #746a72;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: .03em;
+  letter-spacing: .04em;
 }
-.journey-nav button span { margin-right: 7px; color: #b6aab3; font-size: 8px; }
-.journey-nav button:hover { color: var(--plum); }
-.journey-nav button.active { border-bottom-color: var(--gold); color: var(--plum); }
+.journey-nav button + button { border-left: 1px solid var(--line-dark); }
+.journey-nav button span { margin-right: 9px; color: #9b8f98; font-size: .75rem; }
+.journey-nav button:hover { background: rgba(238,189,74,.08); color: var(--plum); }
+.journey-nav button.active { border-bottom-color: var(--gold); background: rgba(238,189,74,.13); color: var(--plum); }
 .journey-nav button.active span { color: #a67821; }
 
 #journey-main { min-height: 680px; }
@@ -233,6 +234,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 
 .readings-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(300px, .55fr); gap: 24px; align-items: start; }
 .reading-stack { display: grid; gap: 17px; }
+.reading-stack-full { grid-column: 1 / -1; }
 .reading-card { position: relative; overflow: hidden; padding: 30px; border-radius: 26px; box-shadow: var(--shadow); }
 .scripture-card { min-height: 275px; background: linear-gradient(145deg, #311e33, #211522); color: var(--ivory); }
 .scripture-card::before { content: "“"; position: absolute; right: 20px; bottom: -75px; color: rgba(238,189,74,.07); font-family: var(--serif); font-size: 280px; line-height: 1; }
@@ -313,10 +315,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .journey-reading > em { color: #9c8e97; font-size: 9px; font-style: normal; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+.stat-grid-three { grid-template-columns: repeat(3, 1fr); }
 .stat-card { padding: 20px; border: 1px solid var(--line-dark); border-radius: 18px; background: var(--white); }
 .stat-card strong { display: block; color: var(--plum); font-family: var(--serif); font-size: 38px; line-height: 1; }
 .stat-card span { display: block; margin-top: 8px; color: #81767e; font-size: 8px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .progress-layout { margin-top: 22px; display: grid; grid-template-columns: minmax(0, .75fr) minmax(360px, 1.25fr); gap: 20px; align-items: start; }
+.progress-layout-single { grid-template-columns: minmax(0, 1fr); }
 .progress-panel { padding: 23px; border: 1px solid var(--line-dark); border-radius: 20px; background: var(--white); }
 .progress-panel h3 { margin: 0 0 17px; color: var(--plum); font-family: var(--serif); font-size: 27px; font-weight: 600; }
 .book-progress-row { margin-bottom: 15px; }
@@ -378,8 +382,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-copy h1 { font-size: clamp(44px, 15vw, 67px); }
   .hero-mark { padding: 22px; }
   .journey-nav { padding: 0 5px; }
-  .journey-nav button { min-height: 60px; font-size: 9px; }
-  .journey-nav button span { display: none; }
+  .journey-nav button { min-height: 66px; font-size: .95rem; }
+  .journey-nav button span { margin-right: 6px; font-size: .7rem; }
   #view-root { width: min(100% - 24px, 1180px); padding-top: 36px; }
   .view-heading { align-items: start; flex-direction: column; gap: 20px; }
   .view-heading h2 { font-size: 44px; }
