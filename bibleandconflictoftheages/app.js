@@ -348,9 +348,12 @@ function taskGroupComplete(reading, kind) {
     const completed = completedCount();
     const bibleComplete = plan.readings.filter((reading) => reading.bibleReference && taskGroupComplete(reading, "bible")).length;
     const commentaryComplete = plan.readings.filter((reading) => reading.commentaryCitation && taskGroupComplete(reading, "commentary")).length;
+    const reviewQueue = plan.reviewQueue?.length
+      ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details>`
+      : "";
     return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING JOURNEY</p><h2 id="progress-heading">Progress</h2><p>${session ? "Your completion state is saved to your account and available on every signed-in device." : "This preview starts at zero. Sign in to save your completion state across devices."}</p></div></header>
       <div class="stat-grid stat-grid-three"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article></div>
-      <div class="progress-layout progress-layout-single"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details></article></div>
+      <div class="progress-layout progress-layout-single"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p style="color:#81767e;font-size:9px;line-height:1.6">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p>${reviewQueue}</article></div>
     </section>`;
   }
 
@@ -362,6 +365,13 @@ function taskGroupComplete(reading, kind) {
     else if (activeView === "progress") content = renderProgress();
     else content = renderReadings();
     root.innerHTML = `${guestBanner()}${content}`;
+  }
+
+  function renderPreservingPlace() {
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    render();
+    requestAnimationFrame(() => window.scrollTo({ left: scrollLeft, top: scrollTop, behavior: "auto" }));
   }
 
   function migrateLegacyChapterProgress() {
@@ -437,7 +447,7 @@ function taskGroupComplete(reading, kind) {
     next.completed_at = bibleDone && commentaryDone ? (previous.completed_at || new Date().toISOString()) : null;
     progress.set(readingId, next);
     setSync("Saving…", "saving");
-    render();
+    renderPreservingPlace();
     const { data, error } = await db.from("conflict_reading_progress").upsert({
       user_id: session.user.id,
       plan_id: CONFIG.planId,
@@ -453,12 +463,12 @@ function taskGroupComplete(reading, kind) {
       progress.set(readingId, previous);
       setSync("Sync failed", "error");
       toast(error.message, "error");
-      render();
+      renderPreservingPlace();
       return;
     }
     progress.set(readingId, data);
     setSync("Synced across devices", "synced");
-    render();
+    renderPreservingPlace();
   }
 
   async function recordOpen(readingId, kind) {
@@ -470,7 +480,7 @@ function taskGroupComplete(reading, kind) {
     await saveReadingProgress(readingId, field, new Date().toISOString());
   }
 
-  async function loadMemberData() {
+  async function loadMemberData({ preservePlace = false } = {}) {
     setSync("Syncing your journey…", "saving");
     const userId = session.user.id;
     const [progressResult, chapterProgressResult, settingsResult] = await Promise.all([
@@ -508,8 +518,10 @@ function taskGroupComplete(reading, kind) {
       }, { onConflict: "user_id,plan_id" });
       if (error) throw error;
     }
-    currentIndex = defaultReadingIndex();
-    activeBook = currentReading().code;
+    if (!preservePlace) {
+      currentIndex = defaultReadingIndex();
+      activeBook = currentReading().code;
+    }
     setSync("Synced across devices", "synced");
   }
 
@@ -561,7 +573,7 @@ function taskGroupComplete(reading, kind) {
     clearInterval(refreshTimer);
     refreshTimer = setInterval(async () => {
       if (document.visibilityState !== "visible" || !session) return;
-      try { await loadMemberData(); render(); } catch (error) { console.warn("Background sync", error.message); }
+      try { await loadMemberData({ preservePlace: true }); renderPreservingPlace(); } catch (error) { console.warn("Background sync", error.message); }
     }, 60000);
   }
 
@@ -628,7 +640,7 @@ function taskGroupComplete(reading, kind) {
   headerSignIn.addEventListener("click", showSignIn);
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState === "visible" && session) {
-      try { await loadMemberData(); render(); } catch (error) { console.warn(error.message); }
+      try { await loadMemberData({ preservePlace: true }); renderPreservingPlace(); } catch (error) { console.warn(error.message); }
     }
   });
 
@@ -648,7 +660,6 @@ function taskGroupComplete(reading, kind) {
     if (plan.planId !== CONFIG.planId || !readingSequenceIsValid) throw new Error("Reading plan validation failed.");
       prepareChapterProgressIndex();
       if (chapterTaskCount !== 1696) throw new Error("Chapter progress validation failed.");
-      document.getElementById("hero-reading-count").textContent = plan.readings.length;
       loading.hidden = true;
       root.hidden = false;
       render();

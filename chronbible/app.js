@@ -173,9 +173,7 @@
 
   function renderReadings() {
     const reading = currentReading();
-    const next = nextIncomplete();
     const percent = percentComplete();
-    const rewards = rewardSummary();
     return `
       <section aria-labelledby="readings-heading">
         <header class="view-heading">
@@ -200,21 +198,6 @@
             </div>
             ${reviewFlag(reading)}
           </article>
-
-          <aside class="chapter-side" aria-labelledby="reading-place-heading">
-            <p class="eyebrow">YOUR READING PLACE</p>
-            <h3 id="reading-place-heading">${session ? "Your reading place" : "Sign in when you want to save."}</h3>
-            ${session ? "" : "<p>You can explore the entire plan now. Google sign-in is optional and is required only for saved, cross-device progress.</p>"}
-            <div class="side-progress">
-              <div class="progress-track"><i style="width:${percent}%"></i></div>
-              <strong>${completedTaskCount()} of ${plan.readings.length} tasks</strong>
-              <small>${completed.size} OF ${plan.chapterCount} CHAPTERS COMPLETE · ${percent}%</small>
-            </div>
-            <div class="points-inline"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></div>
-            ${session ? `<button class="button button-primary" type="button" data-reading-index="${next.index}">Continue next task</button>` : `<button class="button button-primary" type="button" data-require-sign-in>Sign in with Google to sync</button>`}
-            <button class="button button-secondary" type="button" data-view-shortcut="journey">View the full journey</button>
-            <button class="button button-secondary" type="button" data-view-shortcut="rewards">View leaderboard</button>
-          </aside>
         </div>
       </section>`;
   }
@@ -393,7 +376,7 @@
     await persistProgress(previousCompleted, previousLastIndex);
   }
 
-  async function loadMemberData() {
+  async function loadMemberData({ preservePlace = false } = {}) {
     setSync("Syncing your progress…", "saving");
     const userId = session.user.id;
     const progressResult = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle();
@@ -437,9 +420,18 @@
     }
     completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
-    currentIndex = lastIndex;
-    activeSection = currentReading().section;
+    if (!preservePlace) {
+      currentIndex = lastIndex;
+      activeSection = currentReading().section;
+    }
     setSync("Synced with the app", "synced");
+  }
+
+  function renderPreservingPlace() {
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    render();
+    requestAnimationFrame(() => window.scrollTo({ left: scrollLeft, top: scrollTop, behavior: "auto" }));
   }
 
   function updateProfile() {
@@ -469,9 +461,9 @@
     refreshTimer = setInterval(async () => {
       if (document.visibilityState !== "visible" || !session) return;
       try {
-        await loadMemberData();
+        await loadMemberData({ preservePlace: true });
         if (activeView === "rewards") await loadJourneyRewards();
-        render();
+        renderPreservingPlace();
       } catch (error) {
         console.warn("Background sync", error.message);
       }
@@ -577,9 +569,9 @@
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState === "visible" && session) {
       try {
-        await loadMemberData();
+        await loadMemberData({ preservePlace: true });
         if (activeView === "rewards") await loadJourneyRewards();
-        render();
+        renderPreservingPlace();
       } catch (error) {
         console.warn(error.message);
       }
@@ -598,7 +590,6 @@
         && plan.readings[3]?.reference === "Genesis 10-11"
         && plan.readings[9]?.reference === "Genesis 12-17";
       if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.chapterCount !== 1205 || !indicesAreValid || !chaptersAreValid || !jobIsInPlace) throw new Error("Reading plan validation failed.");
-      document.getElementById("hero-reading-count").textContent = plan.readings.length;
       document.getElementById("hero-section-count").textContent = plan.sections.length;
       activeSection = plan.readings[0].section;
       loading.hidden = true;

@@ -90,6 +90,7 @@ assert.equal(websitePlan.readings.at(-1).bibleReference, "Revelation 21; 22");
 assert.match(websitePlan.readings.at(-1).commentaryCitation, /GC 662-678/);
 
 for (const label of ["Journey", "Progress", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
+assert.doesNotMatch(html, /id="hero-reading-count"|264\s+readings/i);
 assert.doesNotMatch(html, /data-view="readings"/i);
 assert.doesNotMatch(html, /data-view="principles"/);
 assert.doesNotMatch(html, /data-view="members"/);
@@ -112,6 +113,10 @@ assert.match(app, /const scriptureCard = reading\.bibleReference \?/);
 assert.match(app, /href="\$\{escapeHTML\(task\.url\)\}"/);
 assert.match(app, /target="_blank" rel="noopener noreferrer"/);
 assert.match(app, /data-open-source="\$\{kind\}"/);
+assert.match(app, /const reviewQueue = plan\.reviewQueue\?\.length/);
+assert.match(app, /loadMemberData\(\{ preservePlace = false \} = \{\}\)/);
+assert.match(app, /loadMemberData\(\{ preservePlace: true \}\)/);
+assert.match(app, /function renderPreservingPlace\(\)/);
 assert.match(app, /BibleGateway/);
 assert.doesNotMatch(app, /data-native-bible-task|TJMNativeBible|nbr-inline-reader|Choose a Scripture passage to read it here/);
 assert.doesNotMatch(app, /Reading \$\{reading\.day\}/);

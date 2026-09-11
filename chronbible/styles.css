@@ -9,54 +9,7 @@
   line-height: 1.08;
 }
 
-.chronbible .chapter-side {
-  position: sticky;
-  top: 92px;
-  padding: 25px;
-  border: 1px solid var(--line-dark);
-  border-radius: 24px;
-  background: #efe3cc;
-}
-
-.chronbible .chapter-side h3 {
-  margin: 0;
-  color: var(--plum);
-  font-family: var(--serif);
-  font-size: 31px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.chronbible .chapter-side > p:not(.eyebrow) {
-  margin: 10px 0 20px;
-  color: #6c6268;
-  font-size: 11px;
-  line-height: 1.65;
-}
-
-.chronbible .side-progress {
-  margin: 18px 0;
-}
-
-.chronbible .side-progress strong {
-  display: block;
-  margin-top: 9px;
-  color: var(--plum);
-  font-family: var(--serif);
-  font-size: 24px;
-}
-
-.chronbible .side-progress small {
-  color: #7d7078;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .06em;
-}
-
-.chronbible .chapter-side .button {
-  width: 100%;
-  margin-top: 8px;
-}
+.chronbible .readings-grid { grid-template-columns: minmax(0, 1fr); }
 
 .chronbible .chapter-task-list {
   width: 100%;
@@ -117,20 +70,6 @@
 
 .chronbible .journey-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-.chronbible .points-inline {
-  margin: 0 0 13px;
-  padding: 13px 15px;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  border: 1px solid rgba(49,30,51,.14);
-  border-radius: 13px;
-  background: rgba(255,255,255,.5);
-}
-
-.chronbible .points-inline strong { color: var(--plum); font-family: var(--serif); font-size: 26px; }
-.chronbible .points-inline span { color: #746a72; font-size: 9px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .chronbible .reward-stat { border-color: rgba(166,114,31,.35); background: #fff3d2; }
 
 .chronbible .reward-overview {
@@ -205,7 +144,6 @@
 .chronbible .leaderboard-error { border-color: rgba(226,109,109,.38); color: #8b5252; }
 
 @media (max-width: 900px) {
-  .chronbible .chapter-side { position: static; }
   .chronbible .progress-layout-wide { grid-template-columns: 1fr; }
   .chronbible .reward-overview { grid-template-columns: 1fr; }
   .chronbible .milestone-panel ul { grid-template-columns: repeat(2, 1fr); }
@@ -213,7 +151,6 @@
 
 @media (max-width: 680px) {
   .chronbible .hero-copy h1 { font-size: clamp(42px, 13vw, 62px); }
-  .chronbible .chapter-side { padding: 20px; }
   .chronbible .journey-nav button { padding-inline: 5px; font-size: .78rem; }
   .chronbible .journey-nav button span { display: block; margin: 0 0 3px; }
   .chronbible .points-card,

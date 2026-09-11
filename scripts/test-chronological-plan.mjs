@@ -74,6 +74,7 @@ assert.deepEqual(plan.readings.filter((reading) => reading.sourceNumber === 2).m
 assert.deepEqual(plan.readings.filter((reading) => reading.sourceNumber === 150).map((reading) => reading.title), ["The Revelation of Jesus Christ", "The Seven Churches", "The Throne, the Lamb, and the Scroll", "The Seals", "The Trumpets and Two Witnesses", "The Dragon, the Beasts, and the Lamb", "The Seven Bowls", "Babylon's Fall", "Christ's Victory and Final Judgment", "New Jerusalem and Eternal Restoration"]);
 assert.match(html, /GOOGLE SIGN-IN IS OPTIONAL/);
 assert.match(html, /Your reading progress can be saved and synced after you sign in/);
+assert.doesNotMatch(html, /id="hero-reading-count"|313\s+reading tasks/i);
 assert.doesNotMatch(html, /data-view="principles"/);
 assert.doesNotMatch(html, /data-view="members"/);
 assert.doesNotMatch(html, />\s*Readings\s*</i);
@@ -83,6 +84,10 @@ assert.match(app, /data-chapter-progress/);
 assert.match(app, /href="\$\{escapeHTML\(task\.url\)\}"/);
 assert.match(app, /target="_blank" rel="noopener noreferrer"/);
 assert.match(app, /on BibleGateway/);
+assert.doesNotMatch(app, /YOUR READING PLACE|class="chapter-side"|class="points-inline"/i);
+assert.match(app, /loadMemberData\(\{ preservePlace = false \} = \{\}\)/);
+assert.match(app, /loadMemberData\(\{ preservePlace: true \}\)/);
+assert.match(app, /function renderPreservingPlace\(\)/);
 assert.doesNotMatch(app, /data-native-bible-task|TJMNativeBible|nbr-inline-reader|Choose a (?:chapter|Scripture passage) to read it here/);
 assert.match(app, /migrateV3Progress/);
 assert.match(app, /migrateV2Progress/);
