@@ -91,6 +91,39 @@
   <script defer src="/assets/guide-experience.js?v=20260907-1"></script>
   <meta name="robots" content="noindex, follow">
   <meta property="og:site_name" content="Try Jesus Media">
+
+  <style>
+    /* A dedicated row in the existing sticky header reserves its own space. */
+    .app-download-row {
+      display: flex;
+      justify-content: center;
+      padding: 8px 16px 10px;
+      border-top: 1px solid rgba(238,189,74,.2);
+      background: #311e33;
+    }
+    .app-download-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 10px 26px;
+      border: 1px solid #f7d983;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f7d983, #eebd4a);
+      color: #211323;
+      font: 700 17px/1.4 Montserrat, Arial, sans-serif;
+      text-decoration: none;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    }
+    .app-download-link:hover { background: #f7d983; }
+    .app-download-link:focus-visible { outline: 3px solid #fffdf9; outline-offset: 3px; }
+    html { scroll-padding-top: 190px; }
+    @media (max-width: 860px) {
+      .site-header .site-nav { top: 100%; max-height: calc(100dvh - 170px); overflow-y: auto; }
+    }
+    @media print { .app-download-row { display: none; } }
+  </style>
 </head>
 
 
@@ -193,6 +226,13 @@
 
   </div>
 
+
+  <div class="app-download-row">
+    <a class="app-download-link"
+       href="https://play.google.com/store/apps/details?id=com.tryjesusmedia.journey"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Download the app: Try Jesus: The Journey on Google Play">Download the App</a>
+  </div>
 </header>
 
 
