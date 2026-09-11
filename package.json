@@ -15,6 +15,7 @@
     "test:chat": "node scripts/test-chat.mjs",
     "test:conflict": "node scripts/test-conflict-plan.mjs",
     "test:chronbible": "node scripts/test-chronological-plan.mjs",
+    "test:reward-security": "node scripts/test-reward-security.mjs",
     "test:principles": "node scripts/test-principles.mjs",
     "test:web-app-parity": "node scripts/test-web-app-parity.mjs"
   },

@@ -191,7 +191,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   top: 0;
   padding: 0 max(16px, calc((100% - 1100px) / 2));
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-bottom: 1px solid var(--line-dark);
   background: rgba(251,246,234,.96);
   backdrop-filter: blur(15px);
@@ -334,6 +334,73 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .review-queue summary { color: #8b5252; cursor: pointer; font-size: 10px; font-weight: 800; }
 .review-item { margin-top: 10px; padding: 12px; border-left: 3px solid var(--red); background: rgba(226,109,109,.07); color: #6d5055; font-size: 10px; line-height: 1.55; }
 
+.reward-stat { border-color: rgba(166,114,31,.35); background: #fff3d2; }
+.reward-overview { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.points-card,
+.milestone-panel,
+.leaderboard-panel {
+  padding: 28px;
+  border: 1px solid var(--line-dark);
+  border-radius: 22px;
+  background: var(--white);
+}
+.points-card { background: linear-gradient(145deg, #311e33, #211522); color: var(--ivory); box-shadow: var(--shadow); }
+.points-card .eyebrow { margin-top: 30px; color: var(--gold); }
+.member-welcome {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 600;
+  line-height: 1.05;
+  text-align: left;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.member-welcome:hover { color: var(--gold-light); }
+.member-welcome-guest { cursor: default; user-select: text; }
+.name-edit-hint { display: block; margin-top: 10px; color: rgba(243,232,208,.78); font-size: 16px; line-height: 1.55; }
+.points-card > strong { display: block; color: var(--gold-light); font-family: var(--serif); font-size: clamp(72px, 10vw, 108px); font-weight: 600; line-height: .82; }
+.points-card > span:not(.name-edit-hint) { display: block; margin-top: 20px; color: rgba(243,232,208,.8); font-size: 16px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.reward-progress { margin-top: 30px; }
+.reward-progress .progress-track { height: 10px; background: rgba(255,255,255,.16); }
+.reward-progress small { display: block; margin-top: 11px; color: rgba(243,232,208,.82); font-size: 17px; line-height: 1.55; }
+.milestone-panel,
+.leaderboard-panel { margin-top: 22px; }
+.milestone-panel h3,
+.leaderboard-panel h3 { margin: 0; color: var(--plum); font-family: var(--serif); font-size: 36px; font-weight: 600; line-height: 1; }
+.milestone-panel ul { margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; list-style: none; }
+.milestone { min-height: 108px; padding: 16px; display: grid; align-content: center; justify-items: center; gap: 9px; border: 1px solid var(--line-dark); border-radius: 15px; color: #796f76; text-align: center; }
+.milestone span { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid #c9bfae; border-radius: 50%; font-size: 17px; }
+.milestone strong { font-size: 16px; line-height: 1.4; }
+.milestone.earned { border-color: rgba(166,114,31,.34); background: #fff3d2; color: var(--plum); }
+.milestone.earned span { border-color: var(--green); background: var(--green); color: #1d2722; font-weight: 900; }
+.leaderboard-panel > header { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.leaderboard-list { margin-top: 24px; display: grid; gap: 10px; }
+.leaderboard-row { min-height: 84px; padding: 14px 17px; display: grid; grid-template-columns: 66px minmax(0, 1fr) auto; align-items: center; gap: 14px; border: 1px solid var(--line-dark); border-radius: 14px; background: var(--paper); }
+.leaderboard-row.is-current { border-color: rgba(166,114,31,.45); background: #fff3d2; box-shadow: 0 8px 22px rgba(49,30,51,.08); }
+.leaderboard-rank { color: #756b72; font-family: var(--serif); font-size: 30px; font-weight: 700; }
+.leaderboard-identity { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; }
+.leaderboard-alias { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
+.leaderboard-alias strong { color: var(--plum); font-size: 19px; overflow-wrap: anywhere; }
+.leaderboard-alias small { padding: 5px 8px; border-radius: 999px; background: var(--plum); color: var(--gold-light); font-size: 12px; font-weight: 900; letter-spacing: .08em; }
+.alias-change { min-height: 46px; padding: 8px 13px; border: 1px solid rgba(49,30,51,.25); border-radius: 999px; background: transparent; color: var(--plum); cursor: pointer; font-size: 16px; font-weight: 800; }
+.alias-change:hover { border-color: var(--gold); background: rgba(238,189,74,.1); }
+.leaderboard-score { display: grid; justify-items: end; }
+.leaderboard-score strong { color: #8a611b; font-size: 19px; }
+.leaderboard-score small { margin-top: 4px; color: #756b72; font-size: 15px; }
+.leaderboard-state { min-height: 200px; margin-top: 22px; padding: 24px; display: grid; place-content: center; justify-items: center; gap: 11px; border: 1px dashed rgba(49,30,51,.2); border-radius: 16px; color: #6f656c; text-align: center; }
+.leaderboard-state > strong { font-size: 20px; }
+.leaderboard-state p { max-width: 540px; margin: 0; font-size: 17px; line-height: 1.65; }
+.leaderboard-error { border-color: rgba(226,109,109,.38); color: #8b5252; }
+.progress-inline-summary { margin: 23px 0; color: #6f646c; font-size: 17px; line-height: 1.65; }
+
 .auth-gate { position: fixed; z-index: 100; inset: 0; padding: 20px; display: grid; place-items: center; overflow-y: auto; background: rgba(18,10,19,.85); backdrop-filter: blur(12px); }
 .auth-card { width: min(480px, 100%); padding: 36px; border: 1px solid rgba(238,189,74,.3); border-radius: 28px; background: linear-gradient(145deg, #3b233d, #201421); color: var(--ivory); text-align: center; box-shadow: 0 35px 100px rgba(0,0,0,.45); }
 .auth-card > img { object-fit: contain; }
@@ -411,4 +478,71 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Comfortable reading sizes across Journey, Progress, and Leaderboard. */
+.journey-nav button { font-size: clamp(17px, 1.6vw, 20px); }
+.journey-nav button span { font-size: 16px; }
+#view-root { font-size: 18px; }
+#view-root .eyebrow { font-size: 16px !important; line-height: 1.5 !important; }
+.journey-hero .eyebrow,
+.auth-card .eyebrow { font-size: 16px !important; line-height: 1.5 !important; }
+.brand strong { font-size: 18px; }
+.brand small { font-size: 16px; line-height: 1.4; letter-spacing: .2em; }
+.hero-intro p { font-size: 18px; }
+.hero-stats span { font-size: 16px; }
+.hero-stats strong { font-size: 18px; }
+.hero-mark span { font-size: 16px; }
+.hero-mark p { font-size: 17px; }
+.hero-book-list small { font-size: 16px; }
+.hero-book-list li { font-size: 20px; }
+.view-heading p:not(.eyebrow) { max-width: 720px; font-size: 18px; }
+.icon-button.nav-button { min-height: 50px; font-size: 15px; }
+.reading-number small { font-size: 16px; }
+.card-kicker span { font-size: 16px; line-height: 1.45; }
+.citation { font-size: 17px; }
+.button { min-height: 52px; font-size: 16px; line-height: 1.35; }
+.source-flag { font-size: 16px; }
+.source-exact summary { font-size: 16px; }
+.book-summary p { font-size: 16px; line-height: 1.5; }
+.book-progress small { font-size: 15px; line-height: 1.45; }
+.journey-reading { min-height: 70px; }
+.journey-reading strong { font-size: 18px; line-height: 1.4; }
+.journey-reading small { font-size: 16px; line-height: 1.5; }
+.journey-reading > em { font-size: 16px; }
+.stat-card span { font-size: 16px; line-height: 1.4; }
+.book-progress-row header { font-size: 16px; line-height: 1.45; }
+.empty-card { font-size: 17px; }
+.save-banner span { font-size: 16px; }
+.review-queue summary,
+.review-item { font-size: 16px; }
+#view-root small { font-size: 16px !important; line-height: 1.55 !important; }
+#view-root .reward-progress small { font-size: 17px !important; }
+.auth-card > p:not(.eyebrow),
+.google-button,
+.guest-button { font-size: 16px; }
+.auth-note { font-size: 16px !important; }
+.sync-status,
+.header-sign-in,
+#profile-name,
+.account-menu strong,
+.account-menu button,
+.toast,
+.site-footer .faithcraft-credit,
+.site-footer > small { font-size: 16px; line-height: 1.55; }
+.site-footer > small { color: rgba(243,232,208,.78); }
+
+@media (max-width: 900px) {
+  .milestone-panel ul { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 680px) {
+  .journey-nav button { min-height: 76px; padding-inline: 5px; font-size: 16px; }
+  .journey-nav button span { display: block; margin: 0 0 4px; font-size: 16px; }
+  .points-card,
+  .milestone-panel,
+  .leaderboard-panel { padding: 23px 18px; }
+  .leaderboard-row { grid-template-columns: 48px minmax(0, 1fr); }
+  .leaderboard-score { grid-column: 2; justify-items: start; }
+  .alias-change { width: 100%; }
 }

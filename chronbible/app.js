@@ -5,6 +5,7 @@
   const PLAN_PATH = "data/readings.json";
   const POINTS_PER_CHAPTER = 10;
   const REWARD_MILESTONES = Object.freeze([1, 25, 100, 250, 500, 750, 1000, 1205]);
+  const FIRST_NAME_HOLD_MS = 1400;
   const root = document.getElementById("view-root");
   const loading = document.getElementById("loading-state");
   const authGate = document.getElementById("auth-gate");
@@ -28,10 +29,21 @@
   let activeSection = "";
   let refreshTimer = null;
   let journeyAlias = "";
+  let journeyFirstName = "";
   let leaderboard = [];
   let leaderboardLoaded = false;
   let leaderboardLoading = false;
   let leaderboardError = "";
+  let nameHoldTimer = null;
+  let namePointerStart = null;
+  let lastNameTapAt = 0;
+  let nameEditInProgress = false;
+  let nameEditRequestId = 0;
+  let identityVersion = 0;
+  let visitRefreshPromise = null;
+  let sessionVersion = 0;
+  let leaderboardRequestId = 0;
+  let visitRefreshId = 0;
 
   function escapeHTML(value = "") {
     return String(value)
@@ -81,6 +93,37 @@
 
   function percentComplete() {
     return Math.round((completed.size / plan.chapterCount) * 100);
+  }
+
+  function metadataFirstName() {
+    const metadata = session?.user?.user_metadata ?? {};
+    const supplied = String(metadata.given_name || metadata.full_name || metadata.name || "").trim();
+    const first = supplied.split(/\s+/)[0] || "Friend";
+    return first.length <= 40 && !/[<>\u0000-\u001f\u007f]/u.test(first) ? first : "Friend";
+  }
+
+  function friendlyFirstName() {
+    return journeyFirstName || metadataFirstName();
+  }
+
+  function isCurrentSession(userId, version) {
+    return Boolean(userId && session?.user?.id === userId && sessionVersion === version);
+  }
+
+  function resetRewardState() {
+    leaderboardRequestId += 1;
+    visitRefreshId += 1;
+    nameEditRequestId += 1;
+    identityVersion += 1;
+    nameEditInProgress = false;
+    cancelNameGesture();
+    visitRefreshPromise = null;
+    journeyAlias = "";
+    journeyFirstName = "";
+    leaderboard = [];
+    leaderboardLoaded = false;
+    leaderboardLoading = false;
+    leaderboardError = "";
   }
 
   function rewardSummary() {
@@ -152,7 +195,7 @@
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
-    if (name === "rewards" && session) void loadJourneyRewards();
+    if (name === "rewards" && session) void refreshJourneyFromVisit();
     if (focusMain) {
       document.getElementById("journey-main").focus({ preventScroll: true });
       const hero = document.querySelector(".journey-hero");
@@ -246,24 +289,23 @@
 
   function renderLeaderboardRows() {
     if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Gathering the community…</strong></div>`;
-    if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-refresh-leaderboard>Try again</button></div>`;
+    if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-retry-leaderboard>Try again</button></div>`;
     if (!leaderboard.length) return `<div class="leaderboard-state"><strong>The journey is just beginning.</strong><p>Complete a chapter and return here to see the community.</p></div>`;
-    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} chapters</small></span></article>`).join("")}</div>`;
+    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span>${entry.is_current_user ? `<button class="alias-change" type="button" data-reroll-alias ${leaderboardLoading ? "disabled" : ""}>Change alias</button>` : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} chapters</small></span></article>`).join("")}</div>`;
   }
 
   function renderRewards() {
     const rewards = rewardSummary();
-    const myEntry = leaderboard.find((entry) => entry.is_current_user);
     const nextLabel = rewards.nextMilestone === null
       ? "You completed the full journey."
       : rewards.nextMilestone === 1
         ? "Complete your first chapter to reach your first milestone."
         : `${rewards.nextMilestone - rewards.completedChapters} chapters to the ${rewards.nextMilestone.toLocaleString()}-chapter milestone.`;
-    const memberCard = session
-      ? `<article class="alias-card"><p class="eyebrow">YOUR COMMUNITY ALIAS</p><h3>${escapeHTML(journeyAlias || myEntry?.alias || "Preparing your alias…")}</h3><p>${myEntry ? `You are currently ranked #${myEntry.rank} among ${leaderboard.length} readers.` : "Your friendly random alias protects your real identity on the leaderboard."}</p><button class="button button-secondary" type="button" data-reroll-alias ${leaderboardLoading ? "disabled" : ""}>Change my alias</button><small>A new friendly alias is supplied at random. You can change only your own.</small></article>`
-      : `<article class="alias-card alias-card-guest"><p class="eyebrow">JOIN THE COMMUNITY</p><h3>Your progress stays yours.</h3><p>Sign in with Google to sync your points, receive a friendly random alias, and view the all-reader leaderboard.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></article>`;
+    const welcome = session
+      ? `<button class="member-welcome" type="button" data-edit-first-name aria-label="Welcome, ${escapeHTML(friendlyFirstName())}. Double-tap or press and hold to change your first name.">Welcome, ${escapeHTML(friendlyFirstName())}!</button><span class="name-edit-hint">Double-tap or press and hold your name to change it.</span>`
+      : `<p class="member-welcome member-welcome-guest">Welcome, Friend!</p>`;
 
-    return `<section aria-labelledby="rewards-heading" class="rewards-view"><header class="view-heading"><div><p class="eyebrow">JOURNEY POINTS</p><h2 id="rewards-heading">Celebrate steady progress.</h2><p>Each distinct completed chapter earns 10 Journey Points. Points celebrate reading progress—not spiritual worth.</p></div></header><div class="reward-overview"><article class="points-card"><p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} chapters complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article>${memberCard}</div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel"><header><div><p class="eyebrow">ALL READERS</p><h3>Journey leaderboard</h3><p>Only random aliases and reading totals are shown. Tied readers share the same rank.</p></div>${session ? `<button class="button button-secondary" type="button" data-refresh-leaderboard ${leaderboardLoading ? "disabled" : ""}>${leaderboardLoading ? "Refreshing…" : "Refresh"}</button>` : ""}</header>${session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>This keeps the reading community private while your local progress remains available without an account.</p></div>`}</article></section>`;
+    return `<section aria-labelledby="rewards-heading" class="rewards-view"><header class="view-heading"><div><p class="eyebrow">JOURNEY POINTS</p><h2 id="rewards-heading">Celebrate steady progress.</h2><p>Each distinct completed chapter earns 10 Journey Points.</p></div></header><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} chapters complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel"><header><div><p class="eyebrow">ALL READERS</p><h3>Journey leaderboard</h3></div></header>${session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>Your local progress remains available without an account.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`}</article></section>`;
   }
 
   function render() {
@@ -277,26 +319,50 @@
     root.innerHTML = `${activeView === "progress" || activeView === "rewards" ? "" : guestBanner()}${content}`;
   }
 
-  async function loadJourneyRewards() {
-    if (!session || !db || leaderboardLoading) return;
+  async function loadJourneyIdentity({ userId = session?.user?.id, version = sessionVersion } = {}) {
+    if (!db || !isCurrentSession(userId, version)) return false;
+    const identityVersionAtStart = identityVersion;
+    const [profileResult, firstNameResult] = await Promise.all([
+      db.rpc("ensure_journey_profile"),
+      db.rpc("get_my_journey_first_name"),
+    ]);
+    if (identityVersionAtStart !== identityVersion || !isCurrentSession(userId, version)) return false;
+    if (profileResult.error) throw profileResult.error;
+    if (firstNameResult.error) throw firstNameResult.error;
+    journeyAlias = String(profileResult.data || "");
+    journeyFirstName = String(firstNameResult.data || metadataFirstName());
+    updateProfile();
+    return true;
+  }
+
+  async function loadJourneyRewards({ identityReady = false } = {}) {
+    if (!session || !db || leaderboardLoading || nameEditInProgress) return false;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const requestId = ++leaderboardRequestId;
     leaderboardLoading = true;
     leaderboardError = "";
     if (activeView === "rewards") render();
     try {
-      const [profileResult, leaderboardResult] = await Promise.all([
-        db.rpc("ensure_journey_profile"),
-        db.rpc("get_journey_leaderboard"),
-      ]);
-      if (profileResult.error) throw profileResult.error;
-      journeyAlias = String(profileResult.data || "");
+      const identityLoaded = identityReady || await loadJourneyIdentity({ userId, version });
+      if (!isCurrentSession(userId, version) || requestId !== leaderboardRequestId) return false;
+      if (!identityLoaded) return false;
+      const leaderboardResult = await db.rpc("get_journey_leaderboard");
+      if (!isCurrentSession(userId, version) || requestId !== leaderboardRequestId) return false;
       if (leaderboardResult.error) throw leaderboardResult.error;
       leaderboard = Array.isArray(leaderboardResult.data) ? leaderboardResult.data : [];
       leaderboardLoaded = true;
+      return true;
     } catch (error) {
-      leaderboardError = error.message || "Please try again in a moment.";
+      if (isCurrentSession(userId, version) && requestId === leaderboardRequestId) {
+        leaderboardError = error.message || "Please try again in a moment.";
+      }
+      return false;
     } finally {
-      leaderboardLoading = false;
-      if (activeView === "rewards") render();
+      if (isCurrentSession(userId, version) && requestId === leaderboardRequestId) {
+        leaderboardLoading = false;
+        if (activeView === "rewards") render();
+      }
     }
   }
 
@@ -305,11 +371,14 @@
       showSignIn();
       return;
     }
+    const userId = session.user.id;
+    const version = sessionVersion;
     if (!window.confirm("Replace your current leaderboard alias with a new random alias?")) return;
     leaderboardLoading = true;
     leaderboardError = "";
     render();
     const { data, error } = await db.rpc("reroll_journey_alias");
+    if (!isCurrentSession(userId, version)) return;
     if (error) {
       leaderboardLoading = false;
       leaderboardError = error.message;
@@ -323,17 +392,136 @@
     toast(`Your new Journey alias is ${journeyAlias}.`);
   }
 
+  async function editJourneyFirstName() {
+    if (nameEditInProgress) return;
+    if (!session) {
+      showSignIn();
+      return;
+    }
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const requestId = ++nameEditRequestId;
+    nameEditInProgress = true;
+    try {
+      const answer = window.prompt("What first name should we use to welcome you?", friendlyFirstName());
+      if (answer === null) return;
+      if (requestId !== nameEditRequestId || !isCurrentSession(userId, version)) return;
+      const firstName = answer.trim();
+      if (!firstName || firstName.length > 40 || /[<>\u0000-\u001f\u007f]/u.test(firstName)) {
+        toast("Please enter a first name from 1 to 40 characters.", "error");
+        return;
+      }
+      identityVersion += 1;
+      const { data, error } = await db.rpc("update_my_journey_first_name", { p_first_name: firstName });
+      if (requestId !== nameEditRequestId || !isCurrentSession(userId, version)) return;
+      if (error) throw error;
+      identityVersion += 1;
+      journeyFirstName = String(data || firstName);
+      updateProfile();
+      renderPreservingPlace();
+      toast(`Welcome, ${journeyFirstName}!`);
+    } catch (error) {
+      if (requestId === nameEditRequestId && isCurrentSession(userId, version)) {
+        toast(error.message || "Your first name could not be saved.", "error");
+      }
+    } finally {
+      if (requestId === nameEditRequestId) nameEditInProgress = false;
+    }
+  }
+
+  function clearNameHold() {
+    if (nameHoldTimer) clearTimeout(nameHoldTimer);
+    const pointer = namePointerStart;
+    if (pointer?.target?.hasPointerCapture?.(pointer.id)) {
+      try { pointer.target.releasePointerCapture(pointer.id); } catch {}
+    }
+    nameHoldTimer = null;
+    namePointerStart = null;
+  }
+
+  function cancelNameGesture() {
+    clearNameHold();
+    lastNameTapAt = 0;
+  }
+
+  function beginNameHold(event) {
+    const target = event.target.closest("[data-edit-first-name]");
+    if (!target || !event.isPrimary || event.button !== 0) return;
+    clearNameHold();
+    namePointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY, at: Date.now(), target };
+    try { target.setPointerCapture?.(event.pointerId); } catch {}
+    nameHoldTimer = setTimeout(() => {
+      clearNameHold();
+      lastNameTapAt = 0;
+      void editJourneyFirstName();
+    }, FIRST_NAME_HOLD_MS);
+  }
+
+  function moveNameHold(event) {
+    if (!namePointerStart || event.pointerId !== namePointerStart.id) return;
+    if (Math.hypot(event.clientX - namePointerStart.x, event.clientY - namePointerStart.y) > 12) {
+      clearNameHold();
+      lastNameTapAt = 0;
+    }
+  }
+
+  function finishNameTap(event) {
+    if (!namePointerStart || event.pointerId !== namePointerStart.id) return;
+    const start = namePointerStart;
+    const isTap = Date.now() - start.at < 700
+      && Math.hypot(event.clientX - start.x, event.clientY - start.y) <= 12;
+    clearNameHold();
+    if (!isTap) return;
+    const now = Date.now();
+    if (now - lastNameTapAt <= 500) {
+      lastNameTapAt = 0;
+      void editJourneyFirstName();
+    } else {
+      lastNameTapAt = now;
+    }
+  }
+
+  async function refreshJourneyFromVisit() {
+    if (!session || activeView !== "rewards" || document.visibilityState === "hidden" || nameEditInProgress) return false;
+    if (visitRefreshPromise) return visitRefreshPromise;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const refreshId = ++visitRefreshId;
+    const refreshPromise = (async () => {
+      try {
+        const loaded = await loadMemberData({ preservePlace: true, userId, version });
+        if (!loaded || !isCurrentSession(userId, version)) return false;
+        await loadJourneyRewards();
+        if (!isCurrentSession(userId, version)) return false;
+        renderPreservingPlace();
+        return true;
+      } catch (error) {
+        if (isCurrentSession(userId, version)) console.warn("Journey refresh", error.message);
+        return false;
+      } finally {
+        if (refreshId === visitRefreshId) visitRefreshPromise = null;
+      }
+    })();
+    visitRefreshPromise = refreshPromise;
+    return refreshPromise;
+  }
+
   async function persistProgress(previousCompleted, previousLastIndex) {
     if (!session) return;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const completedIndices = Array.from(completed).sort((a, b) => a - b);
+    const savedLastIndex = lastIndex;
     setSync("Saving…", "saving");
     const { error } = await db.from("reading_plan_progress").upsert({
-      user_id: session.user.id,
+      user_id: userId,
       plan_id: CONFIG.planId,
-      completed_indices: Array.from(completed).sort((a, b) => a - b),
-      last_index: lastIndex,
+      completed_indices: completedIndices,
+      last_index: savedLastIndex,
       updated_at: new Date().toISOString(),
     }, { onConflict: "user_id,plan_id" });
 
+    if (!isCurrentSession(userId, version)) return;
     if (error) {
       completed = previousCompleted;
       lastIndex = previousLastIndex;
@@ -376,10 +564,11 @@
     await persistProgress(previousCompleted, previousLastIndex);
   }
 
-  async function loadMemberData({ preservePlace = false } = {}) {
+  async function loadMemberData({ preservePlace = false, userId = session?.user?.id, version = sessionVersion } = {}) {
+    if (!isCurrentSession(userId, version)) return false;
     setSync("Syncing your progress…", "saving");
-    const userId = session.user.id;
     const progressResult = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle();
+    if (!isCurrentSession(userId, version)) return false;
     if (progressResult.error) throw progressResult.error;
     let memberData = progressResult.data;
     if (!memberData && plan.previousPlanId) {
@@ -388,6 +577,7 @@
         .eq("user_id", userId)
         .eq("plan_id", plan.previousPlanId)
         .maybeSingle();
+      if (!isCurrentSession(userId, version)) return false;
       if (legacyError) throw legacyError;
       if (legacyData) {
         const migrated = migrateV3Progress(legacyData);
@@ -400,6 +590,7 @@
         .eq("user_id", userId)
         .eq("plan_id", plan.taskLegacyPlanId)
         .maybeSingle();
+      if (!isCurrentSession(userId, version)) return false;
       if (taskLegacyError) throw taskLegacyError;
       if (taskLegacyData) {
         const migrated = migrateV2Progress(taskLegacyData);
@@ -408,6 +599,7 @@
     }
     if (!memberData && plan.originalLegacyPlanId) {
       const { data: originalLegacyData, error: originalLegacyError } = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", plan.originalLegacyPlanId).maybeSingle();
+      if (!isCurrentSession(userId, version)) return false;
       if (originalLegacyError) throw originalLegacyError;
       if (originalLegacyData) {
         const migrated = migrateV1Progress(originalLegacyData);
@@ -416,8 +608,10 @@
     }
     if (memberData && !progressResult.data) {
       const { error: migrationError } = await db.from("reading_plan_progress").upsert({ user_id: userId, plan_id: CONFIG.planId, completed_indices: memberData.completed_indices, last_index: memberData.last_index, updated_at: memberData.updated_at }, { onConflict: "user_id,plan_id" });
+      if (!isCurrentSession(userId, version)) return false;
       if (migrationError) throw migrationError;
     }
+    if (!isCurrentSession(userId, version)) return false;
     completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
     if (!preservePlace) {
@@ -425,6 +619,7 @@
       activeSection = currentReading().section;
     }
     setSync("Synced with the app", "synced");
+    return true;
   }
 
   function renderPreservingPlace() {
@@ -439,7 +634,7 @@
       profileButton.hidden = true;
       return;
     }
-    const name = displayName();
+    const name = journeyFirstName || displayName();
     const avatar = avatarUrl();
     document.getElementById("profile-name").textContent = name.split(" ")[0] || "Member";
     document.getElementById("profile-initial").textContent = initials(name);
@@ -460,9 +655,13 @@
     clearInterval(refreshTimer);
     refreshTimer = setInterval(async () => {
       if (document.visibilityState !== "visible" || !session) return;
+      const userId = session.user.id;
+      const version = sessionVersion;
       try {
-        await loadMemberData({ preservePlace: true });
+        const loaded = await loadMemberData({ preservePlace: true, userId, version });
+        if (!loaded || !isCurrentSession(userId, version)) return;
         if (activeView === "rewards") await loadJourneyRewards();
+        if (!isCurrentSession(userId, version)) return;
         renderPreservingPlace();
       } catch (error) {
         console.warn("Background sync", error.message);
@@ -471,20 +670,26 @@
   }
 
   async function applySession(nextSession) {
+    const previousUserId = session?.user?.id || "";
+    const nextUserId = nextSession?.user?.id || "";
+    if (previousUserId !== nextUserId) {
+      sessionVersion += 1;
+      clearInterval(refreshTimer);
+      completed = new Set();
+      currentIndex = 0;
+      lastIndex = 0;
+      activeSection = plan.readings[0].section;
+      resetRewardState();
+    }
     session = nextSession;
     accountMenu.hidden = true;
-    updateProfile();
     if (!session) {
+      updateProfile();
       completed = new Set();
       currentIndex = 0;
       lastIndex = 0;
       activeSection = plan.readings[0].section;
       clearInterval(refreshTimer);
-      journeyAlias = "";
-      leaderboard = [];
-      leaderboardLoaded = false;
-      leaderboardLoading = false;
-      leaderboardError = "";
       authGate.hidden = guestBrowsing;
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
@@ -494,10 +699,17 @@
     guestBrowsing = false;
     authGate.hidden = true;
     headerSignIn.hidden = true;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    profileButton.hidden = true;
     try {
-      await loadMemberData();
+      const [loaded, identityLoaded] = await Promise.all([
+        loadMemberData({ userId, version }),
+        loadJourneyIdentity({ userId, version }),
+      ]);
+      if (!loaded || !identityLoaded || !isCurrentSession(userId, version)) return;
       render();
-      if (activeView === "rewards") await loadJourneyRewards();
+      if (activeView === "rewards") await loadJourneyRewards({ identityReady: true });
       scheduleRefresh();
     } catch (error) {
       console.error(error);
@@ -528,15 +740,35 @@
   root.addEventListener("click", (event) => {
     const target = event.target.closest("button, a");
     if (!target) return;
-    if (target.hasAttribute("data-require-sign-in")) showSignIn();
+    if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
+    else if (target.hasAttribute("data-require-sign-in")) showSignIn();
     else if (target.dataset.readingNav) goToReading(currentIndex + (target.dataset.readingNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex !== undefined) goToReading(Number(target.dataset.readingIndex));
     else if (target.dataset.section !== undefined) {
       activeSection = activeSection === target.dataset.section ? "" : target.dataset.section;
       render();
     } else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
-    else if (target.hasAttribute("data-refresh-leaderboard")) loadJourneyRewards();
+    else if (target.hasAttribute("data-retry-leaderboard")) loadJourneyRewards();
     else if (target.hasAttribute("data-reroll-alias")) rerollJourneyAlias();
+  });
+
+  root.addEventListener("pointerdown", beginNameHold);
+  window.addEventListener("pointermove", moveNameHold);
+  window.addEventListener("pointerup", finishNameTap);
+  window.addEventListener("pointercancel", cancelNameGesture);
+  document.addEventListener("pointerout", (event) => {
+    if (event.relatedTarget === null) cancelNameGesture();
+  });
+  window.addEventListener("blur", cancelNameGesture);
+  window.addEventListener("scroll", cancelNameGesture, { passive: true });
+  root.addEventListener("contextmenu", (event) => {
+    if (!event.target.closest("[data-edit-first-name]")) return;
+    event.preventDefault();
+  });
+  root.addEventListener("keydown", (event) => {
+    if (event.repeat || !event.target.closest("[data-edit-first-name]") || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    void editJourneyFirstName();
   });
 
   root.addEventListener("change", (event) => {
@@ -568,15 +800,21 @@
   headerSignIn.addEventListener("click", showSignIn);
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState === "visible" && session) {
+      const userId = session.user.id;
+      const version = sessionVersion;
       try {
-        await loadMemberData({ preservePlace: true });
+        const loaded = await loadMemberData({ preservePlace: true, userId, version });
+        if (!loaded || !isCurrentSession(userId, version)) return;
         if (activeView === "rewards") await loadJourneyRewards();
+        if (!isCurrentSession(userId, version)) return;
         renderPreservingPlace();
       } catch (error) {
         console.warn(error.message);
       }
     }
   });
+  window.addEventListener("pageshow", () => { void refreshJourneyFromVisit(); });
+  window.addEventListener("focus", () => { void refreshJourneyFromVisit(); });
 
   async function init() {
     try {

@@ -226,3 +226,72 @@ body,
 .auth-card > p:not(.eyebrow) {
   color: #a8ada5;
 }
+
+.reward-stat {
+  border-color: rgba(199, 147, 65, .42);
+  background-color: rgba(24, 96, 89, .18);
+}
+
+.points-card {
+  background: linear-gradient(145deg, #03101d, #09252a);
+  border-color: rgba(199, 147, 65, .32);
+}
+
+.milestone-panel,
+.leaderboard-panel {
+  color: #ebe9de;
+  background-color: #03101d;
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.milestone-panel h3,
+.leaderboard-panel h3,
+.leaderboard-alias strong {
+  color: #fdfaf2;
+}
+
+.milestone {
+  color: #a8ada5;
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.milestone.earned,
+.leaderboard-row.is-current {
+  color: #fdfaf2;
+  background-color: rgba(24, 96, 89, .22);
+  border-color: rgba(199, 147, 65, .42);
+}
+
+.milestone.earned span {
+  color: #fdfaf2;
+}
+
+.leaderboard-row {
+  background-color: #010c18;
+  border-color: rgba(235, 233, 222, .14);
+}
+
+.leaderboard-rank,
+.leaderboard-score small,
+.leaderboard-state,
+.progress-inline-summary {
+  color: #a8ada5;
+}
+
+.leaderboard-score strong,
+.alias-change {
+  color: #e5b55b;
+}
+
+.alias-change {
+  border-color: rgba(199, 147, 65, .42);
+}
+
+.leaderboard-alias small {
+  color: #010c18;
+  background-color: #c79341;
+}
+
+.leaderboard-state {
+  border-color: rgba(235, 233, 222, .2);
+}

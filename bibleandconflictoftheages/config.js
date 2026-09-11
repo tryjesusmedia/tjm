@@ -5,4 +5,4 @@ window.TJM_CONFLICT_CONFIG = Object.freeze({
   supabaseUrl: "https://erejehmrtzjpqurbftsm.supabase.co",
   supabasePublishableKey: "sb_publishable_bOxmjg6RWmwfw7i7o_YhTg_zOjUt0p6",
 });
-document.write('<link rel="stylesheet" href="faithcraft-theme.css?v=20260911-1">');
+document.write('<link rel="stylesheet" href="faithcraft-theme.css?v=20260911-2">');

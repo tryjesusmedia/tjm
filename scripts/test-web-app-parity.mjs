@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(path, "utf8");
-const [rootPage, welcome, signup, guideScript, guideStyles, redirectPage, redirectSource, conflictConfig, chronConfig, conflictTheme, conflictPage, conflictApp, conflictIntroStyles, chronPage, chronApp, journeyStyles] = await Promise.all([
+const [rootPage, welcome, signup, guideScript, guideStyles, redirectPage, redirectSource, conflictConfig, chronConfig, conflictTheme, conflictPage, conflictApp, conflictIntroStyles, chronPage, chronApp, journeyStyles, rewardMigration] = await Promise.all([
   read("index.html"),
   read("welcome/index.html"),
   read("signupcomplete/index.html"),
@@ -19,6 +19,7 @@ const [rootPage, welcome, signup, guideScript, guideStyles, redirectPage, redire
   read("chronbible/index.html"),
   read("chronbible/app.js"),
   read("bibleandconflictoftheages/styles.css"),
+  read("supabase/migrations/20260911180000_journey_names_and_conflict_rewards.sql"),
 ]);
 
 for (const page of [welcome, signup]) {
@@ -56,11 +57,12 @@ assert.match(redirectSource, /searchParams\.set\("version", "KJV"\)/);
 assert.match(redirectSource, /location\.replace\(destination\.href\)/);
 assert.doesNotMatch(redirectSource, /TJMNativeBible|bible_highlights|notes|highlight|principles/i);
 
-assert.match(conflictConfig, /faithcraft-theme\.css\?v=20260911-1/);
+assert.match(conflictConfig, /faithcraft-theme\.css\?v=20260911-2/);
 assert.doesNotMatch(chronConfig, /faithcraft-theme/);
 assert.match(conflictPage, /theme-color" content="#010c18"/);
 assert.match(chronPage, /theme-color" content="#241425"/);
-assert.match(chronPage, /styles\.css\?v=20260911-2/);
+assert.match(chronPage, /bibleandconflictoftheages\/styles\.css\?v=20260911-5/);
+assert.match(chronPage, /href="styles\.css\?v=20260911-4"/);
 for (const page of [conflictPage, chronPage]) {
   assert.doesNotMatch(page, /native-bible-reader/);
   assert.match(page, /class="faithcraft-credit" href="https:\/\/faithcraft\.agency\/" target="_blank" rel="noopener noreferrer">Powered by FaithCraft\.Agency<\/a>/);
@@ -70,8 +72,15 @@ for (const app of [conflictApp, chronApp]) {
   assert.match(app, /href="\$\{escapeHTML\(task\.url\)\}"/);
   assert.doesNotMatch(app, /TJMNativeBible|data-native-bible-task|nbr-inline-reader|Bible highlights|Your Bible notes|highlights, and notes|keep notes/);
 }
-assert.match(journeyStyles, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
-assert.match(journeyStyles, /\.journey-nav button[\s\S]*min-height:\s*78px[\s\S]*font-size:\s*1rem/);
+assert.match(journeyStyles, /grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+assert.match(journeyStyles, /\.journey-nav button[\s\S]*min-height:\s*78px/);
+assert.match(journeyStyles, /\.journey-nav button \{ font-size: clamp\(17px, 1\.6vw, 20px\)/);
+assert.match(journeyStyles, /\.view-heading p:not\(\.eyebrow\)[\s\S]*font-size: 18px/);
+assert.match(journeyStyles, /#view-root \.eyebrow \{ font-size: 16px !important/);
+assert.match(journeyStyles, /\.journey-hero \.eyebrow,[\s\S]*\.auth-card \.eyebrow \{ font-size: 16px !important/);
+assert.match(journeyStyles, /\.brand small \{ font-size: 16px/);
+assert.match(journeyStyles, /\.site-footer > small \{ font-size: 16px/);
+assert.match(journeyStyles, /\.site-footer > small \{ color: rgba\(243,232,208,\.78\)/);
 assert.match(journeyStyles, /\.stat-grid-three\s*\{\s*grid-template-columns:\s*repeat\(3, 1fr\)/);
 assert.match(journeyStyles, /\.progress-layout-single\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\)/);
 
@@ -85,6 +94,7 @@ for (const volume of ["Patriarchs and Prophets", "Prophets and Kings", "The Desi
   assert.ok(volumeIndex > foundationIndex && volumeIndex < disclosureEnd, `${volume} must stay inside the journey disclosure`);
 }
 assert.match(conflictIntroStyles, /\.hero-intro-more-content \.hero-mark > p,[\s\S]*\.hero-intro-more-content \.hero-book-list li[\s\S]*font-size:\s*clamp\(1\.075rem/);
+assert.match(conflictIntroStyles, /\.hero-mark > span,[\s\S]*\.hero-book-list small[\s\S]*font-size:\s*1rem/);
 
 for (const copy of [
   "Move at your own pace. A reading may take one sitting, several days, or longer; your next unfinished reading will be waiting whenever you return.",
@@ -107,5 +117,31 @@ assert.match(welcome, /chat\.whatsapp\.com\/Lqv7ZVbC3PPBmQNMjRoXaM/, "the WhatsA
 for (const color of ["#010c18", "#03101d", "#c79341", "#e5b55b", "#186059", "#298075", "#ebe9de", "#fdfaf2"]) {
   assert.match(conflictTheme.toLowerCase(), new RegExp(color));
 }
+
+for (const app of [chronApp, conflictApp]) {
+  assert.match(app, /Welcome, \$\{escapeHTML\(friendlyFirstName\(\)\)\}!/);
+  assert.match(app, /FIRST_NAME_HOLD_MS = 1400/);
+  assert.match(app, /update_my_journey_first_name/);
+  assert.match(app, /nameEditRequestId/);
+  assert.match(app, /identityVersionAtStart !== identityVersion/);
+  assert.match(app, /setPointerCapture/);
+  assert.match(app, /releasePointerCapture/);
+  assert.match(app, /event\.repeat/);
+  assert.match(app, /async function loadJourneyIdentity/);
+  assert.match(app, /event\.detail === 0/);
+  assert.match(app, /pageshow/);
+  assert.doesNotMatch(app, /not spiritual worth|YOUR COMMUNITY ALIAS|>Refresh<|Refreshing…/i);
+}
+assert.match(rewardMigration, /add column first_name text/);
+assert.match(rewardMigration, /get_conflict_journey_leaderboard/);
+assert.match(rewardMigration, /progress\.plan_id = 'bible-conflict-ages-chapters-v1'/);
+assert.match(rewardMigration, /completed_index between 0 and 1695/);
+assert.match(rewardMigration, /current_user_id uuid := auth\.uid\(\)/);
+assert.match(rewardMigration, /revoke all on function public\.get_my_journey_first_name\(\)\s+from public, anon, authenticated/);
+assert.match(rewardMigration, /revoke all on function public\.update_my_journey_first_name\(text\)\s+from public, anon, authenticated/);
+assert.match(rewardMigration, /grant execute on function public\.get_my_journey_first_name\(\)\s+to authenticated/);
+assert.match(rewardMigration, /grant execute on function public\.update_my_journey_first_name\(text\)\s+to authenticated/);
+assert.match(rewardMigration, /revoke all on table public\.journey_reward_profiles\s+from anon, authenticated/);
+assert.doesNotMatch(rewardMigration.match(/returns table \([\s\S]*?\)/)?.[0] || "", /first_name/);
 
 console.log("Website validation passed for Bible Guides, external KJV reading links, progress navigation, Zoom links, and the FaithCraft-only theme.");
