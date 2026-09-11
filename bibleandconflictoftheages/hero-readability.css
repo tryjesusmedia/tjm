@@ -97,6 +97,32 @@
   color: rgba(255, 253, 249, .94);
 }
 
+.journey-hero .hero-intro-more-content .hero-mark {
+  margin-top: 4px;
+  padding: clamp(22px, 4vw, 32px);
+}
+
+.journey-hero .hero-intro-more-content .hero-mark > span,
+.journey-hero .hero-intro-more-content .hero-book-list small {
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+.journey-hero .hero-intro-more-content .hero-mark > strong {
+  font-size: clamp(2.25rem, 1.95rem + 1.1vw, 3rem);
+  line-height: 1;
+}
+
+.journey-hero .hero-intro-more-content .hero-mark > p,
+.journey-hero .hero-intro-more-content .hero-book-list li {
+  font-size: clamp(1.075rem, 1.03rem + .18vw, 1.18rem);
+  line-height: 1.65;
+}
+
+.journey-hero .hero-intro-more-content .hero-book-list ul {
+  gap: 9px;
+}
+
 @media (max-width: 760px) {
   .journey-hero .hero-intro {
     margin-top: 24px;

@@ -134,6 +134,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
     #241425;
   color: var(--ivory);
 }
+.conflict-journey-hero { grid-template-columns: minmax(0, 1fr); }
+.conflict-journey-hero .hero-copy { width: min(100%, 920px); justify-self: center; }
 .journey-hero::after {
   content: "";
   position: absolute;
@@ -348,6 +350,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .site-footer { padding: 40px max(20px, calc((100% - 1180px) / 2)); display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 20px 40px; background: var(--ink); color: var(--ivory); }
 .footer-brand { grid-row: span 2; }
 .site-footer p { margin: 0; color: rgba(243,232,208,.7); font-family: var(--serif); font-size: 20px; }
+.site-footer .faithcraft-credit { color: var(--gold-light); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-decoration: none; }
+.site-footer .faithcraft-credit:hover,
+.site-footer .faithcraft-credit:focus-visible { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
 .site-footer > small { color: rgba(243,232,208,.4); font-size: 8px; line-height: 1.6; }
 .noscript { padding: 15px; background: var(--red); color: #fff; text-align: center; font-weight: 800; }
 

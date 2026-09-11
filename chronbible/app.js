@@ -159,7 +159,6 @@
           <div>
             <p class="eyebrow">${escapeHTML(reading.section)} · READING TASK ${reading.number} OF ${plan.readings.length}</p>
             <h2 id="readings-heading">${escapeHTML(reading.title)}</h2>
-            <p>${escapeHTML(reading.reference)}. Move at your own pace; every task contains no more than ten chapters, and each button opens only one Bible chapter at a time.</p>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button" type="button" data-reading-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
@@ -172,7 +171,7 @@
           <article class="reading-card scripture-card">
             <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">SCRIPTURE READING</span></div>
             <h3>${escapeHTML(reading.reference)}</h3>
-            <p class="citation">${reading.partCount > 1 ? `Part ${reading.partNumber} of ${reading.partCount} from the original assignment “${escapeHTML(reading.sourceReference)}.” ` : ""}Choose a chapter below, then read it here in the King James Version or World English Bible.</p>
+            ${reading.partCount > 1 ? `<p class="citation">Part ${reading.partNumber} of ${reading.partCount} from the original assignment “${escapeHTML(reading.sourceReference)}.”</p>` : ""}
             <div class="reading-actions">
               ${sourceTaskLinks(reading)}
             </div>
@@ -181,8 +180,8 @@
 
           <aside class="chapter-side" aria-labelledby="reading-place-heading">
             <p class="eyebrow">YOUR READING PLACE</p>
-            <h3 id="reading-place-heading">${session ? "Synced with the app." : "Sign in when you want to save."}</h3>
-            <p>${session ? "Your completed readings and current place use the same Google account record as the chronological plan in Try Jesus: The Journey." : "You can explore the entire plan now. Google sign-in is optional and is required only for saved, cross-device progress."}</p>
+            <h3 id="reading-place-heading">${session ? "Your reading place" : "Sign in when you want to save."}</h3>
+            ${session ? "" : "<p>You can explore the entire plan now. Google sign-in is optional and is required only for saved, cross-device progress.</p>"}
             <div class="side-progress">
               <div class="progress-track"><i style="width:${percent}%"></i></div>
               <strong>${completedTaskCount()} of ${plan.readings.length} tasks</strong>

@@ -101,6 +101,11 @@ assert.equal(
 assert.equal(window.TJMNativeBible.offsetContract.version, 1);
 assert.equal(window.TJMNativeBible.offsetContract.separator, "\n");
 
+const viewportTargetTop = window.TJMNativeBible.viewportContract.targetTop;
+assert.equal(viewportTargetTop(640, -120, 580, -60), 640, "browser scroll anchoring must not move the reader");
+assert.equal(viewportTargetTop(640, -120, 640, -80), 680, "layout changes above the reader must retain its viewport anchor");
+assert.equal(viewportTargetTop(20, 40, 0, -10), 0, "restored scrolling must not move above the document");
+
 const mergeDecision = window.TJMNativeBible.syncContract.mergeDecision;
 const cached = { synced: true, updatedAt: "2026-09-10T12:00:00.000Z", deletedAt: "" };
 const pending = { ...cached, synced: false };
@@ -179,6 +184,12 @@ const readerCss = await readFile(new URL("../lib/native-bible-reader.css", impor
 assert.match(readerCss, /\.nbr-detail-columns\s*\{[^}]*grid-template-columns:\s*1fr 1fr/s);
 assert.match(readerCss, /\.nbr-detail-pane\s*\{[^}]*overflow-y:\s*auto;[^}]*overflow-x:\s*hidden;/s);
 const readerJs = await readFile(new URL("../lib/native-bible-reader.js", import.meta.url), "utf8");
+assert.doesNotMatch(readerJs, /Select any words, then choose a highlight color\./);
+assert.match(readerJs, /Choose a highlight color/);
+assert.match(readerJs, /preserveContent: true/);
+assert.match(readerJs, /captureReaderViewport/);
+assert.match(readerJs, /restoreReaderViewport/);
+assert.match(readerJs, /Highlight saved\. Tap highlighted words to add a note\./);
 assert.match(readerJs, /closest\?\.\("\[data-highlight-id\]"\)/);
 assert.match(readerJs, /role="button" tabindex="0" aria-label="Open highlight note"/);
 assert.match(readerJs, /if \(!startGroup \|\| startGroup !== endGroup\) return;/, "a highlight cannot bridge hidden verses in discontiguous ranges");
@@ -197,6 +208,8 @@ assert.ok(
   "guest migration must inspect remote rows before writing",
 );
 assert.doesNotMatch(readerJs, /item\.clientMutationId\s*=\s*makeId\(\)/, "editing must preserve cross-client highlight identity");
+assert.match(readerCss, /overflow-anchor:\s*none/);
+assert.match(readerCss, /\.nbr-highlight-palette-label/);
 
 const migrationSql = await readFile(new URL("../supabase/migrations/20260911000000_bible_highlights.sql", import.meta.url), "utf8");
 assert.match(migrationSql, /deleted_at timestamptz/);

@@ -278,7 +278,6 @@ function taskGroupComplete(reading, kind) {
             <article class="reading-card scripture-card">
               <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">READ FIRST</span></div>
               <h3>${escapeHTML(reading.bibleReference)}</h3>
-              <p class="citation">Choose a passage below, then read its assigned verses here in the King James Version or World English Bible.</p>
               <div class="reading-actions">
                 ${scriptureActions}
               </div>
@@ -299,7 +298,6 @@ function taskGroupComplete(reading, kind) {
           <div>
             <p class="eyebrow">CONFLICT OF THE AGES</p>
             <h2 id="readings-heading" class="chapter-heading">${companionHeading(reading)}</h2>
-            <p>Move at your own pace. A reading may take one sitting, several days, or longer; your next unfinished reading will be waiting whenever you return.</p>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button nav-button" type="button" data-day-nav="prev" ${currentIndex === 0 ? "disabled" : ""}>Previous</button>
