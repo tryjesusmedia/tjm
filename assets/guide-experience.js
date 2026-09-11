@@ -12,6 +12,25 @@
 
   const cleanText = (value = '') => value.replace(/\s+/g, ' ').trim();
 
+  const internalizeBibleLinks = () => {
+    document.querySelectorAll('a[href*="biblegateway.com/passage"]').forEach((link) => {
+      try {
+        const external = new URL(link.href);
+        const reference = external.searchParams.get('search');
+        if (!reference) return;
+        link.href = `/bible-reader/?reference=${encodeURIComponent(reference)}`;
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+        link.dataset.nativeBibleLink = 'true';
+        link.setAttribute('aria-label', `${cleanText(link.querySelector('span')?.textContent || reference)} — open in the Try Jesus Media Bible Reader`);
+        const detail = link.querySelector('small');
+        if (detail) detail.textContent = detail.textContent.replace(/\s*↗\s*$/, ' · Opens here');
+      } catch (_) {
+        // Leave malformed or non-passage links untouched.
+      }
+    });
+  };
+
   // Scale the original declarations, preserving each guide's cascade, heading
   // hierarchy and responsive sizes. Inherited text then scales exactly once,
   // including content revealed later. The local sheets are loaded before us.
@@ -327,6 +346,7 @@
 
   };
 
+  internalizeBibleLinks();
   enhanceGuideLibrary();
   enhanceLesson();
 })();

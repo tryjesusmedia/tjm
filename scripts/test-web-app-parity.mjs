@@ -2,19 +2,18 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(path, "utf8");
-const [welcome, signup, guideScript, guideStyles, mapSource, mapStyles, conflictConfig, chronConfig, conflictTheme, conflictPage, chronPage, chronStyles] = await Promise.all([
+const [welcome, signup, guideScript, guideStyles, readerSource, readerStyles, conflictConfig, chronConfig, conflictTheme, conflictPage, chronPage] = await Promise.all([
   read("welcome/index.html"),
   read("signupcomplete/index.html"),
   read("assets/guide-experience.js"),
   read("assets/readability.css"),
-  read("lib/principles-folders-flow.mjs"),
-  read("lib/principles-folders-flow.css"),
+  read("lib/native-bible-reader.js"),
+  read("lib/native-bible-reader.css"),
   read("bibleandconflictoftheages/config.js"),
   read("chronbible/config.js"),
   read("bibleandconflictoftheages/faithcraft-theme.css"),
   read("bibleandconflictoftheages/index.html"),
   read("chronbible/index.html"),
-  read("chronbible/styles.css"),
 ]);
 
 for (const page of [welcome, signup]) {
@@ -36,29 +35,30 @@ for (const copy of [
 ]) assert.match(guideScript, new RegExp(copy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 
 assert.match(guideScript, /app-guide-progress-track/);
+assert.match(guideScript, /\/bible-reader\/\?reference=/);
 assert.match(guideStyles, /#bible-guides\.app-guide-library/);
 for (const color of ["#171418", "#311e33", "#eebd4a", "#2a222b", "#fff9ee"]) {
   assert.match(guideStyles.toLowerCase(), new RegExp(color));
 }
 
-assert.doesNotMatch(mapSource, /className="tjm-fm-toolbar-(?:add|search)"/);
-assert.match(mapSource, /data-horizontal-pan="locked"/);
-assert.match(mapSource, /bottommostNodeTop/);
-assert.match(mapSource, /zIndex: expandedId === principle\.id \? 1000 : 0/);
-assert.match(mapSource, /next\.mapOpen = false;[\s\S]*goToReadingById/);
-assert.match(mapStyles, /react-flow__node:has\(\.tjm-fm-principle\.is-expanded\)/);
+assert.match(readerSource, /KJV/);
+assert.match(readerSource, /WEB/);
+assert.match(readerSource, /data-choose-highlight-color/);
+assert.match(readerSource, /bible_highlights/);
+assert.match(readerStyles, /\.nbr-notes-fab/);
+assert.match(readerStyles, /grid-template-columns:\s*1fr 1fr/);
 
 assert.match(conflictConfig, /faithcraft-theme\.css\?v=20260911-1/);
 assert.doesNotMatch(chronConfig, /faithcraft-theme/);
 assert.match(conflictPage, /theme-color" content="#010c18"/);
 assert.match(chronPage, /theme-color" content="#241425"/);
 assert.match(chronPage, /styles\.css\?v=20260911-1/);
-assert.match(chronStyles, /Match the website Principles Map to the native Chron Bible map/);
-for (const color of ["#171418", "#211b22", "#2a222b", "#311e33", "#eebd4a", "#f3e8d0"]) {
-  assert.match(chronStyles.toLowerCase(), new RegExp(color));
+for (const page of [conflictPage, chronPage]) {
+  assert.match(page, /native-bible-reader\.js/);
+  assert.doesNotMatch(page, /principles-folders|principles\.js|principles\.css/);
 }
 for (const color of ["#010c18", "#03101d", "#c79341", "#e5b55b", "#186059", "#298075", "#ebe9de", "#fdfaf2"]) {
   assert.match(conflictTheme.toLowerCase(), new RegExp(color));
 }
 
-console.log("Website/app parity validation passed for Bible Guides, Principles Maps, Zoom links, and the FaithCraft-only theme.");
+console.log("Website/app parity validation passed for Bible Guides, native Bible reading, highlight notes, Zoom links, and the FaithCraft-only theme.");

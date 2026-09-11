@@ -4,7 +4,6 @@ import { readFile } from "node:fs/promises";
 const websitePlan = JSON.parse(await readFile(new URL("../bibleandconflictoftheages/data/readings.json", import.meta.url), "utf8"));
 const html = await readFile(new URL("../bibleandconflictoftheages/index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../bibleandconflictoftheages/app.js", import.meta.url), "utf8");
-const principleTools = await readFile(new URL("../lib/principles.js", import.meta.url), "utf8");
 const egwLinkMap = JSON.parse(await readFile(new URL("./egw-reading-links.json", import.meta.url), "utf8"));
 
 assert.equal(websitePlan.planId, "bible-conflict-ages-v1");
@@ -90,13 +89,16 @@ assert.equal(websitePlan.readings.find((reading) => reading.sourceKey === "PK:62
 assert.equal(websitePlan.readings.at(-1).bibleReference, "Revelation 21; 22");
 assert.match(websitePlan.readings.at(-1).commentaryCitation, /GC 662-678/);
 
-for (const label of ["Readings", "Journey", "Progress", "Principles", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
+for (const label of ["Journey", "Progress", "Continue with Google", "Explore without saving", "Sign in to save"]) assert.match(html, new RegExp(label, "i"));
+assert.doesNotMatch(html, /data-view="readings"/i);
 assert.doesNotMatch(html, /data-view="principles"/);
 assert.doesNotMatch(html, /data-view="members"/);
+assert.match(html, /native-bible-reader\.css/);
+assert.match(html, /native-bible-reader\.js/);
 assert.doesNotMatch(html, />\s*(?:Today|Calendar)\s*</i);
 assert.doesNotMatch(app, /["'`]Day \$\{/);
 assert.match(app, /Viewing without an account/);
-assert.match(app, /saved only after you sign in/);
+assert.match(app, /Sign in to sync progress, highlights, and notes across devices/);
 assert.match(app, /function companionPageSummary/);
 assert.match(app, /const PK_PAGE_RANGES = new Map/);
 assert.match(app, /kind === "commentary" \? taskTitle\.replace/);
@@ -108,6 +110,9 @@ assert.doesNotMatch(app, /Task \$\{reading\.day\} of \$\{plan\.readings\.length\
 assert.match(app, />Previous<\/button>/);
 assert.match(app, />Next<\/button>/);
 assert.match(app, /const scriptureCard = reading\.bibleReference \?/);
+assert.match(app, /data-native-bible-task/);
+assert.match(app, /TJMNativeBible\.configure/);
+assert.match(app, /data-open-source="commentary"/);
 assert.doesNotMatch(app, /Reading \$\{reading\.day\}/);
 assert.doesNotMatch(`${html}\n${app}`, /Ask Pastor Kal/i);
 assert.match(app, /conflict_reading_progress/);
@@ -116,9 +121,6 @@ assert.match(app, /data-chapter-progress/);
 assert.match(app, /reading_plan_progress/);
 assert.doesNotMatch(app, /View supplied source entry/i);
 assert.doesNotMatch(app, /Scripture complete|Companion complete/);
-assert.match(principleTools, /create_conflict_principle/);
-assert.match(app, /principleManager\.renderCreateNumberField/);
-assert.match(app, /principleManager\.renderReadingPrinciple/);
-for (const feature of ["update_conflict_principle", "move_conflict_principle", "bulk_update_conflict_principles", "Download spreadsheet", "Go to reading", "data-principle-menu", "data-principle-search-next"]) assert.match(principleTools, new RegExp(feature));
+assert.doesNotMatch(`${html}\n${app}`, /principles-folders|TJMPrinciples|principleManager/);
 
-console.log("Conflict journey validation passed: 264 readings, 1696 individually trackable chapters, editable grouped principles, no unresolved review flags, and safe outbound links.");
+console.log("Conflict journey validation passed: 264 readings, 1696 individually trackable chapters, native Scripture reading, external EGW links, and no unresolved review flags.");

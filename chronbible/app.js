@@ -24,35 +24,7 @@
   let lastIndex = 0;
   let activeView = "readings";
   let activeSection = "";
-  let principles = [];
-  let deletedPrinciples = [];
-  let posts = [];
-  let replies = [];
-  let selectedMembersPrincipleId = "";
-  let principleSearch = "";
   let refreshTimer = null;
-  const principleManager = window.TJMPrinciples.createController({
-    planId: CONFIG.notesPlanId,
-    exportFilename: "chronological-bible",
-    getDb: () => db,
-    getSession: () => session,
-    getPrinciples: () => principles,
-    setPrinciples: (nextPrinciples) => { principles = nextPrinciples; },
-    getDeletedPrinciples: () => deletedPrinciples,
-    setDeletedPrinciples: (nextPrinciples) => { deletedPrinciples = nextPrinciples; },
-    getReadings: () => plan?.readings || [],
-    escapeHTML,
-    toast,
-    setSync,
-    showSignIn,
-    rerender: render,
-    showPrinciples: openPrinciplesMap,
-    goToReadingById: (readingId) => {
-      const index = plan.readings.findIndex((reading) => reading.id === readingId);
-      if (index >= 0) goToReading(index, "readings");
-    },
-    readingLabel: (reading) => `${reading.title} · ${reading.reference}`,
-  });
 
   function escapeHTML(value = "") {
     return String(value)
@@ -145,10 +117,6 @@
     };
   }
 
-  function nextPrincipleNumber() {
-    return principleManager.nextNumber();
-  }
-
   function showSignIn() {
     authError.textContent = "";
     authGate.hidden = false;
@@ -156,11 +124,10 @@
 
   function guestBanner() {
     if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading task, but chapter progress, numbered principles, cross-references, and principle groups are saved only after you sign in.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to save</button></aside>`;
+    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading task and keep notes on this device. Sign in to sync chapter progress, highlights, and notes across devices.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
   }
 
   function showView(name, focusMain = false) {
-    if (name === "principles") { openPrinciplesMap(); return; }
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
@@ -174,25 +141,12 @@
 
   function sourceTaskLinks(reading) {
     if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No chapter links available</button>`;
-    return `<div class="chapter-task-list" aria-label="Scripture chapter choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer">Read ${escapeHTML(task.label)} <span>↗</span></a></div>`).join("")}</div>`;
+    return `<div data-native-bible-group><div class="chapter-task-list" aria-label="Scripture chapter choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><button class="button button-primary source-task" type="button" data-native-bible-task="${escapeHTML(task.label)}" data-plan-id="${escapeHTML(CONFIG.planId)}" data-reading-id="${escapeHTML(reading.id)}">Read ${escapeHTML(task.label)}</button></div>`).join("")}</div><div class="nbr-inline-reader" data-native-bible-mount data-plan-id="${escapeHTML(CONFIG.planId)}" data-reading-id="${escapeHTML(reading.id)}"><p class="nbr-empty">Choose a chapter to read it here.</p></div></div>`;
   }
 
   function reviewFlag(reading) {
     if (!reading.reviewNote) return "";
     return `<p class="source-flag"><span aria-hidden="true">△</span><span><strong>Source reference needs review.</strong><br>${escapeHTML(reading.reviewNote)}</span></p>`;
-  }
-
-  function principleMini(principle, shareButton = false) {
-    const references = (principle.cross_reference_numbers ?? []).map((number) => `<button type="button" class="reference-chip" data-find-principle="${number}">#${number}</button>`).join("");
-    return `<article class="principle-mini"><b>PRINCIPLE #${principle.principle_number}</b><p>${escapeHTML(principle.body)}</p>${references ? `<div class="reference-chips">${references}</div>` : ""}${shareButton ? `<button class="button button-secondary" type="button" data-share-principle="${principle.id}">Share my principle</button>` : ""}</article>`;
-  }
-
-  function renderPrinciplePanel(reading) {
-    const readingPrinciples = principles.filter((principle) => principle.reading_id === reading.id);
-    if (!session) {
-      return `<section class="chron-principle-panel" aria-labelledby="principle-heading"><p class="eyebrow">YOUR PRIVATE DISCOVERY</p><h3 id="principle-heading">Write numbered principles from your reading</h3><p>After you read, record the principles you discover in your own words. Sign in with Google to number them, organize them into groups, and sync them across devices.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to save principles</button></section>`;
-    }
-    return `<section class="chron-principle-panel" aria-labelledby="principle-heading"><div>${principleManager.renderReadingReturnLink(reading.id)}<p class="eyebrow">YOUR PRIVATE DISCOVERY</p><h3 id="principle-heading">What principles do you see in this reading?</h3><p>Write one principle at a time. Choose any unused number to organize your discoveries throughout the journey.</p><form id="principle-form">${principleManager.renderCreateNumberField()}<div class="field"><label for="principle-body">The principle I see</label><textarea id="principle-body" maxlength="2000" required placeholder="In my own words…"></textarea></div><button class="button button-primary" type="submit">Save principle</button></form></div><div class="principles-for-reading"><strong>${readingPrinciples.length ? `${readingPrinciples.length} saved for this reading` : "No principles saved for this reading yet"}</strong>${readingPrinciples.map((principle) => principleManager.renderReadingPrinciple(principle)).join("")}</div></section>`;
   }
 
   function renderReadings() {
@@ -218,7 +172,7 @@
           <article class="reading-card scripture-card">
             <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">SCRIPTURE READING</span></div>
             <h3>${escapeHTML(reading.reference)}</h3>
-            <p class="citation">${reading.partCount > 1 ? `Part ${reading.partNumber} of ${reading.partCount} from the original assignment “${escapeHTML(reading.sourceReference)}.” ` : ""}Choose a chapter below. Each link opens only that chapter on Bible Gateway in the King James Version.</p>
+            <p class="citation">${reading.partCount > 1 ? `Part ${reading.partNumber} of ${reading.partCount} from the original assignment “${escapeHTML(reading.sourceReference)}.” ` : ""}Choose a chapter below, then read it here in the King James Version or World English Bible.</p>
             <div class="reading-actions">
               ${sourceTaskLinks(reading)}
             </div>
@@ -238,7 +192,6 @@
             <button class="button button-secondary" type="button" data-view-shortcut="journey">View the full journey</button>
           </aside>
         </div>
-        ${renderPrinciplePanel(reading)}
       </section>`;
   }
 
@@ -272,19 +225,8 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress is synced across your signed-in devices." : "Sign in with Google whenever you want progress and principles saved across devices."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${principles.length}</strong><span>Personal principles</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}<button class="button button-secondary" type="button" data-view-shortcut="principles">Open Principles Map</button></aside></div></section>`;
-  }
-
-  function renderMembers() {
-    if (!session) return `<section aria-labelledby="members-heading"><header class="view-heading"><div><p class="eyebrow">LEARN FROM ONE ANOTHER</p><h2 id="members-heading">Members discussion</h2><p>Your private notes remain private unless you deliberately choose one to share.</p></div></header><div class="empty-card"><strong>Sign in to join Members.</strong><p>Google sign-in is required only when you want to share a principle, ask a question, or reply.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div></section>`;
-    const selected = principles.find((principle) => principle.id === selectedMembersPrincipleId);
-    const feed = posts.map((post) => {
-      const postReplies = replies.filter((reply) => reply.post_id === post.id);
-      const reading = plan.readings.find((item) => item.id === post.reading_id);
-      const author = post.author_name || "Try Jesus member";
-      return `<article class="member-post"><div class="post-author">${post.author_avatar_url ? `<img class="avatar" src="${escapeHTML(post.author_avatar_url)}" alt="">` : `<span class="avatar">${escapeHTML(initials(author))}</span>`}<span><strong>${escapeHTML(author)}</strong><small>${reading ? `${escapeHTML(reading.title)} · ` : ""}${escapeHTML(new Date(post.created_at).toLocaleDateString())}</small></span></div>${post.principle_number ? `<blockquote class="post-principle"><b>PRINCIPLE #${post.principle_number}</b><br>${escapeHTML(post.principle_body || "")}</blockquote>` : ""}<p class="post-body">${escapeHTML(post.body)}</p><div class="reply-list">${postReplies.map((reply) => `<div class="reply"><b>${escapeHTML(reply.author_name || "Member")}</b> · ${escapeHTML(reply.body)}</div>`).join("")}</div><form class="reply-form" data-post-id="${post.id}"><input name="reply" maxlength="1000" required aria-label="Reply to ${escapeHTML(author)}" placeholder="Add to the discussion…"><button type="submit">Reply</button></form></article>`;
-    }).join("");
-    return `<section aria-labelledby="members-heading"><header class="view-heading"><div><p class="eyebrow">LEARN FROM ONE ANOTHER</p><h2 id="members-heading">Members discussion</h2><p>Share a principle or a sincere question. Your notes stay private until you deliberately post one here.</p></div></header><div class="members-layout"><aside class="share-panel"><p class="eyebrow">SHARE DELIBERATELY</p><h3>Share a principle</h3><p>Choose one of your numbered principles, add an observation or question, and share it with signed-in members.</p><form id="post-form"><div class="field"><label for="post-principle">Principle (optional)</label><select id="post-principle"><option value="">Share without a principle</option>${principles.map((principle) => `<option value="${principle.id}" ${selected?.id === principle.id ? "selected" : ""}>#${principle.principle_number} — ${escapeHTML(principle.body.slice(0, 72))}</option>`).join("")}</select></div><div class="field"><label for="post-body">Observation or question</label><textarea id="post-body" minlength="3" maxlength="2000" required placeholder="What did you notice, and what would you like other members to consider?"></textarea><small>This will be visible to signed-in members.</small></div><button class="button button-primary" type="submit">Post to Members</button></form></aside><div class="member-feed">${feed || `<div class="empty-card">No chronological-plan principles have been shared yet. You can begin the conversation.</div>`}</div></div></section>`;
+    const highlightCount = window.TJMNativeBible?.getHighlights().length || 0;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress, highlights, and notes are synced across your signed-in devices." : "Sign in with Google whenever you want progress, highlights, and notes synced across devices."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${highlightCount}</strong><span>Bible highlights</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
   }
 
   function render() {
@@ -293,15 +235,9 @@
     if (activeView === "readings") content = renderReadings();
     else if (activeView === "journey") content = renderJourney();
     else if (activeView === "progress") content = renderProgress();
-    else content = principleManager.renderTab();
+    else content = renderReadings();
     root.innerHTML = `${activeView === "progress" ? "" : guestBanner()}${content}`;
-    window.dispatchEvent(new CustomEvent("tjm-principles-updated", {
-      detail: { planId: CONFIG.notesPlanId, rows: principles },
-    }));
-  }
-
-  function openPrinciplesMap() {
-    window.dispatchEvent(new CustomEvent("tjm-open-principles-map"));
+    window.TJMNativeBible?.enhance(root);
   }
 
   async function persistProgress(previousCompleted, previousLastIndex) {
@@ -356,45 +292,11 @@
     await persistProgress(previousCompleted, previousLastIndex);
   }
 
-  function parseCrossReferences(value) {
-    return Array.from(new Set(String(value).split(/[^0-9]+/).filter(Boolean).map(Number).filter((number) => Number.isInteger(number) && number > 0))).sort((a, b) => a - b);
-  }
-
-  async function createPrinciple(form) {
-    await principleManager.createFromForm(form, currentReading().id);
-  }
-
-  async function createPost(form) {
-    const principleId = form.querySelector("#post-principle").value;
-    const principle = principles.find((item) => item.id === principleId);
-    const body = form.querySelector("#post-body").value.trim();
-    if (!body) return;
-    const { data, error } = await db.from("conflict_discussion_posts").insert({ user_id: session.user.id, plan_id: CONFIG.notesPlanId, reading_id: principle?.reading_id || currentReading().id, principle_id: principle?.id || null, principle_number: principle?.principle_number || null, principle_body: principle?.body || null, body, author_name: displayName(), author_avatar_url: avatarUrl() || null }).select().single();
-    if (error) { toast(error.message, "error"); return; }
-    posts.unshift(data);
-    selectedMembersPrincipleId = "";
-    render();
-    toast("Your principle is now visible to members.");
-  }
-
-  async function createReply(form) {
-    const body = new FormData(form).get("reply")?.toString().trim();
-    if (!body) return;
-    const { data, error } = await db.from("conflict_discussion_replies").insert({ post_id: form.dataset.postId, user_id: session.user.id, body, author_name: displayName(), author_avatar_url: avatarUrl() || null }).select().single();
-    if (error) { toast(error.message, "error"); return; }
-    replies.push(data);
-    render();
-  }
-
   async function loadMemberData() {
     setSync("Syncing your progress…", "saving");
     const userId = session.user.id;
-    const [progressResult, principlesResult] = await Promise.all([
-      db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle(),
-      db.from("conflict_principles").select("*").eq("user_id", userId).eq("plan_id", CONFIG.notesPlanId).order("principle_number"),
-    ]);
-    const firstError = [progressResult, principlesResult].find((result) => result.error)?.error;
-    if (firstError) throw firstError;
+    const progressResult = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle();
+    if (progressResult.error) throw progressResult.error;
     let memberData = progressResult.data;
     if (!memberData && plan.previousPlanId) {
       const { data: legacyData, error: legacyError } = await db.from("reading_plan_progress")
@@ -433,10 +335,6 @@
       if (migrationError) throw migrationError;
     }
     completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
-    principles = (principlesResult.data ?? []).filter((principle) => !principle.deleted_at);
-    deletedPrinciples = (principlesResult.data ?? []).filter((principle) => principle.deleted_at);
-    posts = [];
-    replies = [];
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
     currentIndex = lastIndex;
     activeSection = currentReading().section;
@@ -470,7 +368,7 @@
     refreshTimer = setInterval(async () => {
       if (document.visibilityState !== "visible" || !session) return;
       try {
-        await loadMemberData();
+        await Promise.all([loadMemberData(), window.TJMNativeBible?.syncHighlights()]);
         render();
       } catch (error) {
         console.warn("Background sync", error.message);
@@ -484,11 +382,6 @@
     updateProfile();
     if (!session) {
       completed = new Set();
-      principles = [];
-      deletedPrinciples = [];
-      posts = [];
-      replies = [];
-      principleManager.resetForSession();
       currentIndex = 0;
       lastIndex = 0;
       activeSection = plan.readings[0].section;
@@ -497,6 +390,7 @@
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
       render();
+      window.TJMNativeBible?.syncHighlights();
       return;
     }
     guestBrowsing = false;
@@ -505,6 +399,7 @@
     try {
       await loadMemberData();
       render();
+      await window.TJMNativeBible?.syncHighlights();
       scheduleRefresh();
     } catch (error) {
       console.error(error);
@@ -535,38 +430,21 @@
   root.addEventListener("click", (event) => {
     const target = event.target.closest("button, a");
     if (!target) return;
-    if (principleManager.handleClick(target)) return;
     if (target.hasAttribute("data-require-sign-in")) showSignIn();
     else if (target.dataset.readingNav) goToReading(currentIndex + (target.dataset.readingNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex !== undefined) goToReading(Number(target.dataset.readingIndex));
     else if (target.dataset.section !== undefined) {
       activeSection = activeSection === target.dataset.section ? "" : target.dataset.section;
       render();
-    } else if (target.dataset.viewShortcut === "principles") openPrinciplesMap();
-    else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
-    else if (target.dataset.sharePrinciple) { selectedMembersPrincipleId = target.dataset.sharePrinciple; showView("members", true); }
-    else if (target.dataset.findPrinciple) { principleSearch = String(target.dataset.findPrinciple); showView("progress", true); setTimeout(() => document.getElementById(`principle-${target.dataset.findPrinciple}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0); }
+    } else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
   });
 
   root.addEventListener("change", (event) => {
     const target = event.target;
-    if (principleManager.handleChange(target)) return;
     if (target.matches("[data-chapter-progress]")) {
       if (!session) target.checked = false;
       toggleChapter(target.dataset.chapterProgress, target.dataset.readingIndex, target.checked);
     }
-  });
-
-  root.addEventListener("input", (event) => {
-    if (event.target.id === "principle-search") { principleSearch = event.target.value; const selection = event.target.selectionStart; render(); const input = document.getElementById("principle-search"); input?.focus(); input?.setSelectionRange(selection, selection); }
-  });
-
-  root.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (principleManager.handleSubmit(event.target)) return;
-    if (event.target.id === "principle-form") createPrinciple(event.target);
-    else if (event.target.id === "post-form") createPost(event.target);
-    else if (event.target.matches(".reply-form")) createReply(event.target);
   });
 
   profileButton.addEventListener("click", () => {
@@ -591,7 +469,7 @@
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState === "visible" && session) {
       try {
-        await loadMemberData();
+        await Promise.all([loadMemberData(), window.TJMNativeBible?.syncHighlights()]);
         render();
       } catch (error) {
         console.warn(error.message);
@@ -614,6 +492,7 @@
       document.getElementById("hero-reading-count").textContent = plan.readings.length;
       document.getElementById("hero-section-count").textContent = plan.sections.length;
       activeSection = plan.readings[0].section;
+      window.TJMNativeBible.configure({ getDb: () => db, getSession: () => session, toast, planId: CONFIG.planId });
       loading.hidden = true;
       root.hidden = false;
       render();

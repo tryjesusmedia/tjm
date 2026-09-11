@@ -5,16 +5,17 @@ The static route is `/chronbible/`. It uses the same Supabase project and Google
 ## Shared sync contract
 
 - Progress plan ID: `chronological-bible-order-v4`
-- Stable notes/principles plan ID: `chronological-bible-order-v3`
+- Bible highlights and notes table: `public.bible_highlights`
 - Saved progress automatically migrates from chapter-based version 3, task-based version 2, and original-assignment version 1 records.
 - Table: `public.reading_plan_progress`
 - Completion values: zero-based chapter indices `0` through `1204`
 - Current place: `last_index`
-- Private principles and Members posts continue using `chronological-bible-order-v3` in the existing `conflict_principles`, `conflict_discussion_posts`, and `conflict_discussion_replies` tables. Keeping this namespace stable preserves every existing note while progress moves safely to version 4.
+- The former principles map is no longer loaded by this experience. Its existing `chronological-bible-order-v3` records and the legacy discussion tables are intentionally retained so no user data is erased.
+- New highlights use chapter-text offsets shared by web and mobile; the exact contract and bundled-source details are documented in `assets/bible/README.md`.
 
 `scripts/build-chronological-plan.mjs` writes identical generated plan data to `chronbible/data/readings.json` and `tryjesusjourney/data/chronologicalBiblePlan.json`. It also carries explicit chapter and reading-index maps so previous checkmarks and resume positions survive the Job reordering.
 
-The table and row-level security policies are defined in `tryjesusjourney/supabase/sql/app-upgrade.sql` and are already used by the mobile app.
+The progress table and row-level security policies are defined in `tryjesusjourney/supabase/sql/app-upgrade.sql`. Apply `supabase/migrations/20260911000000_bible_highlights.sql` before launching the shared highlight-and-note sync.
 
 ## Authentication configuration
 

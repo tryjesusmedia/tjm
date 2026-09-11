@@ -4,7 +4,7 @@ The page is a static route at `/bibleandconflictoftheages/`. It uses the same Su
 
 ## Owner steps before launch
 
-1. In the Supabase SQL editor, run `tryjesusjourney/supabase/sql/conflict-journey.sql`.
+1. In the Supabase SQL editor, run `tryjesusjourney/supabase/sql/conflict-journey.sql` and `supabase/migrations/20260911000000_bible_highlights.sql`.
 2. In **Authentication → URL Configuration**, add these exact redirect URLs:
    - `https://tryjesusmedia.com/bibleandconflictoftheages/`
    - the deployment-preview URL for any preview environment used for acceptance testing
@@ -18,4 +18,6 @@ The Supabase publishable key in `config.js` is intentionally public client confi
 
 `data/readings.json` is generated from the five supplied plans by `tjm-site/scripts/import-conflict-reading-plans.mjs`. The importer writes the same validated JSON bundle to `tryjesusjourney/data/conflictPlan.json`. It preserves source blocks and order, and writes ambiguous entries to `reviewQueue` instead of correcting them.
 
-Each Scripture assignment is expanded into one Bible Gateway link per chapter, and each companion assignment is expanded into one direct chapter link on `https://egwwritings.org/`. The resolved companion chapter catalog is stored in `scripts/egw-reading-links.json`; run `npm run links:egw` only when an assignment changes and its official chapter locations must be refreshed.
+Each Scripture assignment opens in the shared native KJV/WEB reader, including partial and discontiguous verse ranges. Companion assignments remain direct external links on `https://egwwritings.org/`. The resolved companion chapter catalog is stored in `scripts/egw-reading-links.json`; run `npm run links:egw` only when an assignment changes and its official chapter locations must be refreshed.
+
+The former principles map is no longer loaded by this experience. Existing legacy principle records remain in Supabase and are not deleted. New highlights and notes use `public.bible_highlights`; the shared offset contract and bundled-source details are documented in `assets/bible/README.md`.
