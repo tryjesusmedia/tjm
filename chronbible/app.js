@@ -32,7 +32,7 @@
   let principleSearch = "";
   let refreshTimer = null;
   const principleManager = window.TJMPrinciples.createController({
-    planId: CONFIG.planId,
+    planId: CONFIG.notesPlanId,
     exportFilename: "chronological-bible",
     getDb: () => db,
     getSession: () => session,
@@ -120,25 +120,28 @@
     return plan.readings.filter((reading) => reading.section === title);
   }
 
-  function chaptersForTaskIndices(indices) {
-    return indices.flatMap((taskIndex) => plan.taskChapterMigration?.[String(taskIndex)] ?? []);
+  function migrateV3Progress(data) {
+    return {
+      completed: Array.from(new Set((data?.completed_indices ?? []).map((index) => plan.previousChapterMigration?.[String(index)]).filter(Number.isInteger))).sort((left, right) => left - right),
+      lastIndex: normalizeIndex(plan.previousReadingMigration?.[String(data?.last_index ?? 0)] ?? 0),
+    };
   }
 
   function migrateV2Progress(data) {
+    const completed = (data?.completed_indices ?? []).flatMap((taskIndex) => plan.taskChapterMigration?.[String(taskIndex)] ?? []);
     return {
-      completed: Array.from(new Set(chaptersForTaskIndices((data?.completed_indices ?? []).map(Number)))).sort((left, right) => left - right),
-      lastIndex: normalizeIndex(data?.last_index ?? 0),
+      completed: Array.from(new Set(completed)).sort((left, right) => left - right),
+      lastIndex: normalizeIndex(plan.taskReadingMigration?.[String(data?.last_index ?? 0)] ?? 0),
     };
   }
 
   function migrateV1Progress(data) {
     const completedLegacy = new Set((data?.completed_indices ?? []).map(Number));
-    const completedTasks = Array.from(completedLegacy).flatMap((legacyIndex) => plan.legacyMigration?.[String(legacyIndex)] ?? []);
     const lastLegacyIndex = Number(data?.last_index ?? 0);
-    const lastChildren = plan.legacyMigration?.[String(lastLegacyIndex)] ?? [0];
+    const readingMigration = plan.originalReadingMigration?.[String(lastLegacyIndex)] ?? { first: 0, last: 0, resume: 0 };
     return {
-      completed: Array.from(new Set(chaptersForTaskIndices(completedTasks))).sort((left, right) => left - right),
-      lastIndex: completedLegacy.has(lastLegacyIndex) ? lastChildren.at(-1) : lastChildren[0],
+      completed: Array.from(new Set(Array.from(completedLegacy).flatMap((legacyIndex) => plan.originalChapterMigration?.[String(legacyIndex)] ?? []))).sort((left, right) => left - right),
+      lastIndex: completedLegacy.has(lastLegacyIndex) ? (readingMigration.resume ?? readingMigration.last) : readingMigration.first,
     };
   }
 
@@ -255,7 +258,7 @@
       </article>`;
     }).join("");
 
-    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2><p>All ${plan.originalReadingCount} supplied assignments remain in their exact order and are now organized into ${plan.readings.length} manageable, named reading tasks.</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
+    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2><p>Across ${plan.sections.length} major historical sections, the complete journey is organized into ${plan.readings.length} manageable, named reading tasks, including all 42 chapters of Job between Genesis 11 and Genesis 12.</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
   }
 
   function renderProgress() {
@@ -293,7 +296,7 @@
     else content = principleManager.renderTab();
     root.innerHTML = `${activeView === "progress" ? "" : guestBanner()}${content}`;
     window.dispatchEvent(new CustomEvent("tjm-principles-updated", {
-      detail: { planId: CONFIG.planId, rows: principles },
+      detail: { planId: CONFIG.notesPlanId, rows: principles },
     }));
   }
 
@@ -366,7 +369,7 @@
     const principle = principles.find((item) => item.id === principleId);
     const body = form.querySelector("#post-body").value.trim();
     if (!body) return;
-    const { data, error } = await db.from("conflict_discussion_posts").insert({ user_id: session.user.id, plan_id: CONFIG.planId, reading_id: principle?.reading_id || currentReading().id, principle_id: principle?.id || null, principle_number: principle?.principle_number || null, principle_body: principle?.body || null, body, author_name: displayName(), author_avatar_url: avatarUrl() || null }).select().single();
+    const { data, error } = await db.from("conflict_discussion_posts").insert({ user_id: session.user.id, plan_id: CONFIG.notesPlanId, reading_id: principle?.reading_id || currentReading().id, principle_id: principle?.id || null, principle_number: principle?.principle_number || null, principle_body: principle?.body || null, body, author_name: displayName(), author_avatar_url: avatarUrl() || null }).select().single();
     if (error) { toast(error.message, "error"); return; }
     posts.unshift(data);
     selectedMembersPrincipleId = "";
@@ -388,20 +391,32 @@
     const userId = session.user.id;
     const [progressResult, principlesResult] = await Promise.all([
       db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle(),
-      db.from("conflict_principles").select("*").eq("user_id", userId).eq("plan_id", CONFIG.planId).order("principle_number"),
+      db.from("conflict_principles").select("*").eq("user_id", userId).eq("plan_id", CONFIG.notesPlanId).order("principle_number"),
     ]);
     const firstError = [progressResult, principlesResult].find((result) => result.error)?.error;
     if (firstError) throw firstError;
     let memberData = progressResult.data;
-    if (!memberData && plan.legacyPlanId) {
+    if (!memberData && plan.previousPlanId) {
       const { data: legacyData, error: legacyError } = await db.from("reading_plan_progress")
         .select("completed_indices,last_index,updated_at")
         .eq("user_id", userId)
-        .eq("plan_id", plan.legacyPlanId)
+        .eq("plan_id", plan.previousPlanId)
         .maybeSingle();
       if (legacyError) throw legacyError;
       if (legacyData) {
-        const migrated = migrateV2Progress(legacyData);
+        const migrated = migrateV3Progress(legacyData);
+        memberData = { completed_indices: migrated.completed, last_index: migrated.lastIndex, updated_at: new Date().toISOString() };
+      }
+    }
+    if (!memberData && plan.taskLegacyPlanId) {
+      const { data: taskLegacyData, error: taskLegacyError } = await db.from("reading_plan_progress")
+        .select("completed_indices,last_index,updated_at")
+        .eq("user_id", userId)
+        .eq("plan_id", plan.taskLegacyPlanId)
+        .maybeSingle();
+      if (taskLegacyError) throw taskLegacyError;
+      if (taskLegacyData) {
+        const migrated = migrateV2Progress(taskLegacyData);
         memberData = { completed_indices: migrated.completed, last_index: migrated.lastIndex, updated_at: new Date().toISOString() };
       }
     }
@@ -592,7 +607,10 @@
       const indicesAreValid = plan.readings?.every((reading, index) => reading.index === index && reading.number === index + 1 && reading.bibleTasks?.length);
       const chapterIndices = plan.readings.flatMap((reading) => reading.bibleTasks.map((task) => task.progressIndex));
       const chaptersAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
-      if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 309 || !indicesAreValid || !chaptersAreValid) throw new Error("Reading plan validation failed.");
+      const jobIsInPlace = plan.readings.slice(4, 9).every((reading) => reading.sourceNumber === 1)
+        && plan.readings[3]?.reference === "Genesis 10-11"
+        && plan.readings[9]?.reference === "Genesis 12-17";
+      if (plan.planId !== CONFIG.planId || plan.notesPlanId !== CONFIG.notesPlanId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.chapterCount !== 1205 || !indicesAreValid || !chaptersAreValid || !jobIsInPlace) throw new Error("Reading plan validation failed.");
       document.getElementById("hero-reading-count").textContent = plan.readings.length;
       document.getElementById("hero-section-count").textContent = plan.sections.length;
       activeSection = plan.readings[0].section;

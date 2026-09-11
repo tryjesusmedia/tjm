@@ -22,9 +22,8 @@ for (const config of [source.conflict, source.chron]) {
   assert.match(config, /reading-plan-copy-mobile-map-fix\.js\?v=20260909-1/);
 }
 
-for (const index of [source.conflictIndex, source.chronIndex]) {
-  assert.match(index, /config\.js\?v=20260910-6/);
-}
+assert.match(source.conflictIndex, /config\.js\?v=20260910-7/);
+assert.match(source.chronIndex, /config\.js\?v=20260910-8/);
 
 assert.match(source.script, /Use any available whole number/);
 assert.match(source.script, /Write one principle at a time/);

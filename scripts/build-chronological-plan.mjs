@@ -5,6 +5,13 @@ const websitePlanUrl = new URL("../chronbible/data/readings.json", import.meta.u
 const appPlanUrl = new URL("../../tryjesusjourney/data/chronologicalBiblePlan.json", import.meta.url);
 
 const subdivisions = new Map(Object.entries({
+  1: [
+    ["Job's Trials and the First Speeches", "Job 1-8"],
+    ["Job and His Friends Continue the Debate", "Job 9-16"],
+    ["Job's Lament and His Hope", "Job 17-24"],
+    ["Job's Final Defense and Elihu Begins", "Job 25-34"],
+    ["Elihu, God's Answer, and Job's Restoration", "Job 35-42"],
+  ],
   2: [
     ["Creation, the Fall, and the Promise", "Genesis 1-3"],
     ["Cain, Seth, and the Generations Before Noah", "Genesis 4-5"],
@@ -288,7 +295,7 @@ function taskKey(task) {
 
 const currentPlan = JSON.parse(await readFile(websitePlanUrl, "utf8"));
 const originals = currentPlan.readingCount === 150
-  ? currentPlan.readings
+  ? currentPlan.readings.map((reading) => ({ ...reading, bibleTasks: [...reading.bibleTasks] }))
   : Array.from(Map.groupBy(currentPlan.readings, (reading) => reading.sourceNumber).entries()).map(([sourceNumber, readings]) => ({
       number: Number(sourceNumber),
       section: readings[0].section,
@@ -299,9 +306,20 @@ const originals = currentPlan.readingCount === 150
 
 if (originals.length !== 150) throw new Error(`Expected 150 original assignments, found ${originals.length}`);
 
+// The supplied legacy assignment contained only Job 1, 2, and 42. Version 4
+// expands it to the complete book and places it at the requested point in the
+// story: after Genesis 11 and before Abraham's call in Genesis 12.
+const jobOriginal = originals.find((original) => original.number === 1);
+if (!jobOriginal) throw new Error("The legacy Job assignment is missing");
+jobOriginal.reference = "Job 1-42";
+jobOriginal.bibleTasks = normalizeTasks(jobOriginal.reference);
+
+const sourceOrder = (number) => number === 2 ? 1 : number === 1 ? 2 : number;
+originals.sort((left, right) => sourceOrder(left.number) - sourceOrder(right.number));
+
 const readings = [];
 const legacyMigration = {};
-const taskChapterMigration = {};
+const currentTaskChapterMigration = {};
 let chapterCount = 0;
 
 for (const original of originals) {
@@ -328,7 +346,7 @@ for (const original of originals) {
       bibleTasks,
       reviewNote: original.reviewNote ?? null,
     });
-    taskChapterMigration[String(readingIndex)] = bibleTasks.map((task) => task.progressIndex);
+    currentTaskChapterMigration[String(readingIndex)] = bibleTasks.map((task) => task.progressIndex);
   }
 
   if (parts.length > 1) {
@@ -352,12 +370,106 @@ const reviewQueue = (currentPlan.reviewQueue ?? []).map((item) => ({
   sourceNumber: item.sourceNumber ?? originals.find((reading) => reading.reference === item.reference)?.number ?? null,
 }));
 
+function chapterOccurrences(planReadings) {
+  const occurrences = new Map();
+  return planReadings.flatMap((reading, readingIndex) => reading.bibleTasks.map((task) => {
+    const baseKey = taskKey(task);
+    const occurrence = (occurrences.get(baseKey) ?? 0) + 1;
+    occurrences.set(baseKey, occurrence);
+    return { key: `${baseKey}#${occurrence}`, readingIndex, sourceNumber: reading.sourceNumber, task };
+  }));
+}
+
+function createPreviousMigrations(previousReadings) {
+  const currentChaptersByKey = new Map(chapterOccurrences(readings).map((entry) => [entry.key, entry.task.progressIndex]));
+  const previousChapters = chapterOccurrences(previousReadings);
+  const previousChapterMigration = {};
+  const taskChapterMigration = {};
+  const originalChapterMigration = {};
+  const previousReadingMigration = {};
+  const taskReadingMigration = {};
+  const currentReadingById = new Map(readings.map((reading) => [reading.id, reading.index]));
+
+  for (const previousReading of previousReadings) {
+    const nextReadingIndex = currentReadingById.get(previousReading.id);
+    if (nextReadingIndex === undefined) throw new Error(`Could not migrate legacy reading ${previousReading.id}`);
+    previousReadingMigration[String(previousReading.index)] = nextReadingIndex;
+    taskReadingMigration[String(previousReading.index)] = nextReadingIndex;
+  }
+
+  for (const previousChapter of previousChapters) {
+    const nextChapterIndex = currentChaptersByKey.get(previousChapter.key);
+    if (nextChapterIndex === undefined) throw new Error(`Could not migrate legacy chapter ${previousChapter.key}`);
+    previousChapterMigration[String(previousChapter.task.progressIndex)] = nextChapterIndex;
+    (taskChapterMigration[String(previousChapter.readingIndex)] ??= []).push(nextChapterIndex);
+    const originalIndex = String(previousChapter.sourceNumber - 1);
+    (originalChapterMigration[originalIndex] ??= []).push(nextChapterIndex);
+  }
+
+  return {
+    previousChapterMigration,
+    previousReadingMigration,
+    taskChapterMigration,
+    taskReadingMigration,
+    originalChapterMigration,
+  };
+}
+
+const generatedPreviousMigrations = currentPlan.planId === "chronological-bible-order-v4"
+  ? (() => {
+      const existingChapterKeyByIndex = new Map(chapterOccurrences(currentPlan.readings).map((entry) => [String(entry.task.progressIndex), entry.key]));
+      const nextChapterIndexByKey = new Map(chapterOccurrences(readings).map((entry) => [entry.key, entry.task.progressIndex]));
+      const nextReadingById = new Map(readings.map((reading) => [reading.id, reading.index]));
+      const remapChapterIndex = (index) => {
+        const key = existingChapterKeyByIndex.get(String(index));
+        const nextIndex = nextChapterIndexByKey.get(key);
+        if (nextIndex === undefined) throw new Error(`Could not preserve chapter migration for index ${index}`);
+        return nextIndex;
+      };
+      const remapReadingIndex = (index) => {
+        const readingId = currentPlan.readings[Number(index)]?.id;
+        const nextIndex = nextReadingById.get(readingId);
+        if (nextIndex === undefined) throw new Error(`Could not preserve reading migration for index ${index}`);
+        return nextIndex;
+      };
+      const remapScalarMap = (mapping, remap) => Object.fromEntries(Object.entries(mapping).map(([key, value]) => [key, remap(value)]));
+      const remapArrayMap = (mapping, remap) => Object.fromEntries(Object.entries(mapping).map(([key, values]) => [key, values.map(remap)]));
+      return {
+        previousChapterMigration: remapScalarMap(currentPlan.previousChapterMigration, remapChapterIndex),
+        previousReadingMigration: remapScalarMap(currentPlan.previousReadingMigration, remapReadingIndex),
+        taskChapterMigration: remapArrayMap(currentPlan.taskChapterMigration, remapChapterIndex),
+        taskReadingMigration: remapScalarMap(currentPlan.taskReadingMigration, remapReadingIndex),
+        originalChapterMigration: remapArrayMap(currentPlan.originalChapterMigration, remapChapterIndex),
+      };
+    })()
+  : createPreviousMigrations(currentPlan.readings);
+
+for (const [name, value] of Object.entries(generatedPreviousMigrations)) {
+  if (!value || typeof value !== "object") throw new Error(`Version 4 migration data is missing ${name}`);
+}
+
+const originalReadingMigration = Object.fromEntries(Object.entries(legacyMigration).map(([legacyIndex, readingIndices]) => {
+  const completedChapters = new Set(generatedPreviousMigrations.originalChapterMigration[legacyIndex] ?? []);
+  const firstReadingWithIncompleteChapter = readingIndices.find((readingIndex) => (
+    currentTaskChapterMigration[String(readingIndex)] ?? []
+  ).some((chapterIndex) => !completedChapters.has(chapterIndex)));
+
+  return [legacyIndex, {
+    first: readingIndices[0],
+    last: readingIndices.at(-1),
+    resume: firstReadingWithIncompleteChapter ?? readingIndices.at(-1),
+  }];
+}));
+
 const plan = {
-  planId: "chronological-bible-order-v3",
-  legacyPlanId: "chronological-bible-order-v2",
+  planId: "chronological-bible-order-v4",
+  notesPlanId: "chronological-bible-order-v3",
+  previousPlanId: "chronological-bible-order-v3",
+  legacyPlanId: "chronological-bible-order-v3",
+  taskLegacyPlanId: "chronological-bible-order-v2",
   originalLegacyPlanId: "chronological-bible-order-v1",
   title: "The Bible in Chronological Order",
-  description: "Follow the biblical story in historical sequence through manageable, named reading tasks of no more than ten chapters.",
+  description: "Follow the biblical story through 11 major historical sections and manageable reading tasks, with all of Job between Genesis 11 and Genesis 12.",
   source: "Try Jesus chronological Bible plan",
   originalReadingCount: 150,
   readingCount: readings.length,
@@ -366,13 +478,23 @@ const plan = {
   sections,
   reviewQueue,
   legacyMigration,
-  taskChapterMigration,
+  originalReadingMigration,
+  currentTaskChapterMigration,
+  ...generatedPreviousMigrations,
   readings,
 };
 
-if (readings.length !== 309) throw new Error(`Expected 309 reading tasks, generated ${readings.length}`);
+if (readings.length !== 313) throw new Error(`Expected 313 reading tasks, generated ${readings.length}`);
 if (readings.some((reading) => reading.bibleTasks.length < 1 || reading.bibleTasks.length > 10)) throw new Error("Every reading task must contain 1-10 Bible chapters");
 if (chapterCount !== readings.reduce((total, reading) => total + reading.bibleTasks.length, 0)) throw new Error("Every chapter task must have one progress index");
+if (chapterCount !== 1205) throw new Error(`Expected 1205 chapter tasks, generated ${chapterCount}`);
+
+const genesisElevenIndex = readings.findIndex((reading) => reading.reference === "Genesis 10-11");
+const genesisTwelveIndex = readings.findIndex((reading) => reading.reference === "Genesis 12-17");
+const jobReadings = readings.filter((reading) => reading.sourceNumber === 1);
+if (genesisElevenIndex !== 3 || genesisTwelveIndex !== 9 || jobReadings.length !== 5 || !jobReadings.every((reading) => reading.index > genesisElevenIndex && reading.index < genesisTwelveIndex)) {
+  throw new Error("The complete book of Job must appear between Genesis 11 and Genesis 12");
+}
 
 const serialized = `${JSON.stringify(plan, null, 2)}\n`;
 await writeFile(websitePlanUrl, serialized);

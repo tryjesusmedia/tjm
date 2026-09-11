@@ -1,6 +1,7 @@
 window.TJM_CHRONBIBLE_CONFIG = Object.freeze({
   appName: "The Bible in Chronological Order",
-  planId: "chronological-bible-order-v3",
+  planId: "chronological-bible-order-v4",
+  notesPlanId: "chronological-bible-order-v3",
   siteUrl: "https://tryjesusmedia.com/chronbible/",
   supabaseUrl: "https://erejehmrtzjpqurbftsm.supabase.co",
   supabasePublishableKey: "sb_publishable_bOxmjg6RWmwfw7i7o_YhTg_zOjUt0p6",
@@ -16,6 +17,6 @@ document.write('<link rel="stylesheet" href="../lib/reading-principle-names.css?
 document.write('<link rel="stylesheet" href="../lib/reading-plan-copy-mobile-map-fix.css?v=20260910-2">');
 document.write('<script defer src="../lib/principles-react-flow-bridge.js?v=20260903-2"><\/script>');
 document.write('<script defer src="../lib/reading-principle-names.js?v=20260909-1"><\/script>');
-document.write('<script type="module" src="../lib/principles-folders-flow.mjs?v=20260910-5"><\/script>');
+document.write('<script type="module" src="../lib/principles-folders-flow.mjs?v=20260910-6"><\/script>');
 document.write('<script defer src="../lib/principles-text-size.js?v=20260910-3"><\/script>');
 document.write('<script defer src="../lib/reading-plan-copy-mobile-map-fix.js?v=20260909-1"><\/script>');
