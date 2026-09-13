@@ -397,10 +397,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .leaderboard-alias { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
 .leaderboard-alias strong { color: var(--plum); font-size: 19px; overflow-wrap: anywhere; }
 .leaderboard-alias small { padding: 5px 8px; border-radius: 999px; background: var(--plum); color: var(--gold-light); font-size: 12px; font-weight: 900; letter-spacing: .08em; }
-.leaderboard-alias-edit { padding: 7px 9px; margin: -7px -9px; border: 0; border-radius: 12px; background: transparent; color: inherit; cursor: pointer; text-align: left; user-select: none; -webkit-touch-callout: none; }
-.leaderboard-alias-edit:hover,
-.leaderboard-alias-edit:focus-visible { background: rgba(238,189,74,.12); outline: 2px solid rgba(166,114,31,.45); outline-offset: 2px; }
-.leaderboard-alias-edit em { flex-basis: 100%; color: #8a611b; font-size: 13px; font-style: normal; font-weight: 800; }
+.alias-change { min-height: 46px; padding: 8px 13px; border: 1px solid rgba(49,30,51,.25); border-radius: 999px; background: transparent; color: var(--plum); cursor: pointer; font-size: 16px; font-weight: 800; }
+.alias-change:hover { border-color: var(--gold); background: rgba(238,189,74,.1); }
 .leaderboard-score { display: grid; justify-items: end; }
 .leaderboard-score strong { color: #8a611b; font-size: 19px; }
 .leaderboard-score small { margin-top: 4px; color: #756b72; font-size: 15px; }

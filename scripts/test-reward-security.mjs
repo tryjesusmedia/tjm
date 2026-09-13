@@ -10,7 +10,8 @@ assert.ok(publishableKey, "Supabase publishable key is required");
 
 const checks = [
   ["private first-name RPC", "/rest/v1/rpc/get_my_journey_first_name", "POST", {}],
-  ["custom leaderboard-name RPC", "/rest/v1/rpc/update_journey_alias", "POST", { p_alias: "Anonymous Reader" }],
+  ["disabled free-text leaderboard-name RPC", "/rest/v1/rpc/update_journey_alias", "POST", { p_alias: "Anonymous Reader" }],
+  ["system alias reroll RPC", "/rest/v1/rpc/reroll_journey_alias", "POST", {}],
   ["conflict leaderboard RPC", "/rest/v1/rpc/get_conflict_journey_leaderboard", "POST", {}],
   ["private reward-profile table", "/rest/v1/journey_reward_profiles?select=first_name&limit=1", "GET", null],
 ];

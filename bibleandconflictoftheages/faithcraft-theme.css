@@ -280,11 +280,12 @@ body,
 }
 
 .leaderboard-score strong,
-.leaderboard-alias-edit em,
+.alias-change,
 .leaderboard-toggle i {
   color: #e5b55b;
 }
 
+.alias-change,
 .leaderboard-toggle i { border-color: rgba(199, 147, 65, .42); }
 
 .leaderboard-alias small {
