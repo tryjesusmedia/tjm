@@ -45,9 +45,11 @@
   let leaderboardLoaded = false;
   let leaderboardLoading = false;
   let leaderboardError = "";
+  let leaderboardOpen = true;
   let nameHoldTimer = null;
   let namePointerStart = null;
   let lastNameTapAt = 0;
+  let lastAliasTapAt = 0;
   let nameEditInProgress = false;
   let nameEditRequestId = 0;
   let identityVersion = 0;
@@ -441,7 +443,7 @@ function taskGroupComplete(reading, kind) {
     if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Gathering the community…</strong></div>`;
     if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-retry-leaderboard>Try again</button></div>`;
     if (!leaderboard.length) return `<div class="leaderboard-state"><strong>The journey is just beginning.</strong><p>Complete a reading item and return here to see the community.</p></div>`;
-    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span>${entry.is_current_user ? `<button class="alias-change" type="button" data-reroll-alias ${leaderboardLoading ? "disabled" : ""}>Change alias</button>` : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} reading items</small></span></article>`).join("")}</div>`;
+    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity">${entry.is_current_user ? `<button class="leaderboard-alias leaderboard-alias-edit" type="button" data-edit-alias aria-label="${escapeHTML(entry.alias)}. Double-tap or press and hold to change your leaderboard name."><strong>${escapeHTML(entry.alias)}</strong><small>YOU</small><em>Double-tap or hold to edit</em></button>` : `<span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong></span>`}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} reading items</small></span></article>`).join("")}</div>`;
   }
 
   function renderRewards() {
@@ -455,7 +457,7 @@ function taskGroupComplete(reading, kind) {
       ? `<button class="member-welcome" type="button" data-edit-first-name aria-label="Welcome, ${escapeHTML(friendlyFirstName())}. Double-tap or press and hold to change your first name.">Welcome, ${escapeHTML(friendlyFirstName())}!</button><span class="name-edit-hint">Double-tap or press and hold your name to change it.</span>`
       : `<p class="member-welcome member-welcome-guest">Welcome, Friend!</p>`;
 
-    return `<section aria-labelledby="rewards-heading" class="rewards-view"><header class="view-heading"><div><p class="eyebrow">JOURNEY POINTS</p><h2 id="rewards-heading">Celebrate steady progress.</h2><p>Each completed Scripture or companion-reading item earns 10 Journey Points.</p></div></header><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedItems.toLocaleString()} of ${chapterTaskCount.toLocaleString()} reading items complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel"><header><div><p class="eyebrow">ALL READERS</p><h3>Journey leaderboard</h3></div></header>${session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>Your local progress remains available without an account.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`}</article></section>`;
+    return `<section aria-labelledby="rewards-heading" class="rewards-view"><header class="view-heading"><div><p class="eyebrow">JOURNEY POINTS</p><h2 id="rewards-heading">Celebrate steady progress.</h2><p>Each completed Scripture or companion-reading item earns 10 Journey Points.</p></div></header><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedItems.toLocaleString()} of ${chapterTaskCount.toLocaleString()} reading items complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">ALL READERS</span><strong>Journey leaderboard</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>Your local progress remains available without an account.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`) : ""}</article></section>`;
   }
 
   function render() {
@@ -523,18 +525,24 @@ function taskGroupComplete(reading, kind) {
     }
   }
 
-  async function rerollJourneyAlias() {
+  async function editJourneyAlias() {
     if (!session) {
       showSignIn();
       return;
     }
     const userId = session.user.id;
     const version = sessionVersion;
-    if (!window.confirm("Replace your current leaderboard alias with a new random alias?")) return;
+    const answer = window.prompt("Choose your public leaderboard name (3–40 characters).", journeyAlias);
+    if (answer === null) return;
+    const alias = answer.trim().replace(/\s+/g, " ");
+    if (alias.length < 3 || alias.length > 40 || /[<>\u0000-\u001f\u007f]/u.test(alias)) {
+      toast("Please enter a leaderboard name from 3 to 40 characters.", "error");
+      return;
+    }
     leaderboardLoading = true;
     leaderboardError = "";
     render();
-    const { data, error } = await db.rpc("reroll_journey_alias");
+    const { data, error } = await db.rpc("update_journey_alias", { p_alias: alias });
     if (!isCurrentSession(userId, version)) return;
     if (error) {
       leaderboardLoading = false;
@@ -546,7 +554,7 @@ function taskGroupComplete(reading, kind) {
     leaderboardLoading = false;
     leaderboardLoaded = false;
     await loadJourneyRewards();
-    toast(`Your new Journey alias is ${journeyAlias}.`);
+    toast(`Your leaderboard name is now ${journeyAlias}.`);
   }
 
   async function editJourneyFirstName() {
@@ -599,18 +607,25 @@ function taskGroupComplete(reading, kind) {
   function cancelNameGesture() {
     clearNameHold();
     lastNameTapAt = 0;
+    lastAliasTapAt = 0;
   }
 
   function beginNameHold(event) {
-    const target = event.target.closest("[data-edit-first-name]");
+    const target = event.target.closest("[data-edit-first-name], [data-edit-alias]");
     if (!target || !event.isPrimary || event.button !== 0) return;
     clearNameHold();
-    namePointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY, at: Date.now(), target };
+    const kind = target.hasAttribute("data-edit-alias") ? "alias" : "first-name";
+    namePointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY, at: Date.now(), target, kind };
     try { target.setPointerCapture?.(event.pointerId); } catch {}
     nameHoldTimer = setTimeout(() => {
       clearNameHold();
-      lastNameTapAt = 0;
-      void editJourneyFirstName();
+      if (kind === "alias") {
+        lastAliasTapAt = 0;
+        void editJourneyAlias();
+      } else {
+        lastNameTapAt = 0;
+        void editJourneyFirstName();
+      }
     }, FIRST_NAME_HOLD_MS);
   }
 
@@ -630,11 +645,18 @@ function taskGroupComplete(reading, kind) {
     clearNameHold();
     if (!isTap) return;
     const now = Date.now();
-    if (now - lastNameTapAt <= 500) {
-      lastNameTapAt = 0;
-      void editJourneyFirstName();
+    const lastTapAt = start.kind === "alias" ? lastAliasTapAt : lastNameTapAt;
+    if (now - lastTapAt <= 500) {
+      if (start.kind === "alias") {
+        lastAliasTapAt = 0;
+        void editJourneyAlias();
+      } else {
+        lastNameTapAt = 0;
+        void editJourneyFirstName();
+      }
     } else {
-      lastNameTapAt = now;
+      if (start.kind === "alias") lastAliasTapAt = now;
+      else lastNameTapAt = now;
     }
   }
 
@@ -958,13 +980,14 @@ function taskGroupComplete(reading, kind) {
     const target = event.target.closest("button, a");
     if (!target) return;
     if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
+    else if (target.hasAttribute("data-edit-alias") && event.detail === 0) void editJourneyAlias();
+    else if (target.hasAttribute("data-toggle-leaderboard")) { leaderboardOpen = !leaderboardOpen; renderPreservingPlace(); }
     else if (target.hasAttribute("data-require-sign-in")) showSignIn();
     else if (target.dataset.dayNav) goToReading(currentIndex + (target.dataset.dayNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex !== undefined) goToReading(Number(target.dataset.readingIndex));
     else if (target.dataset.book) { activeBook = activeBook === target.dataset.book ? "" : target.dataset.book; render(); }
     else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.hasAttribute("data-retry-leaderboard")) loadJourneyRewards();
-    else if (target.hasAttribute("data-reroll-alias")) rerollJourneyAlias();
     else if (target.dataset.openSource) recordOpen(target.dataset.readingId, target.dataset.openSource);
   });
 
@@ -978,13 +1001,15 @@ function taskGroupComplete(reading, kind) {
   window.addEventListener("blur", cancelNameGesture);
   window.addEventListener("scroll", cancelNameGesture, { passive: true });
   root.addEventListener("contextmenu", (event) => {
-    if (!event.target.closest("[data-edit-first-name]")) return;
+    if (!event.target.closest("[data-edit-first-name], [data-edit-alias]")) return;
     event.preventDefault();
   });
   root.addEventListener("keydown", (event) => {
-    if (event.repeat || !event.target.closest("[data-edit-first-name]") || !["Enter", " "].includes(event.key)) return;
+    const target = event.target.closest("[data-edit-first-name], [data-edit-alias]");
+    if (event.repeat || !target || !["Enter", " "].includes(event.key)) return;
     event.preventDefault();
-    void editJourneyFirstName();
+    if (target.hasAttribute("data-edit-alias")) void editJourneyAlias();
+    else void editJourneyFirstName();
   });
 
   root.addEventListener("change", (event) => {

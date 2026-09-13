@@ -57,11 +57,11 @@ assert.match(redirectSource, /searchParams\.set\("version", "KJV"\)/);
 assert.match(redirectSource, /location\.replace\(destination\.href\)/);
 assert.doesNotMatch(redirectSource, /TJMNativeBible|bible_highlights|notes|highlight|principles/i);
 
-assert.match(conflictConfig, /faithcraft-theme\.css\?v=20260911-2/);
+assert.match(conflictConfig, /faithcraft-theme\.css\?v=20260912-1/);
 assert.doesNotMatch(chronConfig, /faithcraft-theme/);
 assert.match(conflictPage, /theme-color" content="#010c18"/);
 assert.match(chronPage, /theme-color" content="#241425"/);
-assert.match(chronPage, /bibleandconflictoftheages\/styles\.css\?v=20260911-5/);
+assert.match(chronPage, /bibleandconflictoftheages\/styles\.css\?v=20260912-1/);
 assert.match(chronPage, /href="styles\.css\?v=20260911-4"/);
 for (const page of [conflictPage, chronPage]) {
   assert.doesNotMatch(page, /native-bible-reader/);

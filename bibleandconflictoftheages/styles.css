@@ -381,7 +381,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .milestone strong { font-size: 16px; line-height: 1.4; }
 .milestone.earned { border-color: rgba(166,114,31,.34); background: #fff3d2; color: var(--plum); }
 .milestone.earned span { border-color: var(--green); background: var(--green); color: #1d2722; font-weight: 900; }
-.leaderboard-panel > header { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.leaderboard-toggle { width: 100%; min-height: 68px; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 0; background: transparent; color: inherit; cursor: pointer; text-align: left; }
+.leaderboard-toggle > span { display: grid; gap: 5px; }
+.leaderboard-toggle .eyebrow { margin: 0; }
+.leaderboard-toggle strong { color: var(--plum); font-family: var(--serif); font-size: 36px; font-weight: 600; line-height: 1; }
+.leaderboard-toggle i { width: 48px; height: 48px; display: grid; place-items: center; flex: 0 0 auto; border: 1px solid var(--line-dark); border-radius: 50%; color: var(--plum); font-family: var(--sans); font-size: 34px; font-style: normal; line-height: 1; }
+.leaderboard-toggle:hover i,
+.leaderboard-toggle:focus-visible i { border-color: var(--gold); background: rgba(238,189,74,.12); }
+.leaderboard-panel.is-closed { padding-block: 19px; }
 .leaderboard-list { margin-top: 24px; display: grid; gap: 10px; }
 .leaderboard-row { min-height: 84px; padding: 14px 17px; display: grid; grid-template-columns: 66px minmax(0, 1fr) auto; align-items: center; gap: 14px; border: 1px solid var(--line-dark); border-radius: 14px; background: var(--paper); }
 .leaderboard-row.is-current { border-color: rgba(166,114,31,.45); background: #fff3d2; box-shadow: 0 8px 22px rgba(49,30,51,.08); }
@@ -390,8 +397,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .leaderboard-alias { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
 .leaderboard-alias strong { color: var(--plum); font-size: 19px; overflow-wrap: anywhere; }
 .leaderboard-alias small { padding: 5px 8px; border-radius: 999px; background: var(--plum); color: var(--gold-light); font-size: 12px; font-weight: 900; letter-spacing: .08em; }
-.alias-change { min-height: 46px; padding: 8px 13px; border: 1px solid rgba(49,30,51,.25); border-radius: 999px; background: transparent; color: var(--plum); cursor: pointer; font-size: 16px; font-weight: 800; }
-.alias-change:hover { border-color: var(--gold); background: rgba(238,189,74,.1); }
+.leaderboard-alias-edit { padding: 7px 9px; margin: -7px -9px; border: 0; border-radius: 12px; background: transparent; color: inherit; cursor: pointer; text-align: left; user-select: none; -webkit-touch-callout: none; }
+.leaderboard-alias-edit:hover,
+.leaderboard-alias-edit:focus-visible { background: rgba(238,189,74,.12); outline: 2px solid rgba(166,114,31,.45); outline-offset: 2px; }
+.leaderboard-alias-edit em { flex-basis: 100%; color: #8a611b; font-size: 13px; font-style: normal; font-weight: 800; }
 .leaderboard-score { display: grid; justify-items: end; }
 .leaderboard-score strong { color: #8a611b; font-size: 19px; }
 .leaderboard-score small { margin-top: 4px; color: #756b72; font-size: 15px; }
@@ -544,5 +553,5 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .leaderboard-panel { padding: 23px 18px; }
   .leaderboard-row { grid-template-columns: 48px minmax(0, 1fr); }
   .leaderboard-score { grid-column: 2; justify-items: start; }
-  .alias-change { width: 100%; }
+  .leaderboard-toggle strong { font-size: 31px; }
 }

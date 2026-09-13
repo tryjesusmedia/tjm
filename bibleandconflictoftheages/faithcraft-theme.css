@@ -246,6 +246,7 @@ body,
 
 .milestone-panel h3,
 .leaderboard-panel h3,
+.leaderboard-toggle strong,
 .leaderboard-alias strong {
   color: #fdfaf2;
 }
@@ -279,13 +280,12 @@ body,
 }
 
 .leaderboard-score strong,
-.alias-change {
+.leaderboard-alias-edit em,
+.leaderboard-toggle i {
   color: #e5b55b;
 }
 
-.alias-change {
-  border-color: rgba(199, 147, 65, .42);
-}
+.leaderboard-toggle i { border-color: rgba(199, 147, 65, .42); }
 
 .leaderboard-alias small {
   color: #010c18;
