@@ -3526,3 +3526,18 @@ button:focus-visible {
   }
 
 }
+
+/* Comfortable CTA spacing and readable guide titles. */
+main .chron-promo-copy .button {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 76px;
+  padding: 22px 32px;
+  line-height: 1.5;
+  white-space: normal;
+  text-align: center;
+}
+main .guide-item-copy strong {
+  font-size: 1.625rem !important;
+  line-height: 1.4;
+}
