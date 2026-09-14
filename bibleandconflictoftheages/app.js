@@ -442,7 +442,7 @@ function taskGroupComplete(reading, kind) {
     if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Gathering the community…</strong></div>`;
     if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-retry-leaderboard>Try again</button></div>`;
     if (!leaderboard.length) return `<div class="leaderboard-state"><strong>The journey is just beginning.</strong><p>Complete a reading item and return here to see the community.</p></div>`;
-    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span>${entry.is_current_user ? `<button class="alias-change" type="button" data-reroll-alias ${leaderboardLoading ? "disabled" : ""}>Change random alias</button>` : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} reading items</small></span></article>`).join("")}</div>`;
+    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span>${entry.is_current_user ? `<button class="alias-change" type="button" data-change-name ${leaderboardLoading ? "disabled" : ""}>Change name</button>` : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} reading items</small></span></article>`).join("")}</div>`;
   }
 
   function renderRewards() {
@@ -524,30 +524,35 @@ function taskGroupComplete(reading, kind) {
     }
   }
 
-  async function rerollJourneyAlias() {
-    if (!session) {
-      showSignIn();
-      return;
-    }
+  async function changeJourneyName() {
+    if (!session) { showSignIn(); return; }
+    if (leaderboardLoading) return;
     const userId = session.user.id;
     const version = sessionVersion;
-    if (!window.confirm("Replace your current friendly alias with another system-generated alias?")) return;
+    const entered = window.prompt("Choose your public leaderboard name (3–40 characters):", journeyAlias || "");
+    if (entered === null) return;
+    const alias = entered.trim().replace(/\s+/g, " ");
+    if (/[\x00-\x1f\x7f<>]/.test(entered) || [...alias].length < 3 || [...alias].length > 40) {
+      toast("Please enter a name with 3–40 characters, without special markup."); return;
+    }
     leaderboardLoading = true;
     leaderboardError = "";
     render();
-    const { data, error } = await db.rpc("reroll_journey_alias");
-    if (!isCurrentSession(userId, version)) return;
-    if (error) {
+    try {
+      const { data, error } = await db.rpc("update_journey_alias", { p_alias: alias });
+      if (!isCurrentSession(userId, version)) return;
+      if (error) throw error;
+      journeyAlias = String(data || alias);
       leaderboardLoading = false;
-      leaderboardError = error.message;
+      leaderboardLoaded = false;
+      await loadJourneyRewards();
+      toast(`Your leaderboard name is now ${journeyAlias}.`);
+    } catch (error) {
+      if (!isCurrentSession(userId, version)) return;
+      leaderboardLoading = false;
+      leaderboardError = error.message || "Your name could not be saved. Please try again.";
       render();
-      return;
     }
-    journeyAlias = String(data || "");
-    leaderboardLoading = false;
-    leaderboardLoaded = false;
-    await loadJourneyRewards();
-    toast(`Your new Journey alias is ${journeyAlias}.`);
   }
 
   async function editJourneyFirstName() {
@@ -959,7 +964,7 @@ function taskGroupComplete(reading, kind) {
     const target = event.target.closest("button, a");
     if (!target) return;
     if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
-    else if (target.hasAttribute("data-reroll-alias")) void rerollJourneyAlias();
+    else if (target.hasAttribute("data-change-name")) void changeJourneyName();
     else if (target.hasAttribute("data-toggle-leaderboard")) { leaderboardOpen = !leaderboardOpen; renderPreservingPlace(); }
     else if (target.hasAttribute("data-require-sign-in")) showSignIn();
     else if (target.dataset.dayNav) goToReading(currentIndex + (target.dataset.dayNav === "next" ? 1 : -1));

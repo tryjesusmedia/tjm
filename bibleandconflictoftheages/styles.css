@@ -553,3 +553,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .leaderboard-score { grid-column: 2; justify-items: start; }
   .leaderboard-toggle strong { font-size: 31px; }
 }
+
+/* Keep the custom-name action at the right of the reader's name line. */
+.leaderboard-row { grid-template-columns:48px minmax(0,1fr); }
+.leaderboard-identity { display:grid; grid-template-columns:minmax(0,1fr) auto; width:100%; gap:10px; }
+.alias-change { justify-self:end; white-space:nowrap; font-size:14px; padding:8px 10px; }
+.leaderboard-score { grid-column:2; text-align:left; }

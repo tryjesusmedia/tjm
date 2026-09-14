@@ -1,0 +1,19 @@
+/* Shared offer presentation: plum, gold, ivory, and clear reading sizes. */
+.membership-offer,.membership-perks { padding: clamp(48px,7vw,90px) 0; }
+.membership-offer-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(200px,.6fr); align-items:center; gap:clamp(24px,5vw,64px); }
+.membership-offer-layout:not(:has(img)) { grid-template-columns:minmax(0,760px); }
+.membership-offer-layout img { width:100%; max-width:330px; height:auto; max-height:420px; object-fit:contain; justify-self:center; border-radius:18px; }
+.membership-offer p,.membership-perk p { font-size:20px; line-height:1.65; }
+.membership-offer .button { margin-top:20px; }
+.membership-perk-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; margin-top:36px; }
+.membership-perk { display:flex; flex-direction:column; align-items:flex-start; padding:28px; background:#fffaf0; color:#311e33; border:1px solid #eebd4a; border-radius:20px; scroll-margin-top:150px; }
+.membership-perk h3 { font-size:clamp(28px,3vw,38px); line-height:1.15; color:#311e33; }
+.membership-perk p { color:#40383f; margin:16px 0 24px; }
+.membership-perk .button { margin-top:auto; }
+.membership-offer.section-light { background:#f3e8d0; color:#311e33; }
+.membership-offer.section-light h2,.membership-offer.section-light .eyebrow { color:#311e33; }
+.chron-promo h1 { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(48px,6vw,82px); line-height:1.05; margin:18px 0 24px; }
+.chron-promo h1 { color:#311e33; }
+.chron-promo h1 em { color:#654260; }
+@media(min-width:981px) { .site-nav { flex-wrap:wrap; justify-content:flex-end; } .site-nav a { font-size:14px; } }
+@media(max-width:600px) { .membership-offer-layout { grid-template-columns:1fr; } .membership-perk-grid { gap:12px; } .membership-perk { padding:18px 12px; } .membership-perk h3 { font-size:26px; } .membership-perk p { font-size:18px; } .membership-perk .button { width:100%; padding:12px 8px; font-size:15px; } }
