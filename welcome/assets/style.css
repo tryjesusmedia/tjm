@@ -3537,7 +3537,7 @@ main .chron-promo-copy .button {
   white-space: normal;
   text-align: center;
 }
-main .guide-item-copy strong {
+main #bible-guides.app-guide-library .guide-item-copy strong {
   font-size: 1.625rem !important;
-  line-height: 1.4;
+  line-height: 1.4 !important;
 }
