@@ -445,6 +445,10 @@ function taskGroupComplete(reading, kind) {
     return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span>${entry.is_current_user ? `<button class="alias-change" type="button" data-change-name ${leaderboardLoading ? "disabled" : ""}>Change name</button>` : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} reading items</small></span></article>`).join("")}</div>`;
   }
 
+  function publicJourneyName() {
+    return leaderboard.find(entry => entry.is_current_user)?.alias || journeyAlias || "Friend";
+  }
+
   function renderRewards() {
     const rewards = rewardSummary();
     const nextLabel = rewards.nextMilestone === null
@@ -453,7 +457,7 @@ function taskGroupComplete(reading, kind) {
         ? "Complete your first reading item to reach your first milestone."
         : `${rewards.nextMilestone - rewards.completedItems} reading items to the ${rewards.nextMilestone.toLocaleString()}-item milestone.`;
     const welcome = session
-      ? `<button class="member-welcome" type="button" data-edit-first-name aria-label="Welcome, ${escapeHTML(friendlyFirstName())}.">Welcome, ${escapeHTML(friendlyFirstName())}!</button>`
+      ? `<p class="member-welcome member-welcome-guest">Welcome, ${escapeHTML(publicJourneyName())}!</p>`
       : `<p class="member-welcome member-welcome-guest">Welcome, Friend!</p>`;
 
     return `<section aria-labelledby="rewards-heading" class="rewards-view"><header class="view-heading"><div><p class="eyebrow">JOURNEY POINTS</p><h2 id="rewards-heading">Celebrate steady progress.</h2><p>Each completed Scripture or companion-reading item earns 10 Journey Points.</p></div></header><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedItems.toLocaleString()} of ${chapterTaskCount.toLocaleString()} reading items complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">ALL READERS</span><strong>Journey leaderboard</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>Your local progress remains available without an account.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`) : ""}</article></section>`;
@@ -542,7 +546,10 @@ function taskGroupComplete(reading, kind) {
       const { data, error } = await db.rpc("update_journey_alias", { p_alias: alias });
       if (!isCurrentSession(userId, version)) return;
       if (error) throw error;
+      identityVersion += 1;
       journeyAlias = String(data || alias);
+      leaderboard = leaderboard.map(entry => entry.is_current_user ? { ...entry, alias: journeyAlias } : entry);
+      render();
       leaderboardLoading = false;
       leaderboardLoaded = false;
       await loadJourneyRewards();

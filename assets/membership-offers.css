@@ -17,3 +17,14 @@
 .chron-promo h1 em { color:#654260; }
 @media(min-width:981px) { .site-nav { flex-wrap:wrap; justify-content:flex-end; } .site-nav a { font-size:14px; } }
 @media(max-width:600px) { .membership-offer-layout { grid-template-columns:1fr; } .membership-perk-grid { gap:12px; } .membership-perk { padding:18px 12px; } .membership-perk h3 { font-size:26px; } .membership-perk p { font-size:18px; } .membership-perk .button { width:100%; padding:12px 8px; font-size:15px; } }
+
+.perk-media,.perk-carousel { display:block; width:100%; margin:0 0 22px; border-radius:14px; overflow:hidden; background:#f3e8d0; }
+.perk-media img,.perk-slide img { display:block; width:100%; aspect-ratio:16/9; height:auto; object-fit:cover; }
+.perk-slide { display:block; } .perk-slide[hidden] { display:none; }
+.perk-carousel[data-perk-carousel="store"] img { object-fit:contain; }
+#ask-pastor-kal .perk-media img { object-position:center 30%; }
+.perk-carousel-controls { display:flex; align-items:center; justify-content:center; gap:8px; padding:8px; color:#311e33; }
+.perk-carousel-controls button { min-width:44px; min-height:44px; padding:5px 10px; border:1px solid #a89a87; border-radius:9px; color:#311e33; background:#fffaf0; font:inherit; font-size:16px; cursor:pointer; }
+.perk-carousel-controls button:focus-visible,.perk-media:focus-visible,.perk-slide:focus-visible { outline:3px solid #311e33; outline-offset:2px; }
+.perk-carousel-controls [data-slide-count] { font-size:14px; white-space:nowrap; }
+@media(max-width:600px) { .perk-carousel-controls { gap:3px; flex-wrap:wrap; padding:5px; } .perk-carousel-controls button { padding:4px; } .perk-media,.perk-carousel { margin-bottom:16px; } }
