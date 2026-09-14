@@ -146,10 +146,35 @@ fbq('track', 'PageView');
   .membership-perk { width: 100%; box-sizing: border-box; padding: 24px 20px; }
   .membership-perk h3 { font-size: 30px; line-height: 1.2; overflow-wrap: normal; }
   .membership-perk p { font-size: 20px !important; line-height: 1.65; }
-  .membership-perk .button { width: 100%; min-height: 52px; padding: 14px 12px; font-size: 18px; white-space: normal; }
+  .membership-perk .button { width: 100%; }
   .membership-perk .perk-carousel-controls { gap: 8px; flex-wrap: wrap; }
   .membership-perk .perk-carousel-controls button { min-width: 48px; min-height: 48px; }
   .membership-perk .perk-carousel-controls [data-slide-count] { font-size: 16px; }
+}
+</style>
+<style id="welcome-matched-buttons">
+/* Match the welcome page's roomy chronological-reading CTA. */
+main .button,
+main .membership-perk .button {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 76px;
+  max-width: 100%;
+  padding: 22px 32px;
+  border: 0;
+  font-family: Montserrat, Inter, sans-serif;
+  font-size: 20px !important;
+  font-weight: 700;
+  letter-spacing: .06em;
+  line-height: 1.5;
+  white-space: normal;
+  text-align: center;
+  text-transform: uppercase;
+}
+main .perk-carousel-controls button {
+  font-size: 20px;
+  min-width: 48px;
+  min-height: 48px;
 }
 </style>
 </head>
