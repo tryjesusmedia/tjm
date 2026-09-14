@@ -28,3 +28,17 @@
 .perk-carousel-controls button:focus-visible,.perk-media:focus-visible,.perk-slide:focus-visible { outline:3px solid #311e33; outline-offset:2px; }
 .perk-carousel-controls [data-slide-count] { font-size:14px; white-space:nowrap; }
 @media(max-width:600px) { .perk-carousel-controls { gap:3px; flex-wrap:wrap; padding:5px; } .perk-carousel-controls button { padding:4px; } .perk-media,.perk-carousel { margin-bottom:16px; } }
+
+/* Keep each card title directly above its full-width preview. */
+.membership-perk > h3 { margin:0 0 20px; width:100%; }
+.membership-perk > .perk-media,.membership-perk > .perk-carousel { flex-shrink:0; margin:0 0 12px; }
+.membership-perk > p { margin-top:8px; }
+.membership-perk-grid { align-items:start; }
+#bible-guides .perk-media img { aspect-ratio:auto; height:auto; }
+
+
+/* Preserve dark, readable text inside the ivory cards in the dark section. */
+.membership-perk p { color:#40383f !important; }
+.membership-perk { min-width:0; }
+.membership-perk h3 { overflow-wrap:anywhere; }
+@media(max-width:360px) { .membership-perk h3 { font-size:24px; } .membership-perk .button { overflow-wrap:anywhere; } }
