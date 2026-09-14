@@ -138,6 +138,20 @@ fbq('track', 'PageView');
   </script>
 <link rel="stylesheet" href="/assets/membership-offers.css?v=20260914-3" />
 <script defer src="/assets/perk-carousels.js?v=20260914-1"></script>
+
+<style id="mobile-member-cards">
+/* One full-width offer at a time while scrolling on phones. */
+@media (max-width: 700px) {
+  .membership-perk-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .membership-perk { width: 100%; box-sizing: border-box; padding: 24px 20px; }
+  .membership-perk h3 { font-size: 30px; line-height: 1.2; overflow-wrap: normal; }
+  .membership-perk p { font-size: 20px !important; line-height: 1.65; }
+  .membership-perk .button { width: 100%; min-height: 52px; padding: 14px 12px; font-size: 18px; white-space: normal; }
+  .membership-perk .perk-carousel-controls { gap: 8px; flex-wrap: wrap; }
+  .membership-perk .perk-carousel-controls button { min-width: 48px; min-height: 48px; }
+  .membership-perk .perk-carousel-controls [data-slide-count] { font-size: 16px; }
+}
+</style>
 </head>
 
 
