@@ -1,0 +1,35 @@
+/* Welcome-page reading sizes; preserve the existing section colors and branding. */
+.welcome-readable { font-size:22px; }
+.welcome-readable main :is(p,li,dd,dt) { font-size:clamp(22px,1.3rem + .3vw,24px) !important; line-height:1.7 !important; }
+.welcome-readable main :is(.eyebrow,[class*="kicker"],[class*="label"],[class*="meta"],[class*="caption"],small,.microcopy) { font-size:18px !important; line-height:1.55 !important; letter-spacing:.05em; }
+.welcome-readable main :is(.button,.text-link,.live-zoom-link,.journey-toggle,.journey-toggle span,.meeting-details,.meeting-schedule span,.meeting-schedule em,.chron-promo-features span,.chron-window-link,.pk-cue strong) { font-size:20px !important; line-height:1.5; }
+.welcome-readable main .button { white-space:normal; min-height:56px; text-align:center; }
+.welcome-readable main h2 { font-size:clamp(40px,4.6vw,68px); }
+.welcome-readable main h3 { font-size:clamp(32px,3vw,42px); }
+.welcome-readable .guide-item-copy strong { font-size:24px !important; line-height:1.4; }
+.welcome-readable .guide-item-copy small { font-size:20px !important; }
+.welcome-readable .guide-item { height:auto; min-height:90px; }
+.welcome-readable .chron-window-heading strong { font-size:clamp(32px,3vw,42px); line-height:1.25; }
+.welcome-readable .chron-window-heading > span { min-width:0; }
+.welcome-readable .chron-window-sequence span { font-size:21px; line-height:1.5; }
+.welcome-readable .chron-window-sequence b { font-size:25px; }
+.welcome-readable .chron-window-link { gap:16px; letter-spacing:.02em; }
+.welcome-readable .chron-promo-window { min-width:0; }
+.welcome-readable .chron-window-heading { align-items:start; }
+.welcome-readable .site-nav a { font-size:18px; line-height:1.5; }
+.welcome-readable .app-download-link { font-size:18px; }
+.welcome-readable .site-footer :is(p,a,small,.social-intro) { font-size:18px !important; line-height:1.65; }
+.welcome-readable #shop .perk-carousel { margin:0; align-self:center; }
+.welcome-readable #shop .perk-slide img { max-width:none; max-height:none; width:100%; height:auto; aspect-ratio:4/3; object-fit:contain; border-radius:0; }
+.welcome-readable #shop .perk-carousel-controls button { font-size:20px; min-width:48px; min-height:48px; }
+.welcome-readable #shop [data-slide-count] { font-size:18px; }
+@media(max-width:1100px) {
+  .welcome-readable .chron-promo-grid,.welcome-readable .live-grid,.welcome-readable .membership-offer-layout { grid-template-columns:minmax(0,1fr); }
+  .welcome-readable #shop .perk-carousel { max-width:600px; justify-self:center; }
+}
+@media(max-width:600px) {
+  .welcome-readable .chron-window-heading { gap:16px; grid-template-columns:48px minmax(0,1fr); }
+  .welcome-readable .countdown-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+  .welcome-readable .chron-window-sequence span { padding:12px; grid-template-columns:32px minmax(0,1fr); }
+  .welcome-readable .guide-item { gap:10px; }
+}
