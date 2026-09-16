@@ -249,7 +249,7 @@ function dashboard() {
       .map(card)
       .join(
         "",
-      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>A fresh workspace for every passage, with all your study methods in one place.</p><a class="button" href="${ROOT}study-lab/">Start a new Bible study →</a><h3 class="section-label">My Bible Studies</h3>${studyList()}` : `<p>Complete the six main lessons to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p>`}</section>${coachingInvite()}`;
+      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>A fresh workspace for every passage, with all your study methods in one place.</p><a class="button" href="${ROOT}study-lab/">Start a new Bible study →</a><h3 class="section-label">My Bible Studies</h3>${studyList()}` : `<p>Complete the six main lessons to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a></div>`;
   wireSignout();
   document.querySelectorAll("[data-printable]").forEach(
     (button) =>
