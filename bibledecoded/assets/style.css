@@ -1201,6 +1201,10 @@ h3,
   color: #5a2234;
   font-weight: 800;
 }
+.dashboard-program-link {
+  justify-content: center;
+  margin: 42px 0 10px;
+}
 
 .coaching-invite {
   margin: 40px 0 10px;
