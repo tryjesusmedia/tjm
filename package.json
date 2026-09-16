@@ -17,12 +17,21 @@
     "test:chronbible": "node scripts/test-chronological-plan.mjs",
     "test:reward-security": "node scripts/test-reward-security.mjs",
     "test:principles": "node scripts/test-principles.mjs",
-    "test:web-app-parity": "node scripts/test-web-app-parity.mjs"
+    "test:web-app-parity": "node scripts/test-web-app-parity.mjs",
+    "build:bibledecoded": "node scripts/build-bibledecoded-pages.mjs && esbuild scripts/bd-app.js --bundle --minify --format=iife --outfile=bibledecoded/assets/app.js",
+    "test:bibledecoded": "node --test tests/bibledecoded.test.mjs tests/bibledecoded-autosave.test.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
     "cheerio": "latest",
     "googleapis": "latest",
     "mammoth": "latest",
-    "openai": "latest"
+    "openai": "latest",
+    "stripe": "^22.6.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260916.1",
+    "esbuild": "^0.28.2",
+    "wrangler": "^4.132.0"
   }
 }

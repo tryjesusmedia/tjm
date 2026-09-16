@@ -1,0 +1,86 @@
+# Bible Decoded
+
+Bible Decoded lives at `/bibledecoded/` on the existing Try Jesus Media site.
+The member routes are `welcome/`, `dashboard/`, `lesson/?lesson=foundations`,
+`study-lab/`, and `complete/`.
+
+## Current rollout
+
+- Six YouTube lessons are configured in the Pages `BD_VIDEOS` environment variable.
+- Seven interactive workbooks and protected printable workbooks are included.
+- Supabase provides the existing site's Google and email-link sign-in.
+- Cloudflare D1 stores entitlements, private workbook answers, progress and studies.
+- The owner email `info@tryjesusmedia.com` has a manual entitlement. It is claimed
+  after this exact email is confirmed by the authentication provider.
+- Checkout is deliberately disabled. Do not enable it until Stripe is connected
+  and the complete test-mode payment/refund flow has been verified.
+- The bonus Word Search workbook is available; its video still needs a link.
+
+## Build and checks
+
+Use Node 24 or later for the test suite's SQLite support.
+
+```sh
+npm ci
+npm run build:bibledecoded
+npm run test:bibledecoded
+npx wrangler pages functions build --outdir .wrangler/build-check --compatibility-date 2026-09-16 --compatibility-flags nodejs_compat
+```
+
+Cloudflare's existing `tjm` Pages project builds with `npm run build:bibledecoded`
+and serves the repository root. Its production branch remains `main`.
+Both environments bind `BD_DB` to `tjm-bibledecoded`. The initial schema is in
+`migrations/0001_bibledecoded.sql`; private course content uses
+`migrations/0002_private_course_content.sql`. Both have been applied.
+
+Lesson exercises and PDFs live in D1's `bd_content` table. Only the public lesson
+catalogue is in Git. Never commit the private import files or copy workbooks to
+public assets. The static pages contain a sign-in shell. Every private API request
+verifies the Supabase token and confirmed email, then checks the entitlement.
+Study and answer queries are always scoped to the authenticated user.
+
+## Add a video
+
+Merge an entry into `BD_VIDEOS` on the Pages project, preserving all existing
+entries, and deploy again. Lesson IDs are `foundations`, `look-for-christ`,
+`pattern-recognition`, `questioning-method`, `exegesis`, `bible-memorization`,
+and `word-search`. A YouTube entry has the shape
+`{"provider":"youtube","id":"the 11-character video ID"}`.
+
+The website must retain `strict-origin-when-cross-origin` as its referrer policy
+for YouTube embeds. YouTube links can be shared outside the course; access checks
+protect the program and saved work, not the underlying YouTube URL.
+For stronger video protection, the API also supports signed Cloudflare Stream
+playback using the variables listed in `.dev.vars.example`.
+
+## Activate Stripe later
+
+Configure `BD_STRIPE_KEY`, `BD_STRIPE_PRICE_ID`, and
+`BD_STRIPE_WEBHOOK_SECRET` as secrets in the same Cloudflare account.
+Use a one-time USD 37.00 price and a webhook at
+`https://tryjesusmedia.com/api/bibledecoded/webhook`.
+The handler accepts checkout completion, asynchronous payment success,
+full refunds and created disputes. Failed or unsigned webhooks never grant access.
+The intended events are `checkout.session.completed`,
+`checkout.session.async_payment_succeeded`, `charge.refunded`, and
+`charge.dispute.created`.
+
+Test payment completion, different checkout/sign-in emails, duplicate events,
+delayed success and revocation before enabling the live price.
+`BD_STRIPE_LIVE_MODE` must match the Stripe environment.
+Finally set `BD_CHECKOUT_ENABLED=true` and redeploy. Until then the site shows
+“Enrollment will open soon” and its server refuses checkout requests.
+
+## Member support
+
+The Study Lab unlocks after the six main lessons are marked complete and stays
+unlocked for an entitled account. A member may revisit lessons freely.
+Answers save with revision checks. Conflicting device edits require the member
+to choose a version; failed saves retain a draft on that device.
+
+For a verified manual access request, add an entitlement using a unique
+`session_id`, normalized email and `status='active'` in `bd_purchases`.
+Never grant access through browser storage or expose an administrative endpoint.
+Set a grant's status to `revoked` to remove it. Honor account deletion requests
+across both Supabase and the owner-scoped D1 tables; the public help link points
+to the site's existing account-deletion process.

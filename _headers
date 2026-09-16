@@ -17,6 +17,14 @@
   Cache-Control: public, max-age=0, must-revalidate
 
 # Development fixtures and app include fragments are not search landing pages.
+/bibledecoded/*
+  Cache-Control: private, no-store
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://embed.cloudflarestream.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; connect-src 'self' https://erejehmrtzjpqurbftsm.supabase.co; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://*.cloudflarestream.com; object-src 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com; frame-ancestors 'self'
+
+/bibledecoded/assets/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /scripts/*
   X-Robots-Tag: noindex
 

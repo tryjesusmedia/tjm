@@ -1,0 +1,10 @@
+# Copy to .dev.vars locally. Never commit keys. Leave checkout disabled until tested.
+BD_CHECKOUT_ENABLED=false
+BD_STRIPE_LIVE_MODE=false
+# BD_STRIPE_KEY=your_restricted_key
+# BD_STRIPE_PRICE_ID=your_37_usd_one_time_price
+# BD_STRIPE_WEBHOOK_SECRET=your_signing_secret
+# BD_VIDEOS={"foundations":{"provider":"stream","id":"YOUR_VIDEO_ID"}}
+# BD_STREAM_HOST=customer-YOURCODE.cloudflarestream.com
+# BD_STREAM_KEY_ID=your_signing_key_id
+# BD_STREAM_SIGNING_JWK=your_private_signing_jwk
