@@ -1197,6 +1197,10 @@ h3,
   margin: 0.6rem 0 1rem;
   color: #6f666f;
 }
+.offer-note strong {
+  color: #5a2234;
+  font-weight: 800;
+}
 
 .coaching-invite {
   margin: 40px 0 10px;
