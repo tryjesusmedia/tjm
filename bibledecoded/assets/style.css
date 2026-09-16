@@ -601,38 +601,7 @@ button.primary:hover {
   padding: 4px 12px;
 }
 .workbook-layout {
-  display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: 34px;
-  align-items: start;
-}
-.workbook-nav {
-  position: sticky;
-  top: 110px;
-  font-size: 0.77rem;
-}
-.workbook-nav p {
-  margin: 0 0 10px;
-  color: #25594b;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.workbook-nav a {
   display: block;
-  padding: 11px 14px;
-  margin-bottom: 7px;
-  border: 1px solid #d3a93f;
-  border-radius: 8px;
-  background: #fff4cf;
-  text-decoration: none;
-  color: #43274a;
-  font-weight: 700;
-}
-.workbook-nav a:hover {
-  border-color: #25594b;
-  background: #f9e4a2;
 }
 .workbook {
   min-width: 0;
