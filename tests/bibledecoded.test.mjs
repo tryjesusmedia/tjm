@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import fs from 'node:fs';
 import {onRequest} from '../functions/api/bibledecoded/[[path]].js';
-import {fieldsFor,validPurchase} from '../functions/_lib/bd-api.js';
+import {fieldsFor,validPurchase,omnisendPurchasePayload} from '../functions/_lib/bd-api.js';
 import {LESSONS} from '../functions/_lib/bd-content.js';
 
 let db,env,realFetch;
@@ -94,6 +94,13 @@ test('a claimed payment must match price, total, currency, mode and environment'
  env.BD_STRIPE_PRICE_ID='price_test';const paid={mode:'payment',payment_status:'paid',currency:'usd',amount_total:3700,metadata:{program:'bibledecoded'},livemode:false,line_items:{data:[{price:{id:'price_test'},quantity:1}]},customer_details:{email:'alice@example.test'}};
  assert.equal(validPurchase(paid,env),true);
  for(const change of [{payment_status:'unpaid'},{currency:'cad'},{amount_total:1},{livemode:true},{mode:'subscription'},{metadata:{program:'other'}},{line_items:{data:[{price:{id:'other'},quantity:1}]}}])assert.equal(validPurchase({...paid,...change},env),false);
+});
+test('Omnisend purchase events include SMS only after explicit checkout consent',async()=>{
+ const base={id:'cs_live_example',created:1789574400,amount_total:3700,currency:'usd',customer_details:{email:' Buyer@Example.com ',name:'Mary Jones',phone:'+13155550123'},custom_fields:[]};
+ const emailOnly=await omnisendPurchasePayload(base);
+ assert.equal(emailOnly.contact.email,'buyer@example.com');assert.equal(emailOnly.contact.firstName,'Mary');assert.equal(emailOnly.contact.lastName,'Jones');assert.equal(emailOnly.contact.phone,undefined);assert.equal(emailOnly.properties.sms_consent,false);
+ const optedIn=await omnisendPurchasePayload({...base,custom_fields:[{key:'sms_consent',type:'dropdown',dropdown:{value:'yes'}}]});
+ assert.equal(optedIn.contact.phone,'+13155550123');assert.equal(optedIn.contact.consents[0].channel,'sms');assert.equal(optedIn.properties.sms_consent,true);assert.equal(optedIn.eventID,emailOnly.eventID);
 });
 test('unsigned webhook requests never grant membership',async()=>{
  env.BD_STRIPE_KEY='sk_test_fixture';env.BD_STRIPE_WEBHOOK_SECRET='fixture-secret';
