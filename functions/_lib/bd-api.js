@@ -12,6 +12,29 @@ export const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-
 const normalized=email=>String(email||'').trim().toLowerCase();
 const ready=env=>env.BD_CHECKOUT_ENABLED==='true'&&!!env.BD_STRIPE_KEY&&!!env.BD_STRIPE_PRICE_ID&&!!env.BD_STRIPE_WEBHOOK_SECRET&&!!env.BD_DB;
 const stripe=env=>new Stripe(env.BD_STRIPE_KEY,{apiVersion:'2026-07-29.dahlia',httpClient:Stripe.createFetchHttpClient(),maxNetworkRetries:2});
+const smsConsent=s=>Array.isArray(s.custom_fields)&&s.custom_fields.some(field=>field?.key==='sms_consent'&&field?.type==='dropdown'&&field?.dropdown?.value==='yes');
+async function purchaseEventID(sessionID){
+ const bytes=new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(`bibledecoded:${sessionID}`))).slice(0,16);
+ bytes[6]=(bytes[6]&15)|80;bytes[8]=(bytes[8]&63)|128;
+ const hex=[...bytes].map(value=>value.toString(16).padStart(2,'0')).join('');
+ return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
+}
+export async function omnisendPurchasePayload(s){
+ const email=normalized(s.customer_details?.email),name=String(s.customer_details?.name||'').trim().split(/\s+/),consented=smsConsent(s),phone=String(s.customer_details?.phone||'').trim();
+ const contact={email,tags:['bible-decoded-customer']};
+ if(name[0])contact.firstName=name.shift().slice(0,50);
+ if(name.length)contact.lastName=name.join(' ').slice(0,50);
+ if(consented&&/^\+[1-9]\d{7,14}$/.test(phone)){
+  const createdAt=new Date((s.created||Math.floor(Date.now()/1000))*1000).toISOString(),source='stripe-checkout:bible-decoded';
+  Object.assign(contact,{phone,optIns:[{channel:'sms',createdAt,source}],consents:[{channel:'sms',createdAt,source}]});
+ }
+ return {eventName:'bible decoded purchased',eventID:await purchaseEventID(s.id),eventTime:new Date((s.created||Math.floor(Date.now()/1000))*1000).toISOString(),origin:'api',contact,properties:{program:'Bible Decoded',amount:Number(s.amount_total||3700),currency:String(s.currency||'usd').toUpperCase(),access_url:`${SITE}/bibledecoded/welcome/`,dashboard_url:`${SITE}/bibledecoded/dashboard/`,stripe_session_id:s.id,sms_consent:consented&&!!contact.phone}};
+}
+async function sendOmnisendPurchase(env,s){
+ if(!env.OMNISEND_API_KEY)return;
+ const response=await fetch('https://api.omnisend.com/api/events',{method:'POST',headers:{Authorization:`Omnisend-API-Key ${env.OMNISEND_API_KEY}`,'Omnisend-Version':'2026-03-15','Content-Type':'application/json'},body:JSON.stringify(await omnisendPurchasePayload(s)),signal:AbortSignal.timeout(12000)});
+ if(response.status!==202)throw new Error('Omnisend rejected the Bible Decoded purchase event.');
+}
 export async function readBody(request,limit=24000){
  if(Number(request.headers.get('content-length')||0)>limit)fail(413,'This answer is too long. Please shorten it and try again.');
  const reader=request.body?.getReader();if(!reader)return {};
@@ -88,7 +111,10 @@ async function webhook(request,env){
  if(event.livemode!==(env.BD_STRIPE_LIVE_MODE==='true'))fail(400,'Incorrect payment environment.');
  if(await env.BD_DB.prepare('SELECT id FROM bd_payment_events WHERE id=?').bind(event.id).first())return json({received:true});
  const object=event.data.object;
- if(['checkout.session.completed','checkout.session.async_payment_succeeded'].includes(event.type)&&object.metadata?.program==='bibledecoded'&&object.payment_status==='paid')await fulfill(env,object.id);
+ if(['checkout.session.completed','checkout.session.async_payment_succeeded'].includes(event.type)&&object.metadata?.program==='bibledecoded'&&object.payment_status==='paid'){
+  const session=await fulfill(env,object.id);
+  await sendOmnisendPurchase(env,session);
+ }
  if((event.type==='charge.refunded'&&object.refunded)||event.type==='charge.dispute.created'){
   const pi=typeof object.payment_intent==='string'?object.payment_intent:object.payment_intent?.id;
   if(pi)await env.BD_DB.batch([env.BD_DB.prepare('INSERT OR IGNORE INTO bd_revocations(payment_intent) VALUES (?)').bind(pi),env.BD_DB.prepare("UPDATE bd_purchases SET status='revoked' WHERE payment_intent=?").bind(pi)]);
