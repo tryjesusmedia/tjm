@@ -139,9 +139,7 @@ function storeCarousel() {
   update();
 }
 function albumLink() {
-  return me?.videoAlbum
-    ? `<a class="button secondary" href="${esc(me.videoAlbum)}" target="_blank" rel="noopener">Open video album ↗</a>`
-    : "";
+  return '<a class="button secondary" href="https://www.youtube.com/playlist?list=PLDFkxHcqdU1-yIxaROnFSvCOtmjoYDzUK" target="_blank" rel="noopener">Open YouTube playlist ↗</a>';
 }
 function authForm(message = "") {
   $("#app").innerHTML =
@@ -186,12 +184,6 @@ function memberHeader() {
   const a = $("#account-link");
   a.textContent = "My dashboard";
   a.href = ROOT + "dashboard/";
-  const button = document.createElement("button");
-  button.className = "header-signout";
-  button.type = "button";
-  button.dataset.signout = "";
-  button.textContent = "Sign out";
-  a.after(button);
 }
 function coachingInvite() {
   return `<section class="coaching-invite no-print" aria-labelledby="coaching-title"><img class="coaching-photo" src="/assets/pastor-kal-coaching.jpg" alt="Pastor Kal" width="900" height="900" loading="lazy"><div class="coaching-copy"><p class="eyebrow">YOUR NEXT STEP · FREE PERSONAL COACHING</p><h2 id="coaching-title">Let’s open the Bible together.</h2><p>Bring the passage that puzzles you—and the questions you have always wanted to ask.</p><p><strong>Book a free Bible discussion coaching call with the real, human Pastor Kal. Not AI.</strong></p><p>We’ll look at your questions together, explore connections you may have missed, and help you approach Scripture with fresh clarity and confidence.</p><div class="coaching-action"><a class="button gold" href="https://calendly.com/kalroller/kal" target="_blank" rel="noopener">Choose my time with Pastor Kal →</a></div><p class="small coaching-note">Bring your Bible. Bring your questions. Choose a time that works for you.</p></div></section>`;
@@ -676,6 +668,11 @@ async function boot() {
       flowType: "implicit",
     },
   });
+  if (params.get("signout") === "1") {
+    await auth.auth.signOut();
+    location.replace(ROOT + "welcome/");
+    return;
+  }
   const sessionId = params.get("session_id");
   if (sessionId) {
     try {
