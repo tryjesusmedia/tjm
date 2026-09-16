@@ -18,7 +18,7 @@
     "test:reward-security": "node scripts/test-reward-security.mjs",
     "test:principles": "node scripts/test-principles.mjs",
     "test:web-app-parity": "node scripts/test-web-app-parity.mjs",
-    "build:bibledecoded": "node scripts/build-bibledecoded-pages.mjs && esbuild scripts/bd-app.js --bundle --minify --format=iife --outfile=bibledecoded/assets/app.js",
+    "build:bibledecoded": "node scripts/build-bibledecoded-pages.mjs && esbuild scripts/bd-app.js --bundle --minify --format=iife --outfile=bibledecoded/assets/app.js && node scripts/inject-bibledecoded-final-tools.mjs",
     "test:bibledecoded": "node --test tests/bibledecoded.test.mjs tests/bibledecoded-autosave.test.mjs"
   },
   "dependencies": {
