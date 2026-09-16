@@ -139,7 +139,7 @@ function storeCarousel() {
   update();
 }
 function albumLink() {
-  return '<a class="button secondary" href="https://www.youtube.com/playlist?list=PLDFkxHcqdU1-yIxaROnFSvCOtmjoYDzUK" target="_blank" rel="noopener">Open YouTube playlist ↗</a>';
+  return '<a class="button secondary" href="https://youtube.com/playlist?list=PLDFkxHcqdU19H9hrOex5RSLvlXU9ycyJu&si=nrlaPqe4YZsawYAc" target="_blank" rel="noopener">Open YouTube playlist ↗</a>';
 }
 function authForm(message = "") {
   $("#app").innerHTML =
