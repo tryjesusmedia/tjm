@@ -81,6 +81,29 @@ Link itself and ensure it uses the configured price. Its redirect should point
 to `/bibledecoded/welcome/`; the webhook grants access using the checkout email.
 Do not treat publishing a Payment Link as verification of live fulfillment.
 
+## Omnisend purchase messages
+
+Set `OMNISEND_API_KEY` as a Cloudflare Pages secret. Use an Omnisend API key
+restricted to `events.write`. A verified paid Stripe webhook then sends the
+custom event `bible decoded purchased` with the buyer email, program, amount,
+currency, and member links. Configure an Omnisend automation triggered by that
+event and mark the welcome email as transactional so purchase access does not
+depend on marketing subscription status.
+
+SMS is intentionally withheld unless Stripe returns both an E.164 phone number
+and an explicit custom-field opt-in. In the Bible Decoded Payment Link, enable
+phone-number collection and add a required dropdown with key `sms_consent`, a
+clear disclosure such as `May Try Jesus Media text me about my Bible Decoded
+purchase?`, and the consenting value `yes`. Keep Stripe's consent record. In
+Omnisend, add the SMS to the same custom-event automation and include required
+sender identification and opt-out language. A checkout phone number by itself
+must never be treated as SMS consent.
+
+The Omnisend event uses a deterministic purchase ID and is sent only after the
+existing Stripe signature, environment, product, price, currency, amount, and
+payment checks pass. Omnisend failures never remove the entitlement already
+created for a valid purchase; returning a webhook error allows Stripe to retry.
+
 ## Member support
 
 The Study Lab unlocks after the six main lessons are marked complete and stays
