@@ -138,7 +138,10 @@ export async function handle(request,env){
   let labUnlocked=false;
   if(member){try{await requireLab(db,user);labUnlocked=true;}catch(e){if(e.status!==403)throw e;}}
   const studies=labUnlocked?(await db.prepare('SELECT id,title,updated_at FROM bd_studies WHERE user_id=? ORDER BY updated_at DESC').bind(user.id).all()).results:[];
-  return json({user:{id:user.id,email:user.email,name:String(user.user_metadata?.full_name||user.user_metadata?.name||'').slice(0,80)},member,labUnlocked,progress,studies});
+  const album=member?await db.prepare("SELECT blocks FROM bd_content WHERE id='video-album'").first():null;
+  const albumUrl=album?JSON.parse(album.blocks).url:null;
+  const videoAlbum=typeof albumUrl==='string'&&/^https:\/\/photos\.app\.goo\.gl\/[A-Za-z0-9]+$/.test(albumUrl)?albumUrl:null;
+  return json({user:{id:user.id,email:user.email,name:String(user.user_metadata?.full_name||user.user_metadata?.name||'').slice(0,80)},member,labUnlocked,progress,studies,videoAlbum});
  }
  if(!member)fail(403,'Your account does not have Bible Decoded access yet.');
  if(route.startsWith('printable/')&&request.method==='GET'){

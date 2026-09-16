@@ -43,6 +43,14 @@ test('claimed access cannot move to another account with the same email',async()
  grant();await data('me');const original=people.bob.email;people.bob.email=people.alice.email;
  try{assert.equal((await data('me',{person:'bob'})).member,false);}finally{people.bob.email=original;}
 });
+test('video album is returned only to entitled members',async()=>{
+ db.prepare('INSERT INTO bd_content(id,blocks) VALUES (?,?)').run('video-album',JSON.stringify({url:'https://photos.app.goo.gl/ExampleAlbum123'}));
+ assert.equal((await data('me',{person:'bob'})).videoAlbum,null);
+ assert.equal(JSON.stringify(await data('config',{person:null})).includes('ExampleAlbum123'),false);
+ grant();assert.equal((await data('me')).videoAlbum,'https://photos.app.goo.gl/ExampleAlbum123');
+ db.prepare("UPDATE bd_content SET blocks=? WHERE id='video-album'").run(JSON.stringify({url:'javascript:alert(1)'}));
+ assert.equal((await data('me')).videoAlbum,null);
+});
 test('workbook answers persist and stale writes return the saved revision instead of overwriting it',async()=>{
  grant();const save=(value,revision)=>request('answer/'+first.id,{method:'PUT',body:{fieldId:field.id,value,revision}});
  assert.deepEqual(await (await save('First answer',0)).json(),{revision:1});

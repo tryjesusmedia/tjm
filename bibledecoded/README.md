@@ -12,8 +12,14 @@ The member routes are `welcome/`, `dashboard/`, `lesson/?lesson=foundations`,
 - Cloudflare D1 stores entitlements, private workbook answers, progress and studies.
 - The owner email `info@tryjesusmedia.com` has a manual entitlement. It is claimed
   after this exact email is confirmed by the authentication provider.
-- Checkout is deliberately disabled. Do not enable it until Stripe is connected
-  and the complete test-mode payment/refund flow has been verified.
+- The sales page links directly to the owner's Stripe Payment Link. The site's
+  session-creation endpoint remains disabled. Live payment fulfillment still
+  requires matching live keys, price, webhook metadata and environment settings.
+- A Fourthwall merchandise carousel follows the enrollment section.
+- Members can download all seven printable guides directly from their dashboard.
+- The optional Google Photos album URL is stored privately in `bd_content` under
+  `video-album`, with `blocks` containing a JSON object with a `url` field. It is
+  returned only to entitled members; do not commit the shared album URL.
 - The bonus Word Search workbook is available; its video still needs a link.
 
 ## Build and checks
@@ -68,8 +74,12 @@ The intended events are `checkout.session.completed`,
 Test payment completion, different checkout/sign-in emails, duplicate events,
 delayed success and revocation before enabling the live price.
 `BD_STRIPE_LIVE_MODE` must match the Stripe environment.
-Finally set `BD_CHECKOUT_ENABLED=true` and redeploy. Until then the site shows
-“Enrollment will open soon” and its server refuses checkout requests.
+`BD_CHECKOUT_ENABLED` only controls the server's session-creation endpoint.
+The public buttons now link directly to the supplied Stripe Payment Link.
+For Payment Link purchases, add `program=bibledecoded` metadata to the Payment
+Link itself and ensure it uses the configured price. Its redirect should point
+to `/bibledecoded/welcome/`; the webhook grants access using the checkout email.
+Do not treat publishing a Payment Link as verification of live fulfillment.
 
 ## Member support
 
