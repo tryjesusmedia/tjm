@@ -559,6 +559,19 @@ button.primary:hover {
 .video-unavailable p {
   font-size: 0.85rem;
 }
+.video.bonus-thumbnail {
+  aspect-ratio: auto;
+  min-height: 0;
+  padding: clamp(20px, 5vw, 48px);
+  background: #f3e8d0;
+}
+.video.bonus-thumbnail img {
+  display: block;
+  width: min(100%, 480px);
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 18px 45px rgb(28 17 29 / 24%);
+}
 .workbook-head {
   display: flex;
   justify-content: space-between;
