@@ -283,22 +283,13 @@ function renderWorkbook(blocks) {
     else groups.at(-1).blocks.push(b);
   }
   const nonempty = groups.filter((g) => g.blocks.length);
-  return `<div class="workbook-layout"><nav class="workbook-nav" aria-label="Workbook sections"><p>Choose a section</p>${nonempty.map((g, i) => `<a href="#section-${i}">${esc(g.title)}</a>`).join("")}</nav><div class="workbook">${nonempty.map((g, i) => `<details class="workbook-subsection" id="section-${i}"><summary><span class="subsection-number">${String(i + 1).padStart(2, "0")}</span><span>${esc(g.title)}</span><span class="subsection-toggle" aria-hidden="true">+</span></summary><section class="workbook-section">${g.blocks.map(blockHTML).join("")}</section></details>`).join("")}</div></div>`;
+  return `<div class="workbook-layout"><div class="workbook">${nonempty.map((g, i) => `<details class="workbook-subsection" id="section-${i}"><summary><span class="subsection-number">${String(i + 1).padStart(2, "0")}</span><span>${esc(g.title)}</span><span class="subsection-toggle" aria-hidden="true">+</span></summary><section class="workbook-section">${g.blocks.map(blockHTML).join("")}</section></details>`).join("")}</div></div>`;
 }
 function wireWorkbookSubsections() {
   document.querySelectorAll(".workbook-subsection").forEach((panel) => {
     const toggle = panel.querySelector(".subsection-toggle");
     panel.addEventListener("toggle", () => {
       toggle.textContent = panel.open ? "−" : "+";
-    });
-  });
-  document.querySelectorAll(".workbook-nav a").forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      const panel = document.querySelector(link.getAttribute("href"));
-      if (!panel) return;
-      panel.open = true;
-      panel.scrollIntoView({ block: "start" });
     });
   });
 }
