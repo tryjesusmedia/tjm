@@ -130,8 +130,10 @@ it does not verify production credentials, bindings, or live message delivery.
 
 ## Member support
 
-The Study Lab unlocks after the six main lessons are marked complete and stays
-unlocked for an entitled account. A member may revisit lessons freely.
+The Study Lab is accessible only while all six main lessons are marked complete.
+Unchecking any main lesson locks access again without deleting saved studies or
+answers. Completing all six restores access to the same saved work; the bonus
+lesson is optional.
 Answers save with revision checks. Conflicting device edits require the member
 to choose a version; failed saves retain a draft on that device.
 

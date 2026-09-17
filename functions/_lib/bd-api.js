@@ -61,7 +61,6 @@ async function membership(db,user){
  return !!await db.prepare("SELECT session_id FROM bd_purchases WHERE user_id=? AND status='active' LIMIT 1").bind(user.id).first();
 }
 async function requireLab(db,user){
- if(await db.prepare('SELECT user_id FROM bd_lab_access WHERE user_id=?').bind(user.id).first())return;
  const count=await db.prepare("SELECT count(*) AS n FROM bd_progress WHERE user_id=? AND completed=1 AND lesson_id IN ('foundations','look-for-christ','pattern-recognition','questioning-method','exegesis','bible-memorization')").bind(user.id).first();
  if(count.n!==6)fail(403,'Complete the six lessons to unlock your Study Lab.');
  await db.prepare('INSERT OR IGNORE INTO bd_lab_access(user_id) VALUES (?)').bind(user.id).run();

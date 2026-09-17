@@ -77,8 +77,17 @@ test('six lessons unlock studies, bonus is optional and studies remain private',
  assert.equal((await data('study/'+id)).answers[0].value,'Genesis 22:1-14');
  assert.equal((await request('study/'+id,{person:'bob'})).status,404);
  assert.equal((await request('answer/'+id,{person:'bob',method:'PUT',body:{fieldId:'passage',value:'other',revision:0}})).status,404);
- await data('progress/'+first.id,{method:'PUT',body:{completed:false}});assert.equal((await data('me')).labUnlocked,true);
- assert.equal((await data('me')).studies[0].title,'Genesis 22');
+ for(const lesson of LESSONS.filter(l=>!l.bonus)){
+  await data('progress/'+lesson.id,{method:'PUT',body:{completed:false}});
+  const locked=await data('me');assert.equal(locked.labUnlocked,false);assert.deepEqual(locked.studies,[]);
+  assert.equal((await request('study/'+id)).status,403);
+  assert.equal((await request('studies',{method:'POST',body:{id:crypto.randomUUID(),title:'Blocked'}})).status,403);
+  assert.equal((await request('answer/'+id,{method:'PUT',body:{fieldId:'passage',value:'blocked change',revision:1}})).status,403);
+  await data('progress/'+lesson.id,{method:'PUT',body:{completed:true}});
+  assert.equal((await data('me')).labUnlocked,true);
+  assert.equal((await data('me')).studies[0].title,'Genesis 22');
+  assert.equal((await data('study/'+id)).answers[0].value,'Genesis 22:1-14');
+ }
 });
 test('progress updates preserve completion when saving video or workbook position',async()=>{
  grant();await data('progress/'+first.id,{method:'PUT',body:{completed:true}});
