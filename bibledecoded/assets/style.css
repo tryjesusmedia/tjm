@@ -1819,3 +1819,8 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
   #certificate-print .certificate-faith-seal { right: 16px; top: 58px; width: 120px; height: 120px; }
   #certificate-print .certificate-signature { bottom: calc(100% - 9px); }
 }
+
+/* Reserve space for the lower frame at every reading size. */
+@media screen {
+  .certificate { padding-bottom: calc(90px + 3rem); }
+}
