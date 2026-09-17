@@ -391,7 +391,7 @@ function showSaveState(store) {
   text.textContent = store.conflicts.size
     ? "An answer needs your attention below."
     : store.error ||
-      (dirty ? "Saving your answers…" : "Saved ✓ — to your account");
+      (dirty ? "Saving your answers…" : "Your answers are saved ✓");
   status.append(text);
   if (dirty && !store.running) {
     const retry = document.createElement("button");
@@ -531,7 +531,33 @@ async function loadLesson() {
     workbookPanel.insertAdjacentHTML("afterend", lessonQuizHTML(quizItems, savedQuizScore));
     wireLessonQuiz(quizItems);
   }
+  const previous = config.lessons.find((item) => item.number === lesson.number - 1);
+  $(".lesson-heading").insertAdjacentHTML("beforeend",
+    `<nav class="lesson-navigation no-print" aria-label="Lesson navigation">${previous ? `<a data-lesson-navigation href="${lessonLink(previous.id)}">← Previous lesson</a>` : ""}<a data-lesson-navigation href="${ROOT}dashboard/">All lessons</a>${next ? `<a data-lesson-navigation href="${lessonLink(next.id)}">Next lesson →</a>` : ""}</nav>`);
+  workbookEnd.querySelector("h2").insertAdjacentHTML("afterend",
+    `<p class="next-lesson-note">${lesson.number === 6 ? "Next: Celebrate your course completion" : next ? `Next: ${esc(next.title)}` : "Next: Your dashboard"}</p>`);
+  document.querySelectorAll(".lesson-workbook, .lesson-quiz, .workbook-subsection").forEach((panel) => {
+    const summary = panel.querySelector(":scope > summary");
+    const hint = document.createElement("span");
+    hint.className = "panel-hint";
+    hint.textContent = "Tap to open";
+    const title = summary.querySelector(":scope > span:not(.subsection-number)");
+    title.append(hint);
+    panel.addEventListener("toggle", () => { hint.textContent = panel.open ? "Tap to close" : "Tap to open"; });
+  });
   connectWorkbook(data);
+  document.querySelectorAll("[data-lesson-navigation]").forEach((link) => {
+    link.addEventListener("click", async (event) => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      if (!(await autosave.flush())) {
+        tell("Your answers are not saved yet. Please check your connection and try again.", true);
+        return;
+      }
+      await saveVideoPosition();
+      location.assign(link.href);
+    });
+  });
   $("#download-workbook").onclick = () => {
     void printDownload();
   };
