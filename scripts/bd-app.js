@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { Autosave } from "./bd-autosave.js";
+import { LESSON_QUIZZES } from "./bd-quizzes.js";
 const $ = (s) => document.querySelector(s),
   esc = (v) =>
     String(v ?? "").replace(
@@ -218,7 +219,7 @@ function wireSignout() {
 }
 function noAccess() {
   $("#app").innerHTML =
-    `<section class="page-top narrow"><p class="eyebrow">SIGNED IN</p><h1>Your Bible Decoded account.</h1><div class="account-row"><p>You’re signed in as <strong>${esc(me.user.email)}</strong>.</p><button class="account-signout" type="button" data-signout>Sign out and use a different account</button></div><div class="notice">You don’t currently have access to Bible Decoded. If you just purchased, use the button below after Stripe returns you to this page. Your checkout and sign-in emails may be different.</div><div class="actions"><a class="button" href="https://buy.stripe.com/dRm28sacw6ufdSKfHu57W0b">Get Bible Decoded — <span class="purchase-prices"><s>$97</s> $37</span></a><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a><button id="check-access" class="button secondary">Check my access again</button></div><p class="offer-note">Discounted for the next 100 customers only!</p></section>`;
+    `<section class="page-top narrow"><p class="eyebrow">SIGNED IN</p><h1>Your Bible Decoded account.</h1><div class="account-row"><p>You’re signed in as <strong>${esc(me.user.email)}</strong>.</p><button class="account-signout" type="button" data-signout>Sign out and use a different account</button></div><div class="notice">You don’t currently have access to Bible Decoded. If you already purchased, check that you’re using the same email address you used at checkout.</div><div class="actions"><a class="button" href="https://buy.stripe.com/dRm28sacw6ufdSKfHu57W0b">Get Bible Decoded — <span class="purchase-prices"><s>$97</s> $37</span></a><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a><button id="check-access" class="button secondary">Check my access again</button></div><p class="offer-note">Discounted for the next 100 customers only!</p></section>`;
   $("#check-access").onclick = () => location.reload();
   wireSignout();
 }
@@ -293,33 +294,21 @@ function wireWorkbookSubsections() {
     });
   });
 }
-const FINAL_QUIZ = [
-  { question: "What is the main purpose of the Foundations lesson?", choices: ["To memorize every Bible book", "To establish helpful ideas and interpretive guardrails", "To replace reading Scripture with commentaries"], answer: 1 },
-  { question: "When looking for Christ in a passage, what should you avoid?", choices: ["Reading the whole passage", "Comparing related Scriptures", "Forcing a symbolic connection that the text does not support"], answer: 2 },
-  { question: "What does pattern recognition help you notice?", choices: ["Repeated sequences and parallels in Scripture", "Only repeated words", "The shortest verse in each chapter"], answer: 0 },
-  { question: "Which list belongs to the Questioning Method?", choices: ["Read, copy, repeat, recite", "Who, what, when, where, why, and how", "Past, present, and future"], answer: 1 },
-  { question: "What is exegesis?", choices: ["Drawing the intended meaning out of the text", "Reading our own ideas into the text", "Ignoring the original audience"], answer: 0 },
-  { question: "Why do historical and literary context matter?", choices: ["They make every passage symbolic", "They help us understand what the author intended to communicate", "They remove the need to read the passage"], answer: 1 },
-  { question: "Which practice supports Scripture memorization?", choices: ["Reading a verse only once", "Avoiding longer passages", "Repetition, emphasis, and testing your recall"], answer: 2 },
-  { question: "What should you do after noticing an exciting Bible connection?", choices: ["Check whether the context and the rest of Scripture support it", "Assume every connection is an interpretation", "Skip directly to teaching it"], answer: 0 },
-  { question: "What is eisegesis?", choices: ["Carefully examining context", "Reading our own ideas into Scripture", "Comparing Bible translations"], answer: 1 },
-  { question: "What is the goal of the Bible Decoded methods?", choices: ["To help you investigate, understand, apply, and share Scripture faithfully", "To make every passage say the same thing", "To depend entirely on someone else’s interpretation"], answer: 0 },
-];
-function finalQuizHTML() {
-  return `<details class="final-quiz no-print"><summary><span><span class="eyebrow">FINAL REVIEW</span>Take the 10-question quiz</span><span class="quiz-toggle" aria-hidden="true">+</span></summary><form id="final-quiz-form" class="final-quiz-body">${FINAL_QUIZ.map((item, questionIndex) => `<fieldset><legend>${questionIndex + 1}. ${esc(item.question)}</legend>${item.choices.map((choice, choiceIndex) => `<label><input type="radio" name="quiz-${questionIndex}" value="${choiceIndex}"> <span>${esc(choice)}</span></label>`).join("")}</fieldset>`).join("")}<button class="button quiz-submit" type="submit">Check my answers</button><div id="quiz-result" class="quiz-result" role="status" aria-live="polite"></div></form></details>`;
+function lessonQuizHTML(items) {
+  return `<details class="lesson-quiz no-print"><summary><span><span class="eyebrow">LESSON REVIEW</span>Take the 10-question quiz</span><span class="quiz-toggle" aria-hidden="true">+</span></summary><form id="lesson-quiz-form" class="lesson-quiz-body">${items.map((item, questionIndex) => `<fieldset data-quiz-question="${questionIndex}"><legend>${questionIndex + 1}. ${esc(item.question)}</legend>${item.choices.map((choice, choiceIndex) => `<label><input type="radio" name="quiz-${questionIndex}" value="${choiceIndex}"> <span>${esc(choice)}</span></label>`).join("")}<p class="quiz-answer" hidden></p></fieldset>`).join("")}<button class="button quiz-submit" type="submit">Submit quiz</button><div id="quiz-result" class="quiz-result" role="status" aria-live="polite"></div></form></details>`;
 }
-function wireFinalQuiz() {
-  const quiz = $(".final-quiz");
+function wireLessonQuiz(items) {
+  const quiz = $(".lesson-quiz");
   if (!quiz) return;
   const toggle = quiz.querySelector(".quiz-toggle");
   quiz.addEventListener("toggle", () => {
     toggle.textContent = quiz.open ? "−" : "+";
   });
-  $("#final-quiz-form").addEventListener("submit", (event) => {
+  $("#lesson-quiz-form").addEventListener("submit", (event) => {
     event.preventDefault();
     let correct = 0;
     let unanswered = 0;
-    FINAL_QUIZ.forEach((item, index) => {
+    items.forEach((item, index) => {
       const selected = event.currentTarget.elements[`quiz-${index}`].value;
       if (selected === "") unanswered += 1;
       else if (Number(selected) === item.answer) correct += 1;
@@ -330,9 +319,18 @@ function wireFinalQuiz() {
       result.className = "quiz-result notice";
       return;
     }
+    items.forEach((item, index) => {
+      const fieldset = event.currentTarget.querySelector(`[data-quiz-question="${index}"]`);
+      const selected = Number(event.currentTarget.elements[`quiz-${index}`].value);
+      fieldset.classList.toggle("quiz-correct", selected === item.answer);
+      fieldset.classList.toggle("quiz-incorrect", selected !== item.answer);
+      const answer = fieldset.querySelector(".quiz-answer");
+      answer.hidden = false;
+      answer.textContent = `Correct answer: ${item.choices[item.answer]}`;
+    });
     result.textContent = correct >= 8
-      ? `${correct} out of 10 correct. Excellent work—you’re ready to put these methods into practice!`
-      : `${correct} out of 10 correct. Review any lesson you need, then take the quiz again.`;
+      ? `${correct} out of 10 correct. Excellent work—you understand this lesson well!`
+      : `${correct} out of 10 correct. Review the correct answers below, revisit the lesson if helpful, and try again.`;
     result.className = `quiz-result notice ${correct >= 8 ? "quiz-passed" : ""}`;
   });
 }
@@ -479,13 +477,12 @@ async function loadLesson() {
   }
   const workbookPanel = $("#workbook");
   const workbookEnd = workbookPanel.querySelector(".workbook-end");
-  if (lesson.number === 6) {
-    workbookPanel
-      .querySelector(".workbook-layout")
-      .insertAdjacentHTML("afterend", finalQuizHTML());
-    wireFinalQuiz();
-  }
   workbookPanel.after(workbookEnd);
+  const quizItems = LESSON_QUIZZES[lesson.id];
+  if (quizItems) {
+    workbookPanel.insertAdjacentHTML("afterend", lessonQuizHTML(quizItems));
+    wireLessonQuiz(quizItems);
+  }
   connectWorkbook(data);
   $("#download-workbook").onclick = () => {
     void printDownload();
@@ -758,7 +755,7 @@ async function boot() {
   if (!data.session) {
     authForm(
       sessionId
-        ? "Sign in with the account you want to use for Bible Decoded. It may use a different email from checkout."
+        ? "Sign in with your checkout email to check your purchase and open your program."
         : "",
     );
     return;
