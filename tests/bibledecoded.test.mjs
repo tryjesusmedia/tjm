@@ -144,10 +144,29 @@ test('printables are real PDFs behind membership and revocation removes access',
  grant();for(const lesson of LESSONS){const response=await request('printable/'+lesson.id);assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'application/pdf');assert.match(response.headers.get('cache-control'),/no-store/);assert.equal((await response.text()).slice(0,5),'%PDF-');}
  db.prepare("UPDATE bd_purchases SET status='revoked'").run();assert.equal((await request('lesson/'+first.id)).status,403);assert.equal((await request('printable/'+first.id)).status,403);
 });
-test('a claimed payment must match price, total, currency, mode and environment',()=>{
- env.BD_STRIPE_PRICE_ID='price_test';const paid={mode:'payment',payment_status:'paid',currency:'usd',amount_total:3700,metadata:{program:'bibledecoded'},livemode:false,line_items:{data:[{price:{id:'price_test'},quantity:1}]},customer_details:{email:'alice@example.test'}};
- assert.equal(validPurchase(paid,env),true);
- for(const change of [{payment_status:'unpaid'},{currency:'cad'},{amount_total:1},{livemode:true},{mode:'subscription'},{metadata:{program:'other'}},{line_items:{data:[{price:{id:'other'},quantity:1}]}}])assert.equal(validPurchase({...paid,...change},env),false);
+test('course purchases accept changing prices while rejecting unrelated or unpaid checkouts',()=>{
+ env.BD_STRIPE_PRICE_ID='price_old';env.BD_STRIPE_PRODUCT_ID='prod_course';
+ const item={price:{id:'price_new',product:'prod_course'},quantity:1};
+ const paid={mode:'payment',payment_status:'paid',currency:'usd',amount_total:9700,metadata:{program:'bibledecoded'},livemode:false,line_items:{data:[item]},customer_details:{email:'alice@example.test'}};
+ for(const amount_total of [1,100,3700,9700,22700,50000])assert.equal(validPurchase({...paid,amount_total},env),true);
+ assert.equal(validPurchase({...paid,line_items:{data:[{...item,price:{id:'price_old',product:{id:'prod_course'}}}]}},env),true);
+ for(const change of [{payment_status:'unpaid'},{payment_status:'no_payment_required'},{currency:'cad'},{amount_total:0},{amount_total:-1},{amount_total:1.5},{amount_total:null},{amount_total:'9700'},{livemode:true},{mode:'subscription'},{metadata:{program:'other'}},{customer_details:{}},{line_items:{data:[]}},{line_items:{data:[item,item]}},{line_items:{data:[item],has_more:true}},{line_items:{data:[{...item,quantity:2}]}},{line_items:{data:[{price:{id:'price_old',product:'prod_unrelated'},quantity:1}]}},{line_items:{data:[{price:{id:'price_old'},quantity:1}]}}])assert.equal(validPurchase({...paid,...change},env),false,JSON.stringify(change));
+});
+
+test('a changed-price purchase can be claimed once and cannot bypass ownership or revocation',async()=>{
+ env.BD_STRIPE_KEY='sk_test_fixture';env.BD_STRIPE_PRODUCT_ID='prod_course';
+ const session={id:'cs_test_changedprice123',mode:'payment',payment_status:'paid',currency:'usd',amount_total:9700,metadata:{program:'bibledecoded'},livemode:false,payment_intent:'pi_changedprice',line_items:{data:[{price:{id:'price_new',product:'prod_course'},quantity:1}]},customer_details:{email:people.alice.email}};
+ const authFetch=globalThis.fetch;
+ globalThis.fetch=async(url,options)=>String(url).startsWith('https://api.stripe.com/v1/checkout/sessions/')?Response.json(session):authFetch(url,options);
+ const claim=person=>request('claim',{person,method:'POST',body:{sessionId:session.id}});
+ assert.equal((await claim('bob')).status,403);
+ assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
+ assert.equal((await (await claim('alice')).json()).member,true);
+ assert.equal((await (await claim('alice')).json()).member,true);
+ assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,1);
+ db.prepare("UPDATE bd_purchases SET status='revoked' WHERE session_id=?").run(session.id);
+ db.prepare('INSERT INTO bd_revocations(payment_intent) VALUES (?)').run(session.payment_intent);
+ assert.equal((await (await claim('alice')).json()).member,false);
 });
 test('Omnisend purchase events include SMS only after explicit checkout consent',async()=>{
  const base={id:'cs_live_example',created:1789574400,amount_total:3700,currency:'usd',customer_details:{email:' Buyer@Example.com ',name:'Mary Jones',phone:'+13155550123'},custom_fields:[]};

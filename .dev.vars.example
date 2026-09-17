@@ -2,7 +2,8 @@
 BD_CHECKOUT_ENABLED=false
 BD_STRIPE_LIVE_MODE=false
 # BD_STRIPE_KEY=your_restricted_key
-# BD_STRIPE_PRICE_ID=your_37_usd_one_time_price
+# BD_STRIPE_PRICE_ID=your_current_one_time_price_for_session_creation
+# BD_STRIPE_PRODUCT_ID=your_bible_decoded_product_id
 # BD_STRIPE_WEBHOOK_SECRET=your_signing_secret
 # OMNISEND_API_KEY=your_events_write_api_key
 # BD_VIDEOS={"foundations":{"provider":"stream","id":"YOUR_VIDEO_ID"}}

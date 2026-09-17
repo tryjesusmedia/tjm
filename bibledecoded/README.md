@@ -16,7 +16,7 @@ Saved studies open at `complete/?study=<id>#study-lab`. The retired
   after this exact email is confirmed by the authentication provider.
 - The sales page links directly to the owner's Stripe Payment Link. The site's
   session-creation endpoint remains disabled. Live payment fulfillment still
-  requires matching live keys, price, webhook metadata and environment settings.
+  requires matching live keys, course product, webhook metadata and environment settings.
 - A Fourthwall merchandise carousel follows the enrollment section.
 - Members can download all seven printable guides directly from their dashboard.
 - The optional Google Photos album URL is stored privately in `bd_content` under
@@ -65,7 +65,7 @@ playback using the variables listed in `.dev.vars.example`.
 
 Configure `BD_STRIPE_KEY`, `BD_STRIPE_PRICE_ID`, and
 `BD_STRIPE_WEBHOOK_SECRET` as secrets in the same Cloudflare account.
-Use a one-time USD 37.00 price and a webhook at
+Use a one-time USD price of any positive amount and a webhook at
 `https://tryjesusmedia.com/api/bibledecoded/webhook`.
 The handler accepts checkout completion, asynchronous payment success,
 full refunds and created disputes. Failed or unsigned webhooks never grant access.
@@ -79,7 +79,12 @@ delayed success and revocation before enabling the live price.
 `BD_CHECKOUT_ENABLED` only controls the server's session-creation endpoint.
 The public buttons now link directly to the supplied Stripe Payment Link.
 For Payment Link purchases, add `program=bibledecoded` metadata to the Payment
-Link itself and ensure it uses the configured price. Its redirect must point to
+Link itself and ensure its price belongs to the Bible Decoded product
+`prod_VGrbGF3FPrkKAC` (override with `BD_STRIPE_PRODUCT_ID` for another
+environment). Fulfillment checks this stable product identity, not the price ID
+or a fixed dollar amount, so earlier and newly priced purchases remain valid.
+`BD_STRIPE_PRICE_ID` is used only by the optional session-creation endpoint.
+Its redirect must point to
 `/bibledecoded/welcome/?session_id={CHECKOUT_SESSION_ID}`. The webhook creates
 the entitlement using the checkout email. The signed redirect session can then
 link that purchase once to a confirmed member account even when its sign-in
@@ -106,7 +111,7 @@ sender identification and opt-out language. A checkout phone number by itself
 must never be treated as SMS consent.
 
 The Omnisend event uses a deterministic purchase ID and is sent only after the
-existing Stripe signature, environment, product, price, currency, amount, and
+existing Stripe signature, environment, course product, USD currency, positive paid total, and
 payment checks pass. Omnisend failures never remove the entitlement already
 created for a valid purchase; returning a webhook error allows Stripe to retry.
 

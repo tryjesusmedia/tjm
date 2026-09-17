@@ -6,6 +6,8 @@ import { completedCourseLessons, gradeQuiz, passedQuizSQL, quizCompleted, quizPr
 const AUTH_URL = 'https://erejehmrtzjpqurbftsm.supabase.co';
 const AUTH_KEY = 'sb_publishable_bOxmjg6RWmwfw7i7o_YhTg_zOjUt0p6';
 const SITE = 'https://tryjesusmedia.com';
+// Stable course identity: Stripe prices can change without changing this product.
+const BIBLE_DECODED_PRODUCT = 'prod_VGrbGF3FPrkKAC';
 const stamp = "strftime('%Y-%m-%dT%H:%M:%fZ','now')";
 const summary = ({id,number,title,bonus,description})=>({id,number,title,bonus,description});
 export class HttpError extends Error { constructor(status,message,extra={}){super(message);this.status=status;this.extra=extra;} }
@@ -87,7 +89,9 @@ async function rateLimit(db,key,limit){
  if(row.count>limit)fail(429,'Please wait a minute, then try again.');
 }
 export function validPurchase(s,env){
- return s.mode==='payment'&&s.payment_status==='paid'&&s.currency==='usd'&&s.amount_total===3700&&s.metadata?.program==='bibledecoded'&&s.livemode===(env.BD_STRIPE_LIVE_MODE==='true')&&s.line_items?.data?.length===1&&s.line_items.data[0].price?.id===env.BD_STRIPE_PRICE_ID&&s.line_items.data[0].quantity===1&&!!s.customer_details?.email;
+ const item=s.line_items?.data?.[0],product=item?.price?.product;
+ const productId=typeof product==='string'?product:product?.id;
+ return s.mode==='payment'&&s.payment_status==='paid'&&s.currency==='usd'&&Number.isSafeInteger(s.amount_total)&&s.amount_total>0&&s.metadata?.program==='bibledecoded'&&s.livemode===(env.BD_STRIPE_LIVE_MODE==='true')&&s.line_items?.data?.length===1&&!s.line_items.has_more&&productId===(env.BD_STRIPE_PRODUCT_ID||BIBLE_DECODED_PRODUCT)&&item.quantity===1&&!!s.customer_details?.email;
 }
 async function fulfill(env,id,expectedEmail){
  const s=await stripe(env).checkout.sessions.retrieve(id,{expand:['line_items']});
