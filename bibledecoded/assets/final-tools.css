@@ -109,17 +109,45 @@
   padding: 30px;
 }
 .final-form-section {
-  border-bottom: 1px solid #e5dde4;
-  padding: 6px 0 30px;
-  margin-bottom: 28px;
+  border: 1px solid #3f7164;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  background: #fffdf9;
 }
-.final-form-section:last-child {
-  border-bottom: 0;
-  margin-bottom: 0;
+.final-form-section > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  cursor: pointer;
+  background: #25594b;
+  color: #fff;
+  font-family: Georgia, serif;
+  font-size: 1.12rem;
+  font-weight: 700;
 }
-.final-form-section h3 {
-  color: #4a2a58;
-  margin-bottom: 20px;
+.final-form-section > summary::-webkit-details-marker {
+  display: none;
+}
+.final-form-section > summary:focus-visible {
+  outline: 3px solid #eebd4a;
+  outline-offset: -4px;
+}
+.final-section-open {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  font: 1.1rem/1 system-ui, sans-serif;
+}
+.final-form-section-body {
+  padding: 4px 20px 22px;
 }
 .final-field {
   margin: 20px 0;
@@ -182,6 +210,12 @@
   .final-form {
     padding: 22px 18px;
   }
+  .final-form-section > summary {
+    padding: 16px;
+  }
+  .final-form-section-body {
+    padding: 4px 16px 18px;
+  }
   .final-tool-intro .actions .button,
   .final-tool-intro .actions a {
     width: 100%;
@@ -220,6 +254,19 @@
   }
   body[data-print-final] .final-form-section {
     break-inside: auto;
+  }
+  body[data-print-final] .final-form-section > summary {
+    background: white;
+    color: #311e33;
+    padding: 10px 0;
+    border-bottom: 1px solid #777;
+  }
+  body[data-print-final] .final-form-section-body {
+    display: block !important;
+    padding: 0;
+  }
+  body[data-print-final] .final-section-open {
+    display: none;
   }
   .bd-congratulations {
     display: none !important;
