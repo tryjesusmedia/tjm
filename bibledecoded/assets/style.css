@@ -1872,3 +1872,10 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
 }
 
 .certificate::before { top: 6px; left: 6px; width: calc(100% - 12px); height: calc(100% - 12px); }
+
+/* Emphasize the brand and make the optional bonus endorsement discreet. */
+.certificate .certificate-logo { width: 128px; height: 128px; }
+.certificate .certificate-bonus { transform: rotate(-11deg) scale(.5); transform-origin: center; }
+@media print {
+  #certificate-print .certificate-logo { width: 112px; height: 112px; }
+}
