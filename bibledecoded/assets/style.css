@@ -1785,3 +1785,37 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
   #certificate-print .certificate-bonus > span { font-size: 20px; }
   #certificate-print .certificate-faith-seal { top: 6px; width: 125px; height: 125px; max-width: none; }
 }
+
+/* Ornamental frame with a generous inner mat. */
+.certificate { padding: 66px 76px 56px; }
+.certificate::before {
+  inset: 6px; border: 0; z-index: -1;
+  background: url("/assets/certificate-ornamental-frame.svg") center / 100% 100% no-repeat;
+}
+.certificate-content { max-width: 780px; margin-inline: auto; }
+.certificate-corner { width: 92px; height: 92px; border-width: 7px; }
+.corner-tl { top: -52px; left: -52px; }
+.corner-tr { top: -52px; right: -52px; }
+.corner-bl { bottom: -52px; left: -52px; }
+.corner-br { bottom: -52px; right: -52px; }
+.certificate .person { max-width: 620px; }
+.certificate-footer { max-width: 600px; }
+.certificate-bonus { left: 16px; top: 72px; }
+.certificate-faith-seal { right: 16px; top: 62px; }
+.certificate-signature { bottom: calc(100% - 10px); }
+@media (max-width: 700px) {
+  .certificate { padding: 54px 34px 48px; }
+  .certificate-bonus { left: 3px; top: 28px; }
+  .certificate-faith-seal { right: 3px; top: 24px; }
+  .certificate .certificate-title { margin-top: 38px; }
+}
+@media print {
+  body.certificate-only > #certificate-print { padding: 44px 76px 40px; }
+  #certificate-print .certificate-content { max-width: 780px; }
+  #certificate-print .person { max-width: 580px; }
+  #certificate-print .certificate-title { margin-top: 8px; }
+  #certificate-print .certificate-footer { max-width: 580px; gap: 70px; margin-bottom: 14px; }
+  #certificate-print .certificate-bonus { left: 16px; top: 64px; width: 145px; }
+  #certificate-print .certificate-faith-seal { right: 16px; top: 58px; width: 120px; height: 120px; }
+  #certificate-print .certificate-signature { bottom: calc(100% - 9px); }
+}
