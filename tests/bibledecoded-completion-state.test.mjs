@@ -3,18 +3,19 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 const source=fs.readFileSync(new URL('../scripts/bd-app.js',import.meta.url),'utf8');
-test('Save & Continue preserves the chosen completion checkbox state',async()=>{
- for(const checked of [false,true]){
-  const button={};let saved,notified=false;
+test('Save & Continue never changes earned completion or reads the delayed checkbox',async()=>{
+ for(const unlocked of [false,true]){
+  const button={};let destination;const calls=[];
   const context=vm.createContext({
-   $:selector=>selector==='#completed'?{checked}:button,
-   autosave:{flush:async()=>true},scope:'foundations',lesson:{number:1},next:{id:'look-for-christ'},ROOT:'/bibledecoded/',
-   api:async(path,method,body)=>{saved=body.completed;},notifyProgressChanged(){notified=true;},
-   saveVideoPosition:async()=>{},location:{assign(){}},lessonLink:()=>'/next',tell(message){throw Error(message);},
+   $:selector=>{assert.notEqual(selector,'#completed');return button;},
+   autosave:{flush:async()=>true},scope:'bible-memorization',lesson:{number:6},ROOT:'/bibledecoded/',me:{},
+   api:async(path,method,body)=>{calls.push({path,method,body});return {labUnlocked:unlocked};},
+   saveVideoPosition:async()=>{},location:{assign(value){destination=value;}},tell(message){throw Error(message);},
   });
   vm.runInContext(source.slice(source.indexOf('  $("#finish-lesson").onclick ='),source.indexOf('  if (data.video) await mountVideo')),context);
   await button.onclick();
-  assert.equal(saved,checked);assert.equal(notified,true);
+  assert.deepEqual(calls,[{path:'me',method:undefined,body:undefined}]);
+  assert.equal(destination,'/bibledecoded/'+(unlocked?'complete/':'dashboard/'));
  }
 });
 test('a restored or separate tab rechecks current Study Lab access',async()=>{

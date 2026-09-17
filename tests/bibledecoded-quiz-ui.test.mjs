@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const source = fs.readFileSync(new URL('../scripts/bd-app.js', import.meta.url), 'utf8');
-const wire = source.slice(source.indexOf('function wireLessonQuiz('), source.indexOf('function showSaveState('));
+const wire = source.slice(source.indexOf('function wireLessonQuiz('), source.indexOf('function hasEarnedCompletion('));
 function node() {
   const classes = new Set();
   return {
@@ -43,10 +43,11 @@ function fixture(failSave = false) {
   const quiz = Object.assign(node(), {querySelector: () => toggle});
   const nodes = {'.lesson-quiz': quiz, '#lesson-quiz-form': form, '#retake-quiz': retake, '#quiz-score': score, '#quiz-result': result};
   let saved;
-  const context = { $: s => nodes[s], scope: 'foundations', api: async (_path, _method, body) => {
+  const context = { $: s => nodes[s], scope: 'foundations', me:{progress:[]}, updateLessonCompletion(){}, notifyProgressChanged(){}, api: async (_path, _method, body) => {
     await Promise.resolve();
     if (failSave) throw Error('Offline');
-    saved = body.quizScore;
+    saved = body.quizAnswers.filter(answer=>answer===0).length*10;
+    return {quizScore:saved,completed:saved>=90};
   }};
   vm.createContext(context);
   vm.runInContext(wire, context);

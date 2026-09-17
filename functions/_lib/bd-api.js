@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { LESSONS } from './bd-content.js';
 import { notifyCourseCompletion } from './bd-completion-notify.js';
+import { completedCourseLessons, gradeQuiz, passedQuizSQL, quizCompleted, quizProgress, quizSaveStatements } from './bd-quiz-progress.js';
 
 const AUTH_URL = 'https://erejehmrtzjpqurbftsm.supabase.co';
 const AUTH_KEY = 'sb_publishable_bOxmjg6RWmwfw7i7o_YhTg_zOjUt0p6';
@@ -62,8 +63,7 @@ async function membership(db,user){
  return !!await db.prepare("SELECT session_id FROM bd_purchases WHERE user_id=? AND status='active' LIMIT 1").bind(user.id).first();
 }
 async function requireLab(db,user){
- const count=await db.prepare("SELECT count(*) AS n FROM bd_progress WHERE user_id=? AND completed=1 AND lesson_id IN ('foundations','look-for-christ','pattern-recognition','questioning-method','exegesis','bible-memorization')").bind(user.id).first();
- if(count.n!==6)fail(403,'Complete the six lessons to unlock your Study Lab.');
+ if(await completedCourseLessons(db,user.id)!==6)fail(403,'Score 90% or higher on each of the six lesson quizzes to unlock your Study Lab.');
  await db.prepare('INSERT OR IGNORE INTO bd_lab_access(user_id) VALUES (?)').bind(user.id).run();
 }
 async function scopeInfo(db,user,scope){
@@ -79,7 +79,7 @@ async function contentBlocks(db,id){
  return JSON.parse(row.blocks);
 }
 export function fieldsFor(blocks){return blocks.flatMap(b=>b.type==='grid'?b.rows.flatMap(r=>r.cells):['field','check'].includes(b.type)?[b]:[]);}
-const answerRows=async(db,user,scope)=>(await db.prepare("SELECT field_id,value,revision FROM bd_answers WHERE user_id=? AND scope=? AND field_id!='__quiz_score'").bind(user.id,scope).all()).results.map(r=>({...r,value:JSON.parse(r.value)}));
+const answerRows=async(db,user,scope)=>(await db.prepare("SELECT field_id,value,revision FROM bd_answers WHERE user_id=? AND scope=? AND field_id NOT IN ('__quiz_score','__quiz_passed')").bind(user.id,scope).all()).results.map(r=>({...r,value:JSON.parse(r.value)}));
 async function rateLimit(db,key,limit){
  const now=Math.floor(Date.now()/1000),bucket=Math.floor(now/60);
  const row=await db.prepare('INSERT INTO bd_rate_limits(key,count,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(`${key}:${bucket}`,now+120).first();
@@ -169,7 +169,7 @@ export async function handle(request,env,waitUntil){
  }
  const member=await membership(db,user);
  if((route==='me'||route==='claim')&&(request.method==='GET'||route==='claim')){
-  const progress=member?(await db.prepare("SELECT p.lesson_id,p.completed,p.seconds,p.last_field,p.updated_at,(SELECT CAST(json_extract(a.value,'$') AS INTEGER) FROM bd_answers a WHERE a.user_id=p.user_id AND a.scope=p.lesson_id AND a.field_id='__quiz_score') AS quiz_score FROM bd_progress p WHERE p.user_id=?").bind(user.id).all()).results:[];
+  const progress=member?await quizProgress(db,user.id):[];
   let labUnlocked=false;
   if(member){try{await requireLab(db,user);labUnlocked=true;}catch(e){if(e.status!==403)throw e;}}
   const studies=labUnlocked?(await db.prepare('SELECT id,title,updated_at FROM bd_studies WHERE user_id=? ORDER BY updated_at DESC').bind(user.id).all()).results:[];
@@ -208,13 +208,20 @@ export async function handle(request,env,waitUntil){
  }
  if(kind==='progress'&&lesson&&request.method==='PUT'){
   const body=await readBody(request);
-  if(body.completed!==undefined&&typeof body.completed!=='boolean')fail(400,'Invalid completion value.');
+  if(body.completed!==undefined||body.quizScore!==undefined)fail(400,'Lesson completion is earned through the quiz. Please refresh this page and submit your answers.');
   if(body.seconds!==undefined&&(!Number.isFinite(body.seconds)||body.seconds<0||body.seconds>86400))fail(400,'Invalid video position.');
   if(body.lastField!==undefined&&!fieldsFor(blocks).some(f=>f.id===body.lastField))fail(400,'Invalid workbook position.');
-  if(body.quizScore!==undefined&&(!Number.isInteger(body.quizScore)||body.quizScore<0||body.quizScore>100))fail(400,'Invalid quiz score.');
-  await db.prepare(`INSERT INTO bd_progress(user_id,lesson_id,completed,seconds,last_field) VALUES (?,?,?,?,?) ON CONFLICT(user_id,lesson_id) DO UPDATE SET completed=COALESCE(?,completed),seconds=COALESCE(?,seconds),last_field=COALESCE(?,last_field),updated_at=${stamp}`).bind(user.id,scope,body.completed?1:0,body.seconds||0,body.lastField||'',body.completed===undefined?null:body.completed?1:0,body.seconds??null,body.lastField??null).run();
-  if(body.quizScore!==undefined)await db.prepare(`INSERT INTO bd_answers(user_id,scope,field_id,value,revision) VALUES (?,?,?, ?,1) ON CONFLICT(user_id,scope,field_id) DO UPDATE SET value=excluded.value,revision=bd_answers.revision+1,updated_at=${stamp}`).bind(user.id,scope,'__quiz_score',JSON.stringify(body.quizScore)).run();
-  try{await requireLab(db,user);await completionNotice(user);}catch(e){if(e.status!==403)throw e;}return json({saved:true});
+  const score=body.quizAnswers===undefined?undefined:gradeQuiz(scope,body.quizAnswers);
+  if(score===null)fail(400,'Please choose one answer for each of the 10 quiz questions.');
+  const statements=score===undefined?[]:quizSaveStatements(db,user.id,scope,score);
+  statements.push(db.prepare(`INSERT INTO bd_progress(user_id,lesson_id,completed,seconds,last_field)
+    VALUES (?,?,EXISTS(SELECT 1 FROM bd_answers WHERE user_id=? AND scope=? AND ${passedQuizSQL}),?,?)
+    ON CONFLICT(user_id,lesson_id) DO UPDATE SET completed=excluded.completed,seconds=COALESCE(?,seconds),last_field=COALESCE(?,last_field),updated_at=${stamp}`)
+    .bind(user.id,scope,user.id,scope,body.seconds||0,body.lastField||'',body.seconds??null,body.lastField??null));
+  await db.batch(statements);
+  const completed=await quizCompleted(db,user.id,scope);
+  try{await requireLab(db,user);await completionNotice(user);}catch(e){if(e.status!==403)throw e;}
+  return json({saved:true,completed,quizScore:score});
  }
  fail(405,'Method not allowed.');
 }

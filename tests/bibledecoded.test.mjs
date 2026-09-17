@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import {onRequest} from '../functions/api/bibledecoded/[[path]].js';
 import {fieldsFor,validPurchase,omnisendPurchasePayload} from '../functions/_lib/bd-api.js';
 import {LESSONS} from '../functions/_lib/bd-content.js';
+import {LESSON_QUIZZES} from '../scripts/bd-quizzes.js';
 
 let db,env,realFetch;
 const people={alice:{id:'alice',email:'alice@example.test',email_confirmed_at:'2026-01-01'},bob:{id:'bob',email:'bob@example.test',email_confirmed_at:'2026-01-01'},unconfirmed:{id:'unconfirmed',email:'alice@example.test'}};
@@ -25,6 +26,9 @@ async function request(path,{person='alice',method='GET',body,origin='https://tr
 }
 async function data(path,options){const response=await request(path,options);assert.equal(response.status,200,await response.clone().text());return response.json();}
 const first=LESSONS[0],field={id:'test-answer',type:'field'};
+
+const answersFor=(id,score=90)=>LESSON_QUIZZES[id].map((question,index)=>index<score/10?question.answer:(question.answer+1)%4);
+const submitQuiz=(id,score=90)=>data('progress/'+id,{method:'PUT',body:{quizAnswers:answersFor(id,score)}});
 
 test('public configuration exposes only lesson summaries and checkout remains disabled',async()=>{
  const config=await data('config',{person:null});assert.equal(config.checkoutEnabled,false);assert.equal(config.lessons.length,7);assert.ok(config.lessons.every(l=>!l.blocks));
@@ -69,7 +73,7 @@ test('malformed, oversized and unknown workbook fields are rejected without writ
 test('six lessons unlock studies, bonus is optional and studies remain private',async()=>{
  grant();grant('bob');const id=crypto.randomUUID();
  assert.equal((await request('studies',{method:'POST',body:{id,title:'Genesis 22'}})).status,403);
- for(const lesson of LESSONS.filter(l=>!l.bonus))await data('progress/'+lesson.id,{method:'PUT',body:{completed:true}});
+ for(const lesson of LESSONS.filter(l=>!l.bonus))await submitQuiz(lesson.id);
  assert.equal((await data('me')).labUnlocked,true);
  assert.equal((await request('studies',{method:'POST',body:{id,title:'Genesis 22'}})).status,201);
  assert.equal((await data('study/'+id)).study.title,'Genesis 22');
@@ -78,32 +82,63 @@ test('six lessons unlock studies, bonus is optional and studies remain private',
  assert.equal((await request('study/'+id,{person:'bob'})).status,404);
  assert.equal((await request('answer/'+id,{person:'bob',method:'PUT',body:{fieldId:'passage',value:'other',revision:0}})).status,404);
  for(const lesson of LESSONS.filter(l=>!l.bonus)){
-  await data('progress/'+lesson.id,{method:'PUT',body:{completed:false}});
+  // Simulate a pre-existing manual completion without a qualifying quiz.
+  db.prepare("DELETE FROM bd_answers WHERE user_id='alice' AND scope=? AND field_id IN ('__quiz_score','__quiz_passed')").run(lesson.id);
   const locked=await data('me');assert.equal(locked.labUnlocked,false);assert.deepEqual(locked.studies,[]);
   assert.equal((await request('study/'+id)).status,403);
   assert.equal((await request('studies',{method:'POST',body:{id:crypto.randomUUID(),title:'Blocked'}})).status,403);
   assert.equal((await request('answer/'+id,{method:'PUT',body:{fieldId:'passage',value:'blocked change',revision:1}})).status,403);
-  await data('progress/'+lesson.id,{method:'PUT',body:{completed:true}});
+  await submitQuiz(lesson.id);
   assert.equal((await data('me')).labUnlocked,true);
   assert.equal((await data('me')).studies[0].title,'Genesis 22');
   assert.equal((await data('study/'+id)).answers[0].value,'Genesis 22:1-14');
  }
 });
 test('progress updates preserve completion when saving video or workbook position',async()=>{
- grant();await data('progress/'+first.id,{method:'PUT',body:{completed:true}});
+ grant();await submitQuiz(first.id);
  await data('progress/'+first.id,{method:'PUT',body:{seconds:42}});
  await data('progress/'+first.id,{method:'PUT',body:{lastField:field.id}});
  const progress=(await data('me')).progress[0];assert.equal(progress.completed,1);assert.equal(progress.seconds,42);assert.equal(progress.last_field,field.id);
 });
-test('quiz scores save per lesson and expose only the latest percentage',async()=>{
+test('each quiz is graded by the server and earns completion at 90 percent',async()=>{
+ grant();assert.equal((await data('me')).progress.length,0);
+ for(const lesson of LESSONS){
+  assert.deepEqual(await submitQuiz(lesson.id,80),{saved:true,completed:false,quizScore:80});
+  let progress=(await data('me')).progress.find(p=>p.lesson_id===lesson.id);
+  assert.equal(progress.completed,0);assert.equal(progress.quiz_score,80);
+  assert.deepEqual(await submitQuiz(lesson.id,90),{saved:true,completed:true,quizScore:90});
+  progress=(await data('me')).progress.find(p=>p.lesson_id===lesson.id);
+  assert.equal(progress.completed,1);assert.equal(progress.quiz_passed,1);assert.equal(progress.quiz_score,90);
+  await submitQuiz(lesson.id,100);
+  assert.equal((await data('me')).progress.find(p=>p.lesson_id===lesson.id).quiz_score,100);
+  // A lower practice attempt replaces the last score without erasing the earned pass.
+  await submitQuiz(lesson.id,50);
+  progress=(await data('me')).progress.find(p=>p.lesson_id===lesson.id);
+  assert.equal(progress.quiz_score,50);assert.equal(progress.completed,1);
+  assert.deepEqual((await data('lesson/'+lesson.id)).answers,[]);
+ }
+});
+test('manual completion and client-supplied scores cannot bypass the quiz',async()=>{
  grant();
- let me=await data('me');assert.equal(me.progress.length,0);
- await data('progress/'+first.id,{method:'PUT',body:{quizScore:70}});
- me=await data('me');assert.equal(me.progress[0].quiz_score,70);
- await data('progress/'+first.id,{method:'PUT',body:{quizScore:90}});
- me=await data('me');assert.equal(me.progress[0].quiz_score,90);
- assert.deepEqual((await data('lesson/'+first.id)).answers,[]);
- for(const quizScore of [-10,101,75.5,'80'])assert.equal((await request('progress/'+first.id,{method:'PUT',body:{quizScore}})).status,400);
+ for(const body of [{completed:true},{completed:false},{quizScore:100},
+  {quizAnswers:[]},{quizAnswers:null},{quizAnswers:Array(10).fill('0')},
+  {quizAnswers:Array(10).fill(4)},{quizAnswers:Array(10).fill(-1)},
+  {quizAnswers:Array(10).fill(0.5)},{quizAnswers:answersFor(first.id).slice(1)}]){
+  assert.equal((await request('progress/'+first.id,{method:'PUT',body})).status,400);
+ }
+ for(const fieldId of ['__quiz_score','__quiz_passed'])assert.equal((await request('answer/'+first.id,{method:'PUT',body:{fieldId,value:100,revision:0}})).status,400);
+ assert.equal((await data('me')).progress.length,0);
+});
+test('legacy passing scores count but manual checkmarks cannot unlock the Study Lab',async()=>{
+ grant();
+ for(const lesson of LESSONS.filter(l=>!l.bonus)){
+  db.prepare("INSERT INTO bd_progress(user_id,lesson_id,completed) VALUES ('alice',?,1)").run(lesson.id);
+ }
+ let member=await data('me');assert.equal(member.labUnlocked,false);assert.ok(member.progress.every(p=>p.completed===0));
+ for(const lesson of LESSONS.filter(l=>!l.bonus))db.prepare("INSERT INTO bd_answers(user_id,scope,field_id,value) VALUES ('alice',?,'__quiz_score','90')").run(lesson.id);
+ member=await data('me');assert.equal(member.labUnlocked,true);assert.ok(member.progress.every(p=>p.completed===1));
+ await submitQuiz(first.id,60);
+ member=await data('me');assert.equal(member.labUnlocked,true);assert.equal(member.progress.find(p=>p.lesson_id===first.id).quiz_score,60);
 });
 test('printables are real PDFs behind membership and revocation removes access',async()=>{
  grant();for(const lesson of LESSONS){const response=await request('printable/'+lesson.id);assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'application/pdf');assert.match(response.headers.get('cache-control'),/no-store/);assert.equal((await response.text()).slice(0,5),'%PDF-');}

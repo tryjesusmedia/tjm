@@ -30,6 +30,8 @@ function fixture({study=null,unlocked=true}={}){
   studyList:()=>'<ul class="study-list"><li>Saved studies</li></ul>',
   coachingInvite:()=>'<section class="coaching-invite">Book a call</section>',
   renderWorkbook:()=>'<div class="workbook-layout"></div>',
+  clearCompletionReveals(){},revealCompletion(){},
+  hasEarnedCompletion:p=>Boolean(p?.quiz_passed||p?.quiz_score>=90),
   wireSignout(){},connectWorkbook(data){selectedData=data;},
   api:async(path,method,body)=>{if(path==='studies'){created=body;return {id:'new-study'};}assert.equal(path,'study/'+(study||'new-study'));return studyData;},
   tell(message){throw Error(message);},

@@ -1,8 +1,8 @@
+import { completedCourseLessons } from './bd-quiz-progress.js';
 const RECIPIENT = 'kalmanroller@gmail.com';
 export async function notifyCourseCompletion(env, user, readCheckoutPhone) {
   const db = env.BD_DB;
-  const count = await db.prepare("SELECT count(*) AS n FROM bd_progress WHERE user_id=? AND completed=1 AND lesson_id IN ('foundations','look-for-christ','pattern-recognition','questioning-method','exegesis','bible-memorization')").bind(user.id).first();
-  if (count.n !== 6) return;
+  if (await completedCourseLessons(db, user.id) !== 6) return;
   await db.prepare('CREATE TABLE IF NOT EXISTS bd_completion_notifications (user_id TEXT PRIMARY KEY, payload TEXT NOT NULL, event_sent_at TEXT, lease_until INTEGER NOT NULL DEFAULT 0)').run();
   const existing = await db.prepare('SELECT user_id FROM bd_completion_notifications WHERE user_id=?').bind(user.id).first();
   if (!existing) {
@@ -31,6 +31,7 @@ export async function notifyCourseCompletion(env, user, readCheckoutPhone) {
   const now = Date.now();
   const rows = (await db.prepare('SELECT user_id FROM bd_completion_notifications WHERE event_sent_at IS NULL AND lease_until<? LIMIT 5').bind(now).all()).results;
   for (const item of rows) {
+    if (await completedCourseLessons(db, item.user_id) !== 6) continue;
     const row = await db.prepare('UPDATE bd_completion_notifications SET lease_until=? WHERE user_id=? AND event_sent_at IS NULL AND lease_until<? RETURNING payload').bind(now + 120000, item.user_id, now).first();
     if (!row) continue;
     try {

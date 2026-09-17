@@ -17,6 +17,9 @@ test('completion alerts queue once, retry failures, and contain the requested co
   await notifyCourseCompletion(env,user,phone);assert.equal(lookups,0);
   for(const lesson of LESSONS.filter(l=>!l.bonus))db.prepare('INSERT INTO bd_progress(user_id,lesson_id,completed) VALUES (?,?,1)').run(user.id,lesson.id);
   await notifyCourseCompletion(env,user,phone);
+  assert.equal(lookups,0); // Old manual checkmarks do not qualify.
+  for(const lesson of LESSONS.filter(l=>!l.bonus))db.prepare("INSERT INTO bd_answers(user_id,scope,field_id,value) VALUES (?,?,'__quiz_score','90')").run(user.id,lesson.id);
+  await notifyCourseCompletion(env,user,phone);
   const row=db.prepare('SELECT * FROM bd_completion_notifications').get();
   assert.equal(row.event_sent_at,null);
   const payload=JSON.parse(row.payload);

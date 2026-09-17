@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { Autosave } from "./bd-autosave.js";
 import { LESSON_QUIZZES } from "./bd-quizzes.js";
+import { clearCompletionReveals, revealCompletion } from "./bd-completion-ui.js";
 const $ = (s) => document.querySelector(s),
   esc = (v) =>
     String(v ?? "").replace(
@@ -225,26 +226,28 @@ function noAccess() {
   wireSignout();
 }
 function dashboard() {
+  clearCompletionReveals();
   const done = me.progress.filter(
     (p) =>
-      p.completed &&
+      hasEarnedCompletion(p) &&
       config.lessons.some((l) => l.id === p.lesson_id && !l.bonus),
   ).length;
   const recent = [...me.progress]
-    .filter((p) => !p.completed)
+    .filter((p) => !hasEarnedCompletion(p))
     .sort((a, b) => b.updated_at.localeCompare(a.updated_at))[0];
   const next =
     config.lessons.find((l) => l.id === recent?.lesson_id) ||
     config.lessons.find(
       (l) =>
-        !l.bonus && !me.progress.find((p) => p.lesson_id === l.id)?.completed,
+        !l.bonus && !hasEarnedCompletion(me.progress.find((p) => p.lesson_id === l.id)),
     ) ||
     config.lessons[0];
   const name = me.user.name.split(" ")[0];
   const card = (l) => {
     const progress = me.progress.find((p) => p.lesson_id === l.id);
+    const completed = hasEarnedCompletion(progress);
     const quizScore = Number.isInteger(progress?.quiz_score) ? progress.quiz_score : 0;
-    return `<article class="card lesson-card ${progress?.completed ? "completed" : ""}"><div class="card-status"><div class="number">${l.bonus ? "Bonus" : `0${l.number}`}</div><div class="card-status-text"><span class="lesson-status">${progress?.completed ? "✓ Completed" : progress ? "In progress" : "Ready when you are"}</span><span class="dashboard-quiz-score" aria-label="Quiz score ${quizScore} percent">Quiz: ${quizScore}%</span></div></div><h3>${esc(l.title)}</h3><p>${esc(l.description)}</p><div class="actions">${l.bonus ? "" : `<a class="button secondary" href="${lessonLink(l.id, "video")}">Watch Video</a>`}<a class="button secondary" href="${lessonLink(l.id, "workbook")}">Open Workbook</a><button class="button secondary" data-printable="${l.id}">Printable guide (PDF)</button>${progress ? `<a href="${lessonLink(l.id)}" class="small">Continue Where I Left Off →</a>` : ""}</div></article>`;
+    return `<article class="card lesson-card ${completed ? "completed" : ""}"><div class="card-status"><div class="number">${l.bonus ? "Bonus" : `0${l.number}`}</div><div class="card-status-text"><span class="lesson-status" ${completed ? 'data-completion-reveal="pending"' : ""}>${completed ? "✓ Completed" : progress ? "In progress" : "Ready when you are"}</span><span class="dashboard-quiz-score" aria-label="Quiz score ${quizScore} percent">Quiz: ${quizScore}%</span></div></div><h3>${esc(l.title)}</h3><p>${esc(l.description)}</p><div class="actions">${l.bonus ? "" : `<a class="button secondary" href="${lessonLink(l.id, "video")}">Watch Video</a>`}<a class="button secondary" href="${lessonLink(l.id, "workbook")}">Open Workbook</a><button class="button secondary" data-printable="${l.id}">Printable guide (PDF)</button>${progress ? `<a href="${lessonLink(l.id)}" class="small">Continue Where I Left Off →</a>` : ""}</div></article>`;
   };
   $("#app").innerHTML =
     `<section class="page-top"><p class="eyebrow">BIBLE DECODED · YOUR DASHBOARD</p><h1>Welcome back${name ? ", " + esc(name) : ""}.</h1><p class="muted">A little time in the Word can become a lasting part of your day.</p></section><section class="progress-panel"><div><h2>Your progress</h2><p>${done} of 6 lessons completed</p><progress max="6" value="${done}" aria-label="${done} of 6 lessons completed"></progress></div><a class="button gold" href="${done === 6 ? ROOT + "complete/" : lessonLink(next.id)}">${done === 6 ? "Celebrate your progress" : "Continue learning →"}</a></section><div class="actions no-print">${albumLink()}</div><h2 class="section-label">Your lessons</h2><p class="small muted">Follow the lessons in order, or revisit a method whenever you need it.</p><div class="cards">${config.lessons
@@ -252,7 +255,8 @@ function dashboard() {
       .map(card)
       .join(
         "",
-      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>Congratulations on completing Bible Decoded! You now have tools to explore Scripture with confidence.</p><p>Visit your Study Lab to create your own Bible studies and put what you’ve learned into practice.</p><a class="button" href="${ROOT}complete/#study-lab">Visit Study Lab</a>` : `<p>Complete the six main lessons to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p><p class="small muted">Any Bible studies and notes you’ve already saved will be here when all six lessons are marked complete again.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a></div>`;
+      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>Congratulations on completing Bible Decoded! You now have tools to explore Scripture with confidence.</p><p>Visit your Study Lab to create your own Bible studies and put what you’ve learned into practice.</p><a class="button" href="${ROOT}complete/#study-lab">Visit Study Lab</a>` : `<p>Score 90% or higher on each of the six main lesson quizzes to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p><p class="small muted">Any Bible studies and notes you’ve already saved will be here when you’ve earned a passing score on all six quizzes.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a></div>`;
+  document.querySelectorAll(".lesson-status[data-completion-reveal]").forEach((label) => revealCompletion(label));
   wireSignout();
   document.querySelectorAll("[data-printable]").forEach(
     (button) =>
@@ -340,9 +344,9 @@ function wireLessonQuiz(items) {
     submit.disabled = true;
     $("#retake-quiz").disabled = true;
     form.querySelectorAll("input").forEach((input) => { input.disabled = true; });
-    const score = correct * 10;
+    let saved;
     try {
-      await api(`progress/${scope}`, "PUT", { quizScore: score });
+      saved = await api(`progress/${scope}`, "PUT", { quizAnswers: selections.map(Number) });
     } catch (error) {
       result.textContent = `${error.message} Your quiz score has not saved yet.`;
       result.className = "quiz-result notice error";
@@ -371,15 +375,44 @@ function wireLessonQuiz(items) {
         correctFeedback.textContent = "✓ Correct answer";
       }
     });
+    const score = saved.quizScore;
+    const progress = me.progress.find((entry) => entry.lesson_id === scope);
+    const latest = {lesson_id: scope, quiz_score: score, quiz_passed: saved.completed ? 1 : 0, completed: saved.completed ? 1 : 0};
+    if (progress) Object.assign(progress, latest);
+    else me.progress.push(latest);
+    updateLessonCompletion(saved.completed);
+    notifyProgressChanged();
     $("#quiz-score").textContent = `${score}%`;
     $("#retake-quiz").hidden = false;
-    result.textContent = correct >= 8
-      ? `${correct} out of 10 correct. Excellent work—you understand this lesson well!`
-      : `${correct} out of 10 correct. Review the highlighted answers above, then select Retake quiz to try again.`;
-    result.className = `quiz-result notice ${correct >= 8 ? "quiz-passed" : ""}`;
+    result.textContent = score >= 90
+      ? `${correct} out of 10 correct. Well done! You’ve earned completion for this lesson.`
+      : `${correct} out of 10 correct. ${saved.completed ? "Your lesson completion is still earned." : "You’re making progress! A score of 90% completes this lesson."} Review the highlighted answers above, then select Retake quiz to try again.`;
+    result.className = `quiz-result notice ${score >= 90 ? "quiz-passed" : ""}`;
     submit.disabled = false;
     $("#retake-quiz").disabled = false;
     form.querySelectorAll("input").forEach((input) => { input.disabled = false; });
+  });
+}
+function hasEarnedCompletion(progress) {
+  return Boolean(progress?.quiz_passed || progress?.quiz_score >= 90);
+}
+let cancelLessonCompletion = () => {};
+function updateLessonCompletion(completed) {
+  const input = $("#completed"), label = $("#completion-label"), status = $("#lesson-completion");
+  if (!input || !label || !status) return;
+  input.disabled = true;
+  if (status.dataset.earned === String(completed)) return;
+  cancelLessonCompletion();
+  status.dataset.earned = String(completed);
+  delete status.dataset.completionReveal;
+  input.checked = false;
+  label.textContent = completed
+    ? "Well done! You’ve earned completion for this lesson."
+    : "You’re on your way! Score 90% or higher on this quiz and we’ll mark this lesson complete for you.";
+  $(".workbook-end h2").textContent = completed ? "View next lesson" : "Put what you learned into practice.";
+  if (completed) cancelLessonCompletion = revealCompletion(status, () => {
+    input.checked = true;
+    label.textContent = "Lesson completed";
   });
 }
 function showSaveState(store, root = document) {
@@ -530,13 +563,14 @@ async function loadLesson() {
   const next = config.lessons.find((l) => l.number === lesson.number + 1);
   document.title = `${lesson.title} | Bible Decoded`;
   $("#app").innerHTML =
-    `<section class="page-top lesson-heading"><p class="breadcrumb"><a href="${ROOT}dashboard/">Bible Decoded</a> / ${lesson.bonus ? "Bonus" : `Lesson ${lesson.number}`}</p><p class="eyebrow">${lesson.bonus ? "YOUR BONUS METHOD" : `LESSON ${lesson.number} OF 6`}</p><h1>${esc(lesson.title)}</h1><p class="muted">${esc(lesson.description)}</p></section><div class="video" id="video"><div class="video-unavailable"><strong>${data.video ? "Loading your video…" : "Your lesson video is being prepared."}</strong><p>${data.video ? "" : "You can work through the exercises below while the video is being connected."}</p></div></div><p class="small no-print">Watch at your own pace. Complete the exercise below before continuing.</p><div class="actions no-print">${albumLink()}</div><details class="lesson-workbook" id="workbook"><summary><span><span class="eyebrow">INTERACTIVE WORKSHEET</span>Your ${lesson.bonus ? "bonus " : ""}workbook</span><span class="workbook-toggle" aria-hidden="true">+</span></summary><div class="lesson-workbook-body"><div class="workbook-head"><h2>Your interactive workbook</h2><div id="save-status" class="save-status" role="status" aria-live="polite"></div></div><div class="actions no-print"><button id="save-now" class="button secondary">Save now</button><button id="download-workbook" class="button secondary">Printable guide (PDF)</button><button id="print-answers" class="button secondary">Print my answers</button></div><p class="small muted no-print">Prefer pen and paper? Download the printable guide above, open the PDF, and choose Print. You can also type below; your answers save automatically.</p>${renderWorkbook(currentBlocks)}<div class="workbook-end"><h2>${progress?.completed ? "View next lesson" : "Put what you learned into practice."}</h2><div class="actions"><button id="finish-lesson" class="button">Save & Continue →</button><label class="check"><input id="completed" type="checkbox" ${progress?.completed ? "checked" : ""}> Lesson completed</label></div></div></div></details><div class="help-bar"><div><strong>Bible-study tools</strong><div class="tools"><a href="https://www.biblegateway.com/" target="_blank" rel="noopener">Read Scripture ↗</a><a href="https://www.blueletterbible.org/" target="_blank" rel="noopener">Concordance & lexicon ↗</a></div></div></div>${lesson.number === 1 || lesson.number === 6 || lesson.bonus ? coachingInvite() : ""}`;
+    `<section class="page-top lesson-heading"><p class="breadcrumb"><a href="${ROOT}dashboard/">Bible Decoded</a> / ${lesson.bonus ? "Bonus" : `Lesson ${lesson.number}`}</p><p class="eyebrow">${lesson.bonus ? "YOUR BONUS METHOD" : `LESSON ${lesson.number} OF 6`}</p><h1>${esc(lesson.title)}</h1><p class="muted">${esc(lesson.description)}</p></section><div class="video" id="video"><div class="video-unavailable"><strong>${data.video ? "Loading your video…" : "Your lesson video is being prepared."}</strong><p>${data.video ? "" : "You can work through the exercises below while the video is being connected."}</p></div></div><p class="small no-print">Watch at your own pace. Complete the exercise below before continuing.</p><div class="actions no-print">${albumLink()}</div><details class="lesson-workbook" id="workbook"><summary><span><span class="eyebrow">INTERACTIVE WORKSHEET</span>Your ${lesson.bonus ? "bonus " : ""}workbook</span><span class="workbook-toggle" aria-hidden="true">+</span></summary><div class="lesson-workbook-body"><div class="workbook-head"><h2>Your interactive workbook</h2><div id="save-status" class="save-status" role="status" aria-live="polite"></div></div><div class="actions no-print"><button id="save-now" class="button secondary">Save now</button><button id="download-workbook" class="button secondary">Printable guide (PDF)</button><button id="print-answers" class="button secondary">Print my answers</button></div><p class="small muted no-print">Prefer pen and paper? Download the printable guide above, open the PDF, and choose Print. You can also type below; your answers save automatically.</p>${renderWorkbook(currentBlocks)}<div class="workbook-end"><h2>Put what you learned into practice.</h2><div class="actions"><button id="finish-lesson" class="button">Save & Continue →</button><div class="check lesson-completion" id="lesson-completion" role="status" aria-live="polite"><input id="completed" type="checkbox" disabled aria-labelledby="completion-label"><span id="completion-label">You’re on your way! Score 90% or higher on this quiz and we’ll mark this lesson complete for you.</span></div></div></div></div></details><div class="help-bar"><div><strong>Bible-study tools</strong><div class="tools"><a href="https://www.biblegateway.com/" target="_blank" rel="noopener">Read Scripture ↗</a><a href="https://www.blueletterbible.org/" target="_blank" rel="noopener">Concordance & lexicon ↗</a></div></div></div>${lesson.number === 1 || lesson.number === 6 || lesson.bonus ? coachingInvite() : ""}`;
   if (lesson.bonus) {
     const video = $("#video");
     video.classList.add("bonus-thumbnail");
     video.innerHTML =
       '<img src="/assets/bible-decoded.jpg" alt="Bible Decoded" width="720" height="960">';
   }
+  clearCompletionReveals();
   const workbookPanel = $("#workbook");
   const workbookEnd = workbookPanel.querySelector(".workbook-end");
   workbookPanel.after(workbookEnd);
@@ -550,7 +584,7 @@ async function loadLesson() {
   $(".lesson-heading").insertAdjacentHTML("beforeend",
     `<nav class="lesson-navigation no-print" aria-label="Lesson navigation">${previous ? `<a data-lesson-navigation href="${lessonLink(previous.id)}">← Previous lesson</a>` : ""}<a data-lesson-navigation href="${ROOT}dashboard/">All lessons</a>${next ? `<a data-lesson-navigation href="${lessonLink(next.id)}">Next lesson →</a>` : ""}</nav>`);
   workbookEnd.querySelector("h2").insertAdjacentHTML("afterend",
-    `<p class="next-lesson-note">${lesson.number === 6 ? "Next: Celebrate your course completion" : next ? `Next: ${esc(next.title)}` : "Next: Your dashboard"}</p>`);
+    `<p class="next-lesson-note">${lesson.number === 6 ? (me.labUnlocked ? "Next: Celebrate your course completion" : "Next: Your dashboard") : next ? `Next: ${esc(next.title)}` : "Next: Your dashboard"}</p>`);
   document.querySelectorAll(".lesson-workbook, .lesson-quiz, .workbook-subsection").forEach((panel) => {
     const summary = panel.querySelector(":scope > summary");
     const hint = document.createElement("span");
@@ -582,29 +616,7 @@ async function loadLesson() {
       (workbookPanel.querySelector(".workbook-toggle").textContent =
         workbookPanel.open ? "−" : "+"),
   );
-  $("#completed").onchange = async (event) => {
-    const input = event.target;
-    input.disabled = true;
-    try {
-      if (!(await autosave.flush()))
-        throw new Error(
-          "Please save the remaining answers before changing completion.",
-        );
-      await api(`progress/${scope}`, "PUT", { completed: input.checked });
-      notifyProgressChanged();
-      $(".workbook-end h2").textContent = input.checked
-        ? "View next lesson"
-        : "Put what you learned into practice.";
-      tell(
-        input.checked ? "Lesson completed ✓" : "Lesson marked as in progress.",
-      );
-    } catch (e) {
-      input.checked = !input.checked;
-      tell(e.message, true);
-    } finally {
-      input.disabled = false;
-    }
-  };
+  updateLessonCompletion(hasEarnedCompletion(progress));
   $("#finish-lesson").onclick = async () => {
     const b = $("#finish-lesson");
     b.disabled = true;
@@ -613,12 +625,11 @@ async function loadLesson() {
         throw new Error(
           "Please resolve any unsaved answers before continuing.",
         );
-      await api(`progress/${scope}`, "PUT", { completed: $("#completed").checked });
-      notifyProgressChanged();
       await saveVideoPosition();
+      if (lesson.number === 6) me = await api("me");
       location.assign(
         lesson.number === 6
-          ? ROOT + "complete/"
+          ? ROOT + (me.labUnlocked ? "complete/" : "dashboard/")
           : next
             ? lessonLink(next.id, "video")
             : ROOT + "dashboard/",
@@ -856,15 +867,17 @@ function wireCertificateName() {
   };
 }
 function bonusCompleted(member) {
-  return Boolean(member.progress?.find((p) => p.lesson_id === "word-search")?.completed);
+  return hasEarnedCompletion(member.progress?.find((p) => p.lesson_id === "word-search"));
 }
 async function completion() {
+  clearCompletionReveals();
   if (!me.labUnlocked) {
     location.replace(ROOT + "dashboard/");
     return;
   }
   $("#app").innerHTML =
     `<section class="page-top narrow"><p class="eyebrow">SIX LESSONS. A NEW BEGINNING.</p><h1>You completed<br>Bible Decoded.</h1><p>You’ve practiced the methods. Now make them part of your own time in Scripture.</p><div class="actions"><a class="button" href="#study-lab">Open my Study Lab →</a><a class="button secondary" href="${lessonLink("word-search", "workbook")}">Explore the bonus lesson</a></div></section><section class="certificate" id="certificate" aria-label="Bible Decoded Certificate of Completion"><span class="certificate-corner corner-tl" aria-hidden="true"></span><span class="certificate-corner corner-tr" aria-hidden="true"></span><span class="certificate-corner corner-bl" aria-hidden="true"></span><span class="certificate-corner corner-br" aria-hidden="true"></span><div class="certificate-content"><div class="certificate-bonus" ${bonusCompleted(me) ? "" : "hidden"}><span aria-hidden="true">❧</span><p>Bonus lesson completed</p><span aria-hidden="true">❧</span></div><img class="certificate-faith-seal" src="/assets/bible-decoded-completion-seal.svg" width="140" height="140" alt="Gold seal with an open Bible and laurel branches: Bible Decoded — Course Completed"><img class="certificate-logo" src="/assets/logo.png" width="88" height="88" alt="Try Jesus Media"><p class="certificate-brand">TRY JESUS MEDIA</p><div class="certificate-flourish" aria-hidden="true">◆</div><h2 class="certificate-title">Certificate <em>of Completion</em></h2><p class="certificate-presented">PRESENTED WITH JOY TO</p><p class="person" id="certificate-name">${esc(me.user.name || me.user.email)}</p><p class="certificate-recognition">In recognition of completing the six guided lessons of</p><h3 class="certificate-course">Bible Decoded</h3><p class="certificate-dedication">A foundation for understanding Scripture,<br>sharing its truth, and pointing others to Jesus.</p><div class="certificate-footer"><div class="certificate-motto"><p>Keep discovering.<br>Keep growing.</p><span>TRYJESUSMEDIA.COM</span></div><div class="certificate-host"><img class="certificate-signature" src="/assets/pastor-kal-signature-transparent.svg" alt="Pastor Kal Roller’s signature" width="180" height="64"><p>Pastor Kal Roller</p><span>COURSE PRESENTER</span></div></div><p class="certificate-methods">Foundations · Look for Christ · Pattern Recognition<br>The Questioning Method · Exegesis · Bible Memorization</p></div></section><details class="certificate-name-editor no-print"><summary>Change certificate name</summary><form id="certificate-name-form"><label for="certificate-display-name">Name to show on your certificate</label><div class="actions"><input id="certificate-display-name" name="certificateName" type="text" maxlength="80" required autocomplete="name" value="${esc(me.user.name || me.user.email)}"><button class="button secondary" type="submit">Update name</button></div><p class="small muted">This changes only your certificate name and is saved on this device.</p><p id="certificate-name-status" class="small" role="status"></p></form></details><div class="actions no-print"><button id="print-certificate" class="button secondary">Print my certificate</button><a href="/welcome/#live-discussion" class="button secondary">Join the weekly Bible discussion</a><a href="${ROOT}dashboard/">Return to my dashboard</a></div>${coachingInvite()}<section class="section completion-study-lab" id="study-lab" aria-labelledby="study-lab-title"><p class="eyebrow">A NEW DISCOVERY BEGINS WITH A PASSAGE</p><h2 id="study-lab-title">Bible Decoded Study Lab</h2><div id="study-lab-content"></div></section>`;
+  if (bonusCompleted(me)) revealCompletion($(".certificate-bonus"));
   wireSignout();
   $("#print-certificate").onclick = () => {
     const copy = $("#certificate").cloneNode(true);
@@ -885,14 +898,21 @@ function notifyProgressChanged() {
   try { local.setItem("bd-progress-changed", String(Date.now())); } catch {}
 }
 async function refreshLabAccess() {
-  if (!me?.member || !["dashboard", "complete"].includes(page)) return;
+  if (!me?.member || !["dashboard", "complete", "lesson"].includes(page)) return;
   try {
     const fresh = await api("me");
-    if (fresh.labUnlocked !== me.labUnlocked || !fresh.member || (page === "complete" && bonusCompleted(fresh) !== bonusCompleted(me))) {
+    if (!fresh.member || (page === "complete" && (fresh.labUnlocked !== me.labUnlocked || bonusCompleted(fresh) !== bonusCompleted(me)))) {
       location.reload();
-    } else if (page === "dashboard" && !fresh.labUnlocked) {
+    } else {
+      const changed = fresh.labUnlocked !== me.labUnlocked || JSON.stringify(fresh.progress) !== JSON.stringify(me.progress);
       me = fresh;
-      dashboard();
+      if (page === "dashboard" && changed) dashboard();
+      if (page === "lesson" && changed) {
+        const progress = me.progress.find((entry) => entry.lesson_id === scope);
+        updateLessonCompletion(hasEarnedCompletion(progress));
+        if ($("#quiz-score")) $("#quiz-score").textContent = `${progress?.quiz_score ?? 0}%`;
+        if ($("#retake-quiz")) $("#retake-quiz").hidden = !Number.isInteger(progress?.quiz_score);
+      }
     }
   } catch {
     // Saved drafts remain on this device if the connection is unavailable.

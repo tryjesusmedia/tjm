@@ -1891,3 +1891,28 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
   #certificate-print .certificate-bonus { left: 1in; }
   #certificate-print .certificate-faith-seal { right: 1in; }
 }
+
+/* Quiz-earned completion: wait until visible, then give a gentle acknowledgement. */
+.lesson-completion { align-items: flex-start; }
+.lesson-completion input:disabled { cursor: default; opacity: 1; flex-shrink: 0; }
+.lesson-completion[data-earned="true"] { color: #32694a; }
+.lesson-status[data-completion-reveal="pending"],
+.certificate-bonus[data-completion-reveal="pending"] { opacity: 0; }
+[data-completion-reveal="done"] { animation: completion-arrival .6s ease-out both; }
+.lesson-completion[data-completion-reveal="done"] input { animation: completion-check .45s ease-out; }
+@keyframes completion-arrival {
+  from { opacity: .15; translate: 0 5px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes completion-check {
+  0% { scale: .85; }
+  60% { scale: 1.15; }
+  100% { scale: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-completion-reveal="done"],
+  .lesson-completion[data-completion-reveal="done"] input { animation: none; }
+}
+@media print {
+  .certificate-bonus[data-completion-reveal] { opacity: 1; animation: none; translate: none; }
+}
