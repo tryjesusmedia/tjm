@@ -1518,3 +1518,22 @@ body[data-page="lesson"] .lesson-quiz > summary .eyebrow {
     font-size: 1.25rem;
   }
 }
+
+/* Align the two account links with identical text and touch-target metrics. */
+.header nav #account-link,
+.header nav .header-signout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 2px;
+  border: 0;
+  font: inherit;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
