@@ -48,7 +48,7 @@ const tell = (text, error = false) => {
 };
 const lessonLink = (id, view = "resume") =>
   `${ROOT}lesson/?lesson=${encodeURIComponent(id)}&view=${view}`;
-const studyLink = (id) => `${ROOT}complete/?study=${encodeURIComponent(id)}#study-lab`;
+const studyStores = new Map();
 const fieldList = (blocks) =>
   blocks.flatMap((b) =>
     b.type === "grid"
@@ -196,7 +196,8 @@ function wireSignout() {
   buttons.forEach(
     (button) =>
       (button.onclick = async () => {
-        if (autosave && !(await autosave.flush())) {
+        const stores = [...studyStores.values(), ...(autosave ? [autosave] : [])];
+        if ((await Promise.all(stores.map((store) => store.flush()))).includes(false)) {
           tell(
             "Some answers have not saved yet. Try saving again or print your answers before signing out.",
             true,
@@ -251,7 +252,7 @@ function dashboard() {
       .map(card)
       .join(
         "",
-      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>Congratulations on completing Bible Decoded! You now have tools to explore Scripture with confidence.</p><p>Visit your Study Lab to create your own Bible studies and put what you’ve learned into practice.</p><a class="button" href="${ROOT}complete/#study-lab">Start a new Bible study →</a>` : `<p>Complete the six main lessons to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a></div>`;
+      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>Congratulations on completing Bible Decoded! You now have tools to explore Scripture with confidence.</p><p>Visit your Study Lab to create your own Bible studies and put what you’ve learned into practice.</p><a class="button" href="${ROOT}complete/#study-lab">Visit Study Lab</a>` : `<p>Complete the six main lessons to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a></div>`;
   wireSignout();
   document.querySelectorAll("[data-printable]").forEach(
     (button) =>
@@ -262,7 +263,7 @@ function dashboard() {
 }
 function studyList() {
   return me.studies.length
-    ? `<ul class="study-list">${me.studies.map((s) => `<li><a href="${studyLink(s.id)}"><span>${esc(s.title)}<small>Updated ${esc(new Date(s.updated_at).toLocaleDateString())}</small></span><span aria-hidden="true">→</span></a></li>`).join("")}</ul>`
+    ? `<div class="study-list">${me.studies.map(studyPanel).join("")}</div>`
     : '<p class="muted">Your saved studies will appear here. Start with a passage you’d like to understand more deeply.</p>';
 }
 function fieldHTML(field) {
@@ -287,8 +288,8 @@ function renderWorkbook(blocks) {
   const nonempty = groups.filter((g) => g.blocks.length);
   return `<div class="workbook-layout"><div class="workbook">${nonempty.map((g, i) => `<details class="workbook-subsection" id="section-${i}"><summary><span class="subsection-number">${String(i + 1).padStart(2, "0")}</span><span>${esc(g.title)}</span><span class="subsection-toggle" aria-hidden="true">+</span></summary><section class="workbook-section">${g.blocks.map(blockHTML).join("")}</section></details>`).join("")}</div></div>`;
 }
-function wireWorkbookSubsections() {
-  document.querySelectorAll(".workbook-subsection").forEach((panel) => {
+function wireWorkbookSubsections(root = document) {
+  root.querySelectorAll(".workbook-subsection").forEach((panel) => {
     const toggle = panel.querySelector(".subsection-toggle");
     panel.addEventListener("toggle", () => {
       toggle.textContent = panel.open ? "−" : "+";
@@ -381,8 +382,8 @@ function wireLessonQuiz(items) {
     form.querySelectorAll("input").forEach((input) => { input.disabled = false; });
   });
 }
-function showSaveState(store) {
-  const status = $("#save-status");
+function showSaveState(store, root = document) {
+  const status = root.querySelector("[data-save-status], #save-status");
   if (!status) return;
   const dirty = store.pending.size > 0;
   status.className = "save-status" + (dirty ? " unsaved" : "");
@@ -402,16 +403,16 @@ function showSaveState(store) {
     status.append(retry);
   }
 }
-function showConflict(id, current) {
-  const box = document.querySelector(`[data-conflict="${id}"]`);
+function showConflict(id, current, root = document, store = autosave) {
+  const box = root.querySelector(`[data-conflict="${id}"]`);
   box.className = "conflict";
   box.innerHTML = `<strong>This answer changed on another device.</strong><p class="small">The account’s saved answer:</p><pre>${esc(typeof current.value === "boolean" ? (current.value ? "Checked" : "Not checked") : current.value)}</pre><div class="actions"><button class="button secondary" data-choice="cloud">Use saved answer</button><button class="button" data-choice="mine">Keep my answer here</button></div>`;
   box.querySelectorAll("button").forEach(
     (button) =>
       (button.onclick = () => {
         const mine = button.dataset.choice === "mine";
-        autosave.resolve(id, mine);
-        const input = document.getElementById(id);
+        store.resolve(id, mine);
+        const input = root.querySelector(`[data-field="${id}"]`);
         if (!mine) {
           if (input.type === "checkbox") input.checked = !!current.value;
           else input.value = current.value;
@@ -421,70 +422,75 @@ function showConflict(id, current) {
       }),
   );
 }
-function connectWorkbook(data) {
-  wireWorkbookSubsections();
-  autosave = new Autosave({
+function connectWorkbook(data, root = document, workbookScope = scope, blocks = currentBlocks) {
+  wireWorkbookSubsections(root);
+  const store = new Autosave({
     rows: data.answers,
     storage: local,
-    key: `bd-draft:${me.user.id}:${scope}`,
+    key: `bd-draft:${me.user.id}:${workbookScope}`,
     save: (fieldId, value, revision) =>
-      api(`answer/${scope}`, "PUT", { fieldId, value, revision }),
-    onState: showSaveState,
-    onConflict: showConflict,
+      api(`answer/${workbookScope}`, "PUT", { fieldId, value, revision }),
+    onState: (state) => showSaveState(state, root),
+    onConflict: (id, current) => showConflict(id, current, root, store),
   });
-  for (const field of fieldList(currentBlocks)) {
-    const input = document.getElementById(field.id);
-    const value = autosave.get(field.id, field.type === "check" ? false : "");
+  if (root === document) autosave = store;
+  else studyStores.set(workbookScope, store);
+  for (const field of fieldList(blocks)) {
+    const input = root.querySelector(`[data-field="${field.id}"]`);
+    const value = store.get(field.id, field.type === "check" ? false : "");
     if (field.type === "check") input.checked = !!value;
     else input.value = value;
     input.addEventListener("input", () =>
-      autosave.change(
+      store.change(
         field.id,
         field.type === "check" ? input.checked : input.value,
       ),
     );
     input.addEventListener("blur", () => {
-      void autosave.flush();
+      void store.flush();
       if (lesson)
-        void api(`progress/${scope}`, "PUT", { lastField: field.id }).catch(
+        void api(`progress/${workbookScope}`, "PUT", { lastField: field.id }).catch(
           () => {},
         );
     });
   }
-  showSaveState(autosave);
-  if (autosave.pending.size) void autosave.flush();
-  $("#save-now").onclick = () => {
-    void autosave.flush();
+  showSaveState(store, root);
+  if (store.pending.size) void store.flush();
+  root.querySelector("[data-save-now], #save-now").onclick = () => {
+    void store.flush();
   };
-  $("#print-answers").onclick = () => {
-    document
+  root.querySelector("[data-print-answers], #print-answers").onclick = () => {
+    root
       .querySelectorAll("[data-print]")
       .forEach(
-        (p) => (p.textContent = document.getElementById(p.dataset.print).value),
+        (p) => (p.textContent = root.querySelector(`[data-field="${p.dataset.print}"]`).value),
       );
-    const panels = [...document.querySelectorAll("#study-lab .workbook-subsection")];
+    const panels = root === document ? [] : [...root.querySelectorAll(".workbook-subsection")];
     const states = panels.map((panel) => panel.open);
     panels.forEach((panel) => { panel.open = true; });
+    const studyPanel = root === document ? null : root.closest(".saved-study");
+    studyPanel?.classList.add("printing-study");
     if (page === "complete") document.body.classList.add("study-only");
     try {
       window.print();
     } finally {
       document.body.classList.remove("study-only");
+      studyPanel?.classList.remove("printing-study");
       panels.forEach((panel, index) => { panel.open = states[index]; });
     }
   };
   window.addEventListener("online", () => {
-    void autosave.flush();
+    void store.flush();
   });
   window.addEventListener("beforeunload", (event) => {
-    if (autosave.pending.size) {
+    if (store.pending.size) {
       event.preventDefault();
       event.returnValue = "";
     }
   });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      void autosave.flush();
+      void store.flush();
       void saveVideoPosition();
     }
   });
@@ -744,36 +750,83 @@ async function saveVideoPosition() {
     );
   }
 }
+function studyPanel(study) {
+  return `<details class="saved-study" data-study-id="${esc(study.id)}"><summary><span>${esc(study.title)}<small>Updated ${esc(new Date(study.updated_at).toLocaleDateString())}</small></span><span class="study-toggle" aria-hidden="true">+</span></summary><div class="study-editor"></div></details>`;
+}
+async function openStudyPanel(panel) {
+  if (panel.dataset.loaded || panel.dataset.loading) return;
+  panel.dataset.loading = "true";
+  const editor = panel.querySelector(".study-editor");
+  editor.innerHTML = '<p role="status">Opening your study…</p>';
+  try {
+    const id = panel.dataset.studyId;
+    const data = await api("study/" + encodeURIComponent(id));
+    editor.innerHTML = `<p class="muted">Use the methods that help you explore this passage. Your work will be here when you return.</p><div class="workbook-head"><h3>Your study workspace</h3><div data-save-status class="save-status" role="status" aria-live="polite"></div></div><div class="actions study-actions no-print"><button data-save-now class="button">Save my study</button><button data-print-answers class="button secondary">Print my study</button></div>${renderWorkbook(data.study.blocks)}`;
+    // Keep labels unique while preserving the account's original answer identifiers.
+    editor.querySelectorAll("[id]").forEach((node) => { node.id = `study-${id}-${node.id}`; });
+    editor.querySelectorAll("[for]").forEach((node) => { node.htmlFor = `study-${id}-${node.htmlFor}`; });
+    connectWorkbook(data, editor, id, data.study.blocks);
+    panel.dataset.loaded = "true";
+  } catch (error) {
+    editor.replaceChildren();
+    const message = document.createElement("p");
+    message.className = "notice error";
+    message.textContent = error.message;
+    const retry = document.createElement("button");
+    retry.className = "button secondary";
+    retry.textContent = "Try opening again";
+    retry.onclick = () => { void openStudyPanel(panel); };
+    editor.append(message, retry);
+  } finally {
+    delete panel.dataset.loading;
+  }
+}
+function wireStudyPanel(panel) {
+  panel.addEventListener("toggle", () => {
+    panel.querySelector(".study-toggle").textContent = panel.open ? "−" : "+";
+    if (panel.open) void openStudyPanel(panel);
+  });
+}
 async function studyLab() {
   const container = $("#study-lab-content");
   if (!me.labUnlocked || !container) return;
-  scope = params.get("study");
-  if (!scope) {
-    container.innerHTML =
-      `<p>Choose a passage and give your study a name. A blank workspace will bring all your methods together.</p><form class="study-form" id="new-study"><div><label for="study-name">Study name</label><input class="study-title" id="study-name" maxlength="120" required placeholder="For example: Genesis 22 — Abraham & Isaac"></div><button class="button">Start my study →</button></form><h3 class="section-label">My Bible Studies</h3>${studyList()}`;
-    const newStudyId = crypto.randomUUID();
-    $("#new-study").onsubmit = async (event) => {
-      event.preventDefault();
-      const b = event.currentTarget.querySelector("button");
-      b.disabled = true;
-      try {
-        const s = await api("studies", "POST", {
-          id: newStudyId,
-          title: $("#study-name").value,
-        });
-        location.assign(studyLink(s.id));
-      } catch (e) {
-        tell(e.message, true);
-        b.disabled = false;
+  container.innerHTML = `<p>Choose a passage and give your study a name. A blank workspace will bring all your methods together.</p><form class="study-form" id="new-study"><div><label for="study-name">Study name</label><input class="study-title" id="study-name" maxlength="120" required placeholder="For example: Genesis 22 — Abraham & Isaac"></div><button class="button">Start my study →</button></form><h3 class="section-label">My Bible Studies</h3><div id="saved-studies">${studyList()}</div>`;
+  container.querySelectorAll(".saved-study").forEach(wireStudyPanel);
+  let newStudyId = crypto.randomUUID();
+  $("#new-study").onsubmit = async (event) => {
+    event.preventDefault();
+    const button = event.currentTarget.querySelector("button");
+    button.disabled = true;
+    try {
+      const title = $("#study-name").value;
+      const study = await api("studies", "POST", { id: newStudyId, title });
+      let list = container.querySelector(".study-list");
+      if (!list) {
+        $("#saved-studies").innerHTML = '<div class="study-list"></div>';
+        list = container.querySelector(".study-list");
       }
-    };
-    return;
+      list.insertAdjacentHTML("beforeend", studyPanel({id: study.id, title, updated_at: Date.now()}));
+      const panel = list.lastElementChild;
+      wireStudyPanel(panel);
+      panel.open = true;
+      await openStudyPanel(panel);
+      $("#study-name").value = "";
+      newStudyId = crypto.randomUUID();
+    } catch (error) {
+      tell(error.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  };
+  // Previously bookmarked study URLs still open their matching window.
+  const requested = params.get("study");
+  if (requested) {
+    const panel = [...container.querySelectorAll(".saved-study")].find((item) => item.dataset.studyId === requested);
+    if (panel) {
+      panel.open = true;
+      await openStudyPanel(panel);
+    }
   }
-  const data = await api("study/" + encodeURIComponent(scope));
-  currentBlocks = data.study.blocks;
-  container.innerHTML =
-    `<p class="breadcrumb"><a href="${ROOT}complete/#study-lab">My Bible Studies</a></p><h3>${esc(data.study.title)}</h3><p class="muted">Use the methods that help you explore this passage. Your work will be here when you return.</p><div class="workbook-head"><h3>Your study workspace</h3><div id="save-status" class="save-status" role="status" aria-live="polite"></div></div><div class="actions no-print"><button id="save-now" class="button">Save my study</button><button id="print-answers" class="button secondary">Print my study</button></div>${renderWorkbook(currentBlocks)}`;
-  connectWorkbook(data);
 }
 async function completion() {
   if (!me.labUnlocked) {
@@ -793,7 +846,7 @@ async function completion() {
     copy.remove();
   };
   await studyLab();
-  if (location.hash === "#study-lab" || params.has("study")) {
+  if (location.hash === "#study-lab") {
     $("#study-lab").scrollIntoView({ block: "start" });
   }
 }

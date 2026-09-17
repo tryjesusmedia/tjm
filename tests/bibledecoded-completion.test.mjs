@@ -12,9 +12,12 @@ function fixture({study=null,unlocked=true}={}){
  let selectedData,redirect,created,scrolled=false;
  const root='/bibledecoded/';
  const studyData={study:{id:'saved-study',title:'My passage',blocks:[]},answers:[{field_id:'passage',value:'Luke 15',revision:2}]};
+ const editor={innerHTML:'',querySelectorAll:()=>[]};
+ const panel={dataset:{studyId:study||'new-study'},open:false,querySelector:()=>editor,addEventListener(){}};
+ const list={lastElementChild:panel,insertAdjacentHTML(){}};
  const $=selector=>{
   if(selector==='#app')return app;
-  if(!nodes.has(selector))nodes.set(selector,{innerHTML:'',value:'My new study',scrollIntoView(){scrolled=true;}});
+  if(!nodes.has(selector))nodes.set(selector,{innerHTML:'',value:'My new study',querySelector:()=>list,querySelectorAll:()=>study?[panel]:[],scrollIntoView(){scrolled=true;}});
   return nodes.get(selector);
  };
  const context=vm.createContext({
@@ -28,11 +31,11 @@ function fixture({study=null,unlocked=true}={}){
   coachingInvite:()=>'<section class="coaching-invite">Book a call</section>',
   renderWorkbook:()=>'<div class="workbook-layout"></div>',
   wireSignout(){},connectWorkbook(data){selectedData=data;},
-  api:async(path,method,body)=>{if(path==='studies'){created=body;return {id:'new-study'};}assert.equal(path,'study/'+study);return studyData;},
+  api:async(path,method,body)=>{if(path==='studies'){created=body;return {id:'new-study'};}assert.equal(path,'study/'+(study||'new-study'));return studyData;},
   tell(message){throw Error(message);},
  });
- vm.runInContext(source.slice(source.indexOf('async function studyLab()'),source.indexOf('async function boot()')),context);
- return {context,app,$,get selectedData(){return selectedData;},get redirect(){return redirect;},get created(){return created;},get scrolled(){return scrolled;}};
+ vm.runInContext(source.slice(source.indexOf('function studyPanel('),source.indexOf('async function boot()')),context);
+ return {context,app,$,panel,editor,get selectedData(){return selectedData;},get redirect(){return redirect;},get created(){return created;},get scrolled(){return scrolled;}};
 }
 test('completion includes a single Study Lab below the call with an in-page button',async()=>{
  const f=fixture();await f.context.completion();
@@ -46,12 +49,15 @@ test('completion includes a single Study Lab below the call with an in-page butt
  const button={disabled:false};
  await f.$('#new-study').onsubmit({preventDefault(){},currentTarget:{querySelector:()=>button}});
  assert.equal(f.created.title,'My new study');
- assert.equal(f.redirect,'/bibledecoded/complete/?study=new-study#study-lab');
+ assert.equal(f.redirect,undefined);
+ assert.equal(f.panel.open,true);
+ assert.equal(f.panel.dataset.loaded,'true');
 });
 test('saved study answers connect to autosave within the completion page',async()=>{
  const f=fixture({study:'saved-study'});await f.context.completion();
  assert.equal(f.selectedData.answers[0].value,'Luke 15');
- assert.match(f.$('#study-lab-content').innerHTML,/My passage/);
+ assert.equal(f.panel.open,true);
+ assert.match(f.editor.innerHTML,/Save my study/);
  assert.match(f.app.innerHTML,/Certificate of Completion/);
 });
 test('completion still requires the course to be unlocked',async()=>{

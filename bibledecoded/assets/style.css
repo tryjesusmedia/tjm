@@ -1637,10 +1637,22 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
 }
 .completion-study-lab .study-form { flex-wrap: wrap; }
 .completion-study-lab .study-form > div { min-width: 0; }
+.saved-study { border: 1px solid #d8cad8; border-radius: 14px; background: #fff; margin-bottom: 18px; overflow: hidden; overflow-anchor: none; }
+.saved-study > summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px; cursor: pointer; color: #43274a; font-size: 1.1rem; }
+.saved-study > summary::-webkit-details-marker { display: none; }
+.saved-study > summary small { display: block; font-size: .85rem; color: #706970; margin-top: 6px; }
+.saved-study > summary:focus-visible { outline: 3px solid #8c713e; outline-offset: -4px; }
+.study-toggle { font-size: 1.5rem; flex-shrink: 0; }
+.study-editor { padding: 0 24px 24px; }
+.study-actions { margin-bottom: 30px; }
 .completion-study-lab .workbook-section p,
 .completion-study-lab .field label,
 .completion-study-lab .field textarea { font-size: 1rem; line-height: 1.7; }
 @media print {
   body.study-only #app > :not(#study-lab) { display: none !important; }
   body.study-only #study-lab { margin: 0; padding: 0; border: 0; }
+  body.study-only #study-lab-content > :not(#saved-studies),
+  body.study-only .saved-study:not(.printing-study) { display: none !important; }
+  body.study-only .saved-study { border: 0; overflow: visible; }
+  body.study-only .study-editor { padding: 0; }
 }
