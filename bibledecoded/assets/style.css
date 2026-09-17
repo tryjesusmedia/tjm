@@ -1721,22 +1721,67 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
   body.study-only .study-editor { padding: 0; }
 }
 
-/* Engraved gold award and optional bonus endorsement. */
-.certificate-faith-seal { display: block; width: 140px; height: 140px; max-width: 100%; margin: auto; }
-.certificate-footer { grid-template-columns: 1fr 140px 1fr; }
-.certificate-bonus { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 18px auto 0; color: #86601e; }
-.certificate-bonus[hidden] { display: none; }
-.certificate-bonus p { font: italic 500 clamp(1rem, 2.8vw, 1.4rem)/1.35 "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif; margin: 0; padding: 5px 10px; border-block: 3px double #b28a37; text-shadow: 0 1px #fff; }
-.certificate-bonus > span { font: 30px/1 Georgia, serif; }
-.certificate-bonus > span:last-child { transform: rotate(180deg); }
-@media (max-width: 600px) {
-  .certificate-footer { grid-template-columns: 1fr 1fr; }
-  .certificate-faith-seal { grid-column: 1 / -1; grid-row: 1; }
-  .certificate-bonus { gap: 5px; }
+
+/* Foil stickers sit in the upper quadrants without interrupting the award. */
+.certificate-faith-seal {
+  position: absolute; right: 0; top: 0; width: 130px; height: 130px;
+  max-width: 27%; object-fit: contain; transform: rotate(12deg);
+  filter: drop-shadow(2px 5px 3px #70522255);
 }
+.certificate-bonus {
+  position: absolute; left: 0; top: 22px; width: 170px; max-width: 29%;
+  box-sizing: border-box; padding: 12px 8px; margin: 0;
+  transform: rotate(-11deg); color: #fff0be;
+  background: linear-gradient(135deg,#211424,#57345d 42%,#311e33 65%,#65446a);
+  border: 3px double #eebd4a; border-radius: 8px 2px 8px 2px;
+  box-shadow: 0 3px 0 #9b762d, 3px 7px 9px #311e3333, inset 0 0 0 3px #311e33;
+}
+.certificate-bonus[hidden] { display: none; }
+.certificate-bonus p {
+  font: italic 600 clamp(.7rem, 2vw, 1.05rem)/1.3 "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  margin: 3px 0; color: #fff0be; text-shadow: 0 1px 1px #171418;
+}
+.certificate-bonus > span { display: block; font: 20px/1 Georgia,serif; color: #eebd4a; }
+.certificate-bonus > span:last-child { transform: rotate(180deg); }
+.certificate-footer { grid-template-columns: 1fr 1fr; column-gap: 80px; }
+@media (max-width: 600px) {
+  .certificate-faith-seal { width: 90px; height: 90px; top: 3px; }
+  .certificate-bonus { top: 8px; padding: 6px 4px; }
+  .certificate-bonus p { font-size: 12px; }
+  .certificate-bonus > span { font-size: 14px; }
+  .certificate-footer { column-gap: 20px; }
+}
+/* Physical dimensions and fixed type keep reading-size preferences out of print. */
+@page certificate-page { size: 11in 8.5in; margin: .375in; }
 @media print {
-  #certificate-print .certificate-footer { grid-template-columns: 1fr 110px 1fr; }
-  #certificate-print .certificate-faith-seal { grid-column: auto; grid-row: auto; width: 110px; height: 110px; }
-  #certificate-print .certificate-bonus { margin-top: 10px; }
-  #certificate-print .certificate-bonus p { font-size: 14pt; }
+  html:has(body.certificate-only), body.certificate-only {
+    margin: 0 !important; padding: 0 !important; width: auto; min-height: 0;
+  }
+  body.certificate-only > #certificate-print {
+    page: certificate-page; width: 10in; height: 7.25in; max-width: none;
+    margin: 0 auto !important; padding: 24px 48px; border-width: 8px;
+    box-sizing: border-box; break-inside: avoid; break-after: avoid;
+    font-size: 14px; line-height: 1.3;
+  }
+  #certificate-print .certificate-content { height: 100%; }
+  #certificate-print .certificate-logo { width: 48px; height: 48px; margin: 0 auto 5px; }
+  #certificate-print .certificate-brand { font-size: 10px; line-height: 14px; margin: 0; }
+  #certificate-print .certificate-flourish { font-size: 14px; line-height: 16px; margin: 8px auto; }
+  #certificate-print .certificate-title { font-size: 38px; line-height: 1.05; margin: 8px 0 12px; }
+  #certificate-print .certificate-title em { margin-top: 5px; }
+  #certificate-print .certificate-presented { font-size: 10px; line-height: 14px; margin: 8px 0 0; }
+  #certificate-print .person { font-size: 30px; line-height: 1.15; padding: 10px 0 12px; margin: 0 auto 12px; }
+  #certificate-print .certificate-recognition { font-size: 13px; line-height: 18px; margin: 6px 0 4px; }
+  #certificate-print .certificate-course { font-size: 28px; line-height: 1.15; margin: 6px 0 10px; }
+  #certificate-print .certificate-dedication { font-size: 15px; line-height: 1.5; margin: 0; }
+  #certificate-print .certificate-footer { grid-template-columns: 1fr 1fr; gap: 80px; margin: 18px auto 16px; max-width: 650px; }
+  #certificate-print .certificate-host, #certificate-print .certificate-motto { margin-top: 48px; padding-top: 10px; }
+  #certificate-print .certificate-host p, #certificate-print .certificate-motto p { font-size: 16px; line-height: 1.3; margin: 0 0 6px; }
+  #certificate-print .certificate-host span, #certificate-print .certificate-motto span { font-size: 9px; line-height: 12px; }
+  #certificate-print .certificate-signature { height: 44px; width: 160px; }
+  #certificate-print .certificate-methods { font-size: 10px; line-height: 1.5; margin: 0; }
+  #certificate-print .certificate-bonus { top: 22px; width: 160px; max-width: none; padding: 10px 8px; }
+  #certificate-print .certificate-bonus p { font-size: 18px; line-height: 1.2; margin: 3px 0; }
+  #certificate-print .certificate-bonus > span { font-size: 20px; }
+  #certificate-print .certificate-faith-seal { top: 6px; width: 125px; height: 125px; max-width: none; }
 }
