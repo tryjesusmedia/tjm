@@ -105,7 +105,7 @@
           if (icon) icon.textContent = panel.open ? "−" : "+";
         }),
       );
-    app.querySelector(".final-tools-footer").insertAdjacentHTML("beforebegin",
+    app.querySelector(".final-tools-footer").insertAdjacentHTML("afterend",
       `<section class="coaching-invite no-print" aria-labelledby="study-lab-coaching-title"><img class="coaching-photo" src="/assets/pastor-kal-coaching.jpg" alt="Pastor Kal" width="900" height="900" loading="lazy"><div class="coaching-copy"><p class="eyebrow">YOUR NEXT STEP · FREE PERSONAL COACHING</p><h2 id="study-lab-coaching-title">Let’s open the Bible together.</h2><p>Bring your Master Study Sheet, your Discussion Builder, or a passage you would like help understanding.</p><p><strong>Book a free Bible discussion coaching call with the real, human Pastor Kal. Not AI.</strong></p><p>We’ll explore your questions together and help you take the next step with confidence.</p><div class="coaching-action"><a class="button gold" href="https://calendly.com/kalroller/kal" target="_blank" rel="noopener">Choose my time with Pastor Kal →</a></div><p class="small coaching-note">Bring your Bible. Bring your questions. Choose a time that works for you.</p></div></section>`);
     const inputs = [...document.querySelectorAll("[data-final-field]")];
     for (const input of inputs) {
