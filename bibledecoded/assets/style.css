@@ -353,6 +353,22 @@ button.primary:hover {
   align-items: flex-end;
   flex-direction: column;
   gap: 5px;
+  font: inherit;
+  font-weight: 400;
+}
+.card-status-text > .lesson-status,
+.card-status-text > .dashboard-quiz-score {
+  display: block;
+  font: inherit;
+  font-weight: 400;
+}
+.card-status-text > .dashboard-quiz-score {
+  background: transparent;
+  border-radius: 0;
+}
+.choice-feedback[hidden],
+.quiz-retake[hidden] {
+  display: none !important;
 }
 .card-status .lesson-status {
   border-radius: 20px;
