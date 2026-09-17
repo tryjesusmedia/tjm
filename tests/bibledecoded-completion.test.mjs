@@ -34,7 +34,7 @@ function fixture({study=null,unlocked=true}={}){
   api:async(path,method,body)=>{if(path==='studies'){created=body;return {id:'new-study'};}assert.equal(path,'study/'+(study||'new-study'));return studyData;},
   tell(message){throw Error(message);},
  });
- vm.runInContext(source.slice(source.indexOf('function studyPanel('),source.indexOf('async function boot()')),context);
+ vm.runInContext(source.slice(source.indexOf('function studyPanel('),source.indexOf('function notifyProgressChanged(')),context);
  return {context,app,$,panel,editor,get selectedData(){return selectedData;},get redirect(){return redirect;},get created(){return created;},get scrolled(){return scrolled;}};
 }
 test('completion includes a single Study Lab below the call with an in-page button',async()=>{

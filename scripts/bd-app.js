@@ -591,6 +591,7 @@ async function loadLesson() {
           "Please save the remaining answers before changing completion.",
         );
       await api(`progress/${scope}`, "PUT", { completed: input.checked });
+      notifyProgressChanged();
       $(".workbook-end h2").textContent = input.checked
         ? "View next lesson"
         : "Put what you learned into practice.";
@@ -612,7 +613,8 @@ async function loadLesson() {
         throw new Error(
           "Please resolve any unsaved answers before continuing.",
         );
-      await api(`progress/${scope}`, "PUT", { completed: true });
+      await api(`progress/${scope}`, "PUT", { completed: $("#completed").checked });
+      notifyProgressChanged();
       await saveVideoPosition();
       location.assign(
         lesson.number === 6
@@ -876,6 +878,32 @@ async function completion() {
     $("#study-lab").scrollIntoView({ block: "start" });
   }
 }
+function notifyProgressChanged() {
+  try { local.setItem("bd-progress-changed", String(Date.now())); } catch {}
+}
+async function refreshLabAccess() {
+  if (!me?.member || !["dashboard", "complete"].includes(page)) return;
+  try {
+    const fresh = await api("me");
+    if (fresh.labUnlocked !== me.labUnlocked || !fresh.member) {
+      location.reload();
+    } else if (page === "dashboard" && !fresh.labUnlocked) {
+      me = fresh;
+      dashboard();
+    }
+  } catch {
+    // Saved drafts remain on this device if the connection is unavailable.
+  }
+}
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) void refreshLabAccess();
+});
+window.addEventListener("storage", (event) => {
+  if (event.key === "bd-progress-changed") void refreshLabAccess();
+});
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) void refreshLabAccess();
+});
 async function boot() {
   readingSize();
   if (params.get("checkout") === "cancelled") {
