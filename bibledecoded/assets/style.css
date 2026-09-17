@@ -1677,7 +1677,7 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
 .certificate .certificate-dedication { font: italic .85rem/1.6 Georgia, serif; color: #5c4b50; margin: 0; }
 .certificate-footer { display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; gap: 24px; max-width: 700px; margin: 30px auto 20px; }
 .certificate-host p, .certificate-motto p { font: italic 1rem/1.35 Georgia, serif; margin: 0 0 8px; }
-.certificate-host, .certificate-motto { padding-top: 12px; border-top: 1px solid #b28a37; }
+.certificate-host, .certificate-motto { align-self: start; padding-top: 12px; border-top: 1px solid #b28a37; }
 .certificate-host span, .certificate-motto span { font-size: .5rem; letter-spacing: .12em; }
 .certificate-seal { width: 114px; height: 114px; border: double 5px #eebd4a; border-radius: 50%; background: #311e33; color: #f3e8d0; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 0 0 3px #b28a37; }
 .certificate-seal > span { font-size: 13px; color: #eebd4a; line-height: 1; }
