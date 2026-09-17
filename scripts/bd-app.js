@@ -828,13 +828,38 @@ async function studyLab() {
     }
   }
 }
+function wireCertificateName() {
+  const input = $("#certificate-display-name");
+  const name = $("#certificate-name");
+  const status = $("#certificate-name-status");
+  const key = `bd-certificate-name:${me.user.id}`;
+  try {
+    const saved = local.getItem(key);
+    if (saved && saved.trim()) name.textContent = input.value = saved.slice(0, 80);
+  } catch {}
+  $("#certificate-name-form").onsubmit = (event) => {
+    event.preventDefault();
+    const value = input.value.trim();
+    if (!value) {
+      status.textContent = "Please enter the name you would like on your certificate.";
+      return;
+    }
+    name.textContent = value;
+    try {
+      local.setItem(key, value);
+      status.textContent = "Certificate name updated.";
+    } catch {
+      status.textContent = "Certificate name updated for this visit.";
+    }
+  };
+}
 async function completion() {
   if (!me.labUnlocked) {
     location.replace(ROOT + "dashboard/");
     return;
   }
   $("#app").innerHTML =
-    `<section class="page-top narrow"><p class="eyebrow">SIX LESSONS. A NEW BEGINNING.</p><h1>You completed<br>Bible Decoded.</h1><p>You’ve practiced the methods. Now make them part of your own time in Scripture.</p><div class="actions"><a class="button" href="#study-lab">Open my Study Lab →</a><a class="button secondary" href="${lessonLink("word-search", "workbook")}">Explore the bonus lesson</a></div></section><section class="certificate" id="certificate"><p class="eyebrow">TRY JESUS MEDIA</p><h2>Certificate of Completion</h2><p>This celebrates</p><p class="person">${esc(me.user.name || me.user.email)}</p><p>for completing the six lessons of</p><h2>Bible Decoded</h2><p class="small">Foundations · Look for Christ · Pattern Recognition<br>The Questioning Method · Exegesis · Bible Memorization</p><p class="small">Keep discovering. Keep practicing. Keep growing.</p></section><div class="actions no-print"><button id="print-certificate" class="button secondary">Print my certificate</button><a href="/welcome/#live-discussion" class="button secondary">Join the weekly Bible discussion</a><a href="${ROOT}dashboard/">Return to my dashboard</a></div>${coachingInvite()}<section class="section completion-study-lab" id="study-lab" aria-labelledby="study-lab-title"><p class="eyebrow">A NEW DISCOVERY BEGINS WITH A PASSAGE</p><h2 id="study-lab-title">Bible Decoded Study Lab</h2><div id="study-lab-content"></div></section>`;
+    `<section class="page-top narrow"><p class="eyebrow">SIX LESSONS. A NEW BEGINNING.</p><h1>You completed<br>Bible Decoded.</h1><p>You’ve practiced the methods. Now make them part of your own time in Scripture.</p><div class="actions"><a class="button" href="#study-lab">Open my Study Lab →</a><a class="button secondary" href="${lessonLink("word-search", "workbook")}">Explore the bonus lesson</a></div></section><section class="certificate" id="certificate" aria-label="Bible Decoded Certificate of Completion"><span class="certificate-corner corner-tl" aria-hidden="true"></span><span class="certificate-corner corner-tr" aria-hidden="true"></span><span class="certificate-corner corner-bl" aria-hidden="true"></span><span class="certificate-corner corner-br" aria-hidden="true"></span><div class="certificate-content"><img class="certificate-logo" src="/assets/logo.png" width="88" height="88" alt="Try Jesus Media"><p class="certificate-brand">TRY JESUS MEDIA</p><div class="certificate-flourish" aria-hidden="true">◆</div><h2 class="certificate-title">Certificate <em>of Completion</em></h2><p class="certificate-presented">PRESENTED WITH JOY TO</p><p class="person" id="certificate-name">${esc(me.user.name || me.user.email)}</p><p class="certificate-recognition">In recognition of completing the six guided lessons of</p><h3 class="certificate-course">Bible Decoded</h3><p class="certificate-dedication">A foundation for understanding Scripture,<br>sharing its truth, and pointing others to Jesus.</p><div class="certificate-footer"><div class="certificate-host"><p>Pastor Kal Roller</p><span>COURSE PRESENTER</span></div><div class="certificate-seal" aria-label="Six lessons completed"><span>✦</span><strong>6</strong><small>LESSONS<br>COMPLETED</small></div><div class="certificate-motto"><p>Keep discovering.<br>Keep growing.</p><span>TRYJESUSMEDIA.COM</span></div></div><p class="certificate-methods">Foundations · Look for Christ · Pattern Recognition<br>The Questioning Method · Exegesis · Bible Memorization</p></div></section><details class="certificate-name-editor no-print"><summary>Change certificate name</summary><form id="certificate-name-form"><label for="certificate-display-name">Name to show on your certificate</label><div class="actions"><input id="certificate-display-name" name="certificateName" type="text" maxlength="80" required autocomplete="name" value="${esc(me.user.name || me.user.email)}"><button class="button secondary" type="submit">Update name</button></div><p class="small muted">This changes only your certificate name and is saved on this device.</p><p id="certificate-name-status" class="small" role="status"></p></form></details><div class="actions no-print"><button id="print-certificate" class="button secondary">Print my certificate</button><a href="/welcome/#live-discussion" class="button secondary">Join the weekly Bible discussion</a><a href="${ROOT}dashboard/">Return to my dashboard</a></div>${coachingInvite()}<section class="section completion-study-lab" id="study-lab" aria-labelledby="study-lab-title"><p class="eyebrow">A NEW DISCOVERY BEGINS WITH A PASSAGE</p><h2 id="study-lab-title">Bible Decoded Study Lab</h2><div id="study-lab-content"></div></section>`;
   wireSignout();
   $("#print-certificate").onclick = () => {
     const copy = $("#certificate").cloneNode(true);
@@ -845,6 +870,7 @@ async function completion() {
     document.body.classList.remove("certificate-only");
     copy.remove();
   };
+  wireCertificateName();
   await studyLab();
   if (location.hash === "#study-lab") {
     $("#study-lab").scrollIntoView({ block: "start" });
