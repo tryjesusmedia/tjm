@@ -218,7 +218,7 @@ function wireSignout() {
 }
 function noAccess() {
   $("#app").innerHTML =
-    `<section class="page-top narrow"><p class="eyebrow">SIGNED IN</p><h1>Your Bible Decoded account.</h1><div class="account-row"><p>You’re signed in as <strong>${esc(me.user.email)}</strong>.</p><button class="account-signout" type="button" data-signout>Sign out and use a different account</button></div><div class="notice">You don’t currently have access to Bible Decoded. If you already purchased, check that you’re using the same email address you used at checkout.</div><div class="actions"><a class="button" href="https://buy.stripe.com/dRm28sacw6ufdSKfHu57W0b">Get Bible Decoded — <span class="purchase-prices"><s>$97</s> $37</span></a><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a><button id="check-access" class="button secondary">Check my access again</button></div><p class="offer-note">Discounted for the next 100 customers only!</p></section>`;
+    `<section class="page-top narrow"><p class="eyebrow">SIGNED IN</p><h1>Your Bible Decoded account.</h1><div class="account-row"><p>You’re signed in as <strong>${esc(me.user.email)}</strong>.</p><button class="account-signout" type="button" data-signout>Sign out and use a different account</button></div><div class="notice">You don’t currently have access to Bible Decoded. If you just purchased, use the button below after Stripe returns you to this page. Your checkout and sign-in emails may be different.</div><div class="actions"><a class="button" href="https://buy.stripe.com/dRm28sacw6ufdSKfHu57W0b">Get Bible Decoded — <span class="purchase-prices"><s>$97</s> $37</span></a><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a><button id="check-access" class="button secondary">Check my access again</button></div><p class="offer-note">Discounted for the next 100 customers only!</p></section>`;
   $("#check-access").onclick = () => location.reload();
   wireSignout();
 }
@@ -758,7 +758,7 @@ async function boot() {
   if (!data.session) {
     authForm(
       sessionId
-        ? "Sign in with your checkout email to check your purchase and open your program."
+        ? "Sign in with the account you want to use for Bible Decoded. It may use a different email from checkout."
         : "",
     );
     return;

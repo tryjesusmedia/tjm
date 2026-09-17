@@ -77,8 +77,12 @@ delayed success and revocation before enabling the live price.
 `BD_CHECKOUT_ENABLED` only controls the server's session-creation endpoint.
 The public buttons now link directly to the supplied Stripe Payment Link.
 For Payment Link purchases, add `program=bibledecoded` metadata to the Payment
-Link itself and ensure it uses the configured price. Its redirect should point
-to `/bibledecoded/welcome/`; the webhook grants access using the checkout email.
+Link itself and ensure it uses the configured price. Its redirect must point to
+`/bibledecoded/welcome/?session_id={CHECKOUT_SESSION_ID}`. The webhook creates
+the entitlement using the checkout email. The signed redirect session can then
+link that purchase once to a confirmed member account even when its sign-in
+email differs. D1 retains the checkout email and the Supabase account retains
+the confirmed sign-in email.
 Do not treat publishing a Payment Link as verification of live fulfillment.
 
 ## Omnisend purchase messages
