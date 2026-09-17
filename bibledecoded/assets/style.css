@@ -348,7 +348,13 @@ button.primary:hover {
   align-items: start;
   font-size: 0.72rem;
 }
-.card-status span {
+.card-status-text {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 5px;
+}
+.card-status .lesson-status {
   border-radius: 20px;
   background: #f1ecef;
   padding: 4px 10px;
@@ -717,8 +723,9 @@ button.primary:hover {
   line-height: 1;
 }
 .dashboard-quiz-score {
-  margin: 14px 0 4px;
-  font-size: 1.1rem;
+  padding: 0 10px;
+  font: inherit;
+  font-weight: 400;
 }
 .quiz-retake {
   background: #f3e8d0;
