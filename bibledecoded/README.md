@@ -128,7 +128,37 @@ buyer to test. A manual entitlement does not verify automatic fulfillment. The
 automated suite exercises the real Stripe SDK against simulated HTTP responses;
 it does not verify production credentials, bindings, or live message delivery.
 
-## Member support
+## Course completion notifications
+
+Course completion queues one administrator notification per account in
+`bd_completion_notifications`. The table is created automatically. Existing
+studies, answers, and completion access rules are unchanged.
+
+Recipient: `kalmanroller@gmail.com`. Event: `bible decoded completed`.
+Properties: `student_name`, `student_email`, `student_phone`, `program`,
+and `message`. Phone comes from the authenticated account or its owned Stripe
+checkout when available. Workbook answers and notes are never included.
+
+Before delivery can be enabled:
+1. In Omnisend, create an administrator email workflow triggered by the custom
+   event `bible decoded completed`. The event contact is Pastor Kal's Gmail,
+   not the student. Permit each separate completion event to enter the workflow.
+2. Set the subject to "Someone completed Bible Decoded".
+3. Use the event personalization picker to include the student's name, email,
+   phone, and the message "Someone completed this course: Bible Decoded."
+4. Confirm the sender is verified and the Gmail recipient can receive this
+   administrative email; publish and test the workflow.
+5. Set Cloudflare production `BD_COMPLETION_NOTIFY_ENABLED=true`, keeping
+   the existing `OMNISEND_API_KEY`. Do not enable this before the workflow is ready.
+
+Pending events are retained while disabled. After activation, completion or
+completed-member visits retry a small pending batch. The stable event ID and
+database marker prevent normal repeat notifications if lessons are unchecked
+and rechecked. `event_sent_at` records API acceptance, not inbox delivery.
+Confirm the workflow's delivery log and a received email before reporting alerts
+as live. Failed events remain pending for a later eligible visit.
+
+## Member access and support
 
 The Study Lab is accessible only while all six main lessons are marked complete.
 Unchecking any main lesson locks access again without deleting saved studies or

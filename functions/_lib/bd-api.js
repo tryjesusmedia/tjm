@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { LESSONS } from './bd-content.js';
+import { notifyCourseCompletion } from './bd-completion-notify.js';
 
 const AUTH_URL = 'https://erejehmrtzjpqurbftsm.supabase.co';
 const AUTH_KEY = 'sb_publishable_bOxmjg6RWmwfw7i7o_YhTg_zOjUt0p6';
@@ -134,7 +135,16 @@ async function videoFor(env,lesson){
  }
  return null;
 }
-export async function handle(request,env){
+export async function handle(request,env,waitUntil){
+ const completionNotice = async user => {
+  const task = notifyCourseCompletion(env,user,async()=>{
+   const purchase=await env.BD_DB.prepare("SELECT session_id FROM bd_purchases WHERE user_id=? AND status='active' AND session_id LIKE 'cs_%' ORDER BY created_at DESC LIMIT 1").bind(user.id).first();
+   if(!purchase || !env.BD_STRIPE_KEY)return '';
+   const session=await stripe(env).checkout.sessions.retrieve(purchase.session_id);
+   return session.customer_details?.phone || '';
+  }).catch(()=>console.error(JSON.stringify({event:'bibledecoded_completion_notification_pending'})));
+  if(waitUntil)waitUntil(task);else await task;
+ };
  const url=new URL(request.url),route=url.pathname.replace(/^\/api\/bibledecoded\/?/,'').replace(/\/$/,'');
  if(route==='webhook'&&request.method==='POST')return webhook(request,env);
  if(!['GET','POST','PUT'].includes(request.method))fail(405,'Method not allowed.');
@@ -163,6 +173,7 @@ export async function handle(request,env){
   let labUnlocked=false;
   if(member){try{await requireLab(db,user);labUnlocked=true;}catch(e){if(e.status!==403)throw e;}}
   const studies=labUnlocked?(await db.prepare('SELECT id,title,updated_at FROM bd_studies WHERE user_id=? ORDER BY updated_at DESC').bind(user.id).all()).results:[];
+  if(labUnlocked)await completionNotice(user);
   const album=member?await db.prepare("SELECT blocks FROM bd_content WHERE id='video-album'").first():null;
   const albumUrl=album?JSON.parse(album.blocks).url:null;
   const videoAlbum=typeof albumUrl==='string'&&/^https:\/\/photos\.app\.goo\.gl\/[A-Za-z0-9]+$/.test(albumUrl)?albumUrl:null;
@@ -203,7 +214,7 @@ export async function handle(request,env){
   if(body.quizScore!==undefined&&(!Number.isInteger(body.quizScore)||body.quizScore<0||body.quizScore>100))fail(400,'Invalid quiz score.');
   await db.prepare(`INSERT INTO bd_progress(user_id,lesson_id,completed,seconds,last_field) VALUES (?,?,?,?,?) ON CONFLICT(user_id,lesson_id) DO UPDATE SET completed=COALESCE(?,completed),seconds=COALESCE(?,seconds),last_field=COALESCE(?,last_field),updated_at=${stamp}`).bind(user.id,scope,body.completed?1:0,body.seconds||0,body.lastField||'',body.completed===undefined?null:body.completed?1:0,body.seconds??null,body.lastField??null).run();
   if(body.quizScore!==undefined)await db.prepare(`INSERT INTO bd_answers(user_id,scope,field_id,value,revision) VALUES (?,?,?, ?,1) ON CONFLICT(user_id,scope,field_id) DO UPDATE SET value=excluded.value,revision=bd_answers.revision+1,updated_at=${stamp}`).bind(user.id,scope,'__quiz_score',JSON.stringify(body.quizScore)).run();
-  try{await requireLab(db,user);}catch(e){if(e.status!==403)throw e;}return json({saved:true});
+  try{await requireLab(db,user);await completionNotice(user);}catch(e){if(e.status!==403)throw e;}return json({saved:true});
  }
  fail(405,'Method not allowed.');
 }

@@ -1,7 +1,8 @@
 import {handle,json,HttpError} from '../../_lib/bd-api.js';
 import {paymentDiagnostic} from '../../_lib/bd-diagnostics.js';
-export async function onRequest({request,env}){
- try{return await handle(request,env);}catch(error){
+export async function onRequest(context){
+ const {request,env}=context;
+ try{return await handle(request,env,context.waitUntil ? task=>context.waitUntil(task) : undefined);}catch(error){
   if(error instanceof HttpError)return json({error:error.message,...error.extra},error.status);
   const reference=crypto.randomUUID(),diagnostic=paymentDiagnostic(error);
   console.error(JSON.stringify({event:'bibledecoded_request_failed',reference,...diagnostic}));
