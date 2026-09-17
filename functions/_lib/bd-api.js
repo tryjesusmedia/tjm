@@ -11,7 +11,7 @@ const fail=(status,message,extra)=>{throw new HttpError(status,message,extra);};
 export const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Vary':'Authorization'}});
 const normalized=email=>String(email||'').trim().toLowerCase();
 const ready=env=>env.BD_CHECKOUT_ENABLED==='true'&&!!env.BD_STRIPE_KEY&&!!env.BD_STRIPE_PRICE_ID&&!!env.BD_STRIPE_WEBHOOK_SECRET&&!!env.BD_DB;
-const stripe=env=>new Stripe(env.BD_STRIPE_KEY,{apiVersion:'2026-07-29.dahlia',httpClient:Stripe.createFetchHttpClient(),maxNetworkRetries:2});
+const stripe=env=>env.BD_STRIPE_CLIENT||new Stripe(env.BD_STRIPE_KEY,{apiVersion:'2026-07-29.dahlia',httpClient:Stripe.createFetchHttpClient(),maxNetworkRetries:2});
 const smsConsent=s=>Array.isArray(s.custom_fields)&&s.custom_fields.some(field=>field?.key==='sms_consent'&&field?.type==='dropdown'&&field?.dropdown?.value==='yes');
 async function purchaseEventID(sessionID){
  const bytes=new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(`bibledecoded:${sessionID}`))).slice(0,16);
@@ -89,14 +89,19 @@ async function rateLimit(db,key,limit){
 export function validPurchase(s,env){
  return s.mode==='payment'&&s.payment_status==='paid'&&s.currency==='usd'&&s.amount_total===3700&&s.metadata?.program==='bibledecoded'&&s.livemode===(env.BD_STRIPE_LIVE_MODE==='true')&&s.line_items?.data?.length===1&&s.line_items.data[0].price?.id===env.BD_STRIPE_PRICE_ID&&s.line_items.data[0].quantity===1&&!!s.customer_details?.email;
 }
-async function fulfill(env,id,expectedEmail){
+async function fulfill(env,id,claimUser=null){
  const s=await stripe(env).checkout.sessions.retrieve(id,{expand:['line_items']});
  if(!validPurchase(s,env))fail(409,'Your payment has not been confirmed yet. Please check again shortly.');
  const email=normalized(s.customer_details.email);
- if(expectedEmail&&email!==normalized(expectedEmail))fail(403,'Please sign in using the email address you used at checkout.');
  const pi=typeof s.payment_intent==='string'?s.payment_intent:s.payment_intent?.id;
  if(!pi)fail(409,'Your payment is still being confirmed.');
  await env.BD_DB.prepare("INSERT OR IGNORE INTO bd_purchases(session_id,email,payment_intent,status) VALUES (?,?,?,CASE WHEN EXISTS(SELECT 1 FROM bd_revocations WHERE payment_intent=?) THEN 'revoked' ELSE 'active' END)").bind(s.id,email,pi,pi).run();
+ if(claimUser){
+  await env.BD_DB.prepare("UPDATE bd_purchases SET user_id=? WHERE session_id=? AND status='active' AND (user_id IS NULL OR user_id=?)").bind(claimUser.id,s.id,claimUser.id).run();
+  const purchase=await env.BD_DB.prepare('SELECT user_id,status FROM bd_purchases WHERE session_id=?').bind(s.id).first();
+  if(purchase?.status==='revoked')fail(403,'This purchase was refunded or disputed and no longer provides access.');
+  if(purchase?.user_id!==claimUser.id)fail(409,'This purchase is already linked to another member account. Please contact info@tryjesusmedia.com for help.');
+ }
  return s;
 }
 async function webhook(request,env){
@@ -156,7 +161,7 @@ export async function handle(request,env){
  if(route==='claim'&&request.method==='POST'){
   if(!env.BD_STRIPE_KEY)fail(503,'Payments are not connected yet.');
   const body=await readBody(request);if(!/^cs_(test_|live_)?[A-Za-z0-9]{10,250}$/.test(body.sessionId||''))fail(400,'Invalid purchase reference.');
-  await rateLimit(db,`claim:${user.id}`,10);await fulfill(env,body.sessionId,user.email);
+  await rateLimit(db,`claim:${user.id}`,10);await fulfill(env,body.sessionId,user);
  }
  const member=await membership(db,user);
  if((route==='me'||route==='claim')&&(request.method==='GET'||route==='claim')){
