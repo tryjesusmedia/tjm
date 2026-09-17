@@ -1,18 +1,17 @@
 import Stripe from 'stripe';
 import { LESSONS } from './bd-content.js';
-import {paymentStep} from './bd-diagnostics.js';
 
 const AUTH_URL = 'https://erejehmrtzjpqurbftsm.supabase.co';
 const AUTH_KEY = 'sb_publishable_bOxmjg6RWmwfw7i7o_YhTg_zOjUt0p6';
 const SITE = 'https://tryjesusmedia.com';
 const stamp = "strftime('%Y-%m-%dT%H:%M:%fZ','now')";
 const summary = ({id,number,title,bonus,description})=>({id,number,title,bonus,description});
-export class HttpError extends Error { constructor(status,message,extra={}){super(message);this.name='HttpError';this.status=status;this.extra=extra;} }
+export class HttpError extends Error { constructor(status,message,extra={}){super(message);this.status=status;this.extra=extra;} }
 const fail=(status,message,extra)=>{throw new HttpError(status,message,extra);};
 export const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Vary':'Authorization'}});
 const normalized=email=>String(email||'').trim().toLowerCase();
 const ready=env=>env.BD_CHECKOUT_ENABLED==='true'&&!!env.BD_STRIPE_KEY&&!!env.BD_STRIPE_PRICE_ID&&!!env.BD_STRIPE_WEBHOOK_SECRET&&!!env.BD_DB;
-const stripe=env=>env.BD_STRIPE_CLIENT||new Stripe(String(env.BD_STRIPE_KEY||'').trim(),{apiVersion:'2026-07-29.dahlia',httpClient:Stripe.createFetchHttpClient(),maxNetworkRetries:2});
+const stripe=env=>new Stripe(env.BD_STRIPE_KEY,{apiVersion:'2026-07-29.dahlia',httpClient:Stripe.createFetchHttpClient(),maxNetworkRetries:2});
 const smsConsent=s=>Array.isArray(s.custom_fields)&&s.custom_fields.some(field=>field?.key==='sms_consent'&&field?.type==='dropdown'&&field?.dropdown?.value==='yes');
 async function purchaseEventID(sessionID){
  const bytes=new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(`bibledecoded:${sessionID}`))).slice(0,16);
@@ -80,7 +79,7 @@ async function contentBlocks(db,id){
  return JSON.parse(row.blocks);
 }
 export function fieldsFor(blocks){return blocks.flatMap(b=>b.type==='grid'?b.rows.flatMap(r=>r.cells):['field','check'].includes(b.type)?[b]:[]);}
-const answerRows=async(db,user,scope)=>(await db.prepare('SELECT field_id,value,revision FROM bd_answers WHERE user_id=? AND scope=?').bind(user.id,scope).all()).results.map(r=>({...r,value:JSON.parse(r.value)}));
+const answerRows=async(db,user,scope)=>(await db.prepare("SELECT field_id,value,revision FROM bd_answers WHERE user_id=? AND scope=? AND field_id!='__quiz_score'").bind(user.id,scope).all()).results.map(r=>({...r,value:JSON.parse(r.value)}));
 async function rateLimit(db,key,limit){
  const now=Math.floor(Date.now()/1000),bucket=Math.floor(now/60);
  const row=await db.prepare('INSERT INTO bd_rate_limits(key,count,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(`${key}:${bucket}`,now+120).first();
@@ -90,19 +89,14 @@ async function rateLimit(db,key,limit){
 export function validPurchase(s,env){
  return s.mode==='payment'&&s.payment_status==='paid'&&s.currency==='usd'&&s.amount_total===3700&&s.metadata?.program==='bibledecoded'&&s.livemode===(env.BD_STRIPE_LIVE_MODE==='true')&&s.line_items?.data?.length===1&&s.line_items.data[0].price?.id===env.BD_STRIPE_PRICE_ID&&s.line_items.data[0].quantity===1&&!!s.customer_details?.email;
 }
-async function fulfill(env,id,claimUser=null){
- const s=await paymentStep('stripe_session_read',()=>stripe(env).checkout.sessions.retrieve(id,{expand:['line_items']}));
+async function fulfill(env,id,expectedEmail){
+ const s=await stripe(env).checkout.sessions.retrieve(id,{expand:['line_items']});
  if(!validPurchase(s,env))fail(409,'Your payment has not been confirmed yet. Please check again shortly.');
  const email=normalized(s.customer_details.email);
+ if(expectedEmail&&email!==normalized(expectedEmail))fail(403,'Please sign in using the email address you used at checkout.');
  const pi=typeof s.payment_intent==='string'?s.payment_intent:s.payment_intent?.id;
  if(!pi)fail(409,'Your payment is still being confirmed.');
- await paymentStep('purchase_record',()=>env.BD_DB.prepare("INSERT OR IGNORE INTO bd_purchases(session_id,email,payment_intent,status) VALUES (?,?,?,CASE WHEN EXISTS(SELECT 1 FROM bd_revocations WHERE payment_intent=?) THEN 'revoked' ELSE 'active' END)").bind(s.id,email,pi,pi).run());
- if(claimUser){
-  await paymentStep('purchase_link',()=>env.BD_DB.prepare("UPDATE bd_purchases SET user_id=? WHERE session_id=? AND status='active' AND (user_id IS NULL OR user_id=?)").bind(claimUser.id,s.id,claimUser.id).run());
-  const purchase=await env.BD_DB.prepare('SELECT user_id,status FROM bd_purchases WHERE session_id=?').bind(s.id).first();
-  if(purchase?.status==='revoked')fail(403,'This purchase was refunded or disputed and no longer provides access.');
-  if(purchase?.user_id!==claimUser.id)fail(409,'This purchase is already linked to another member account. Please contact info@tryjesusmedia.com for help.');
- }
+ await env.BD_DB.prepare("INSERT OR IGNORE INTO bd_purchases(session_id,email,payment_intent,status) VALUES (?,?,?,CASE WHEN EXISTS(SELECT 1 FROM bd_revocations WHERE payment_intent=?) THEN 'revoked' ELSE 'active' END)").bind(s.id,email,pi,pi).run();
  return s;
 }
 async function webhook(request,env){
@@ -119,7 +113,7 @@ async function webhook(request,env){
  const object=event.data.object;
  if(['checkout.session.completed','checkout.session.async_payment_succeeded'].includes(event.type)&&object.metadata?.program==='bibledecoded'&&object.payment_status==='paid'){
   const session=await fulfill(env,object.id);
-  await paymentStep('omnisend_event',()=>sendOmnisendPurchase(env,session));
+  await sendOmnisendPurchase(env,session);
  }
  if((event.type==='charge.refunded'&&object.refunded)||event.type==='charge.dispute.created'){
   const pi=typeof object.payment_intent==='string'?object.payment_intent:object.payment_intent?.id;
@@ -162,11 +156,11 @@ export async function handle(request,env){
  if(route==='claim'&&request.method==='POST'){
   if(!env.BD_STRIPE_KEY)fail(503,'Payments are not connected yet.');
   const body=await readBody(request);if(!/^cs_(test_|live_)?[A-Za-z0-9]{10,250}$/.test(body.sessionId||''))fail(400,'Invalid purchase reference.');
-  await paymentStep('claim_rate_limit',()=>rateLimit(db,`claim:${user.id}`,10));await fulfill(env,body.sessionId,user);
+  await rateLimit(db,`claim:${user.id}`,10);await fulfill(env,body.sessionId,user.email);
  }
  const member=await membership(db,user);
  if((route==='me'||route==='claim')&&(request.method==='GET'||route==='claim')){
-  const progress=member?(await db.prepare('SELECT lesson_id,completed,seconds,last_field,updated_at FROM bd_progress WHERE user_id=?').bind(user.id).all()).results:[];
+  const progress=member?(await db.prepare("SELECT p.lesson_id,p.completed,p.seconds,p.last_field,p.updated_at,(SELECT CAST(json_extract(a.value,'$') AS INTEGER) FROM bd_answers a WHERE a.user_id=p.user_id AND a.scope=p.lesson_id AND a.field_id='__quiz_score') AS quiz_score FROM bd_progress p WHERE p.user_id=?").bind(user.id).all()).results:[];
   let labUnlocked=false;
   if(member){try{await requireLab(db,user);labUnlocked=true;}catch(e){if(e.status!==403)throw e;}}
   const studies=labUnlocked?(await db.prepare('SELECT id,title,updated_at FROM bd_studies WHERE user_id=? ORDER BY updated_at DESC').bind(user.id).all()).results:[];
@@ -207,7 +201,9 @@ export async function handle(request,env){
   if(body.completed!==undefined&&typeof body.completed!=='boolean')fail(400,'Invalid completion value.');
   if(body.seconds!==undefined&&(!Number.isFinite(body.seconds)||body.seconds<0||body.seconds>86400))fail(400,'Invalid video position.');
   if(body.lastField!==undefined&&!fieldsFor(blocks).some(f=>f.id===body.lastField))fail(400,'Invalid workbook position.');
+  if(body.quizScore!==undefined&&(!Number.isInteger(body.quizScore)||body.quizScore<0||body.quizScore>100))fail(400,'Invalid quiz score.');
   await db.prepare(`INSERT INTO bd_progress(user_id,lesson_id,completed,seconds,last_field) VALUES (?,?,?,?,?) ON CONFLICT(user_id,lesson_id) DO UPDATE SET completed=COALESCE(?,completed),seconds=COALESCE(?,seconds),last_field=COALESCE(?,last_field),updated_at=${stamp}`).bind(user.id,scope,body.completed?1:0,body.seconds||0,body.lastField||'',body.completed===undefined?null:body.completed?1:0,body.seconds??null,body.lastField??null).run();
+  if(body.quizScore!==undefined)await db.prepare(`INSERT INTO bd_answers(user_id,scope,field_id,value,revision) VALUES (?,?,?, ?,1) ON CONFLICT(user_id,scope,field_id) DO UPDATE SET value=excluded.value,revision=bd_answers.revision+1,updated_at=${stamp}`).bind(user.id,scope,'__quiz_score',JSON.stringify(body.quizScore)).run();
   try{await requireLab(db,user);}catch(e){if(e.status!==403)throw e;}return json({saved:true});
  }
  fail(405,'Method not allowed.');
