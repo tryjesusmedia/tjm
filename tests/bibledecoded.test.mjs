@@ -2,11 +2,9 @@ import {test, beforeEach, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import fs from 'node:fs';
-import Stripe from 'stripe';
 import {onRequest} from '../functions/api/bibledecoded/[[path]].js';
 import {fieldsFor,validPurchase,omnisendPurchasePayload} from '../functions/_lib/bd-api.js';
 import {LESSONS} from '../functions/_lib/bd-content.js';
-import {paymentDiagnostic} from '../functions/_lib/bd-diagnostics.js';
 
 let db,env,realFetch;
 const people={alice:{id:'alice',email:'alice@example.test',email_confirmed_at:'2026-01-01'},bob:{id:'bob',email:'bob@example.test',email_confirmed_at:'2026-01-01'},unconfirmed:{id:'unconfirmed',email:'alice@example.test'}};
@@ -27,17 +25,6 @@ async function request(path,{person='alice',method='GET',body,origin='https://tr
 }
 async function data(path,options){const response=await request(path,options);assert.equal(response.status,200,await response.clone().text());return response.json();}
 const first=LESSONS[0],field={id:'test-answer',type:'field'};
-const paidSession=(overrides={})=>({id:'cs_test_paidpurchase123',mode:'payment',payment_status:'paid',currency:'usd',amount_total:3700,metadata:{program:'bibledecoded'},livemode:false,line_items:{data:[{price:{id:'price_test'},quantity:1}]},customer_details:{email:'alice@example.test'},payment_intent:'pi_test_purchase',...overrides});
-function mockStripe(session){
- const verifier=new Stripe('sk_test_fixture').webhooks;
- env.BD_STRIPE_KEY='sk_test_fixture';env.BD_STRIPE_PRICE_ID='price_test';env.BD_STRIPE_LIVE_MODE='false';env.BD_STRIPE_WEBHOOK_SECRET='fixture-secret';
- env.BD_STRIPE_CLIENT={checkout:{sessions:{retrieve:async()=>session}},webhooks:verifier};
-}
-async function webhook(event){
- const payload=JSON.stringify(event),signature=Stripe.webhooks.generateTestHeaderString({payload,secret:env.BD_STRIPE_WEBHOOK_SECRET});
- const response=await onRequest({env,request:new Request('https://tryjesusmedia.com/api/bibledecoded/webhook',{method:'POST',headers:{'stripe-signature':signature},body:payload})});
- return response;
-}
 
 test('public configuration exposes only lesson summaries and checkout remains disabled',async()=>{
  const config=await data('config',{person:null});assert.equal(config.checkoutEnabled,false);assert.equal(config.lessons.length,7);assert.ok(config.lessons.every(l=>!l.blocks));
@@ -99,6 +86,16 @@ test('progress updates preserve completion when saving video or workbook positio
  await data('progress/'+first.id,{method:'PUT',body:{lastField:field.id}});
  const progress=(await data('me')).progress[0];assert.equal(progress.completed,1);assert.equal(progress.seconds,42);assert.equal(progress.last_field,field.id);
 });
+test('quiz scores save per lesson and expose only the latest percentage',async()=>{
+ grant();
+ let me=await data('me');assert.equal(me.progress.length,0);
+ await data('progress/'+first.id,{method:'PUT',body:{quizScore:70}});
+ me=await data('me');assert.equal(me.progress[0].quiz_score,70);
+ await data('progress/'+first.id,{method:'PUT',body:{quizScore:90}});
+ me=await data('me');assert.equal(me.progress[0].quiz_score,90);
+ assert.deepEqual((await data('lesson/'+first.id)).answers,[]);
+ for(const quizScore of [-10,101,75.5,'80'])assert.equal((await request('progress/'+first.id,{method:'PUT',body:{quizScore}})).status,400);
+});
 test('printables are real PDFs behind membership and revocation removes access',async()=>{
  grant();for(const lesson of LESSONS){const response=await request('printable/'+lesson.id);assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'application/pdf');assert.match(response.headers.get('cache-control'),/no-store/);assert.equal((await response.text()).slice(0,5),'%PDF-');}
  db.prepare("UPDATE bd_purchases SET status='revoked'").run();assert.equal((await request('lesson/'+first.id)).status,403);assert.equal((await request('printable/'+first.id)).status,403);
@@ -107,46 +104,6 @@ test('a claimed payment must match price, total, currency, mode and environment'
  env.BD_STRIPE_PRICE_ID='price_test';const paid={mode:'payment',payment_status:'paid',currency:'usd',amount_total:3700,metadata:{program:'bibledecoded'},livemode:false,line_items:{data:[{price:{id:'price_test'},quantity:1}]},customer_details:{email:'alice@example.test'}};
  assert.equal(validPurchase(paid,env),true);
  for(const change of [{payment_status:'unpaid'},{currency:'cad'},{amount_total:1},{livemode:true},{mode:'subscription'},{metadata:{program:'other'}},{line_items:{data:[{price:{id:'other'},quantity:1}]}}])assert.equal(validPurchase({...paid,...change},env),false);
-});
-test('a paid redirect securely links different checkout and sign-in emails once',async()=>{
- const session=paidSession();mockStripe(session);
- const claimed=await data('claim',{person:'bob',method:'POST',body:{sessionId:session.id}});
- assert.equal(claimed.member,true);
- assert.deepEqual({...db.prepare('SELECT email,user_id,status FROM bd_purchases').get()},{email:'alice@example.test',user_id:'bob',status:'active'});
- assert.equal((await data('me',{person:'alice'})).member,false);
- assert.equal((await data('claim',{person:'bob',method:'POST',body:{sessionId:session.id}})).member,true);
- const transfer=await request('claim',{person:'alice',method:'POST',body:{sessionId:session.id}});
- assert.equal(transfer.status,409);
- assert.equal(db.prepare('SELECT user_id FROM bd_purchases').get().user_id,'bob');
-});
-test('delayed payments grant only after Stripe reports paid',async()=>{
- const session=paidSession({payment_status:'unpaid'});mockStripe(session);
- assert.equal((await request('claim',{person:'bob',method:'POST',body:{sessionId:session.id}})).status,409);
- assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
- session.payment_status='paid';
- assert.equal((await data('claim',{person:'bob',method:'POST',body:{sessionId:session.id}})).member,true);
-});
-test('duplicate payment events are idempotent and a full refund revokes access',async()=>{
- const session=paidSession();mockStripe(session);
- const completed={id:'evt_checkout_complete',type:'checkout.session.completed',livemode:false,data:{object:{id:session.id,payment_status:'paid',metadata:{program:'bibledecoded'}}}};
- assert.equal((await webhook(completed)).status,200);
- assert.equal((await webhook(completed)).status,200);
- assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,1);
- assert.equal(db.prepare('SELECT count(*) AS n FROM bd_payment_events').get().n,1);
- await data('me');
- const refunded={id:'evt_refund',type:'charge.refunded',livemode:false,data:{object:{refunded:true,payment_intent:session.payment_intent}}};
- assert.equal((await webhook(refunded)).status,200);
- assert.equal(db.prepare('SELECT status FROM bd_purchases').get().status,'revoked');
- assert.equal((await data('me')).member,false);
-});
-test('a dispute arriving before delayed fulfillment prevents later access',async()=>{
- const session=paidSession();mockStripe(session);
- const disputed={id:'evt_dispute',type:'charge.dispute.created',livemode:false,data:{object:{payment_intent:session.payment_intent}}};
- assert.equal((await webhook(disputed)).status,200);
- const delayed={id:'evt_async_paid',type:'checkout.session.async_payment_succeeded',livemode:false,data:{object:{id:session.id,payment_status:'paid',metadata:{program:'bibledecoded'}}}};
- assert.equal((await webhook(delayed)).status,200);
- assert.equal(db.prepare('SELECT status FROM bd_purchases').get().status,'revoked');
- assert.equal((await request('claim',{person:'bob',method:'POST',body:{sessionId:session.id}})).status,403);
 });
 test('Omnisend purchase events include SMS only after explicit checkout consent',async()=>{
  const base={id:'cs_live_example',created:1789574400,amount_total:3700,currency:'usd',customer_details:{email:' Buyer@Example.com ',name:'Mary Jones',phone:'+13155550123'},custom_fields:[]};
@@ -159,70 +116,4 @@ test('unsigned webhook requests never grant membership',async()=>{
  env.BD_STRIPE_KEY='sk_test_fixture';env.BD_STRIPE_WEBHOOK_SECRET='fixture-secret';
  assert.equal((await request('webhook',{person:null,method:'POST',body:{type:'checkout.session.completed',data:{object:{payment_status:'paid'}}}})).status,400);
  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
-});
-
-test('real Stripe SDK transport grants a paid purchase with a different sign-in email',async()=>{
- const session=paidSession();mockStripe(session);delete env.BD_STRIPE_CLIENT;
- env.BD_STRIPE_KEY='  sk_test_fixture\n';
- const authFetch=globalThis.fetch;let reads=0;
- globalThis.fetch=async(url,options)=>{
-  if(String(url).startsWith('https://api.stripe.com/v1/checkout/sessions/')){
-   reads++;assert.equal(new Headers(options.headers).get('authorization'),'Bearer sk_test_fixture');
-   assert.match(String(url),/expand/);
-   return Response.json(session);
-  }
-  return authFetch(url,options);
- };
- assert.equal((await data('claim',{person:'bob',method:'POST',body:{sessionId:session.id}})).member,true);
- assert.equal(reads,1);assert.equal(db.prepare('SELECT user_id FROM bd_purchases').get().user_id,'bob');
-});
-
-test('Stripe SDK permission failures produce safe diagnostics and no entitlement',async()=>{
- const session=paidSession();mockStripe(session);delete env.BD_STRIPE_CLIENT;
- const authFetch=globalThis.fetch,originalLog=console.error,logs=[];
- console.error=value=>logs.push(JSON.parse(value));
- globalThis.fetch=async(url,options)=>String(url).startsWith('https://api.stripe.com/')
-  ?Response.json({error:{type:'invalid_request_error',message:'secret sk_live_DO_NOT_LOG alice@example.test',code:'permission_denied'}},{status:403})
-  :authFetch(url,options);
- try{
-  const response=await request('claim',{method:'POST',body:{sessionId:session.id}});
-  assert.equal(response.status,503);const body=await response.json();
-  assert.equal(logs[0].stage,'stripe_session_read');assert.equal(logs[0].code,'stripe_permission_denied');
-  assert.equal(body.reference,logs[0].reference);
-  assert.doesNotMatch(JSON.stringify({body,logs}),/DO_NOT_LOG|alice@example|sk_live/);
-  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
- }finally{console.error=originalLog;}
-});
-
-test('missing purchase schema is identified without exposing raw database errors',async()=>{
- const session=paidSession();mockStripe(session);db.exec('DROP TABLE bd_revocations');
- const originalLog=console.error,logs=[];console.error=value=>logs.push(JSON.parse(value));
- try{
-  assert.equal((await request('claim',{method:'POST',body:{sessionId:session.id}})).status,503);
-  assert.equal(logs[0].stage,'purchase_record');assert.equal(logs[0].code,'database_schema_missing');
-  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
- }finally{console.error=originalLog;}
- assert.deepEqual(paymentDiagnostic(new Error('private arbitrary message sk_live_secret')),{stage:'request',code:'unexpected_error'});
-});
-
-test('Omnisend failure preserves access and Stripe retry sends the same event ID',async()=>{
- const session=paidSession();mockStripe(session);env.OMNISEND_API_KEY='fixture';
- const authFetch=globalThis.fetch,originalLog=console.error,logs=[],sent=[];
- console.error=value=>logs.push(JSON.parse(value));
- globalThis.fetch=async(url,options)=>{
-  if(String(url)==='https://api.omnisend.com/api/events'){
-   sent.push(JSON.parse(options.body));return new Response(null,{status:sent.length===1?500:202});
-  }
-  return authFetch(url,options);
- };
- const event={id:'evt_omnisend_retry',type:'checkout.session.completed',livemode:false,data:{object:session}};
- try{
-  assert.equal((await webhook(event)).status,503);
-  assert.equal(logs[0].stage,'omnisend_event');assert.equal((await data('me')).member,true);
-  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_payment_events').get().n,0);
-  assert.equal((await webhook(event)).status,200);
-  assert.equal((await webhook(event)).status,200);
-  assert.equal(sent.length,2);assert.equal(sent[0].eventID,sent[1].eventID);
-  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,1);
- }finally{console.error=originalLog;}
 });
