@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { Autosave } from "./bd-autosave.js";
 import { LESSON_QUIZZES } from "./bd-quizzes.js";
+import { quizChoiceOrder } from "./bd-quiz-order.js";
 import { clearCompletionReveals, revealCompletion } from "./bd-completion-ui.js";
 const $ = (s) => document.querySelector(s),
   esc = (v) =>
@@ -302,7 +303,8 @@ function wireWorkbookSubsections(root = document) {
 }
 function lessonQuizHTML(items, savedScore) {
   const hasScore = Number.isInteger(savedScore);
-  return `<details class="lesson-quiz no-print"><summary><span><span class="eyebrow">LESSON REVIEW</span>Take the 10-question quiz</span><span class="quiz-toggle" aria-hidden="true">+</span></summary><div class="quiz-top"><div><span class="quiz-score-label">Last score</span><strong id="quiz-score">${hasScore ? savedScore : 0}%</strong></div><button id="retake-quiz" class="button quiz-retake" type="button" ${hasScore ? "" : "hidden"}>Retake quiz</button></div><form id="lesson-quiz-form" class="lesson-quiz-body">${items.map((item, questionIndex) => `<fieldset data-quiz-question="${questionIndex}"><legend>${questionIndex + 1}. ${esc(item.question)}</legend>${item.choices.map((choice, choiceIndex) => `<label data-choice="${choiceIndex}"><input type="radio" name="quiz-${questionIndex}" value="${choiceIndex}"><span class="choice-copy">${esc(choice)}<small class="choice-feedback" hidden></small></span></label>`).join("")}</fieldset>`).join("")}<button class="button quiz-submit" type="submit">Submit quiz</button><div id="quiz-result" class="quiz-result" role="status" aria-live="polite"></div></form></details>`;
+  const choiceOrder = quizChoiceOrder(items);
+  return `<details class="lesson-quiz no-print"><summary><span><span class="eyebrow">LESSON REVIEW</span>Take the 10-question quiz</span><span class="quiz-toggle" aria-hidden="true">+</span></summary><div class="quiz-top"><div><span class="quiz-score-label">Last score</span><strong id="quiz-score">${hasScore ? savedScore : 0}%</strong></div><button id="retake-quiz" class="button quiz-retake" type="button" ${hasScore ? "" : "hidden"}>Retake quiz</button></div><form id="lesson-quiz-form" class="lesson-quiz-body">${items.map((item, questionIndex) => `<fieldset data-quiz-question="${questionIndex}"><legend>${questionIndex + 1}. ${esc(item.question)}</legend>${choiceOrder[questionIndex].map((choiceIndex) => `<label data-choice="${choiceIndex}"><input type="radio" name="quiz-${questionIndex}" value="${choiceIndex}"><span class="choice-copy">${esc(item.choices[choiceIndex])}<small class="choice-feedback" hidden></small></span></label>`).join("")}</fieldset>`).join("")}<button class="button quiz-submit" type="submit">Submit quiz</button><div id="quiz-result" class="quiz-result" role="status" aria-live="polite"></div></form></details>`;
 }
 function wireLessonQuiz(items) {
   const quiz = $(".lesson-quiz");
@@ -314,7 +316,13 @@ function wireLessonQuiz(items) {
   const form = $("#lesson-quiz-form");
   const resetAnswers = () => {
     form.reset();
-    form.querySelectorAll("fieldset").forEach((fieldset) => fieldset.classList.remove("quiz-correct", "quiz-incorrect"));
+    const choiceOrder = quizChoiceOrder(items);
+    form.querySelectorAll("fieldset").forEach((fieldset, questionIndex) => {
+      fieldset.classList.remove("quiz-correct", "quiz-incorrect");
+      choiceOrder[questionIndex].forEach((choiceIndex) => {
+        fieldset.append(fieldset.querySelector(`[data-choice="${choiceIndex}"]`));
+      });
+    });
     form.querySelectorAll("[data-choice]").forEach((label) => label.classList.remove("selected-correct", "selected-incorrect", "correct-choice"));
     form.querySelectorAll(".choice-feedback").forEach((feedback) => { feedback.hidden = true; feedback.textContent = ""; });
     const result = $("#quiz-result");

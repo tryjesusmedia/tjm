@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {quizChoiceOrder} from '../scripts/bd-quiz-order.js';
 
 const source = fs.readFileSync(new URL('../scripts/bd-app.js', import.meta.url), 'utf8');
 const wire = source.slice(source.indexOf('function wireLessonQuiz('), source.indexOf('function hasEarnedCompletion('));
@@ -19,11 +20,13 @@ function node() {
   };
 }
 function fixture(failSave = false) {
-  const items = Array.from({length: 10}, () => ({answer: 0}));
+  const items = Array.from({length: 10}, () => ({answer: 0, choices: ['Correct', 'Wrong one', 'Wrong two', 'Wrong three']}));
   const feedback = Array.from({length: 40}, node);
   const labels = feedback.map(f => Object.assign(node(), {querySelector: () => f}));
   const fields = Array.from({length: 10}, (_, i) => Object.assign(node(), {
     querySelector: selector => labels[i * 4 + Number(selector.match(/"(\d+)"/)[1])],
+    order: labels.slice(i * 4, i * 4 + 4),
+    append(label) { this.order = this.order.filter(item => item !== label); this.order.push(label); },
   }));
   const inputs = Array.from({length: 40}, node);
   const submit = node(), result = node(), retake = node(), score = node(), toggle = node();
@@ -43,7 +46,7 @@ function fixture(failSave = false) {
   const quiz = Object.assign(node(), {querySelector: () => toggle});
   const nodes = {'.lesson-quiz': quiz, '#lesson-quiz-form': form, '#retake-quiz': retake, '#quiz-score': score, '#quiz-result': result};
   let saved;
-  const context = { $: s => nodes[s], scope: 'foundations', me:{progress:[]}, updateLessonCompletion(){}, notifyProgressChanged(){}, api: async (_path, _method, body) => {
+  const context = { quizChoiceOrder, $: s => nodes[s], scope: 'foundations', me:{progress:[]}, updateLessonCompletion(){}, notifyProgressChanged(){}, api: async (_path, _method, body) => {
     await Promise.resolve();
     if (failSave) throw Error('Offline');
     saved = body.quizAnswers.filter(answer=>answer===0).length*10;
@@ -52,7 +55,7 @@ function fixture(failSave = false) {
   vm.createContext(context);
   vm.runInContext(wire, context);
   context.wireLessonQuiz(items);
-  return {form, retake, score, submit, labels, feedback, result, get saved() { return saved; }};
+  return {form, retake, score, submit, labels, fields, feedback, result, get saved() { return saved; }};
 }
 test('quiz feedback survives event.currentTarget clearing after asynchronous save', async () => {
   const f = fixture();
@@ -73,6 +76,9 @@ test('quiz feedback survives event.currentTarget clearing after asynchronous sav
   assert.ok(Object.values(f.form.elements).every(e => e.value === ''));
   assert.ok(f.feedback.every(e => e.hidden));
   assert.ok(f.labels.every(e => !e.classList.contains('correct-choice')));
+  const positions = [0, 0, 0, 0];
+  f.fields.forEach((field, index) => positions[field.order.indexOf(f.labels[index * 4])]++);
+  assert.ok(positions.every(count => count >= 2 && count <= 3));
 });
 test('quiz save failure preserves last score and enables retry', async () => {
   const f = fixture(true);
