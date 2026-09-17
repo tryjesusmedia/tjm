@@ -1720,3 +1720,23 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
   body.study-only .saved-study { border: 0; overflow: visible; }
   body.study-only .study-editor { padding: 0; }
 }
+
+/* Engraved gold award and optional bonus endorsement. */
+.certificate-faith-seal { display: block; width: 140px; height: 140px; max-width: 100%; margin: auto; }
+.certificate-footer { grid-template-columns: 1fr 140px 1fr; }
+.certificate-bonus { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 18px auto 0; color: #86601e; }
+.certificate-bonus[hidden] { display: none; }
+.certificate-bonus p { font: italic 500 clamp(1rem, 2.8vw, 1.4rem)/1.35 "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif; margin: 0; padding: 5px 10px; border-block: 3px double #b28a37; text-shadow: 0 1px #fff; }
+.certificate-bonus > span { font: 30px/1 Georgia, serif; }
+.certificate-bonus > span:last-child { transform: rotate(180deg); }
+@media (max-width: 600px) {
+  .certificate-footer { grid-template-columns: 1fr 1fr; }
+  .certificate-faith-seal { grid-column: 1 / -1; grid-row: 1; }
+  .certificate-bonus { gap: 5px; }
+}
+@media print {
+  #certificate-print .certificate-footer { grid-template-columns: 1fr 110px 1fr; }
+  #certificate-print .certificate-faith-seal { grid-column: auto; grid-row: auto; width: 110px; height: 110px; }
+  #certificate-print .certificate-bonus { margin-top: 10px; }
+  #certificate-print .certificate-bonus p { font-size: 14pt; }
+}
