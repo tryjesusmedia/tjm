@@ -1824,3 +1824,51 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
 @media screen {
   .certificate { padding-bottom: calc(90px + 3rem); }
 }
+
+/* A centered Letter portrait composition with a protected inner area. */
+.certificate {
+  box-sizing: border-box; width: 816px; max-width: 100%; min-height: 1056px;
+  margin-inline: auto; padding: 112px 64px;
+  display: flex; align-items: center; justify-content: center;
+}
+.certificate .certificate-content { width: 100%; height: auto; margin: 0; }
+.certificate .certificate-logo { width: 64px; height: 64px; margin: 0 auto 10px; }
+.certificate .certificate-brand { font-size: 11px; }
+.certificate .certificate-title { font-size: 42px; margin: 14px 0 24px; }
+.certificate .certificate-presented { font-size: 11px; }
+.certificate .person { font-size: 36px; }
+.certificate .certificate-recognition { font-size: 14px; }
+.certificate .certificate-course { font-size: 32px; }
+.certificate .certificate-dedication { font-size: 16px; }
+.certificate .certificate-methods { font-size: 11px; }
+.certificate .certificate-host p, .certificate .certificate-motto p { font-size: 17px; }
+.certificate .certificate-host span, .certificate .certificate-motto span { font-size: 10px; }
+.certificate .certificate-bonus { left: 0; top: 82px; width: 128px; }
+.certificate .certificate-bonus p { font-size: 16px; }
+.certificate .certificate-faith-seal { right: 0; top: 74px; width: 108px; height: 108px; }
+.certificate .certificate-footer { gap: 40px; }
+@media screen and (max-width: 600px) {
+  .certificate { min-height: 0; padding: 105px 34px; }
+  .certificate .certificate-title { font-size: 32px; margin-top: 100px; }
+  .certificate .person { font-size: 28px; }
+  .certificate .certificate-bonus { top: 78px; width: 100px; max-width: 36%; }
+  .certificate .certificate-bonus p { font-size: 12px; }
+  .certificate .certificate-faith-seal { top: 76px; width: 84px; height: 84px; max-width: 32%; }
+  .certificate .certificate-footer { gap: 16px; }
+}
+@page certificate-page { size: 8.5in 11in; margin: .375in; }
+@media print {
+  body.certificate-only > #certificate-print {
+    display: flex !important; align-items: center; justify-content: center;
+    width: 7.75in; height: 10.25in; min-height: 0; padding: 90px 55px;
+  }
+  #certificate-print .certificate-content { height: auto; width: 100%; }
+  #certificate-print .certificate-logo { width: 56px; height: 56px; }
+  #certificate-print .certificate-title { margin-top: 12px; font-size: 38px; }
+  #certificate-print .certificate-bonus { left: 0; top: 68px; width: 122px; }
+  #certificate-print .certificate-bonus p { font-size: 15px; }
+  #certificate-print .certificate-faith-seal { right: 0; top: 64px; width: 100px; height: 100px; }
+  #certificate-print .certificate-footer { gap: 38px; }
+}
+
+.certificate::before { top: 6px; left: 6px; width: calc(100% - 12px); height: calc(100% - 12px); }
