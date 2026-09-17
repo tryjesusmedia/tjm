@@ -2,7 +2,9 @@
 
 Bible Decoded lives at `/bibledecoded/` on the existing Try Jesus Media site.
 The member routes are `welcome/`, `dashboard/`, `lesson/?lesson=foundations`,
-`study-lab/`, and `complete/`.
+`complete/` (with the Study Lab below the call invitation).
+Saved studies open at `complete/?study=<id>#study-lab`. The retired
+`study-lab/` and `final-tools/` pages redirect to this section.
 
 ## Current rollout
 

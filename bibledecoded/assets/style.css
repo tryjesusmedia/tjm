@@ -1493,8 +1493,7 @@ h3,
 /* Matching typography for lesson panels; preserve their colors and layout. */
 body[data-page="lesson"] .lesson-workbook > summary,
 body[data-page="lesson"] .lesson-quiz > summary,
-body[data-page="lesson"] .workbook-end h2,
-body[data-page="lesson"] .bd-congratulations > summary {
+body[data-page="lesson"] .workbook-end h2 {
   font-family: Georgia, serif;
   font-size: 1.45rem;
   font-weight: 500;
@@ -1512,8 +1511,7 @@ body[data-page="lesson"] .lesson-quiz > summary .eyebrow {
 @media (max-width: 760px) {
   body[data-page="lesson"] .lesson-workbook > summary,
   body[data-page="lesson"] .lesson-quiz > summary,
-  body[data-page="lesson"] .workbook-end h2,
-  body[data-page="lesson"] .bd-congratulations > summary {
+  body[data-page="lesson"] .workbook-end h2 {
     font-size: 1.25rem;
   }
 }
@@ -1631,4 +1629,18 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
 @media print {
   body[data-page="lesson"] .panel-hint,
   body[data-page="lesson"] .lesson-navigation { display: none !important; }
+}
+.completion-study-lab {
+  scroll-margin-top: 120px;
+  border-top: 1px solid #d8cad8;
+  margin-top: 40px;
+}
+.completion-study-lab .study-form { flex-wrap: wrap; }
+.completion-study-lab .study-form > div { min-width: 0; }
+.completion-study-lab .workbook-section p,
+.completion-study-lab .field label,
+.completion-study-lab .field textarea { font-size: 1rem; line-height: 1.7; }
+@media print {
+  body.study-only #app > :not(#study-lab) { display: none !important; }
+  body.study-only #study-lab { margin: 0; padding: 0; border: 0; }
 }

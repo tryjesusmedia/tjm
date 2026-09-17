@@ -48,7 +48,7 @@ const tell = (text, error = false) => {
 };
 const lessonLink = (id, view = "resume") =>
   `${ROOT}lesson/?lesson=${encodeURIComponent(id)}&view=${view}`;
-const studyLink = (id) => `${ROOT}study-lab/?study=${encodeURIComponent(id)}`;
+const studyLink = (id) => `${ROOT}complete/?study=${encodeURIComponent(id)}#study-lab`;
 const fieldList = (blocks) =>
   blocks.flatMap((b) =>
     b.type === "grid"
@@ -251,7 +251,7 @@ function dashboard() {
       .map(card)
       .join(
         "",
-      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>A fresh workspace for every passage, with all your study methods in one place.</p><a class="button" href="${ROOT}study-lab/">Start a new Bible study →</a><h3 class="section-label">My Bible Studies</h3>${studyList()}` : `<p>Complete the six main lessons to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a></div>`;
+      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">KEEP EXPLORING SCRIPTURE</p><h2>Bible Decoded Study Lab</h2>${me.labUnlocked ? `<p>A fresh workspace for every passage, with all your study methods in one place.</p><a class="button" href="${ROOT}complete/#study-lab">Start a new Bible study →</a><h3 class="section-label">My Bible Studies</h3>${studyList()}` : `<p>Complete the six main lessons to unlock your personal Study Lab. You’ll be able to name, save, and return to as many studies as you like.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The bonus is yours to explore at any time.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">View the Bible Decoded program</a></div>`;
   wireSignout();
   document.querySelectorAll("[data-printable]").forEach(
     (button) =>
@@ -462,7 +462,16 @@ function connectWorkbook(data) {
       .forEach(
         (p) => (p.textContent = document.getElementById(p.dataset.print).value),
       );
-    window.print();
+    const panels = [...document.querySelectorAll("#study-lab .workbook-subsection")];
+    const states = panels.map((panel) => panel.open);
+    panels.forEach((panel) => { panel.open = true; });
+    if (page === "complete") document.body.classList.add("study-only");
+    try {
+      window.print();
+    } finally {
+      document.body.classList.remove("study-only");
+      panels.forEach((panel, index) => { panel.open = states[index]; });
+    }
   };
   window.addEventListener("online", () => {
     void autosave.flush();
@@ -736,16 +745,12 @@ async function saveVideoPosition() {
   }
 }
 async function studyLab() {
-  if (!me.labUnlocked) {
-    $("#app").innerHTML =
-      `<section class="page-top narrow"><p class="eyebrow">BIBLE DECODED STUDY LAB</p><h1>Keep learning.<br>Your lab is ahead.</h1><p>Complete the six main lessons to unlock your reusable study workspace.</p><a class="button" href="${ROOT}dashboard/">Return to your lessons</a></section>`;
-    return;
-  }
+  const container = $("#study-lab-content");
+  if (!me.labUnlocked || !container) return;
   scope = params.get("study");
   if (!scope) {
-    $("#app").innerHTML =
-      `<section class="page-top"><p class="breadcrumb"><a href="${ROOT}dashboard/">Your dashboard</a> / Study Lab</p><p class="eyebrow">A NEW DISCOVERY BEGINS WITH A PASSAGE</p><h1>Bible Decoded Study Lab</h1><p>Choose a passage and give your study a name. A blank workspace will bring all your methods together.</p></section><form class="study-form" id="new-study"><div><label for="study-name">Study name</label><input class="study-title" id="study-name" maxlength="120" required placeholder="For example: Genesis 22 — Abraham & Isaac"></div><button class="button">Start my study →</button></form><h2 class="section-label">My Bible Studies</h2>${studyList()}`;
-    wireSignout();
+    container.innerHTML =
+      `<p>Choose a passage and give your study a name. A blank workspace will bring all your methods together.</p><form class="study-form" id="new-study"><div><label for="study-name">Study name</label><input class="study-title" id="study-name" maxlength="120" required placeholder="For example: Genesis 22 — Abraham & Isaac"></div><button class="button">Start my study →</button></form><h3 class="section-label">My Bible Studies</h3>${studyList()}`;
     const newStudyId = crypto.randomUUID();
     $("#new-study").onsubmit = async (event) => {
       event.preventDefault();
@@ -766,17 +771,17 @@ async function studyLab() {
   }
   const data = await api("study/" + encodeURIComponent(scope));
   currentBlocks = data.study.blocks;
-  $("#app").innerHTML =
-    `<section class="page-top"><p class="breadcrumb"><a href="${ROOT}dashboard/">Your dashboard</a> / <a href="${ROOT}study-lab/">My Bible Studies</a></p><p class="eyebrow">BIBLE DECODED STUDY LAB</p><h1>${esc(data.study.title)}</h1><p class="muted">Use the methods that help you explore this passage. Your work will be here when you return.</p></section><div class="workbook-head"><h2>Your study workspace</h2><div id="save-status" class="save-status" role="status" aria-live="polite"></div></div><div class="actions no-print"><button id="save-now" class="button">Save my study</button><button id="print-answers" class="button secondary">Print my study</button></div>${renderWorkbook(currentBlocks)}`;
+  container.innerHTML =
+    `<p class="breadcrumb"><a href="${ROOT}complete/#study-lab">My Bible Studies</a></p><h3>${esc(data.study.title)}</h3><p class="muted">Use the methods that help you explore this passage. Your work will be here when you return.</p><div class="workbook-head"><h3>Your study workspace</h3><div id="save-status" class="save-status" role="status" aria-live="polite"></div></div><div class="actions no-print"><button id="save-now" class="button">Save my study</button><button id="print-answers" class="button secondary">Print my study</button></div>${renderWorkbook(currentBlocks)}`;
   connectWorkbook(data);
 }
-function completion() {
+async function completion() {
   if (!me.labUnlocked) {
     location.replace(ROOT + "dashboard/");
     return;
   }
   $("#app").innerHTML =
-    `<section class="page-top narrow"><p class="eyebrow">SIX LESSONS. A NEW BEGINNING.</p><h1>You completed<br>Bible Decoded.</h1><p>You’ve practiced the methods. Now make them part of your own time in Scripture.</p><div class="actions"><a class="button" href="${ROOT}study-lab/">Open my Study Lab →</a><a class="button secondary" href="${lessonLink("word-search", "workbook")}">Explore the bonus lesson</a></div></section><section class="certificate" id="certificate"><p class="eyebrow">TRY JESUS MEDIA</p><h2>Certificate of Completion</h2><p>This celebrates</p><p class="person">${esc(me.user.name || me.user.email)}</p><p>for completing the six lessons of</p><h2>Bible Decoded</h2><p class="small">Foundations · Look for Christ · Pattern Recognition<br>The Questioning Method · Exegesis · Bible Memorization</p><p class="small">Keep discovering. Keep practicing. Keep growing.</p></section><div class="actions no-print"><button id="print-certificate" class="button secondary">Print my certificate</button><a href="/welcome/#live-discussion" class="button secondary">Join the weekly Bible discussion</a><a href="${ROOT}dashboard/">Return to my dashboard</a></div>${coachingInvite()}`;
+    `<section class="page-top narrow"><p class="eyebrow">SIX LESSONS. A NEW BEGINNING.</p><h1>You completed<br>Bible Decoded.</h1><p>You’ve practiced the methods. Now make them part of your own time in Scripture.</p><div class="actions"><a class="button" href="#study-lab">Open my Study Lab →</a><a class="button secondary" href="${lessonLink("word-search", "workbook")}">Explore the bonus lesson</a></div></section><section class="certificate" id="certificate"><p class="eyebrow">TRY JESUS MEDIA</p><h2>Certificate of Completion</h2><p>This celebrates</p><p class="person">${esc(me.user.name || me.user.email)}</p><p>for completing the six lessons of</p><h2>Bible Decoded</h2><p class="small">Foundations · Look for Christ · Pattern Recognition<br>The Questioning Method · Exegesis · Bible Memorization</p><p class="small">Keep discovering. Keep practicing. Keep growing.</p></section><div class="actions no-print"><button id="print-certificate" class="button secondary">Print my certificate</button><a href="/welcome/#live-discussion" class="button secondary">Join the weekly Bible discussion</a><a href="${ROOT}dashboard/">Return to my dashboard</a></div>${coachingInvite()}<section class="section completion-study-lab" id="study-lab" aria-labelledby="study-lab-title"><p class="eyebrow">A NEW DISCOVERY BEGINS WITH A PASSAGE</p><h2 id="study-lab-title">Bible Decoded Study Lab</h2><div id="study-lab-content"></div></section>`;
   wireSignout();
   $("#print-certificate").onclick = () => {
     const copy = $("#certificate").cloneNode(true);
@@ -787,6 +792,10 @@ function completion() {
     document.body.classList.remove("certificate-only");
     copy.remove();
   };
+  await studyLab();
+  if (location.hash === "#study-lab" || params.has("study")) {
+    $("#study-lab").scrollIntoView({ block: "start" });
+  }
 }
 async function boot() {
   readingSize();
@@ -862,8 +871,7 @@ async function boot() {
   }
   if (page === "dashboard") dashboard();
   else if (page === "lesson") await loadLesson();
-  else if (page === "study-lab") await studyLab();
-  else if (page === "complete") completion();
+  else if (page === "complete") await completion();
 }
 boot().catch((error) => {
   tell(error.message, true);
