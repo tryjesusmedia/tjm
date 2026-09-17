@@ -321,10 +321,11 @@ function wireLessonQuiz(items) {
   $("#retake-quiz").addEventListener("click", resetAnswers);
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const selections = items.map((_, index) => form.elements[`quiz-${index}`].value);
     let correct = 0;
     let unanswered = 0;
     items.forEach((item, index) => {
-      const selected = event.currentTarget.elements[`quiz-${index}`].value;
+      const selected = selections[index];
       if (selected === "") unanswered += 1;
       else if (Number(selected) === item.answer) correct += 1;
     });
@@ -334,8 +335,10 @@ function wireLessonQuiz(items) {
       result.className = "quiz-result notice";
       return;
     }
-    const submit = event.currentTarget.querySelector(".quiz-submit");
+    const submit = form.querySelector(".quiz-submit");
     submit.disabled = true;
+    $("#retake-quiz").disabled = true;
+    form.querySelectorAll("input").forEach((input) => { input.disabled = true; });
     const score = correct * 10;
     try {
       await api(`progress/${scope}`, "PUT", { quizScore: score });
@@ -343,11 +346,15 @@ function wireLessonQuiz(items) {
       result.textContent = `${error.message} Your quiz score has not saved yet.`;
       result.className = "quiz-result notice error";
       submit.disabled = false;
+      $("#retake-quiz").disabled = false;
+      form.querySelectorAll("input").forEach((input) => { input.disabled = false; });
       return;
     }
+    form.querySelectorAll("[data-choice]").forEach((label) => label.classList.remove("selected-correct", "selected-incorrect", "correct-choice"));
+    form.querySelectorAll(".choice-feedback").forEach((feedback) => { feedback.hidden = true; feedback.textContent = ""; });
     items.forEach((item, index) => {
-      const fieldset = event.currentTarget.querySelector(`[data-quiz-question="${index}"]`);
-      const selected = Number(event.currentTarget.elements[`quiz-${index}`].value);
+      const fieldset = form.querySelector(`[data-quiz-question="${index}"]`);
+      const selected = Number(selections[index]);
       fieldset.classList.toggle("quiz-correct", selected === item.answer);
       fieldset.classList.toggle("quiz-incorrect", selected !== item.answer);
       const selectedLabel = fieldset.querySelector(`[data-choice="${selected}"]`);
@@ -367,9 +374,11 @@ function wireLessonQuiz(items) {
     $("#retake-quiz").hidden = false;
     result.textContent = correct >= 8
       ? `${correct} out of 10 correct. Excellent work—you understand this lesson well!`
-      : `${correct} out of 10 correct. Review the correct answers below, revisit the lesson if helpful, and try again.`;
+      : `${correct} out of 10 correct. Review the highlighted answers above, then select Retake quiz to try again.`;
     result.className = `quiz-result notice ${correct >= 8 ? "quiz-passed" : ""}`;
     submit.disabled = false;
+    $("#retake-quiz").disabled = false;
+    form.querySelectorAll("input").forEach((input) => { input.disabled = false; });
   });
 }
 function showSaveState(store) {
