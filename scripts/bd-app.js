@@ -242,7 +242,8 @@ function dashboard() {
   const name = me.user.name.split(" ")[0];
   const card = (l) => {
     const progress = me.progress.find((p) => p.lesson_id === l.id);
-    return `<article class="card lesson-card ${progress?.completed ? "completed" : ""}"><div class="card-status"><div class="number">${l.bonus ? "Bonus" : `0${l.number}`}</div><span>${progress?.completed ? "✓ Completed" : progress ? "In progress" : "Ready when you are"}</span></div><h3>${esc(l.title)}</h3><p>${esc(l.description)}</p><div class="actions">${l.bonus ? "" : `<a class="button secondary" href="${lessonLink(l.id, "video")}">Watch Video</a>`}<a class="button secondary" href="${lessonLink(l.id, "workbook")}">Open Workbook</a><button class="button secondary" data-printable="${l.id}">Printable guide (PDF)</button>${progress ? `<a href="${lessonLink(l.id)}" class="small">Continue Where I Left Off →</a>` : ""}</div></article>`;
+    const quizScore = Number.isInteger(progress?.quiz_score) ? progress.quiz_score : 0;
+    return `<article class="card lesson-card ${progress?.completed ? "completed" : ""}"><div class="card-status"><div class="number">${l.bonus ? "Bonus" : `0${l.number}`}</div><span>${progress?.completed ? "✓ Completed" : progress ? "In progress" : "Ready when you are"}</span></div><div class="dashboard-quiz-score" aria-label="Quiz score ${quizScore} percent">Quiz: ${quizScore}%</div><h3>${esc(l.title)}</h3><p>${esc(l.description)}</p><div class="actions">${l.bonus ? "" : `<a class="button secondary" href="${lessonLink(l.id, "video")}">Watch Video</a>`}<a class="button secondary" href="${lessonLink(l.id, "workbook")}">Open Workbook</a><button class="button secondary" data-printable="${l.id}">Printable guide (PDF)</button>${progress ? `<a href="${lessonLink(l.id)}" class="small">Continue Where I Left Off →</a>` : ""}</div></article>`;
   };
   $("#app").innerHTML =
     `<section class="page-top"><p class="eyebrow">BIBLE DECODED · YOUR DASHBOARD</p><h1>Welcome back${name ? ", " + esc(name) : ""}.</h1><p class="muted">A little time in the Word can become a lasting part of your day.</p></section><section class="progress-panel"><div><h2>Your progress</h2><p>${done} of 6 lessons completed</p><progress max="6" value="${done}" aria-label="${done} of 6 lessons completed"></progress></div><a class="button gold" href="${done === 6 ? ROOT + "complete/" : lessonLink(next.id)}">${done === 6 ? "Celebrate your progress" : "Continue learning →"}</a></section><div class="actions no-print">${albumLink()}</div><h2 class="section-label">Your lessons</h2><p class="small muted">Follow the lessons in order, or revisit a method whenever you need it.</p><div class="cards">${config.lessons
@@ -294,8 +295,9 @@ function wireWorkbookSubsections() {
     });
   });
 }
-function lessonQuizHTML(items) {
-  return `<details class="lesson-quiz no-print"><summary><span><span class="eyebrow">LESSON REVIEW</span>Take the 10-question quiz</span><span class="quiz-toggle" aria-hidden="true">+</span></summary><form id="lesson-quiz-form" class="lesson-quiz-body">${items.map((item, questionIndex) => `<fieldset data-quiz-question="${questionIndex}"><legend>${questionIndex + 1}. ${esc(item.question)}</legend>${item.choices.map((choice, choiceIndex) => `<label><input type="radio" name="quiz-${questionIndex}" value="${choiceIndex}"> <span>${esc(choice)}</span></label>`).join("")}<p class="quiz-answer" hidden></p></fieldset>`).join("")}<button class="button quiz-submit" type="submit">Submit quiz</button><div id="quiz-result" class="quiz-result" role="status" aria-live="polite"></div></form></details>`;
+function lessonQuizHTML(items, savedScore) {
+  const hasScore = Number.isInteger(savedScore);
+  return `<details class="lesson-quiz no-print"><summary><span><span class="eyebrow">LESSON REVIEW</span>Take the 10-question quiz</span><span class="quiz-toggle" aria-hidden="true">+</span></summary><div class="quiz-top"><div><span class="quiz-score-label">Last score</span><strong id="quiz-score">${hasScore ? savedScore : 0}%</strong></div><button id="retake-quiz" class="button quiz-retake" type="button" ${hasScore ? "" : "hidden"}>Retake quiz</button></div><form id="lesson-quiz-form" class="lesson-quiz-body">${items.map((item, questionIndex) => `<fieldset data-quiz-question="${questionIndex}"><legend>${questionIndex + 1}. ${esc(item.question)}</legend>${item.choices.map((choice, choiceIndex) => `<label data-choice="${choiceIndex}"><input type="radio" name="quiz-${questionIndex}" value="${choiceIndex}"><span class="choice-copy">${esc(choice)}<small class="choice-feedback" hidden></small></span></label>`).join("")}</fieldset>`).join("")}<button class="button quiz-submit" type="submit">Submit quiz</button><div id="quiz-result" class="quiz-result" role="status" aria-live="polite"></div></form></details>`;
 }
 function wireLessonQuiz(items) {
   const quiz = $(".lesson-quiz");
@@ -304,7 +306,20 @@ function wireLessonQuiz(items) {
   quiz.addEventListener("toggle", () => {
     toggle.textContent = quiz.open ? "−" : "+";
   });
-  $("#lesson-quiz-form").addEventListener("submit", (event) => {
+  const form = $("#lesson-quiz-form");
+  const resetAnswers = () => {
+    form.reset();
+    form.querySelectorAll("fieldset").forEach((fieldset) => fieldset.classList.remove("quiz-correct", "quiz-incorrect"));
+    form.querySelectorAll("[data-choice]").forEach((label) => label.classList.remove("selected-correct", "selected-incorrect", "correct-choice"));
+    form.querySelectorAll(".choice-feedback").forEach((feedback) => { feedback.hidden = true; feedback.textContent = ""; });
+    const result = $("#quiz-result");
+    result.textContent = "";
+    result.className = "quiz-result";
+    quiz.open = true;
+    form.querySelector("input")?.focus();
+  };
+  $("#retake-quiz").addEventListener("click", resetAnswers);
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     let correct = 0;
     let unanswered = 0;
@@ -319,19 +334,42 @@ function wireLessonQuiz(items) {
       result.className = "quiz-result notice";
       return;
     }
+    const submit = event.currentTarget.querySelector(".quiz-submit");
+    submit.disabled = true;
+    const score = correct * 10;
+    try {
+      await api(`progress/${scope}`, "PUT", { quizScore: score });
+    } catch (error) {
+      result.textContent = `${error.message} Your quiz score has not saved yet.`;
+      result.className = "quiz-result notice error";
+      submit.disabled = false;
+      return;
+    }
     items.forEach((item, index) => {
       const fieldset = event.currentTarget.querySelector(`[data-quiz-question="${index}"]`);
       const selected = Number(event.currentTarget.elements[`quiz-${index}`].value);
       fieldset.classList.toggle("quiz-correct", selected === item.answer);
       fieldset.classList.toggle("quiz-incorrect", selected !== item.answer);
-      const answer = fieldset.querySelector(".quiz-answer");
-      answer.hidden = false;
-      answer.textContent = `Correct answer: ${item.choices[item.answer]}`;
+      const selectedLabel = fieldset.querySelector(`[data-choice="${selected}"]`);
+      const correctLabel = fieldset.querySelector(`[data-choice="${item.answer}"]`);
+      correctLabel.classList.add("correct-choice");
+      selectedLabel.classList.add(selected === item.answer ? "selected-correct" : "selected-incorrect");
+      const selectedFeedback = selectedLabel.querySelector(".choice-feedback");
+      selectedFeedback.hidden = false;
+      selectedFeedback.textContent = selected === item.answer ? "✓ Correct!" : "Incorrect";
+      if (selected !== item.answer) {
+        const correctFeedback = correctLabel.querySelector(".choice-feedback");
+        correctFeedback.hidden = false;
+        correctFeedback.textContent = "✓ Correct answer";
+      }
     });
+    $("#quiz-score").textContent = `${score}%`;
+    $("#retake-quiz").hidden = false;
     result.textContent = correct >= 8
       ? `${correct} out of 10 correct. Excellent work—you understand this lesson well!`
       : `${correct} out of 10 correct. Review the correct answers below, revisit the lesson if helpful, and try again.`;
     result.className = `quiz-result notice ${correct >= 8 ? "quiz-passed" : ""}`;
+    submit.disabled = false;
   });
 }
 function showSaveState(store) {
@@ -480,7 +518,8 @@ async function loadLesson() {
   workbookPanel.after(workbookEnd);
   const quizItems = LESSON_QUIZZES[lesson.id];
   if (quizItems) {
-    workbookPanel.insertAdjacentHTML("afterend", lessonQuizHTML(quizItems));
+    const savedQuizScore = Number.isInteger(progress?.quiz_score) ? progress.quiz_score : null;
+    workbookPanel.insertAdjacentHTML("afterend", lessonQuizHTML(quizItems, savedQuizScore));
     wireLessonQuiz(quizItems);
   }
   connectWorkbook(data);
