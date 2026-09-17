@@ -108,6 +108,24 @@ existing Stripe signature, environment, product, price, currency, amount, and
 payment checks pass. Omnisend failures never remove the entitlement already
 created for a valid purchase; returning a webhook error allows Stripe to retry.
 
+## Purchase failure diagnostics
+
+Unexpected server failures log `bibledecoded_request_failed` with a random
+`reference`, an allowlisted `stage`, and an allowlisted `code`. The browser shows
+the same reference. Raw exceptions, keys, emails, session IDs, and request headers
+are deliberately excluded. `stripe_session_read` identifies the Stripe lookup;
+`purchase_record` and `purchase_link` identify D1 writes; `claim_rate_limit`
+identifies the rate-limit database operation; `omnisend_event` identifies delivery.
+Codes distinguish Stripe authentication, permission, missing-resource, connection,
+and API failures from missing D1 schema and other database failures.
+
+After fixing production configuration, resend the original successful Checkout
+event to the configured webhook. This does not charge the customer again. Confirm
+a 2xx response, an active entitlement, and the Omnisend event before inviting a new
+buyer to test. A manual entitlement does not verify automatic fulfillment. The
+automated suite exercises the real Stripe SDK against simulated HTTP responses;
+it does not verify production credentials, bindings, or live message delivery.
+
 ## Member support
 
 The Study Lab unlocks after the six main lessons are marked complete and stays

@@ -6,6 +6,7 @@ import Stripe from 'stripe';
 import {onRequest} from '../functions/api/bibledecoded/[[path]].js';
 import {fieldsFor,validPurchase,omnisendPurchasePayload} from '../functions/_lib/bd-api.js';
 import {LESSONS} from '../functions/_lib/bd-content.js';
+import {paymentDiagnostic} from '../functions/_lib/bd-diagnostics.js';
 
 let db,env,realFetch;
 const people={alice:{id:'alice',email:'alice@example.test',email_confirmed_at:'2026-01-01'},bob:{id:'bob',email:'bob@example.test',email_confirmed_at:'2026-01-01'},unconfirmed:{id:'unconfirmed',email:'alice@example.test'}};
@@ -158,4 +159,70 @@ test('unsigned webhook requests never grant membership',async()=>{
  env.BD_STRIPE_KEY='sk_test_fixture';env.BD_STRIPE_WEBHOOK_SECRET='fixture-secret';
  assert.equal((await request('webhook',{person:null,method:'POST',body:{type:'checkout.session.completed',data:{object:{payment_status:'paid'}}}})).status,400);
  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
+});
+
+test('real Stripe SDK transport grants a paid purchase with a different sign-in email',async()=>{
+ const session=paidSession();mockStripe(session);delete env.BD_STRIPE_CLIENT;
+ env.BD_STRIPE_KEY='  sk_test_fixture\n';
+ const authFetch=globalThis.fetch;let reads=0;
+ globalThis.fetch=async(url,options)=>{
+  if(String(url).startsWith('https://api.stripe.com/v1/checkout/sessions/')){
+   reads++;assert.equal(new Headers(options.headers).get('authorization'),'Bearer sk_test_fixture');
+   assert.match(String(url),/expand/);
+   return Response.json(session);
+  }
+  return authFetch(url,options);
+ };
+ assert.equal((await data('claim',{person:'bob',method:'POST',body:{sessionId:session.id}})).member,true);
+ assert.equal(reads,1);assert.equal(db.prepare('SELECT user_id FROM bd_purchases').get().user_id,'bob');
+});
+
+test('Stripe SDK permission failures produce safe diagnostics and no entitlement',async()=>{
+ const session=paidSession();mockStripe(session);delete env.BD_STRIPE_CLIENT;
+ const authFetch=globalThis.fetch,originalLog=console.error,logs=[];
+ console.error=value=>logs.push(JSON.parse(value));
+ globalThis.fetch=async(url,options)=>String(url).startsWith('https://api.stripe.com/')
+  ?Response.json({error:{type:'invalid_request_error',message:'secret sk_live_DO_NOT_LOG alice@example.test',code:'permission_denied'}},{status:403})
+  :authFetch(url,options);
+ try{
+  const response=await request('claim',{method:'POST',body:{sessionId:session.id}});
+  assert.equal(response.status,503);const body=await response.json();
+  assert.equal(logs[0].stage,'stripe_session_read');assert.equal(logs[0].code,'stripe_permission_denied');
+  assert.equal(body.reference,logs[0].reference);
+  assert.doesNotMatch(JSON.stringify({body,logs}),/DO_NOT_LOG|alice@example|sk_live/);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
+ }finally{console.error=originalLog;}
+});
+
+test('missing purchase schema is identified without exposing raw database errors',async()=>{
+ const session=paidSession();mockStripe(session);db.exec('DROP TABLE bd_revocations');
+ const originalLog=console.error,logs=[];console.error=value=>logs.push(JSON.parse(value));
+ try{
+  assert.equal((await request('claim',{method:'POST',body:{sessionId:session.id}})).status,503);
+  assert.equal(logs[0].stage,'purchase_record');assert.equal(logs[0].code,'database_schema_missing');
+  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,0);
+ }finally{console.error=originalLog;}
+ assert.deepEqual(paymentDiagnostic(new Error('private arbitrary message sk_live_secret')),{stage:'request',code:'unexpected_error'});
+});
+
+test('Omnisend failure preserves access and Stripe retry sends the same event ID',async()=>{
+ const session=paidSession();mockStripe(session);env.OMNISEND_API_KEY='fixture';
+ const authFetch=globalThis.fetch,originalLog=console.error,logs=[],sent=[];
+ console.error=value=>logs.push(JSON.parse(value));
+ globalThis.fetch=async(url,options)=>{
+  if(String(url)==='https://api.omnisend.com/api/events'){
+   sent.push(JSON.parse(options.body));return new Response(null,{status:sent.length===1?500:202});
+  }
+  return authFetch(url,options);
+ };
+ const event={id:'evt_omnisend_retry',type:'checkout.session.completed',livemode:false,data:{object:session}};
+ try{
+  assert.equal((await webhook(event)).status,503);
+  assert.equal(logs[0].stage,'omnisend_event');assert.equal((await data('me')).member,true);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_payment_events').get().n,0);
+  assert.equal((await webhook(event)).status,200);
+  assert.equal((await webhook(event)).status,200);
+  assert.equal(sent.length,2);assert.equal(sent[0].eventID,sent[1].eventID);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM bd_purchases').get().n,1);
+ }finally{console.error=originalLog;}
 });
