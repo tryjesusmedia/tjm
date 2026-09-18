@@ -801,7 +801,7 @@
   });
   document.getElementById("sign-out").addEventListener("click", async () => {
     guestBrowsing = false;
-    await db.auth.signOut();
+    await db.auth.signOut({ scope: "local" });
   });
   signInButton.addEventListener("click", signInGoogle);
   guestButton.addEventListener("click", () => {

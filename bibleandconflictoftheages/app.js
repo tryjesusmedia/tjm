@@ -1015,7 +1015,7 @@ function taskGroupComplete(reading, kind) {
     accountMenu.hidden = !opening;
     profileButton.setAttribute("aria-expanded", String(opening));
   });
-  document.getElementById("sign-out").addEventListener("click", async () => { guestBrowsing = false; await db.auth.signOut(); });
+  document.getElementById("sign-out").addEventListener("click", async () => { guestBrowsing = false; await db.auth.signOut({ scope: "local" }); });
   signInButton.addEventListener("click", signInGoogle);
   guestButton.addEventListener("click", () => {
     guestBrowsing = true;
@@ -1063,7 +1063,7 @@ function taskGroupComplete(reading, kind) {
       root.hidden = false;
       render();
       if (!window.supabase?.createClient) throw new Error("The secure account service could not be loaded. Please refresh and try again.");
-      db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" } });
+      db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, { auth: { storageKey: CONFIG.authStorageKey, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" } });
       const { data, error } = await db.auth.getSession();
       if (error) throw error;
       await applySession(data.session);
