@@ -252,6 +252,7 @@ function taskGroupComplete(reading, kind) {
   }
 
   function showView(name, focusMain = false) {
+    window.TJMReadingBadgeViewer?.close(true);
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
@@ -364,7 +365,7 @@ function taskGroupComplete(reading, kind) {
         <header class="view-heading">
           <div>
             <p class="eyebrow">CONFLICT OF THE AGES</p>
-            <h2 id="readings-heading" class="chapter-heading">${companionHeading(reading)}</h2>
+            <div class="reading-title-with-badge"><h2 id="readings-heading" class="chapter-heading">${companionHeading(reading)}</h2>${readingComplete(reading) ? renderReadingBadge(reading) : ""}</div>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button nav-button" type="button" data-day-nav="prev" ${currentIndex === 0 ? "disabled" : ""}>Previous</button>
@@ -417,6 +418,18 @@ function taskGroupComplete(reading, kind) {
     return best;
   }
 
+  function renderReadingBadge(reading) {
+    const art = window.TJMReadingBadges;
+    const badge = art?.getBadge(reading.id);
+    if (!badge) return "";
+    return `<button type="button" class="reading-badge" data-reading-badge="${escapeHTML(reading.id)}" aria-label="${escapeHTML(`Enlarge earned badge: ${badge.label}. Reading ${reading.day}: ${badge.title}`)}" aria-haspopup="dialog"><img src="${art.badgeDataUri(badge)}" width="64" height="64" alt="" loading="lazy" decoding="async"><span class="reading-badge-number">Reading ${reading.day}</span><span class="reading-badge-label">${escapeHTML(badge.label)}</span></button>`;
+  }
+
+  function renderEarnedBadges() {
+    const earned = plan.readings.filter(readingComplete);
+    return `<section class="earned-badges" aria-labelledby="earned-badges-heading"><h3 id="earned-badges-heading">Earned badges · ${earned.length}</h3>${earned.length ? `<div class="earned-badge-grid">${earned.map(renderReadingBadge).join("")}</div>` : `<p class="earned-badge-empty">Complete all the items in a reading to earn its badge. Your badges will appear here.</p>`}</section>`;
+  }
+
   function renderProgress() {
     const completed = completedCount();
     const bibleComplete = plan.readings.filter((reading) => reading.bibleReference && taskGroupComplete(reading, "bible")).length;
@@ -425,7 +438,9 @@ function taskGroupComplete(reading, kind) {
     const reviewQueue = plan.reviewQueue?.length
       ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details>`
       : "";
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING JOURNEY</p><h2 id="progress-heading">Progress</h2><p>${session ? "Your completion state is saved to your account and available on every signed-in device." : "This preview starts at zero. Sign in to save your completion state across devices."}</p></div></header>
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING JOURNEY</p><h2 id="progress-heading">Progress</h2></div></header>
+      ${renderEarnedBadges()}
+      <p class="earned-badge-empty">${session ? "Your completion state is saved to your account and available on every signed-in device." : "This preview starts at zero. Sign in to save your completion state across devices."}</p>
       <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div>
       <div class="progress-layout progress-layout-single"><article class="progress-panel"><h3>By companion book</h3>${plan.books.map((book) => { const count = completedCount(book.code); const percent = Math.round(count / book.readingCount * 100); return `<div class="book-progress-row"><header><span>${escapeHTML(book.shortTitle)}</span><span>${count}/${book.readingCount}</span></header><span class="progress-track"><i style="width:${percent}%"></i></span></div>`; }).join("")}<p class="progress-inline-summary">${bibleComplete} Scripture assignments and ${commentaryComplete} companion assignments marked complete.</p><button class="button button-secondary" type="button" data-view-shortcut="rewards">View Journey leaderboard</button>${reviewQueue}</article></div>
     </section>`;
@@ -466,6 +481,11 @@ function taskGroupComplete(reading, kind) {
 
   function render() {
     if (!plan) return;
+    const selectedBadge = window.TJMReadingBadgeViewer?.selectedId();
+    if (selectedBadge) {
+      const reading = plan.readings.find(item => item.id === selectedBadge);
+      if (!session || !reading || !readingComplete(reading)) window.TJMReadingBadgeViewer.close(true);
+    }
     let content;
     if (activeView === "readings") content = renderReadings();
     else if (activeView === "journey") content = renderJourney();
@@ -880,6 +900,7 @@ function taskGroupComplete(reading, kind) {
     const previousUserId = session?.user?.id || "";
     const nextUserId = nextSession?.user?.id || "";
     if (previousUserId !== nextUserId) {
+      window.TJMReadingBadgeViewer?.close(true);
       sessionVersion += 1;
       clearInterval(refreshTimer);
       progress = new Map();
@@ -971,7 +992,11 @@ function taskGroupComplete(reading, kind) {
   root.addEventListener("click", (event) => {
     const target = event.target.closest("button, a");
     if (!target) return;
-    if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
+    if (target.dataset.readingBadge) {
+      const reading = plan.readings.find(item => item.id === target.dataset.readingBadge);
+      if (reading && readingComplete(reading)) window.TJMReadingBadgeViewer?.open(reading.id, target);
+    }
+    else if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
     else if (target.hasAttribute("data-change-name")) void changeJourneyName();
     else if (target.hasAttribute("data-toggle-leaderboard")) { leaderboardOpen = !leaderboardOpen; renderPreservingPlace(); }
     else if (target.hasAttribute("data-require-sign-in")) showSignIn();

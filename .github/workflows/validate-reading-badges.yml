@@ -1,0 +1,27 @@
+name: Validate Reading Badges
+on:
+  pull_request:
+    paths:
+      - 'bibleandconflictoftheages/**'
+      - 'scripts/*reading-badge*'
+      - '.github/workflows/validate-reading-badges.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'bibleandconflictoftheages/**'
+      - 'scripts/*reading-badge*'
+      - '.github/workflows/validate-reading-badges.yml'
+permissions:
+  contents: read
+jobs:
+  badges:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/build-reading-badges.mjs
+      - run: git diff --exit-code -- bibleandconflictoftheages/reading-badges.js
+      - run: node scripts/test-reading-badges.mjs
+      - run: node scripts/test-reading-account-isolation.mjs
