@@ -12,6 +12,7 @@
 .earned-badges h3 { margin: 0 0 16px; color: #E5B55B; font-family: var(--sans); font-size: 18px; line-height: 25px; }
 .earned-badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 22px 12px; align-items: start; }
 .earned-badge-empty { margin: 0; color: #B9C2C5; font-size: 17px; line-height: 26px; }
+.earned-badges + .earned-badge-empty { margin-bottom: 24px; }
 .badge-viewer-open { overflow: hidden; }
 .reading-badge-viewer { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: max(22px, env(safe-area-inset-top)) 16px max(22px, env(safe-area-inset-bottom)); border: 0; background: #010C18; color: #FDFAF2; overflow: auto; }
 .reading-badge-viewer::backdrop { background: #010C18; }
