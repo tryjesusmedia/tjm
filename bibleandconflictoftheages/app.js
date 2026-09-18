@@ -377,6 +377,7 @@ function taskGroupComplete(reading, kind) {
           <div class="reading-stack reading-stack-full">
             ${scriptureCard}
             ${companionCard}
+            ${readingComplete(reading) ? `<div class="reading-complete-card" role="status"><span aria-hidden="true">✦</span><strong>Reading complete</strong><span aria-hidden="true">✦</span></div>` : ""}
           </div>
         </div>
       </section>`;
