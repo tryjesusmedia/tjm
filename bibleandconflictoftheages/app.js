@@ -391,7 +391,7 @@ function taskGroupComplete(reading, kind) {
       return `<section class="book-section">
         <button class="book-summary" type="button" data-book="${book.code}" aria-expanded="${isOpen}">
           <span class="book-badge">${book.code}</span>
-          <span><h3>${escapeHTML(book.title)}</h3><p>${escapeHTML(bookChapterRange(readings))}</p></span>
+          <span><h3>${escapeHTML(book.title)}</h3></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${complete} of ${readings.length} complete · ${percent}%</small></span>
         </button>
         <div class="reading-list" ${isOpen ? "" : "hidden"}>
