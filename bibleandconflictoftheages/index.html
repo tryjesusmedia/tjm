@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20260918-reading-complete">
+  <link rel="stylesheet" href="reading-badges.css?v=20260918-1">
   <title>Bible &amp; Conflict of the Ages Reading Plan | Try Jesus Media</title>
   <link rel="stylesheet" href="/assets/readability.css?v=20260910-1" />
   <link rel="stylesheet" href="hero-readability.css?v=20260911-2" />
@@ -145,10 +146,23 @@
     <button type="button" id="sign-out">Sign out</button>
   </div>
   <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <dialog class="reading-badge-viewer" id="reading-badge-viewer" aria-labelledby="badge-viewer-title" aria-describedby="badge-viewer-source">
+    <div class="badge-viewer-content">
+      <button type="button" class="badge-zoom" id="shrink-reading-badge" aria-label="Shrink reading badge"><img id="expanded-reading-badge" width="256" height="256" alt=""></button>
+      <p class="badge-viewer-reading" id="badge-viewer-reading"></p>
+      <h2 id="badge-viewer-title"></h2>
+      <p class="badge-viewer-source" id="badge-viewer-source"></p>
+      <p class="badge-viewer-reference" id="badge-viewer-reference"></p>
+      <p class="badge-viewer-hint">Tap the badge again to shrink</p>
+      <button type="button" class="badge-viewer-close" id="close-reading-badge">Close badge</button>
+    </div>
+  </dialog>
 
   <noscript><div class="noscript">JavaScript is required to save and sync this reading journey.</div></noscript>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" crossorigin="anonymous"></script>
   <script src="config.js?v=20260918-separate-accounts"></script>
-  <script src="app.js?v=20260918-reading-complete" defer></script>
+  <script src="reading-badges.js?v=20260918-1" defer></script>
+  <script src="badge-viewer.js?v=20260918-1" defer></script>
+  <script src="app.js?v=20260918-reading-badges" defer></script>
 </body>
 </html>
