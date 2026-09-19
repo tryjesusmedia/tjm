@@ -193,6 +193,7 @@
   }
 
   function showView(name, focusMain = false) {
+    window.TJMReadingBadgeViewer?.close(true);
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
@@ -223,7 +224,7 @@
         <header class="view-heading">
           <div>
             <p class="eyebrow">${escapeHTML(reading.section)} · READING TASK ${reading.number} OF ${plan.readings.length}</p>
-            <h2 id="readings-heading">${escapeHTML(reading.title)}</h2>
+            <div class="reading-title-with-badge"><h2 id="readings-heading">${escapeHTML(reading.title)}</h2>${readingComplete(reading) ? renderReadingBadge(reading) : ""}</div>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button" type="button" data-reading-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
@@ -265,6 +266,18 @@
     return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2><p>Across ${plan.sections.length} major historical sections, the complete journey is organized into ${plan.readings.length} manageable, named reading tasks, including all 42 chapters of Job between Genesis 11 and Genesis 12.</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
   }
 
+  function renderReadingBadge(reading) {
+    const art = window.TJMReadingBadges;
+    const badge = art?.getBadge(reading.id);
+    if (!badge) return "";
+    return `<button type="button" class="reading-badge" data-reading-badge="${escapeHTML(reading.id)}" aria-label="${escapeHTML(`Enlarge earned badge: ${badge.label}. Reading ${reading.number}: ${badge.title}`)}" aria-haspopup="dialog"><img src="${art.badgeDataUri(badge)}" width="64" height="64" alt="" loading="lazy" decoding="async"><span class="reading-badge-number">Reading ${reading.number}</span></button>`;
+  }
+
+  function renderEarnedBadges() {
+    const earned = plan.readings.filter(readingComplete);
+    return `<section class="earned-badges" aria-labelledby="earned-badges-heading"><h3 id="earned-badges-heading">Earned badges · ${earned.length}</h3>${earned.length ? `<div class="earned-badge-grid">${earned.map(renderReadingBadge).join("")}</div>` : `<p class="earned-badge-empty">Complete all the items in a reading to earn its badge. Your badges will appear here.</p>`}</section>`;
+  }
+
   function renderProgress() {
     const percent = percentComplete();
     const next = nextIncomplete();
@@ -277,7 +290,7 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress and Journey Points are synced across your signed-in devices." : "Sign in with Google whenever you want your progress and Journey Points synced across devices."}</p></div></header>${guestBanner()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button><button class="button button-secondary" type="button" data-view-shortcut="rewards">View Journey leaderboard</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress and Journey Points are synced across your signed-in devices." : "Sign in with Google whenever you want your progress and Journey Points synced across devices."}</p></div></header>${guestBanner()}${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button><button class="button button-secondary" type="button" data-view-shortcut="rewards">View Journey leaderboard</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
   }
 
   function renderMilestones(rewards) {
@@ -292,7 +305,7 @@
     if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Gathering the community…</strong></div>`;
     if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-retry-leaderboard>Try again</button></div>`;
     if (!leaderboard.length) return `<div class="leaderboard-state"><strong>The journey is just beginning.</strong><p>Complete a chapter and return here to see the community.</p></div>`;
-    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span>${entry.is_current_user ? `<button class="alias-change" type="button" data-change-name ${leaderboardLoading ? "disabled" : ""}>Change name</button>` : ""}</span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} chapters</small></span></article>`).join("")}</div>`;
+    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span></span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} chapters</small></span></article>`).join("")}</div>`;
   }
 
   function publicJourneyName() {
@@ -307,7 +320,7 @@
         ? "Complete your first chapter to reach your first milestone."
         : `${rewards.nextMilestone - rewards.completedChapters} chapters to the ${rewards.nextMilestone.toLocaleString()}-chapter milestone.`;
     const welcome = session
-      ? `<p class="member-welcome member-welcome-guest">Welcome, ${escapeHTML(publicJourneyName())}!</p>`
+      ? `<button class="member-welcome" type="button" data-change-name aria-label="Change your public name" ${leaderboardLoading ? "disabled" : ""}><span>Welcome, ${escapeHTML(publicJourneyName())}!</span><span class="welcome-change-name">Change name</span></button>`
       : `<p class="member-welcome member-welcome-guest">Welcome, Friend!</p>`;
 
     return `<section aria-labelledby="rewards-heading" class="rewards-view"><header class="view-heading"><div><p class="eyebrow">JOURNEY POINTS</p><h2 id="rewards-heading">Celebrate steady progress.</h2><p>Each distinct completed chapter earns 10 Journey Points.</p></div></header><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} chapters complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">ALL READERS</span><strong>Journey leaderboard</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>Your local progress remains available without an account.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`) : ""}</article></section>`;
@@ -315,6 +328,11 @@
 
   function render() {
     if (!plan) return;
+    const selectedBadge = window.TJMReadingBadgeViewer?.selectedId();
+    if (selectedBadge) {
+      const reading = plan.readings.find(item => item.id === selectedBadge);
+      if (!session || !reading || !readingComplete(reading)) window.TJMReadingBadgeViewer.close(true);
+    }
     let content;
     if (activeView === "readings") content = renderReadings();
     else if (activeView === "journey") content = renderJourney();
@@ -686,6 +704,7 @@
     const previousUserId = session?.user?.id || "";
     const nextUserId = nextSession?.user?.id || "";
     if (previousUserId !== nextUserId) {
+      window.TJMReadingBadgeViewer?.close(true);
       sessionVersion += 1;
       clearInterval(refreshTimer);
       completed = new Set();
@@ -753,7 +772,11 @@
   root.addEventListener("click", (event) => {
     const target = event.target.closest("button, a");
     if (!target) return;
-    if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
+    if (target.dataset.readingBadge) {
+      const reading = plan.readings.find(item => item.id === target.dataset.readingBadge);
+      if (reading && readingComplete(reading)) window.TJMReadingBadgeViewer?.open(reading.id, target);
+    }
+    else if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
     else if (target.hasAttribute("data-change-name")) void changeJourneyName();
     else if (target.hasAttribute("data-toggle-leaderboard")) { leaderboardOpen = !leaderboardOpen; renderPreservingPlace(); }
     else if (target.hasAttribute("data-require-sign-in")) showSignIn();

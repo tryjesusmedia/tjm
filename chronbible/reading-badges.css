@@ -1,0 +1,38 @@
+/* Shared 64px artwork size in the gallery and alongside reading headings. */
+.reading-badge { display: inline-flex; flex-direction: column; align-items: center; gap: 5px; min-height: 64px; padding: 6px 3px; border: 0; border-radius: 12px; background: transparent; color: #EBE9DE; cursor: pointer; text-align: center; font: inherit; }
+.reading-badge:hover { background: rgba(24, 96, 89, .18); }
+.reading-badge:focus-visible { outline: 3px solid #E5B55B; outline-offset: 4px; }
+.reading-badge img { display: block; width: 64px; height: 64px; flex: none; }
+.reading-badge-number { color: #E5B55B; font-size: 12px; line-height: 17px; font-weight: 800; }
+.reading-badge-label { font-size: 13px; line-height: 18px; overflow-wrap: anywhere; }
+.reading-title-with-badge { display: flex; align-items: center; gap: 14px; }
+.reading-title-with-badge h2 { flex: 1; min-width: 0; }
+.reading-title-with-badge .reading-badge { width: 88px; flex: none; }
+.earned-badges { margin: 0 0 28px; }
+.earned-badges h3 { margin: 0 0 16px; color: #E5B55B; font-family: var(--sans); font-size: 18px; line-height: 25px; }
+.earned-badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 22px 12px; align-items: start; }
+.earned-badge-empty { margin: 0; color: #B9C2C5; font-size: 17px; line-height: 26px; }
+.earned-badges + .earned-badge-empty { margin-bottom: 24px; }
+.badge-viewer-open { overflow: hidden; }
+.reading-badge-viewer { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: max(22px, env(safe-area-inset-top)) 16px max(22px, env(safe-area-inset-bottom)); border: 0; background: #010C18; color: #FDFAF2; overflow: auto; }
+.reading-badge-viewer::backdrop { background: #010C18; }
+.badge-viewer-content { min-height: 100%; width: min(100%, 900px); margin: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
+.badge-zoom { display: grid; place-items: center; padding: 0; border: 0; border-radius: 20px; background: none; cursor: zoom-out; }
+.badge-zoom:focus-visible, .badge-viewer-close:focus-visible { outline: 3px solid #E5B55B; outline-offset: 5px; }
+.badge-zoom img { display: block; width: min(calc(100vw - 32px), 65vh); width: min(calc(100vw - 32px), 65dvh); height: auto; aspect-ratio: 1; }
+.reading-badge-viewer[open] .badge-zoom img { animation: reading-badge-grow 220ms ease-out both; }
+.reading-badge-viewer.is-closing .badge-zoom img { animation: reading-badge-shrink 180ms ease-in both; }
+.badge-viewer-reading { margin: 8px 0 0; color: #E5B55B; font-size: 16px; line-height: 22px; font-weight: 800; letter-spacing: .07em; }
+.badge-viewer-content h2 { margin: 0; color: #FDFAF2; font-family: var(--sans); font-size: clamp(25px, 5vw, 36px); line-height: 1.25; }
+.badge-viewer-source { margin: 0; color: #EBE9DE; font-size: 19px; line-height: 1.45; }
+.badge-viewer-reference { margin: 0; color: #B9C2C5; font-size: 16px; line-height: 1.5; }
+.badge-viewer-hint { margin: 8px 0 0; color: #E5B55B; font-size: 16px; line-height: 24px; }
+.badge-viewer-close { min-height: 48px; margin: 6px 0; padding: 12px 24px; border: 1px solid #C79341; border-radius: 20px; background: transparent; color: #EBE9DE; font: inherit; font-size: 17px; cursor: pointer; }
+@keyframes reading-badge-grow { from { transform: scale(.18); opacity: .3; } to { transform: scale(1); opacity: 1; } }
+@keyframes reading-badge-shrink { from { transform: scale(1); opacity: 1; } to { transform: scale(.18); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .reading-badge-viewer[open] .badge-zoom img { animation: none; } }
+
+.chronbible .reading-badge-viewer, .chronbible .reading-badge-viewer::backdrop { background: #1C111D; }
+.chronbible .reading-badge { color: #311E33; }
+.chronbible .reading-badge-number, .chronbible .earned-badges h3 { color: #67431B; }
+.chronbible .earned-badge-empty { color: #655965; }
