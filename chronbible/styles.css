@@ -39,34 +39,8 @@
 
 .chronbible .chapter-task-row .source-task { width: 100%; }
 
-.chronbible .progress-layout-wide {
-  grid-template-columns: minmax(0, 1.25fr) minmax(310px, .75fr);
-}
+.chronbible .progress-layout-wide { grid-template-columns: minmax(0, 1fr); }
 
-.chronbible .next-reading-card {
-  padding: 23px;
-  border-radius: 20px;
-  background: var(--plum);
-  color: var(--ivory);
-}
-
-.chronbible .next-reading-card h3 {
-  margin: 0;
-  color: var(--white);
-  font-family: var(--serif);
-  font-size: 32px;
-  font-weight: 600;
-  line-height: 1.05;
-}
-
-.chronbible .next-reading-card p {
-  color: rgba(243,232,208,.78);
-  font-size: 17px;
-  line-height: 1.65;
-}
-
-.chronbible .next-reading-card .eyebrow { color: var(--gold); }
-.chronbible .next-reading-card .button { width: 100%; margin-top: 8px; }
 .chronbible .journey-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 @media (max-width: 900px) {

@@ -149,10 +149,6 @@
     return plan.readings.filter(readingComplete).length;
   }
 
-  function nextIncomplete() {
-    return plan.readings.find((reading) => !readingComplete(reading)) ?? plan.readings[plan.readings.length - 1];
-  }
-
   function sectionReadings(title) {
     return plan.readings.filter((reading) => reading.section === title);
   }
@@ -280,7 +276,6 @@
 
   function renderProgress() {
     const percent = percentComplete();
-    const next = nextIncomplete();
     const rewards = rewardSummary();
     const rows = plan.sections.map((section) => {
       const readings = sectionReadings(section.title);
@@ -290,7 +285,7 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress and Journey Points are synced across your signed-in devices." : "Sign in with Google whenever you want your progress and Journey Points synced across devices."}</p></div></header>${guestBanner()}${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article><aside class="next-reading-card"><p class="eyebrow">NEXT UNFINISHED READING TASK</p><h3>${escapeHTML(next.title)}</h3><p>${escapeHTML(next.reference)}</p><button class="button button-primary" type="button" data-reading-index="${next.index}">Continue reading</button><button class="button button-secondary" type="button" data-view-shortcut="rewards">View Journey leaderboard</button>${session ? "" : `<button class="button button-secondary" type="button" data-require-sign-in>Sign in to save progress</button>`}</aside></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress and Journey Points are synced across your signed-in devices." : "Sign in with Google whenever you want your progress and Journey Points synced across devices."}</p></div></header>${guestBanner()}${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
   }
 
   function renderMilestones(rewards) {
