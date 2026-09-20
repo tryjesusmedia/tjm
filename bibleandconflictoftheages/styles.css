@@ -575,3 +575,19 @@ body:has(.conflict-app-invite) .journey-nav { top: var(--app-invite-height, 69px
 @media (max-width: 600px) {
   .journey-nav button { font-size: 1rem !important; letter-spacing: 0; padding-inline: 4px; overflow-wrap: normal; }
 }
+
+.conflict-reading .points-card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.conflict-reading .points-explanation {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-transform: none;
+}
