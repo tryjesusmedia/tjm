@@ -78,3 +78,28 @@
   .chronbible .journey-nav button { min-height: 76px; padding-inline: 5px; font-size: 16px; }
   .chronbible .journey-nav button span { display: block; margin: 0 0 4px; font-size: 16px; }
 }
+
+/* Keep the welcome and points content directly on the page. */
+.chronbible .points-card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+}
+.chronbible .points-card .member-welcome,
+.chronbible .points-card > strong,
+.chronbible .points-card .eyebrow { color: var(--plum); }
+.chronbible .points-card .welcome-change-name { color: var(--plum-3); }
+.chronbible .points-card > span:not(.name-edit-hint),
+.chronbible .points-card .reward-progress small { color: var(--ink-soft); }
+.chronbible .points-card .reward-progress .progress-track { background: var(--line-dark); }
+.chronbible .points-explanation {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-transform: none;
+}
