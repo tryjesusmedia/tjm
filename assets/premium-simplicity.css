@@ -1,0 +1,74 @@
+/* Shared website presentation. Functional reading, quiz and badge layouts stay local. */
+:root { --tjm-simple-shadow: 0 12px 36px rgba(28,17,29,.09); }
+body.tjm-simple { font-size: 1.1875rem; line-height: 1.7; }
+.tjm-simple :is(h1,h2,h3) { text-wrap: balance; }
+.tjm-simple h1 { line-height: 1.08 !important; }
+.tjm-simple h2 { line-height: 1.15 !important; }
+.tjm-simple :is(.hero-glow,.lesson-shell-glow,.hero-divider,.page-progress) { display: none; }
+.tjm-simple :is(.hero,.journey-hero,.overview-hero) { background-image: none; }
+.tjm-simple :is(.hero,.overview-hero,.chron-promo) { padding-block: clamp(40px,6vw,76px); }
+.tjm-simple :is(.hero-grid,.chron-promo-grid,.membership-offer-layout,.panel-grid) { gap: clamp(28px,5vw,64px); }
+.tjm-simple :is(.hero-lede,.panel-lead,.hero-copy > p,.chron-promo-copy > p) { max-width: 48ch; }
+.tjm-simple :is(.eyebrow,.lesson-topline,.small,.save-note) { letter-spacing: .04em; }
+.tjm-simple :is(.button,.primary-button,.secondary-button,.overview-header-cta,.listen-button) {
+  min-height: 56px; height: auto; padding: 16px 26px; font-size: 1.125rem !important;
+  font-weight: 700; line-height: 1.45; letter-spacing: 0 !important;
+  text-transform: none !important; white-space: normal; border-radius: 12px;
+  box-shadow: none; max-width: 100%; text-align: center;
+}
+.tjm-simple :is(.button-gold,.primary-button,.button.gold,.overview-header-cta) {
+  background: linear-gradient(180deg,#f3ce71,#eebd4a); color: #311e33;
+  border: 1px solid rgba(49,30,51,.14); box-shadow: 0 5px 14px rgba(28,17,29,.1);
+}
+.tjm-simple :is(.button-secondary,.secondary-button,.button.secondary) { background: transparent; box-shadow: none; }
+.tjm-simple :is(.site-nav a,.header nav a) { font-size: .9375rem; letter-spacing: 0; text-transform: none; }
+.tjm-simple :is(.hero-form-panel,.chron-promo-window,.membership-perk,.card,.lesson-shell,.study-preview) {
+  box-shadow: var(--tjm-simple-shadow); border-radius: 18px;
+}
+.tjm-simple .hero-form-panel { border: 1px solid rgba(238,189,74,.24); padding: clamp(24px,4vw,40px); }
+.tjm-simple .form-intro strong { font-size: 1.5rem; line-height: 1.35; }
+.tjm-simple .form-intro span { font-size: 1rem; margin-top: 10px; }
+.tjm-simple :is(.membership-offer,.membership-perks,.section) { padding-block: clamp(44px,6vw,80px); }
+.tjm-simple .membership-perk { border-color: rgba(49,30,51,.13); padding: clamp(24px,3vw,36px); }
+.tjm-simple .membership-perk-grid { gap: 28px; }
+.tjm-simple .membership-perks { background: #faf6ee; color: #311e33; }
+.tjm-simple .membership-perks h2 { color: #311e33; }
+.tjm-simple .membership-perk { background: #fffdf9; }
+.tjm-simple .membership-perk .button { background: transparent; color: #311e33; border: 1px solid rgba(49,30,51,.3); box-shadow: none; }
+.tjm-simple .membership-perk .button:hover { background: #f3e8d0; }
+.tjm-simple .journey-hero { min-height: auto; padding-block: 36px; gap: 24px; }
+.tjm-simple .journey-hero h1 { font-size: clamp(38px,5vw,64px); }
+.tjm-simple .hero-mark { border: 0; background: transparent; box-shadow: none; padding: 0; }
+.tjm-simple .hero-mark strong { font-size: 1.75rem; line-height: 1.2; }
+.tjm-simple .hero-mark p { font-size: 1rem; }
+.tjm-simple .hero-stats { margin-top: 18px; }
+.tjm-simple .lesson-shell { padding: clamp(24px,4vw,48px); }
+.tjm-simple .hero-panel-grid { grid-template-columns: minmax(0,1fr); }
+.tjm-simple .hero-panel-grid .hero-visual { display: none; }
+.tjm-simple .hero-panel-grid .panel-copy { max-width: 760px; margin-inline: auto; width: 100%; }
+.tjm-simple :is(.trust-row,.study-chips,.benefits) { gap: 12px; flex-wrap: wrap; }
+.tjm-simple :is(.trust-row span,.study-chips span,.benefits span) { font-size: 1rem; letter-spacing: 0; }
+.tjm-simple :is(.button,.primary-button,.secondary-button):hover { transform: translateY(-1px); }
+.tjm-simple :is(a,button,input,textarea,select,summary):focus-visible { outline: 3px solid #c79341; outline-offset: 4px; }
+@media(max-width:700px) {
+ .tjm-simple :is(.hero-grid,.chron-promo-grid,.membership-offer-layout) { grid-template-columns: minmax(0,1fr); }
+ .tjm-simple .membership-perk-grid { grid-template-columns: minmax(0,1fr); }
+ .tjm-simple :is(.button-row,.completion-actions,.actions) { gap: 16px; flex-wrap: wrap; }
+ .tjm-simple :is(.button-row,.completion-actions,.actions) > :is(.button,.primary-button,.secondary-button) { width: 100%; }
+ .tjm-simple :is(.hero h1,.chron-promo h1,.overview-hero h1) { font-size: clamp(40px,10vw,64px); }
+ .tjm-simple .header-inner { gap: 14px; }
+}
+@media(prefers-reduced-motion:reduce) { .tjm-simple *, .tjm-simple *::before,.tjm-simple *::after { scroll-behavior:auto !important; animation:none !important; transition:none !important; } }
+@media print { .tjm-simple .hero-panel-grid .hero-visual { display:none; } }
+/* Keep dark hero text on a solid plum surface after removing glow layers. */
+.tjm-simple :is(.hero,.overview-hero).section-dark { background: #1c111d; color: #fffdf9; }
+.tjm-simple .journey-hero { background-color: var(--midnight-plum, #1c111d); }
+.tjm-simple.conflict-reading .journey-hero { background-color: #010c18; }
+
+.tjm-simple .hero-grid { min-height: auto; padding-block: 20px; }
+.tjm-simple .trust-row { margin-top: 22px; gap: 8px 16px; justify-content: flex-start; }
+.tjm-simple .trust-row span { padding: 0; border: 0; background: transparent; }
+.tjm-simple .guide-simple-tools { margin-block: 18px 28px; border: 1px solid rgba(238,189,74,.25); border-radius: 12px; }
+.tjm-simple .guide-simple-tools > summary { padding: 14px 18px; font-size: 1rem; cursor: pointer; color: #f3e8d0; }
+.tjm-simple .guide-simple-tools > :not(summary) { margin-inline: 16px; }
+@media(max-width:700px) { .tjm-simple .trust-row { justify-content: center; } }
