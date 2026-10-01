@@ -248,6 +248,18 @@
       shell.insertBefore(plainLanguage, stage);
     }
 
+    // Keep optional controls together so the guide itself comes first.
+    if (document.body.classList.contains('tjm-simple')) {
+      const tools = document.createElement('details');
+      tools.className = 'guide-simple-tools';
+      const label = document.createElement('summary');
+      label.textContent = 'Reading tools & help';
+      tools.appendChild(label);
+      shell.insertBefore(tools, stage);
+      [toolbar, outline, shell.querySelector('.guide-glossary')].filter(Boolean)
+        .forEach((control) => tools.appendChild(control));
+    }
+
     panels.forEach((panel, index) => {
       panel.querySelectorAll('details.evidence-drawer > summary > span:first-child').forEach((label) => {
         const text = cleanText(label.textContent);
