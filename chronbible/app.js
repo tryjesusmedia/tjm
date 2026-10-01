@@ -183,11 +183,6 @@
     authGate.hidden = false;
   }
 
-  function guestBanner() {
-    if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><strong>Save your progress</strong><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
-  }
-
   function showView(name, focusMain = false) {
     window.TJMReadingBadgeViewer?.close(true);
     activeView = name;
@@ -233,7 +228,6 @@
           <article class="reading-card scripture-card">
             <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">SCRIPTURE READING</span></div>
             <h3>${escapeHTML(reading.reference)}</h3>
-            ${reading.partCount > 1 ? `<p class="citation">Part ${reading.partNumber} of ${reading.partCount} from the original assignment “${escapeHTML(reading.sourceReference)}.”</p>` : ""}
             <div class="reading-actions">
               ${sourceTaskLinks(reading)}
             </div>
@@ -285,7 +279,7 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2></div></header>${guestBanner()}${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2></div></header>${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
   }
 
   function renderMilestones(rewards) {
@@ -330,7 +324,7 @@
     else if (activeView === "progress") content = renderProgress();
     else if (activeView === "rewards") content = renderRewards();
     else content = renderReadings();
-    root.innerHTML = `${activeView === "progress" || activeView === "rewards" ? "" : guestBanner()}${content}`;
+    root.innerHTML = `${content}`;
   }
 
   async function loadJourneyIdentity({ userId = session?.user?.id, version = sessionVersion } = {}) {
