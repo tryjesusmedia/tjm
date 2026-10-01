@@ -185,7 +185,7 @@
 
   function guestBanner() {
     if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading task. Sign in to sync your chapter progress across devices.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
+    return `<aside class="save-banner" aria-label="Saving requires sign-in"><strong>Save your progress</strong><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
   }
 
   function showView(name, focusMain = false) {
@@ -259,7 +259,7 @@
       </article>`;
     }).join("");
 
-    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2><p>Across ${plan.sections.length} major historical sections, the complete journey is organized into ${plan.readings.length} manageable, named reading tasks, including all 42 chapters of Job between Genesis 11 and Genesis 12.</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
+    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
   }
 
   function renderReadingBadge(reading) {
@@ -271,7 +271,7 @@
 
   function renderEarnedBadges() {
     const earned = plan.readings.filter(readingComplete);
-    return `<section class="earned-badges" aria-labelledby="earned-badges-heading"><h3 id="earned-badges-heading">Earned badges · ${earned.length}</h3>${earned.length ? `<div class="earned-badge-grid">${earned.map(renderReadingBadge).join("")}</div>` : `<p class="earned-badge-empty">Complete all the items in a reading to earn its badge. Your badges will appear here.</p>`}</section>`;
+    return `<section class="earned-badges" aria-labelledby="earned-badges-heading"><h3 id="earned-badges-heading">Earned badges · ${earned.length}</h3>${earned.length ? `<div class="earned-badge-grid">${earned.map(renderReadingBadge).join("")}</div>` : ""}</section>`;
   }
 
   function renderProgress() {
@@ -285,7 +285,7 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2><p>${session ? "Your chapter progress and Journey Points are synced across your signed-in devices." : "Sign in with Google whenever you want your progress and Journey Points synced across devices."}</p></div></header>${guestBanner()}${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2></div></header>${guestBanner()}${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
   }
 
   function renderMilestones(rewards) {
@@ -299,7 +299,7 @@
   function renderLeaderboardRows() {
     if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Gathering the community…</strong></div>`;
     if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-retry-leaderboard>Try again</button></div>`;
-    if (!leaderboard.length) return `<div class="leaderboard-state"><strong>The journey is just beginning.</strong><p>Complete a chapter and return here to see the community.</p></div>`;
+    if (!leaderboard.length) return `<div class="leaderboard-state"><strong>No readers yet.</strong></div>`;
     return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span></span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} chapters</small></span></article>`).join("")}</div>`;
   }
 
@@ -309,16 +309,12 @@
 
   function renderRewards() {
     const rewards = rewardSummary();
-    const nextLabel = rewards.nextMilestone === null
-      ? "You completed the full journey."
-      : rewards.nextMilestone === 1
-        ? "Complete your first chapter to reach your first milestone."
-        : `${rewards.nextMilestone - rewards.completedChapters} chapters to the ${rewards.nextMilestone.toLocaleString()}-chapter milestone.`;
+
     const welcome = session
       ? `<button class="member-welcome" type="button" data-change-name aria-label="Change your public name" ${leaderboardLoading ? "disabled" : ""}><span>Welcome, ${escapeHTML(publicJourneyName())}!</span><span class="welcome-change-name">Change name</span></button>`
       : `<p class="member-welcome member-welcome-guest">Welcome, Friend!</p>`;
 
-    return `<section aria-label="Your journey points and leaderboard" class="rewards-view"><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS <span class="points-explanation">(Each chapter earns 10 points)</span></p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} chapters complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div><small>${escapeHTML(nextLabel)}</small></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">ALL READERS</span><strong>Journey leaderboard</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><strong>Sign in to view the leaderboard.</strong><p>Your local progress remains available without an account.</p><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`) : ""}</article></section>`;
+    return `<section aria-label="Your journey points and leaderboard" class="rewards-view"><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} chapters complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">ALL READERS</span><strong>Journey leaderboard</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`) : ""}</article></section>`;
   }
 
   function render() {
@@ -861,7 +857,6 @@
         && plan.readings[3]?.reference === "Genesis 10-11"
         && plan.readings[9]?.reference === "Genesis 12-17";
       if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.chapterCount !== 1205 || !indicesAreValid || !chaptersAreValid || !jobIsInPlace) throw new Error("Reading plan validation failed.");
-      document.getElementById("hero-section-count").textContent = plan.sections.length;
       activeSection = plan.readings[0].section;
       loading.hidden = true;
       root.hidden = false;
