@@ -97,6 +97,8 @@
     .app-download-row {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
       padding: 8px 16px 10px;
       border-top: 1px solid rgba(238,189,74,.2);
       background: #311e33;
@@ -121,6 +123,11 @@
     html { scroll-padding-top: 190px; }
     @media (max-width: 860px) {
       .site-header .site-nav { top: 100%; max-height: calc(100dvh - 170px); overflow-y: auto; }
+    }
+    @media (max-width: 600px) {
+      .app-download-row { flex-direction: column; align-items: stretch; }
+      html { scroll-padding-top: 250px; }
+      .site-header .site-nav { max-height: calc(100dvh - 250px); }
     }
     @media print { .app-download-row { display: none; } }
   </style>
@@ -205,7 +212,11 @@
     <a class="app-download-link"
        href="https://play.google.com/store/apps/details?id=com.tryjesusmedia.journey"
        target="_blank" rel="noopener noreferrer"
-       aria-label="Download the app: Try Jesus: The Journey on Google Play">Download the App</a>
+       aria-label="Download the app: Try Jesus: The Journey on Google Play">Get it on Google Play</a>
+    <a class="app-download-link"
+       href="https://apps.apple.com/app/id6818312685"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Download Try Jesus: The Journey on the App Store">Download on the App Store</a>
   </div>
 </header>
 
