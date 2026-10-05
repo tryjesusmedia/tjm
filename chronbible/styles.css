@@ -100,3 +100,21 @@
   letter-spacing: normal;
   text-transform: none;
 }
+
+/* The manuscript's guidance, comfortably spaced on phones and larger screens. */
+.reading-guide { margin-top: 1.5rem; border-top: 1px solid #d7cbb8; padding-top: 1rem; }
+.reading-guide p, .guide-sections p { font-size: 1rem; line-height: 1.75; max-width: 72ch; }
+.reading-guide details, .guide-sections details { padding: 1rem; margin: 0 0 1rem; background: #fffaf0; border: 1px solid #ded1bc; border-radius: 12px; color: #311e33; }
+.reading-guide summary, .guide-sections summary { cursor: pointer; font-weight: 700; line-height: 1.5; }
+.guide-note { opacity: .8; }
+.guide-sections { max-width: 900px; margin: auto; }
+
+.guide-table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:.9rem; }
+.guide-table td, .guide-table th { padding:.65rem; border:1px solid #d7cbb8; text-align:left; overflow-wrap:anywhere; }
+.reading-complete { display:flex; align-items:center; gap:.7rem; margin-top:1.2rem; font-weight:700; }
+.reading-complete input { width:22px; height:22px; accent-color:#311e33; }
+.chronbible .journey-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width:680px) { .chronbible .journey-nav { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.guide-table { table-layout:fixed; }
+.guide-table th:first-child { width:28%; }
+@media(max-width:680px) { .guide-table td,.guide-table th { padding:.4rem; } }

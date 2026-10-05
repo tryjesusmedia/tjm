@@ -1,0 +1,24 @@
+name: Validate authoritative ChronBible guide
+on:
+  pull_request:
+    paths: ['chronbible/**', 'scripts/*chronological*', 'scripts/chronbible-passages.mjs']
+  push:
+    branches: [main]
+    paths: ['chronbible/**', 'scripts/*chronological*', 'scripts/chronbible-passages.mjs']
+permissions:
+  contents: read
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/build-chronological-plan.mjs
+      - run: node scripts/build-chronological-badges.mjs
+      - run: git diff --exit-code -- chronbible/data/readings.json chronbible/reading-badges.js
+      - run: node scripts/test-chronological-plan.mjs
+      - run: node scripts/test-chronological-badges.mjs
+      - run: node scripts/test-reading-account-isolation.mjs
+      - run: node --check chronbible/app.js

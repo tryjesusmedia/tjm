@@ -4,7 +4,7 @@
   const CONFIG = window.TJM_CHRONBIBLE_CONFIG;
   const PLAN_PATH = "data/readings.json";
   const POINTS_PER_CHAPTER = 10;
-  const REWARD_MILESTONES = Object.freeze([1, 25, 100, 250, 500, 750, 1000, 1205]);
+  const REWARD_MILESTONES = Object.freeze([1, 25, 100, 250, 500, 750, 1000, 1440]);
   const FIRST_NAME_HOLD_MS = 1400;
   const root = document.getElementById("view-root");
   const loading = document.getElementById("loading-state");
@@ -153,30 +153,6 @@
     return plan.readings.filter((reading) => reading.section === title);
   }
 
-  function migrateV3Progress(data) {
-    return {
-      completed: Array.from(new Set((data?.completed_indices ?? []).map((index) => plan.previousChapterMigration?.[String(index)]).filter(Number.isInteger))).sort((left, right) => left - right),
-      lastIndex: normalizeIndex(plan.previousReadingMigration?.[String(data?.last_index ?? 0)] ?? 0),
-    };
-  }
-
-  function migrateV2Progress(data) {
-    const completed = (data?.completed_indices ?? []).flatMap((taskIndex) => plan.taskChapterMigration?.[String(taskIndex)] ?? []);
-    return {
-      completed: Array.from(new Set(completed)).sort((left, right) => left - right),
-      lastIndex: normalizeIndex(plan.taskReadingMigration?.[String(data?.last_index ?? 0)] ?? 0),
-    };
-  }
-
-  function migrateV1Progress(data) {
-    const completedLegacy = new Set((data?.completed_indices ?? []).map(Number));
-    const lastLegacyIndex = Number(data?.last_index ?? 0);
-    const readingMigration = plan.originalReadingMigration?.[String(lastLegacyIndex)] ?? { first: 0, last: 0, resume: 0 };
-    return {
-      completed: Array.from(new Set(Array.from(completedLegacy).flatMap((legacyIndex) => plan.originalChapterMigration?.[String(legacyIndex)] ?? []))).sort((left, right) => left - right),
-      lastIndex: completedLegacy.has(lastLegacyIndex) ? (readingMigration.resume ?? readingMigration.last) : readingMigration.first,
-    };
-  }
 
   function showSignIn() {
     authError.textContent = "";
@@ -198,13 +174,28 @@
   }
 
   function sourceTaskLinks(reading) {
-    if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No chapter links available</button>`;
-    return `<div class="chapter-task-list" aria-label="Scripture chapter choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" aria-label="Read ${escapeHTML(task.label)} on BibleGateway">Read ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
+    if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No passage links available</button>`;
+    return `<div class="chapter-task-list" aria-label="Scripture passage choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" aria-label="Read ${escapeHTML(task.label)} on BibleGateway">Read ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
   }
 
   function reviewFlag(reading) {
     if (!reading.reviewNote) return "";
     return `<p class="source-flag"><span aria-hidden="true">△</span><span><strong>Source reference needs review.</strong><br>${escapeHTML(reading.reviewNote)}</span></p>`;
+  }
+
+  function guideBlocks(blocks) {
+    return blocks.map(block => block.style?.startsWith("HEADING") ? `<h3>${escapeHTML(block.text)}</h3>` : `<p>${escapeHTML(block.text)}</p>`).join("");
+  }
+
+  function renderReadingGuide(reading) {
+    const section = plan.sections.find(s => s.title === reading.section);
+    const sectionReadings = plan.readings.filter(r => r.section === reading.section);
+    const last = sectionReadings.at(-1).index === reading.index;
+    return `<div class="reading-guide"><details ${sectionReadings[0].index === reading.index ? "open" : ""}><summary>About this section</summary>${guideBlocks(section.introduction)}</details>${reading.guidance.map(t => `<p>${escapeHTML(t)}</p>`).join("")}${last ? `<details open><summary>Pause and reflect</summary>${guideBlocks(section.reflection)}</details>` : ""}<p class="guide-note">A few notes in your own notebook can help you remember what you noticed.</p></div>`;
+  }
+
+  function renderGuide() {
+    return `<section aria-labelledby="guide-heading"><header class="view-heading"><div><p class="eyebrow">ONE SMALL STEP AT A TIME</p><h2 id="guide-heading">Your reading guide</h2><p>${escapeHTML(plan.description)}</p><p>This website follows the updated book. Older app versions may use an earlier reading order.</p></div></header><div class="guide-sections">${plan.guide.map(group => `<details><summary>${escapeHTML(group.title)}</summary>${group.table ? guideBlocks(group.blocks.slice(0,1)) : ""}${group.table ? `<table class="guide-table"><thead><tr>${group.table[0].map(t=>`<th scope="col">${escapeHTML(t)}</th>`).join("")}</tr></thead><tbody>${group.table.slice(1).map(row=>`<tr>${row.map(t=>`<td>${escapeHTML(t)}</td>`).join("")}</tr>`).join("")}</tbody></table>` : ""}${guideBlocks(group.table ? group.blocks.slice(1) : group.blocks)}</details>`).join("")}</div></section>`;
   }
 
   function renderReadings() {
@@ -214,12 +205,12 @@
       <section aria-labelledby="readings-heading">
         <header class="view-heading">
           <div>
-            <p class="eyebrow">${escapeHTML(reading.section)} · READING TASK ${reading.number} OF ${plan.readings.length}</p>
+            <p class="eyebrow">${escapeHTML(reading.section)} · READING ${reading.number} OF ${plan.readings.length}</p>
             <div class="reading-title-with-badge"><h2 id="readings-heading">${escapeHTML(reading.title)}</h2>${readingComplete(reading) ? renderReadingBadge(reading) : ""}</div>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
             <button class="icon-button" type="button" data-reading-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
-            <span class="reading-number"><strong>Task ${reading.number}</strong><small>${percent}% COMPLETE</small></span>
+            <span class="reading-number"><strong>Reading ${reading.number}</strong><small>${percent}% COMPLETE</small></span>
             <button class="icon-button" type="button" data-reading-nav="next" aria-label="Next reading" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
           </div>
         </header>
@@ -230,8 +221,10 @@
             <h3>${escapeHTML(reading.reference)}</h3>
             <div class="reading-actions">
               ${sourceTaskLinks(reading)}
+              <label class="reading-complete"><input type="checkbox" data-reading-complete="${reading.index}" ${readingComplete(reading) ? "checked" : ""}> Reading complete</label>
             </div>
             ${reviewFlag(reading)}
+            ${renderReadingGuide(reading)}
           </article>
         </div>
       </section>`;
@@ -246,7 +239,7 @@
       return `<article class="book-section">
         <button class="book-summary" type="button" data-section="${escapeHTML(section.title)}" aria-expanded="${open}">
           <span class="book-badge">${String(section.number).padStart(2, "0")}</span>
-          <span><h3>${escapeHTML(section.title)}</h3><p>Tasks ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "task" : "tasks"}</p></span>
+          <span><h3>${escapeHTML(section.title)}</h3><p>Readings ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "reading" : "readings"}</p></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${completeCount} OF ${readings.length} COMPLETE</small></span>
         </button>
         ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Open →</em></button>`).join("")}</div>` : ""}
@@ -279,13 +272,13 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2></div></header>${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Tasks complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Chapters complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
+    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2></div></header>${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Readings complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Passages complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
   }
 
   function renderMilestones(rewards) {
     return REWARD_MILESTONES.map((milestone) => {
       const earned = rewards.completedChapters >= milestone;
-      const label = milestone === plan.chapterCount ? "Journey complete" : `${milestone.toLocaleString()} chapters`;
+      const label = milestone === plan.chapterCount ? "Journey complete" : `${milestone.toLocaleString()} passages`;
       return `<li class="milestone ${earned ? "earned" : ""}"><span aria-hidden="true">${earned ? "✓" : "◇"}</span><strong>${label}</strong></li>`;
     }).join("");
   }
@@ -294,7 +287,7 @@
     if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Gathering the community…</strong></div>`;
     if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Leaderboard unavailable</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-retry-leaderboard>Try again</button></div>`;
     if (!leaderboard.length) return `<div class="leaderboard-state"><strong>No readers yet.</strong></div>`;
-    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span></span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} chapters</small></span></article>`).join("")}</div>`;
+    return `<div class="leaderboard-list" role="list" aria-label="All Journey readers">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>YOU</small>" : ""}</span></span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} passages</small></span></article>`).join("")}</div>`;
   }
 
   function publicJourneyName() {
@@ -308,7 +301,7 @@
       ? `<button class="member-welcome" type="button" data-change-name aria-label="Change your public name" ${leaderboardLoading ? "disabled" : ""}><span>Welcome, ${escapeHTML(publicJourneyName())}!</span><span class="welcome-change-name">Change name</span></button>`
       : `<p class="member-welcome member-welcome-guest">Welcome, Friend!</p>`;
 
-    return `<section aria-label="Your journey points and leaderboard" class="rewards-view"><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} chapters complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">ALL READERS</span><strong>Journey leaderboard</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`) : ""}</article></section>`;
+    return `<section aria-label="Your journey points and leaderboard" class="rewards-view"><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">YOUR JOURNEY POINTS</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} of ${plan.chapterCount.toLocaleString()} passages complete</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">MILESTONES</p><h3>Markers along the way</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">ALL READERS</span><strong>Journey leaderboard</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><button class="button button-primary" type="button" data-require-sign-in>Sign in to join</button></div>`) : ""}</article></section>`;
   }
 
   function render() {
@@ -320,6 +313,7 @@
     }
     let content;
     if (activeView === "readings") content = renderReadings();
+    else if (activeView === "guide") content = renderGuide();
     else if (activeView === "journey") content = renderJourney();
     else if (activeView === "progress") content = renderProgress();
     else if (activeView === "rewards") content = renderRewards();
@@ -355,7 +349,7 @@
       const identityLoaded = identityReady || await loadJourneyIdentity({ userId, version });
       if (!isCurrentSession(userId, version) || requestId !== leaderboardRequestId) return false;
       if (!identityLoaded) return false;
-      const leaderboardResult = await db.rpc("get_journey_leaderboard");
+      const leaderboardResult = await db.rpc("get_chronbible_doc_leaderboard");
       if (!isCurrentSession(userId, version) || requestId !== leaderboardRequestId) return false;
       if (leaderboardResult.error) throw leaderboardResult.error;
       leaderboard = Array.isArray(leaderboardResult.data) ? leaderboardResult.data : [];
@@ -547,7 +541,7 @@
       render();
       return;
     }
-    setSync("Synced with the app", "synced");
+    setSync("Progress saved", "synced");
     if (activeView === "rewards") await loadJourneyRewards();
   }
 
@@ -587,45 +581,25 @@
     if (!isCurrentSession(userId, version)) return false;
     if (progressResult.error) throw progressResult.error;
     let memberData = progressResult.data;
-    if (!memberData && plan.previousPlanId) {
-      const { data: legacyData, error: legacyError } = await db.from("reading_plan_progress")
-        .select("completed_indices,last_index,updated_at")
-        .eq("user_id", userId)
-        .eq("plan_id", plan.previousPlanId)
-        .maybeSingle();
+    for (const [legacyVersion, planId] of [['v4','chronological-bible-order-v4'], ['v3','chronological-bible-order-v3'], ['v2','chronological-bible-order-v2'], ['v1','chronological-bible-order-v1']]) {
+      if (memberData) break;
+      const {data, error} = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id",userId).eq("plan_id",planId).maybeSingle();
       if (!isCurrentSession(userId, version)) return false;
-      if (legacyError) throw legacyError;
-      if (legacyData) {
-        const migrated = migrateV3Progress(legacyData);
-        memberData = { completed_indices: migrated.completed, last_index: migrated.lastIndex, updated_at: new Date().toISOString() };
-      }
-    }
-    if (!memberData && plan.taskLegacyPlanId) {
-      const { data: taskLegacyData, error: taskLegacyError } = await db.from("reading_plan_progress")
-        .select("completed_indices,last_index,updated_at")
-        .eq("user_id", userId)
-        .eq("plan_id", plan.taskLegacyPlanId)
-        .maybeSingle();
-      if (!isCurrentSession(userId, version)) return false;
-      if (taskLegacyError) throw taskLegacyError;
-      if (taskLegacyData) {
-        const migrated = migrateV2Progress(taskLegacyData);
-        memberData = { completed_indices: migrated.completed, last_index: migrated.lastIndex, updated_at: new Date().toISOString() };
-      }
-    }
-    if (!memberData && plan.originalLegacyPlanId) {
-      const { data: originalLegacyData, error: originalLegacyError } = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", plan.originalLegacyPlanId).maybeSingle();
-      if (!isCurrentSession(userId, version)) return false;
-      if (originalLegacyError) throw originalLegacyError;
-      if (originalLegacyData) {
-        const migrated = migrateV1Progress(originalLegacyData);
-        memberData = { completed_indices: migrated.completed, last_index: migrated.lastIndex, updated_at: new Date().toISOString() };
+      if (error) throw error;
+      if (data) {
+        const migrated = globalThis.TJMPlanProgress.migrate(plan,data,legacyVersion);
+        memberData = {completed_indices:migrated.completed,last_index:migrated.lastIndex,updated_at:new Date().toISOString()};
       }
     }
     if (memberData && !progressResult.data) {
-      const { error: migrationError } = await db.from("reading_plan_progress").upsert({ user_id: userId, plan_id: CONFIG.planId, completed_indices: memberData.completed_indices, last_index: memberData.last_index, updated_at: memberData.updated_at }, { onConflict: "user_id,plan_id" });
+      const { error: migrationError } = await db.from("reading_plan_progress").upsert({ user_id: userId, plan_id: CONFIG.planId, completed_indices: memberData.completed_indices, last_index: memberData.last_index, updated_at: memberData.updated_at }, { onConflict: "user_id,plan_id", ignoreDuplicates: true });
       if (!isCurrentSession(userId, version)) return false;
       if (migrationError) throw migrationError;
+      // A second device may have created the new row while this one was migrating.
+      const saved = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id",userId).eq("plan_id",CONFIG.planId).maybeSingle();
+      if (!isCurrentSession(userId,version)) return false;
+      if (saved.error) throw saved.error;
+      memberData = saved.data ?? memberData;
     }
     if (!isCurrentSession(userId, version)) return false;
     completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
@@ -634,7 +608,7 @@
       currentIndex = lastIndex;
       activeSection = currentReading().section;
     }
-    setSync("Synced with the app", "synced");
+    setSync("Progress saved", "synced");
     return true;
   }
 
@@ -796,7 +770,15 @@
 
   root.addEventListener("change", (event) => {
     const target = event.target;
-    if (target.matches("[data-chapter-progress]")) {
+    if (target.matches("[data-reading-complete]")) {
+      if (!session) { target.checked=false; showSignIn(); return; }
+      const previousCompleted=new Set(completed), previousLastIndex=lastIndex;
+      const reading=plan.readings[Number(target.dataset.readingComplete)];
+      for (const task of reading.bibleTasks) target.checked ? completed.add(task.progressIndex) : completed.delete(task.progressIndex);
+      lastIndex=reading.index;
+      render();
+      void persistProgress(previousCompleted,previousLastIndex);
+    } else if (target.matches("[data-chapter-progress]")) {
       if (!session) target.checked = false;
       toggleChapter(target.dataset.chapterProgress, target.dataset.readingIndex, target.checked);
     }
@@ -846,11 +828,8 @@
       plan = await response.json();
       const indicesAreValid = plan.readings?.every((reading, index) => reading.index === index && reading.number === index + 1 && reading.bibleTasks?.length);
       const chapterIndices = plan.readings.flatMap((reading) => reading.bibleTasks.map((task) => task.progressIndex));
-      const chaptersAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
-      const jobIsInPlace = plan.readings.slice(4, 9).every((reading) => reading.sourceNumber === 1)
-        && plan.readings[3]?.reference === "Genesis 10-11"
-        && plan.readings[9]?.reference === "Genesis 12-17";
-      if (plan.planId !== CONFIG.planId || !Array.isArray(plan.readings) || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.chapterCount !== 1205 || !indicesAreValid || !chaptersAreValid || !jobIsInPlace) throw new Error("Reading plan validation failed.");
+      const passagesAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
+      if (plan.planId !== CONFIG.planId || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.verseCount !== 31102 || !indicesAreValid || !passagesAreValid) throw new Error("Reading plan validation failed.");
       activeSection = plan.readings[0].section;
       loading.hidden = true;
       root.hidden = false;
