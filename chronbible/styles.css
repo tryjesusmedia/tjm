@@ -113,8 +113,6 @@
 .guide-table td, .guide-table th { padding:.65rem; border:1px solid #d7cbb8; text-align:left; overflow-wrap:anywhere; }
 .reading-complete { display:flex; align-items:center; gap:.7rem; margin-top:1.2rem; font-weight:700; }
 .reading-complete input { width:22px; height:22px; accent-color:#311e33; }
-.chronbible .journey-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width:680px) { .chronbible .journey-nav { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 .guide-table { table-layout:fixed; }
 .guide-table th:first-child { width:28%; }
 @media(max-width:680px) { .guide-table td,.guide-table th { padding:.4rem; } }
