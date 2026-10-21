@@ -118,3 +118,52 @@
 .guide-table { table-layout:fixed; }
 .guide-table th:first-child { width:28%; }
 @media(max-width:680px) { .guide-table td,.guide-table th { padding:.4rem; } }
+
+/* TJM1 storefront badges: familiar store layouts, brand-colored and readable. */
+.chronbible .store-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.chronbible .store-badge {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  min-width: 162px;
+  padding: 8px 13px;
+  border: 1.5px solid #eebd4a;
+  border-radius: 10px;
+  color: #faf6ee;
+  background: linear-gradient(155deg, #4a2a58, #311e33 68%, #1c111d);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 3px 10px rgba(23,20,24,.16);
+  text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.chronbible .store-badge-google { background: linear-gradient(155deg, #263957, #16233c 70%, #101a2c); }
+.chronbible .store-badge-book { background: linear-gradient(155deg, #713047, #5a2234 70%, #381522); }
+.chronbible .store-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 5px 14px rgba(23,20,24,.25);
+  color: #fff;
+}
+.chronbible .store-badge:focus-visible { outline: 3px solid #eebd4a; outline-offset: 3px; }
+.chronbible .store-icon { width: 29px; height: 29px; flex: none; }
+.chronbible .store-badge-book .store-icon { color: #eebd4a; }
+.chronbible .store-label { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; white-space: nowrap; }
+.chronbible .store-label small { font: 600 11px/1.25 Montserrat, sans-serif; }
+.chronbible .store-label strong { font: 700 17px/1.2 Montserrat, sans-serif; letter-spacing: -.03em; }
+@media (max-width: 680px) {
+  .chronbible .header-actions { width: 100%; justify-content: center; }
+  .chronbible .store-links { width: 100%; justify-content: center; }
+  .chronbible .store-badge { flex: 1 1 170px; max-width: 280px; }
+}
+@media (max-width: 420px) {
+  .chronbible .store-badge { max-width: none; flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chronbible .store-badge { transition: none; }
+}
