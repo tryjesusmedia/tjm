@@ -45,3 +45,14 @@ body.chronbible .text-size-controls { display:grid; grid-template-columns: minma
 body.chronbible .text-size-controls button { width:100%; min-width:44px; min-height:48px; margin:0; padding:8px; }
 body.chronbible #text-size-status { white-space:nowrap; min-width:0; }
 body.chronbible #sign-out, body.chronbible #header-sign-in { margin-top:0; white-space:normal; }
+
+/* The guide title now occupies the header's brand position. */
+body.chronbible #page-title, body.chronbible #page-title * { font-family:"Cormorant Garamond",Georgia,serif !important; }
+body.chronbible #page-title { margin:0; min-width:0; font-size:clamp(32px,7.7vw,52px) !important; line-height:1.08; font-weight:600; letter-spacing:-.035em; color:var(--ivory); }
+body.chronbible #page-title em { font-size:1em !important; font-weight:500; color:var(--gold); }
+body.chronbible #page-title span { font-size:.64em !important; font-weight:600; font-style:normal; color:var(--ivory); }
+body.chronbible .chron-bottom-brand { display:flex; justify-content:center; padding:28px 16px; background:#201321; color:var(--white); }
+body.chronbible .scripture-card .card-kicker,
+body.chronbible .scripture-card .card-kicker * { font-size:15px !important; line-height:22px !important; }
+body.chronbible .scripture-card > h3 { font-size:23px !important; line-height:30px !important; }
+body.chronbible #readings-heading { font-size:19px !important; line-height:25px !important; }
