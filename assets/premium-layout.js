@@ -41,7 +41,7 @@
     }
     if(document.body.classList.contains('chronbible')) {
       const book=q('.store-badge-book'),menu=q('#account-menu');
-      if(book&&menu){book.textContent='Buy the hardcover book';menu.append(book);}
+      if(book&&menu){menu.append(book);}
     }
     if(document.body.dataset.page==='sales') {
       fold(q('#curriculum'),'Explore the six lessons');
