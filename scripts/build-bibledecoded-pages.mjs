@@ -24,7 +24,7 @@ function styleSalesPage(html) {
  .replace('<body class="tjm-simple"','<body class="tjm-simple premium-system"');
 }
 
-fs.mkdirSync('bibledecoded',{recursive:true});fs.writeFileSync('bibledecoded/index.html',styleSalesPage(sales));
+fs.mkdirSync('bibledecoded',{recursive:true});fs.writeFileSync('bibledecoded/index.html',styleSalesPage(sales).replace('</head>', "<link rel=\"stylesheet\" href=\"/assets/bottom-tabs.css?v=1\"><script defer src=\"/assets/bottom-tabs.js?v=1\"></script>" + '</head>'));
 for(const [page,title] of [['welcome','Welcome to Bible Decoded'],['dashboard','Your Bible Decoded Dashboard'],['lesson','Your Bible Decoded Lesson'],['complete','Bible Decoded Completion']]){
  fs.mkdirSync(`bibledecoded/${page}`,{recursive:true});fs.writeFileSync(`bibledecoded/${page}/index.html`,styleSalesPage(`${head(title,'Your personal Bible Decoded course and study workspace.',true)}<body class="tjm-simple" data-page="${page}">${header}<main id="main" class="wrap app-content"><div id="global-message" class="notice" role="status"></div><div id="app"><p class="loading" role="status">Opening Bible Decoded…</p></div><noscript><div class="notice">Please enable JavaScript to sign in and save your workbook answers. Need help? Email info@tryjesusmedia.com.</div></noscript></main>${footer}</body></html>`));
 }

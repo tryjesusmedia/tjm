@@ -1,0 +1,35 @@
+/* Identical navigation on ChronBible, Bible Decoded sales, and Members only. */
+html body.tjm-tabbed-page { padding-bottom:calc(var(--tjm-bottom-bar-height,90px) + 16px)!important; }
+html body.tjm-tabbed-page #tjm-bottom-tabs {
+  position:fixed; inset:auto 0 0; z-index:45; width:100%; margin:0;
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0;
+  padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));
+  box-sizing:border-box; background:#311e33; border:0; border-top:1px solid #eebd4a; box-shadow:0 -4px 18px #17141826;
+}
+html body.tjm-tabbed-page #tjm-bottom-tabs a {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:72px; min-width:0; margin:0; padding:6px 4px; gap:5px; border:0; border-radius:10px;
+  background:transparent; color:#f3e8d0; text-align:center; text-decoration:none; box-shadow:none;
+}
+html body.tjm-tabbed-page #tjm-bottom-tabs a,
+html body.tjm-tabbed-page #tjm-bottom-tabs a span {
+  font-family:Montserrat,Arial,sans-serif!important; font-size:17px!important;
+  font-weight:600!important; line-height:1.4!important; letter-spacing:0!important; text-transform:none!important;
+  white-space:normal; overflow-wrap:normal;
+}
+html body.tjm-tabbed-page #tjm-bottom-tabs a[aria-current="page"] { color:#eebd4a; background:#4a2a58; }
+html body.tjm-tabbed-page #tjm-bottom-tabs a:hover { background:#4a2a58; }
+html body.tjm-tabbed-page #tjm-bottom-tabs a:focus-visible { outline:3px solid #eebd4a; outline-offset:-3px; }
+html body.tjm-tabbed-page #tjm-bottom-tabs svg {
+  display:block; width:23px; height:23px; flex:0 0 23px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linejoin:round; stroke-linecap:round;
+}
+html body.tjm-tabbed-page .toast-region { bottom:calc(var(--tjm-bottom-bar-height,90px) + 16px); }
+html body.tjm-tabbed-page .pk-launcher { bottom:calc(var(--tjm-bottom-bar-height,90px) + 16px); }
+html body.tjm-tabbed-page .pk-panel {
+  bottom:calc(var(--tjm-bottom-bar-height,90px) + 16px);
+  max-height:calc(100dvh - var(--tjm-bottom-bar-height,90px) - 40px);
+}
+@media print {
+  html body.tjm-tabbed-page #tjm-bottom-tabs { display:none!important; }
+  html body.tjm-tabbed-page { padding-bottom:0!important; }
+}
