@@ -14,6 +14,7 @@
   html body.premium-system.premium-home .site-header .brand {justify-self:start}
   html body.premium-system.premium-home .site-header .menu-toggle {justify-self:end}
   html body.premium-system.premium-home .hero {
+    min-height:0;
     padding-block:clamp(44px,6vw,76px);
     background:#1c111d;
   }
