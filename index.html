@@ -70,14 +70,14 @@
 
   <link
     rel="stylesheet"
-    href="assets/style.css?v=20260904-3"
+    href="assets/style.css?v=omni-isolated1"
   />
 
   <script
     defer
-    src="assets/script.js?v=20260904-2"
+    src="assets/script.js?v=omni-isolated1"
   ></script>
-  <link rel="stylesheet" href="/assets/readability.css?v=premium1" />
+  <link rel="stylesheet" href="/assets/readability.css?v=omni-isolated1" />
 
   <!-- Meta Pixel Code -->
 <script>
@@ -136,26 +136,26 @@ fbq('track', 'PageView');
   ]
 }
   </script>
-<link rel="stylesheet" href="/assets/membership-offers.css?v=20260914-3" />
+<link rel="stylesheet" href="/assets/membership-offers.css?v=omni-isolated1" />
 <script defer src="/assets/perk-carousels.js?v=20260914-1"></script>
 
 <style id="mobile-member-cards">
 /* One full-width offer at a time while scrolling on phones. */
 @media (max-width: 700px) {
-  .membership-perk-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .membership-perk { width: 100%; box-sizing: border-box; padding: 24px 20px; }
-  .membership-perk h3 { font-size: 30px; line-height: 1.2; overflow-wrap: normal; }
-  .membership-perk p { font-size: 20px !important; line-height: 1.65; }
-  .membership-perk .button { width: 100%; }
-  .membership-perk .perk-carousel-controls { gap: 8px; flex-wrap: wrap; }
-  .membership-perk .perk-carousel-controls button { min-width: 48px; min-height: 48px; }
-  .membership-perk .perk-carousel-controls [data-slide-count] { font-size: 16px; }
+  .membership-perk-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .membership-perk:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { width: 100%; box-sizing: border-box; padding: 24px 20px; }
+  .membership-perk h3:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size: 30px; line-height: 1.2; overflow-wrap: normal; }
+  .membership-perk p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size: 20px !important; line-height: 1.65; }
+  .membership-perk .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { width: 100%; }
+  .membership-perk .perk-carousel-controls:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { gap: 8px; flex-wrap: wrap; }
+  .membership-perk .perk-carousel-controls button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { min-width: 48px; min-height: 48px; }
+  .membership-perk .perk-carousel-controls [data-slide-count]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size: 16px; }
 }
 </style>
 <style id="welcome-matched-buttons">
 /* Match the welcome page's roomy chronological-reading CTA. */
-main .button,
-main .membership-perk .button {
+main .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+main .membership-perk .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   box-sizing: border-box;
   height: auto;
   min-height: 76px;
@@ -171,14 +171,14 @@ main .membership-perk .button {
   text-align: center;
   text-transform: uppercase;
 }
-main .perk-carousel-controls button {
+main .perk-carousel-controls button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: 20px;
   min-width: 48px;
   min-height: 48px;
 }
 </style>
-<link rel="stylesheet" href="/assets/premium-simplicity.css?v=20261001-1" />
-<link rel="stylesheet" href="/assets/premium-system.css?v=2"><script defer src="/assets/premium-layout.js?v=3"></script><link rel="stylesheet" href="/assets/landing-header.css?v=2"></head>
+<link rel="stylesheet" href="/assets/premium-simplicity.css?v=omni-isolated1" />
+<link rel="stylesheet" href="/assets/premium-system.css?v=omni-isolated1"><script defer src="/assets/premium-layout.js?v=3"></script><link rel="stylesheet" href="/assets/landing-header.css?v=omni-isolated1"><link rel="stylesheet" href="/assets/omnisend-boundary.css?v=1"></head>
 
 
 <body class="premium-system tjm-simple premium-home">

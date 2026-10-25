@@ -6,7 +6,7 @@
   readable set of type, control, focus, contrast, and mobile standards.
 */
 
-:root {
+:root:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   --tjm-readable-ink: #302831;
   --tjm-readable-muted: #5f5660;
   --tjm-readable-ivory: #fffdf9;
@@ -16,19 +16,19 @@
   --tjm-control-height: 52px;
 }
 
-*,
-*::before,
-*::after {
+*:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+*:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::before,
+*:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::after {
   box-sizing: border-box;
 }
 
-html {
+html:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   scroll-padding-top: 110px;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
 
-body {
+body:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   overflow-wrap: break-word;
   font-size: 19px;
   line-height: 1.72;
@@ -36,56 +36,56 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-main,
-#app-main,
-.lesson-main,
-.page-main,
-.legal-page {
+main:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+#app-main:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.lesson-main:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.page-main:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.legal-page:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-width: 0;
 }
 
 /* Comfortable reading measure and a consistent body size. Embedded marketing
    forms are excluded so their provider-controlled layout remains intact. */
 :where(body:not(.premium-system)) :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-  :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+  :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: clamp(1.125rem, 1.075rem + .2vw, 1.25rem) !important;
   line-height: 1.72 !important;
 }
 
 :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-  p:not(.eyebrow):not(.microcopy):not([class*="meta"]):not([class*="caption"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+  p:not(.eyebrow):not(.microcopy):not([class*="meta"]):not([class*="caption"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   max-width: var(--tjm-reading-width);
 }
 
 /* Headings retain the editorial serif treatment but gain enough leading to
    remain readable when a visitor enlarges the page. */
-:where(main, #app-main, .lesson-main, .page-main, .legal-page) :where(h1, h2, h3) {
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) :where(h1, h2, h3):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   max-width: 24ch;
   text-wrap: balance;
   overflow-wrap: normal;
 }
 
-:where(main, #app-main, .lesson-main, .page-main, .legal-page) h1 {
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   line-height: .98 !important;
 }
 
-:where(main, #app-main, .lesson-main, .page-main, .legal-page) h2 {
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   line-height: 1.03 !important;
 }
 
-:where(main, #app-main, .lesson-main, .page-main, .legal-page) h3 {
+:where(main, #app-main, .lesson-main, .page-main, .legal-page) h3:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   line-height: 1.14 !important;
 }
 
 /* Small editorial labels remain premium, but are no longer fine print. */
 :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-  :where(.eyebrow, [class*="kicker"], [class*="label"], [class*="meta"], [class*="caption"]) {
+  :where(.eyebrow, [class*="kicker"], [class*="label"], [class*="meta"], [class*="caption"]):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: max(.875rem, 14px) !important;
   line-height: 1.45 !important;
 }
 
 :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-  :where(.microcopy, [class*="note"], small) {
+  :where(.microcopy, [class*="note"], small):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: max(.875rem, 14px) !important;
   line-height: 1.55 !important;
 }
@@ -93,20 +93,20 @@ main,
 /* Stronger text contrast without changing the brand palette. */
 :where(.section-dark, .lesson-shell, .hero-welcome, .result-wrap, .experience-section,
   .request-section, .urgency-section, .continue-card, .dashboard-side-card.dark)
-  p:not(.eyebrow) {
+  p:not(.eyebrow):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: rgba(255, 253, 249, .88) !important;
 }
 
 :where(.section-light, .section-cream, .story, .watch-section, .topics-section,
   .faq-section, .legal-section, .topic-card, .benefit-card)
-  p:not(.eyebrow) {
+  p:not(.eyebrow):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: var(--tjm-readable-muted) !important;
 }
 
 /* Body links look like links; navigation, cards, and buttons keep their own
    component styling. */
 :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-  :where(p, li, dd) a:not(.button):not(.primary-button):not(.secondary-button):not(.text-link):not(.next-card-link) {
+  :where(p, li, dd) a:not(.button):not(.primary-button):not(.secondary-button):not(.text-link):not(.next-card-link):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   text-decoration-thickness: .1em;
   text-underline-offset: .2em;
 }
@@ -114,142 +114,142 @@ main,
 /* Large, forgiving controls for mouse, touch, and reduced dexterity. */
 :where(.button, .primary-button, .secondary-button, .nav-button, .header-link,
   .listen-button, .live-zoom-link, .channel-link, .lesson-return-link,
-  .social-link, .mobile-sticky, .nav-cta, input, select, textarea) {
+  .social-link, .mobile-sticky, .nav-cta, input, select, textarea):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: var(--tjm-control-height);
   font-size: max(1rem, 16px) !important;
 }
 
 :where(.button, .primary-button, .secondary-button, .nav-button, .live-zoom-link,
-  .channel-link, .lesson-return-link, .social-link, .mobile-sticky, .nav-cta) {
+  .channel-link, .lesson-return-link, .social-link, .mobile-sticky, .nav-cta):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   padding-block: 12px;
   white-space: normal;
   text-align: center;
 }
 
-:where(.site-nav a, .side-nav button, .bottom-nav button, summary) {
+:where(.site-nav a, .side-nav button, .bottom-nav button, summary):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 48px;
 }
 
-:where(.site-nav a) {
+:where(.site-nav a):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: inline-flex;
   align-items: center;
   font-size: max(.875rem, 14px) !important;
   line-height: 1.35 !important;
 }
 
-summary {
+summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   padding-block: 16px;
 }
 
-input,
-select,
-textarea {
+input:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+select:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+textarea:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border-width: 2px !important;
 }
 
 /* The small guide-progress dots are supplemental navigation. Their spacing
    and labels provide a usable target without turning them into large pills. */
-.lesson-dots button {
+.lesson-dots button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-width: 28px !important;
   min-height: 28px !important;
 }
 
 /* A clear focus ring works on both cream and plum surfaces. */
-:where(a, button, input, select, textarea, summary):focus-visible {
+:where(a, button, input, select, textarea, summary):focus-visible:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   outline: 3px solid var(--tjm-readable-gold) !important;
   outline-offset: 4px !important;
 }
 
 /* Footer links should not become small again after the main content. */
-:where(.site-footer, .footer-inner) :where(p, a, span:not(.brand-mark):not(.brand-type)) {
+:where(.site-footer, .footer-inner) :where(p, a, span:not(.brand-mark):not(.brand-type)):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: max(.9375rem, 15px);
   line-height: 1.55;
 }
 
 @media (max-width: 860px) {
-  .site-nav {
+  .site-nav:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     max-height: calc(100dvh - 96px);
     overflow-y: auto;
   }
 
-  .site-nav a {
+  .site-nav a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     width: 100%;
     padding: 12px 14px !important;
   }
 }
 
 @media (max-width: 700px) {
-  html {
+  html:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     scroll-padding-top: 92px;
   }
 
-  body {
+  body:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     font-size: 18px;
   }
 
   :where(body:not(.premium-system)) :where(main, #app-main, .lesson-main, .page-main, .legal-page)
-    :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *) {
+    :where(p, li, dd, dt):not(.eyebrow):not(.microcopy):not([class*="label"]):not([class*="meta"]):not([class*="caption"]):not([class*="kicker"]):not([class*="note"]):not(#omnisend-embedded-v2-69965e87faf307608c8f562a *):not(#omnisend-embedded-v2-6a6ec2f44b0e701059793992 *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     font-size: 1.125rem !important;
     line-height: 1.68 !important;
   }
 
   :where(.button, .primary-button, .secondary-button, .nav-button,
-    .live-zoom-link, .channel-link, .lesson-return-link, .mobile-sticky) {
+    .live-zoom-link, .channel-link, .lesson-return-link, .mobile-sticky):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     width: 100%;
     min-height: 56px;
     justify-content: center;
   }
 
-  :where(.completion-actions, .hero-actions, .button-row, .shop-actions) {
+  :where(.completion-actions, .hero-actions, .button-row, .shop-actions):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     gap: 14px !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
+  html:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
+  *:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+*:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::before,
+*:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::after {
     scroll-behavior: auto !important;
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
 
-  .reveal {
+  .reveal:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     opacity: 1 !important;
     transform: none !important;
   }
 }
 
 @media print {
-  body {
+  body:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     color: #171418 !important;
     background: #fff !important;
     font-size: 12pt;
   }
 
-  .site-header,
-  .page-progress,
-  .lesson-navigation,
-  .site-footer,
-  .toast,
-  .pk-launcher,
-  .pk-panel,
-  .completion-actions,
-  .hero-visual,
-  .lesson-shell-glow {
+  .site-header:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.page-progress:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.lesson-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.site-footer:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.toast:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.pk-launcher:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.pk-panel:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.completion-actions:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.hero-visual:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.lesson-shell-glow:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: none !important;
   }
 
-  .lesson-main,
-  .lesson-shell,
-  .lesson-panel,
-  .panel-copy,
-  .panel-copy-wide {
+  .lesson-main:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.lesson-shell:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.lesson-panel:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.panel-copy:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.panel-copy-wide:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
@@ -260,59 +260,59 @@ textarea {
     box-shadow: none !important;
   }
 
-  .lesson-panel[hidden] {
+  .lesson-panel[hidden]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: block !important;
   }
 
-  .lesson-panel + .lesson-panel {
+  .lesson-panel + .lesson-panel:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     margin-top: 36pt !important;
     padding-top: 28pt !important;
     border-top: 1px solid #bbb !important;
   }
 
-  .lesson-panel :where(h1, h2, h3, p, li, strong, span, small, blockquote) {
+  .lesson-panel :where(h1, h2, h3, p, li, strong, span, small, blockquote):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     color: #171418 !important;
     text-shadow: none !important;
   }
 
-  details,
-  details[open] {
+  details:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+details[open]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: block !important;
   }
 
-  details > *:not(summary) {
+  details > *:not(summary):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: block !important;
   }
 
-  a {
+  a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     color: #171418 !important;
   }
 }
 
 /* Welcome and signup-complete use the same Bible Guides experience as the app. */
-#bible-guides.app-guide-library {
+#bible-guides.app-guide-library:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 0;
   color: #fff9ee;
   background: #171418;
 }
 
-#bible-guides.app-guide-library::before,
-#bible-guides.app-guide-library .ambient {
+#bible-guides.app-guide-library:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::before,
+#bible-guides.app-guide-library .ambient:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: none;
 }
 
-#bible-guides.app-guide-library .guides-inner {
+#bible-guides.app-guide-library .guides-inner:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   width: min(760px, calc(100% - 32px));
   padding: 52px 0 110px;
 }
 
-#bible-guides.app-guide-library .section-heading {
+#bible-guides.app-guide-library .section-heading:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   max-width: none;
   margin: 0 0 20px;
   text-align: left;
 }
 
-#bible-guides.app-guide-library .section-heading h2 {
+#bible-guides.app-guide-library .section-heading h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin: 0 0 8px;
   color: #fff9ee;
   font-family: inherit;
@@ -323,7 +323,7 @@ textarea {
   line-height: 1.2;
 }
 
-#bible-guides.app-guide-library .section-heading > p:not(.eyebrow) {
+#bible-guides.app-guide-library .section-heading > p:not(.eyebrow):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   max-width: none;
   margin: 0;
   color: #bfb2c2;
@@ -331,14 +331,14 @@ textarea {
   line-height: 21px !important;
 }
 
-#bible-guides.app-guide-library .journey-grid {
+#bible-guides.app-guide-library .journey-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   grid-template-columns: 1fr;
   gap: 16px;
 }
 
-#bible-guides.app-guide-library .journey-card,
-#bible-guides.app-guide-library .journey-jesus,
-#bible-guides.app-guide-library .journey-prophecy {
+#bible-guides.app-guide-library .journey-card:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+#bible-guides.app-guide-library .journey-jesus:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+#bible-guides.app-guide-library .journey-prophecy:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border: 1px solid rgba(238, 189, 74, .24);
   border-radius: 18px;
   background: #311e33;
@@ -346,22 +346,22 @@ textarea {
   backdrop-filter: none;
 }
 
-#bible-guides.app-guide-library .journey-card::before {
+#bible-guides.app-guide-library .journey-card:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::before {
   display: none;
 }
 
-#bible-guides.app-guide-library .journey-card:hover,
-#bible-guides.app-guide-library .journey-card[open] {
+#bible-guides.app-guide-library .journey-card:hover:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+#bible-guides.app-guide-library .journey-card[open]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border-color: rgba(238, 189, 74, .24);
   box-shadow: none;
 }
 
-#bible-guides.app-guide-library .journey-summary {
+#bible-guides.app-guide-library .journey-summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 0;
   padding: 20px;
 }
 
-#bible-guides.app-guide-library .journey-label {
+#bible-guides.app-guide-library .journey-label:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin: 0 0 8px;
   color: #eebd4a;
   font-size: 11px !important;
@@ -370,7 +370,7 @@ textarea {
   line-height: 16px !important;
 }
 
-#bible-guides.app-guide-library .journey-summary h2 {
+#bible-guides.app-guide-library .journey-summary h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin: 0 0 7px;
   display: flex;
   align-items: flex-start;
@@ -384,7 +384,7 @@ textarea {
   line-height: 30px !important;
 }
 
-#bible-guides.app-guide-library .journey-summary h2::after {
+#bible-guides.app-guide-library .journey-summary h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::after {
   content: "+";
   flex: 0 0 auto;
   color: #eebd4a;
@@ -393,11 +393,11 @@ textarea {
   line-height: 30px;
 }
 
-#bible-guides.app-guide-library .journey-card[open] .journey-summary h2::after {
+#bible-guides.app-guide-library .journey-card[open] .journey-summary h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::after {
   content: "−";
 }
 
-#bible-guides.app-guide-library .journey-summary p {
+#bible-guides.app-guide-library .journey-summary p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   max-width: none;
   margin: 0 0 16px;
   color: #f3e8d0 !important;
@@ -405,48 +405,48 @@ textarea {
   line-height: 21px !important;
 }
 
-#bible-guides.app-guide-library .app-guide-progress {
+#bible-guides.app-guide-library .app-guide-progress:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin: 0 0 18px;
 }
 
-#bible-guides.app-guide-library .app-guide-progress > div:first-child {
+#bible-guides.app-guide-library .app-guide-progress > div:first-child:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin-bottom: 7px;
   display: flex;
   justify-content: space-between;
   gap: 12px;
 }
 
-#bible-guides.app-guide-library .app-guide-progress strong,
-#bible-guides.app-guide-library .app-guide-progress span {
+#bible-guides.app-guide-library .app-guide-progress strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+#bible-guides.app-guide-library .app-guide-progress span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: 12px !important;
   line-height: 16px !important;
 }
 
-#bible-guides.app-guide-library .app-guide-progress strong {
+#bible-guides.app-guide-library .app-guide-progress strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: #eebd4a;
   font-weight: 900;
 }
 
-#bible-guides.app-guide-library .app-guide-progress > div:first-child > span {
+#bible-guides.app-guide-library .app-guide-progress > div:first-child > span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: #bfb2c2;
   font-weight: 700;
 }
 
-#bible-guides.app-guide-library .app-guide-progress-track {
+#bible-guides.app-guide-library .app-guide-progress-track:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   height: 8px;
   overflow: hidden;
   border-radius: 8px;
   background: #2a222b;
 }
 
-#bible-guides.app-guide-library .app-guide-progress-track > span {
+#bible-guides.app-guide-library .app-guide-progress-track > span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   height: 100%;
   display: block;
   border-radius: inherit;
   background: #eebd4a;
 }
 
-#bible-guides.app-guide-library .journey-toggle {
+#bible-guides.app-guide-library .journey-toggle:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 50px;
   padding: 12px 18px;
   justify-content: center;
@@ -460,18 +460,18 @@ textarea {
   text-transform: none;
 }
 
-#bible-guides.app-guide-library .journey-toggle b {
+#bible-guides.app-guide-library .journey-toggle b:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: none;
 }
 
-#bible-guides.app-guide-library .guide-list {
+#bible-guides.app-guide-library .guide-list:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   padding: 0 20px 20px;
   gap: 9px;
   border: 0;
   background: transparent;
 }
 
-#bible-guides.app-guide-library .guide-item {
+#bible-guides.app-guide-library .guide-item:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 62px;
   padding: 10px 12px;
   grid-template-columns: 34px minmax(0, 1fr) auto;
@@ -482,14 +482,14 @@ textarea {
   background: #2a222b;
 }
 
-#bible-guides.app-guide-library .guide-item:hover {
+#bible-guides.app-guide-library .guide-item:hover:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border-color: rgba(238, 189, 74, .24);
   background: #2a222b;
   opacity: .75;
   transform: none;
 }
 
-#bible-guides.app-guide-library .guide-index {
+#bible-guides.app-guide-library .guide-index:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   width: 34px;
   height: 34px;
   color: #171418;
@@ -499,14 +499,14 @@ textarea {
   font-weight: 900;
 }
 
-#bible-guides.app-guide-library .guide-item-copy strong {
+#bible-guides.app-guide-library .guide-item-copy strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: #f3e8d0;
   font-size: 14px !important;
   font-weight: 800;
   line-height: 19px !important;
 }
 
-#bible-guides.app-guide-library .guide-item > b {
+#bible-guides.app-guide-library .guide-item > b:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: #eebd4a;
   font-size: 27px;
   font-weight: 400;
@@ -514,7 +514,7 @@ textarea {
 }
 
 @media (max-width: 520px) {
-  #bible-guides.app-guide-library .guides-inner {
+  #bible-guides.app-guide-library .guides-inner:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     width: auto;
     margin: 0;
     padding: 52px 20px 110px;
@@ -525,23 +525,23 @@ textarea {
    Bible guide reader — calm, premium, senior-friendly layer
    ========================================================= */
 
-.guide-reader-page {
+.guide-reader-page:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   --tjm-guide-copy: 1.2rem;
   padding-bottom: 0;
 }
 
-.guide-reader-page .lesson-shell {
+.guide-reader-page .lesson-shell:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   isolation: isolate;
 }
 
-.guide-reader-page .lesson-panel :where(p, li, dd),
-.guide-reader-page .drawer-content p,
-.guide-reader-page .drawer-list,
-.guide-reader-page .contrast-card li,
-.guide-reader-page .discovery-summary li,
-.guide-reader-page .reflection-card p,
-.guide-reader-page .next-lesson-card p,
-.guide-reader-page .discussion-invite p {
+.guide-reader-page .lesson-panel :where(p, li, dd):not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .drawer-content p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .drawer-list:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .contrast-card li:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .discovery-summary li:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .reflection-card p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .next-lesson-card p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .discussion-invite p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   max-width: 65ch;
   font-size: var(--tjm-guide-copy) !important;
   line-height: 1.72 !important;
@@ -557,7 +557,7 @@ textarea {
   .interpretation-list,
   .authority-profile,
   .clue-ledger
-) strong {
+) strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: max(1.0625rem, calc(var(--tjm-guide-copy) * .9)) !important;
   line-height: 1.42 !important;
 }
@@ -572,7 +572,7 @@ textarea {
   .interpretation-list,
   .authority-profile,
   .clue-ledger
-) p {
+) p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: rgba(255, 253, 249, .86) !important;
 }
 
@@ -586,50 +586,50 @@ textarea {
   .reflection-card small,
   .next-lesson-card > span,
   .discussion-invite > div > span
-) {
+):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: max(.9375rem, 15px) !important;
   line-height: 1.5 !important;
 }
 
-.guide-reader-page .source-links a {
+.guide-reader-page .source-links a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 58px;
   padding: 13px 15px;
 }
 
-.guide-reader-page .source-links a small,
-.guide-reader-page .save-note,
-.guide-reader-page .lesson-topline,
-.guide-reader-page .lesson-shell :where(.drawer-note, [class*="note"]) {
+.guide-reader-page .source-links a small:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .save-note:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .lesson-topline:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .lesson-shell :where(.drawer-note, [class*="note"]):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: rgba(255, 253, 249, .78) !important;
 }
 
-.guide-reader-page .lesson-topline {
+.guide-reader-page .lesson-topline:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 54px;
   font-size: .9375rem !important;
   letter-spacing: .075em;
 }
 
-.guide-reader-page .panel-copy,
-.guide-reader-page .panel-copy-wide {
+.guide-reader-page .panel-copy:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .panel-copy-wide:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   width: 100%;
 }
 
-.guide-reader-page h1 {
+.guide-reader-page h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: clamp(3rem, 6vw, 4.875rem);
   line-height: 1 !important;
 }
 
-.guide-reader-page h2 {
+.guide-reader-page h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: clamp(2.5rem, 5.2vw, 4.25rem);
   line-height: 1.05 !important;
 }
 
-.guide-reader-page :where(.header-link, .listen-button) {
+.guide-reader-page :where(.header-link, .listen-button):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 46px;
   font-size: .9375rem !important;
 }
 
-.guide-reader-toolbar {
+.guide-reader-toolbar:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   position: relative;
   z-index: 3;
   display: grid;
@@ -641,41 +641,41 @@ textarea {
   background: rgba(255, 255, 255, .035);
 }
 
-.guide-reading-controls,
-.guide-text-controls,
-.guide-audio-speed,
-.guide-reader-links {
+.guide-reading-controls:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-text-controls:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-audio-speed:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-links:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.guide-audio-speed {
+.guide-audio-speed:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: rgba(255, 253, 249, .82);
   font-size: .9375rem;
   font-weight: 700;
 }
 
-.guide-reading-controls {
+.guide-reading-controls:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   gap: 12px;
   flex-wrap: nowrap;
 }
 
-.guide-text-controls {
+.guide-text-controls:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   flex: 0 0 auto;
   gap: 0;
 }
 
-.guide-audio-speed,
-.guide-audio-speed > span {
+.guide-audio-speed:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-audio-speed > span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-width: 0;
 }
 
-.guide-audio-speed > span {
+.guide-audio-speed > span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   overflow-wrap: anywhere;
 }
 
-.guide-text-controls button {
+.guide-text-controls button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-width: 44px;
   min-height: 44px;
   display: grid;
@@ -689,21 +689,21 @@ textarea {
   font-weight: 800;
 }
 
-.guide-text-controls button:disabled {
+.guide-text-controls button:disabled:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   opacity: .4;
   cursor: default;
 }
 
-.guide-text-controls [data-text-size="decrease"] {
+.guide-text-controls [data-text-size="decrease"]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border-radius: 10px 0 0 10px;
 }
 
-.guide-text-controls [data-text-size="increase"] {
+.guide-text-controls [data-text-size="increase"]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border-left: 0;
   border-radius: 0 10px 10px 0;
 }
 
-.guide-text-status {
+.guide-text-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -717,35 +717,35 @@ textarea {
 
 /* Let enlarged guide text reflow instead of being clipped by fixed tracks. */
 .guide-reader-page :where(.lesson-panel, .lesson-panel *, .header-actions,
-  .lesson-topline *, .guide-reader-toolbar > *, .guide-outline *, .guide-glossary *) {
+  .lesson-topline *, .guide-reader-toolbar > *, .guide-outline *, .guide-glossary *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-width: 0;
 }
 
-.guide-reader-page .lesson-panel :where(h1, h2, h3, p, strong, em, span, a, li) {
+.guide-reader-page .lesson-panel :where(h1, h2, h3, p, strong, em, span, a, li):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   overflow-wrap: anywhere;
 }
 
-.guide-reader-page .lesson-topline span {
+.guide-reader-page .lesson-topline span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   overflow-wrap: anywhere;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .guide-reader-page,
-  .guide-reader-page * {
+  .guide-reader-page:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page *:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     transition: none !important;
   }
 }
 
-.guide-reader-page .header-actions {
+.guide-reader-page .header-actions:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   flex-wrap: wrap;
 }
 
-.guide-reader-page .guide-reader-toolbar {
+.guide-reader-page .guide-reader-toolbar:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   grid-template-columns: minmax(0, auto) minmax(0, 1fr);
 }
 
 html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
-  [class*="-card-front"], [class*="-card-back"]) {
+  [class*="-card-front"], [class*="-card-back"]):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   position: relative;
   inset: auto;
   width: 100%;
@@ -756,35 +756,35 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
 }
 
 @media (max-width: 940px) {
-  .guide-reader-page .guide-reader-toolbar {
+  .guide-reader-page .guide-reader-toolbar:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (max-width: 700px) {
-  .guide-reader-page .guide-reader-toolbar {
+  .guide-reader-page .guide-reader-toolbar:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  html[data-guide-text-enlarged="true"] .guide-reader-page .mobile-guide-navigation {
+  html[data-guide-text-enlarged="true"] .guide-reader-page .mobile-guide-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     position: static;
     margin: 12px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  html[data-guide-text-enlarged="true"] .guide-reader-page .mobile-guide-status {
+  html[data-guide-text-enlarged="true"] .guide-reader-page .mobile-guide-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-column: 1 / -1;
     grid-row: 1;
   }
 
-  .guide-reader-page .mobile-guide-navigation button {
+  .guide-reader-page .mobile-guide-navigation button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     min-width: 0;
     flex-wrap: wrap;
     overflow-wrap: anywhere;
   }
 }
 
-.guide-audio-speed select {
+.guide-audio-speed select:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   flex-shrink: 0;
   min-width: 0;
   max-width: 70%;
@@ -797,12 +797,12 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   font-size: 1rem !important;
 }
 
-.guide-reader-links {
+.guide-reader-links:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   justify-content: flex-end;
   flex-wrap: wrap;
 }
 
-.guide-reader-links a {
+.guide-reader-links a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -817,14 +817,14 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   text-underline-offset: .22em;
 }
 
-.guide-reader-links a:last-child {
+.guide-reader-links a:last-child:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border: 1px solid rgba(238, 189, 74, .5);
   color: var(--tjm-readable-gold);
   text-decoration: none;
 }
 
-.guide-outline,
-.guide-glossary {
+.guide-outline:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-glossary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   position: relative;
   z-index: 3;
   margin: 16px 28px 0;
@@ -834,12 +834,12 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   background: rgba(8, 4, 9, .19);
 }
 
-.guide-glossary {
+.guide-glossary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin-top: 10px;
 }
 
-.guide-outline summary,
-.guide-glossary summary {
+.guide-outline summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-glossary summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 54px;
   display: flex;
   align-items: center;
@@ -853,24 +853,24 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   list-style: none;
 }
 
-.guide-outline summary::-webkit-details-marker,
-.guide-glossary summary::-webkit-details-marker {
+.guide-outline summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::-webkit-details-marker,
+.guide-glossary summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::-webkit-details-marker {
   display: none;
 }
 
-.guide-outline summary span:last-child,
-.guide-glossary summary span:last-child {
+.guide-outline summary span:last-child:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-glossary summary span:last-child:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: var(--tjm-readable-gold);
   font-size: 1.3rem;
   transition: transform .2s ease;
 }
 
-.guide-outline[open] summary span:last-child,
-.guide-glossary[open] summary span:last-child {
+.guide-outline[open] summary span:last-child:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-glossary[open] summary span:last-child:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   transform: rotate(45deg);
 }
 
-.guide-outline ol {
+.guide-outline ol:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
@@ -879,7 +879,7 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   list-style: none;
 }
 
-.guide-outline button {
+.guide-outline button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   width: 100%;
   min-height: 54px;
   display: grid;
@@ -897,7 +897,7 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   text-align: left;
 }
 
-.guide-outline button > span {
+.guide-outline button > span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   width: 32px;
   height: 32px;
   display: grid;
@@ -909,12 +909,12 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   font-weight: 700;
 }
 
-.guide-outline button.is-current {
+.guide-outline button.is-current:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border-color: rgba(238, 189, 74, .72);
   background: rgba(238, 189, 74, .1);
 }
 
-.guide-glossary dl {
+.guide-glossary dl:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
@@ -922,14 +922,14 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   padding: 4px 18px 20px;
 }
 
-.guide-glossary dl > div {
+.guide-glossary dl > div:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   padding: 15px;
   border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 13px;
   background: rgba(255, 255, 255, .035);
 }
 
-.guide-glossary dt {
+.guide-glossary dt:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: var(--tjm-readable-gold);
   font-family: Georgia, serif;
   font-size: 1.2rem;
@@ -937,14 +937,14 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   text-transform: capitalize;
 }
 
-.guide-glossary dd {
+.guide-glossary dd:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin: 6px 0 0;
   color: rgba(255, 253, 249, .86);
   font-size: 1rem !important;
   line-height: 1.58 !important;
 }
 
-.main-point {
+.main-point:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin-top: 32px;
   padding: 23px 25px;
   border: 1px solid rgba(238, 189, 74, .5);
@@ -954,7 +954,7 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   box-shadow: 0 16px 38px rgba(8, 4, 9, .18);
 }
 
-.main-point > span {
+.main-point > span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: block;
   color: #8b5c00;
   font-size: .9375rem;
@@ -962,7 +962,7 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   letter-spacing: .1em;
 }
 
-.main-point p {
+.main-point p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin: 9px 0 0 !important;
   color: #403641 !important;
   font-size: var(--tjm-guide-copy) !important;
@@ -970,12 +970,12 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   line-height: 1.62 !important;
 }
 
-.guide-reader-page .evidence-drawer > summary {
+.guide-reader-page .evidence-drawer > summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: 1rem !important;
   line-height: 1.45 !important;
 }
 
-.guide-reader-page .lesson-navigation {
+.guide-reader-page .lesson-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 92px;
   display: grid !important;
   grid-template-columns: minmax(175px, .8fr) minmax(220px, 1.4fr) minmax(210px, .9fr);
@@ -984,11 +984,11 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   background: rgba(8, 4, 9, .32);
 }
 
-.guide-reader-page .lesson-dots {
+.guide-reader-page .lesson-dots:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: none;
 }
 
-.guide-section-status {
+.guide-section-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -998,7 +998,7 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   text-align: center;
 }
 
-.guide-section-status span {
+.guide-section-status span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: var(--tjm-readable-gold);
   font-size: .875rem;
   font-weight: 800;
@@ -1006,14 +1006,14 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   text-transform: uppercase;
 }
 
-.guide-section-status strong {
+.guide-section-status strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   max-width: 32ch;
   color: var(--tjm-readable-ivory);
   font-size: 1rem;
   line-height: 1.35;
 }
 
-.guide-reader-page .nav-button {
+.guide-reader-page .nav-button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 56px;
   padding: 10px 18px;
   border-color: rgba(255, 255, 255, .2);
@@ -1021,35 +1021,35 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   font-size: 1rem !important;
 }
 
-.guide-reader-page .nav-next {
+.guide-reader-page .nav-next:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   border-color: var(--tjm-readable-gold);
   color: #211323;
   background: linear-gradient(135deg, #f7d983, #eebd4a);
 }
 
-.mobile-guide-navigation {
+.mobile-guide-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: none;
 }
 
 /* Guide library status and actions */
-#bible-guides .guide-item {
+#bible-guides .guide-item:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 104px;
   padding: 16px;
 }
 
-#bible-guides .guide-item-copy strong {
+#bible-guides .guide-item-copy strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: clamp(1.2rem, 1.1rem + .25vw, 1.4rem) !important;
   line-height: 1.22 !important;
 }
 
-#bible-guides .guide-item-copy > small {
+#bible-guides .guide-item-copy > small:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   margin-top: 7px;
   color: rgba(255, 253, 249, .82);
   font-size: 1rem !important;
   line-height: 1.58 !important;
 }
 
-.guide-item-meta {
+.guide-item-meta:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
@@ -1058,18 +1058,18 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   margin-top: 13px;
 }
 
-.guide-item-status,
-.guide-item-action {
+.guide-item-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-item-action:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: .9375rem !important;
   font-weight: 750;
   line-height: 1.35;
 }
 
-.guide-item-status {
+.guide-item-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: rgba(255, 253, 249, .76);
 }
 
-.guide-item-action {
+.guide-item-action:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 42px;
   display: inline-flex !important;
   align-items: center;
@@ -1080,109 +1080,109 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
   background: #eebd4a;
 }
 
-#bible-guides .journey-label,
-#bible-guides .journey-toggle {
+#bible-guides .journey-label:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+#bible-guides .journey-toggle:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   font-size: .9375rem !important;
   line-height: 1.45 !important;
 }
 
-#bible-guides .journey-card p {
+#bible-guides .journey-card p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   color: rgba(255, 253, 249, .86) !important;
 }
 
-#bible-guides .journey-summary {
+#bible-guides .journey-summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
   min-height: 310px;
 }
 
 @media (max-width: 940px) {
-  .guide-reader-toolbar {
+  .guide-reader-toolbar:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-template-columns: 1fr 1fr;
   }
 
-  .guide-reader-links {
+  .guide-reader-links:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-column: 1 / -1;
     justify-content: flex-start;
   }
 
-  .guide-outline ol,
-  .guide-glossary dl {
+  .guide-outline ol:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-glossary dl:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 700px) {
-  .guide-reader-page {
+  .guide-reader-page:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     padding-bottom: calc(92px + env(safe-area-inset-bottom));
   }
 
-  .guide-reader-page .site-header {
+  .guide-reader-page .site-header:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     flex-wrap: wrap;
     gap: 8px 12px;
     padding-block: 8px;
   }
 
-  .guide-reader-page .header-actions {
+  .guide-reader-page .header-actions:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     flex: 1 1 100%;
     justify-content: center;
   }
 
-  .guide-reader-page .page-progress {
+  .guide-reader-page .page-progress:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     top: 116px;
   }
 
-  .guide-reader-page .lesson-main {
+  .guide-reader-page .lesson-main:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     padding-top: 18px;
   }
 
-  .guide-reader-page h1 {
+  .guide-reader-page h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     font-size: clamp(2.65rem, 12vw, 3.85rem);
   }
 
-  .guide-reader-page h2 {
+  .guide-reader-page h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     font-size: clamp(2.15rem, 10vw, 3.3rem);
   }
 
-  .guide-reader-page .lesson-topline {
+  .guide-reader-page .lesson-topline:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: grid;
     justify-items: start;
     gap: 3px;
     padding: 10px 16px;
   }
 
-  .guide-reader-toolbar {
+  .guide-reader-toolbar:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-template-columns: 1fr;
     gap: 14px;
     padding: 16px;
   }
 
-  .guide-reader-links {
+  .guide-reader-links:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .guide-reader-links a {
+  .guide-reader-links a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     min-height: 52px;
     border: 1px solid rgba(255, 255, 255, .16);
   }
 
-  .guide-outline,
-  .guide-glossary {
+  .guide-outline:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-glossary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     margin-inline: 16px;
   }
 
-  .guide-outline ol {
+  .guide-outline ol:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     padding-inline: 10px;
   }
 
-  .guide-reader-page .lesson-panel {
+  .guide-reader-page .lesson-panel:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     padding: 36px 20px 38px;
   }
 
-  .guide-reader-page .lesson-navigation {
+  .guide-reader-page .lesson-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: none !important;
   }
 
-  .mobile-guide-navigation {
+  .mobile-guide-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     position: fixed;
     right: 10px;
     bottom: max(10px, env(safe-area-inset-bottom));
@@ -1202,7 +1202,7 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
     backdrop-filter: blur(18px);
   }
 
-  .mobile-guide-navigation button {
+  .mobile-guide-navigation button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     min-height: 54px;
     display: flex;
     align-items: center;
@@ -1217,17 +1217,17 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
     font-weight: 800;
   }
 
-  .mobile-guide-navigation .mobile-guide-next {
+  .mobile-guide-navigation .mobile-guide-next:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     border-color: #eebd4a;
     color: #211323;
     background: #eebd4a;
   }
 
-  .mobile-guide-navigation button:disabled {
+  .mobile-guide-navigation button:disabled:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     opacity: .42;
   }
 
-  .mobile-guide-status {
+  .mobile-guide-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     min-width: 52px;
     color: #f7d983;
     font-size: .875rem;
@@ -1235,52 +1235,52 @@ html[data-guide-text-enlarged="true"] .guide-reader-page .lesson-panel :where(
     text-align: center;
   }
 
-  #bible-guides .guide-item {
+  #bible-guides .guide-item:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-template-columns: 40px minmax(0, 1fr);
     gap: 12px;
     padding: 17px 14px;
   }
 
-  #bible-guides .guide-item > b {
+  #bible-guides .guide-item > b:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: none;
   }
 
-  .guide-item-meta {
+  .guide-item-meta:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .guide-item-action {
+  .guide-item-action:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     min-height: 46px;
     justify-content: center;
   }
 
-  #bible-guides .journey-summary {
+  #bible-guides .journey-summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     min-height: 0;
   }
 }
 
 @media print {
-  .guide-reader-page {
+  .guide-reader-page:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     --tjm-guide-scale: 1 !important;
   }
 
-  .guide-reader-toolbar,
-  .guide-outline,
-  .guide-glossary,
-  .mobile-guide-navigation {
+  .guide-reader-toolbar:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-outline:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-glossary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.mobile-guide-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     display: none !important;
   }
 
-  .guide-reader-page .lesson-panel :where(p, li, dd),
-  .guide-reader-page .drawer-content p,
-  .guide-reader-page .drawer-list {
+  .guide-reader-page .lesson-panel :where(p, li, dd):not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .drawer-content p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.guide-reader-page .drawer-list:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     max-width: none;
     font-size: 14pt !important;
     line-height: 1.55 !important;
   }
 
-  .main-point {
+  .main-point:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     break-inside: avoid;
     border: 2px solid #311e33 !important;
     box-shadow: none !important;

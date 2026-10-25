@@ -19,69 +19,70 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css?v=20260904-3">
-  <link rel="stylesheet" href="/assets/readability.css?v=premium1">
-  <link rel="stylesheet" href="/assets/premium-simplicity.css?v=20261001-1">
-  <script defer src="/assets/script.js?v=20260904-2"></script>
+  <link rel="stylesheet" href="/assets/style.css?v=omni-isolated1">
+  <link rel="stylesheet" href="/assets/readability.css?v=omni-isolated1">
+  <link rel="stylesheet" href="/assets/premium-simplicity.css?v=omni-isolated1">
+  <script defer src="/assets/script.js?v=omni-isolated1"></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://tryjesusmedia.com/guidesonline/#webpage","url":"https://tryjesusmedia.com/guidesonline/","name":"Free Online Bible Study Guides | Try Jesus Media","description":"Free online Bible study guides with an optional weekly Zoom discussion.","inLanguage":"en","isPartOf":{"@id":"https://tryjesusmedia.com/#website"},"publisher":{"@id":"https://tryjesusmedia.com/#organization"}}</script>
   <style>
     /* Local presentation only; the shared header and footer retain the homepage styles. */
-    .online-hero { background:var(--midnight-plum); color:var(--ivory); padding:clamp(44px,6vw,86px) 0; }
-    .online-hero-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); align-items:start; gap:clamp(32px,5vw,70px); }
-    .online-hero h1 { font-size:clamp(48px,5.8vw,78px); max-width:11ch; margin:0 0 24px; color:var(--ivory); letter-spacing:-.025em; }
-    .online-hero h1 em { color:var(--gold); font-style:normal; }
-    .guide-switch { margin:-10px 0 22px; font-size:16px!important; line-height:1.5!important; color:var(--ivory); }
-    .guide-switch a { color:var(--gold); font-weight:700; text-decoration:underline; text-underline-offset:3px; }
-    .online-hero .online-subtitle { color:var(--ivory); font-weight:500; margin:0 0 22px; }
-    .online-hero .online-description { color:var(--ivory); margin:0; max-width:43ch; }
-    .online-meta { display:flex; flex-wrap:wrap; gap:8px 18px; margin:26px 0 0; padding:0; list-style:none; color:var(--ivory); }
-    .online-meta li { font-size:14px!important; line-height:1.5!important; }
-    .online-meta li::before { content:'✓'; color:var(--gold); padding-right:8px; }
-    .online-signup { min-width:0; width:100%; padding:clamp(22px,3vw,34px); background:var(--cream); color:var(--plum); border:1px solid rgba(238,189,74,.45); border-radius:18px; box-shadow:0 16px 44px rgba(0,0,0,.14); }
-    .online-signup-intro { padding:0 0 16px; border-bottom:1px solid rgba(49,30,51,.13); margin-bottom:18px; }
-    .online-signup-intro strong { display:block; font-family:var(--serif); font-size:32px; line-height:1.2; }
-    .online-signup-intro span { display:block; font-size:14px; line-height:1.6; margin-top:8px; }
-    #guide-form { scroll-margin-top:110px; }
-    #omnisend-embedded-v2-6abfc85b36424f780b9e9641 { min-width:0; width:100%; }
+    .online-hero:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { background:var(--midnight-plum); color:var(--ivory); padding:clamp(44px,6vw,86px) 0; }
+    .online-hero-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); align-items:start; gap:clamp(32px,5vw,70px); }
+    .online-hero h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:clamp(48px,5.8vw,78px); max-width:11ch; margin:0 0 24px; color:var(--ivory); letter-spacing:-.025em; }
+    .online-hero h1 em:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { color:var(--gold); font-style:normal; }
+    .guide-switch:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin:-10px 0 22px; font-size:16px!important; line-height:1.5!important; color:var(--ivory); }
+    .guide-switch a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { color:var(--gold); font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+    .online-hero .online-subtitle:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { color:var(--ivory); font-weight:500; margin:0 0 22px; }
+    .online-hero .online-description:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { color:var(--ivory); margin:0; max-width:43ch; }
+    .online-meta:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { display:flex; flex-wrap:wrap; gap:8px 18px; margin:26px 0 0; padding:0; list-style:none; color:var(--ivory); }
+    .online-meta li:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:14px!important; line-height:1.5!important; }
+    .online-meta li:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::before { content:"✓"; color:var(--gold); padding-right:8px; }
+    .online-signup:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { min-width:0; width:100%; padding:clamp(22px,3vw,34px); background:var(--cream); color:var(--plum); border:1px solid rgba(238,189,74,.45); border-radius:18px; box-shadow:0 16px 44px rgba(0,0,0,.14); }
+    .online-signup-intro:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding:0 0 16px; border-bottom:1px solid rgba(49,30,51,.13); margin-bottom:18px; }
+    .online-signup-intro strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { display:block; font-family:var(--serif); font-size:32px; line-height:1.2; }
+    .online-signup-intro span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { display:block; font-size:14px; line-height:1.6; margin-top:8px; }
+    #guide-form:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { scroll-margin-top:110px; }
+    #omnisend-embedded-v2-6abfc85b36424f780b9e9641:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { min-width:0; width:100%; }
     /* Prevent the site's editorial text rules from enlarging provider form copy. */
-    #omnisend-embedded-v2-6abfc85b36424f780b9e9641 p { font-size:16px!important; line-height:1.55!important; max-width:none; }
-    #omnisend-embedded-v2-6abfc85b36424f780b9e9641 [class*="-section-"] { padding-inline:16px!important; }
-    .online-form-status { font-size:14px; line-height:1.6; margin:16px 0; }
-    .online-form-status a { text-underline-offset:3px; }
-    .online-section { padding:clamp(46px,6vw,78px) 0; }
-    .online-reading { width:min(760px,calc(100% - 40px)); margin-inline:auto; }
-    .online-reading p { margin:0 0 20px; }
-    .online-reading p:last-child { margin-bottom:0; }
-    .online-section h2 { font-size:clamp(38px,4.8vw,58px); max-width:24ch; margin-bottom:26px; }
-    .online-introduction { background:var(--cream); }
-    .online-introduction .online-opening { font-weight:600; color:var(--plum); }
-    .online-questions { border-left:3px solid var(--gold); padding-left:24px; margin:28px 0; }
-    .online-understanding { background:var(--ivory); }
-    .online-understanding .online-reading { border-top:1px solid rgba(49,30,51,.15); padding-top:32px; }
-    .online-topics { background:var(--cream); }
-    .online-topic-list { margin:30px 0; border-top:1px solid rgba(49,30,51,.15); }
-    .online-topic { padding:24px 0; border-bottom:1px solid rgba(49,30,51,.15); }
-    .online-topic h3 { font-size:30px; color:var(--plum); margin-bottom:10px; max-width:none; }
-    .online-topic p { margin:0; }
-    .online-actions { margin-top:30px; }
-    .online-steps { background:var(--plum); color:var(--ivory); }
-    .online-steps h2 { color:var(--ivory); }
-    .online-steps p { color:var(--ivory); }
-    .online-step-list { padding:0; list-style:none; margin:0; counter-reset:step; }
-    .online-step-list li { position:relative; padding:0 0 24px 54px; counter-increment:step; }
-    .online-step-list li::before { content:counter(step,decimal-leading-zero); position:absolute; left:0; top:0; color:var(--gold); font-family:var(--serif); font-size:32px; line-height:1.2; }
-    .online-purpose { background:var(--cream); }
-    .online-purpose .online-question { padding:24px 0 24px 24px; border-left:3px solid var(--gold); font-family:var(--serif); color:var(--plum); font-size:30px!important; line-height:1.35!important; margin-block:28px; }
-    .online-final { background:var(--ivory); text-align:center; }
-    .online-final h2 { margin-inline:auto; }
-    .online-final p { margin-inline:auto; }
-    .online-final .button { margin-top:14px; }
-    .online-final .online-small { font-size:14px!important; line-height:1.6!important; margin-top:20px; }
-    .online-section .button { max-width:100%; }
-    @media(max-width:900px) { .online-hero-grid { grid-template-columns:minmax(0,1fr); max-width:760px; } .online-hero h1 { max-width:16ch; } .online-signup { max-width:600px; } }
-    @media(max-width:600px) { .online-hero h1 { font-size:clamp(42px,11vw,60px); } .online-hero { padding-top:38px; } .online-hero-grid { gap:28px; } .online-signup { padding:22px 16px; } .online-actions .button,.online-final .button { width:100%; } .online-questions { padding-left:18px; } }
+    #omnisend-embedded-v2-6abfc85b36424f780b9e9641 p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:16px!important; line-height:1.55!important; max-width:none; }
+    #omnisend-embedded-v2-6abfc85b36424f780b9e9641 [class*="-section-"]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding-inline:16px!important; }
+    .online-form-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:14px; line-height:1.6; margin:16px 0; }
+    .online-form-status a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { text-underline-offset:3px; }
+    .online-section:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding:clamp(46px,6vw,78px) 0; }
+    .online-reading:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { width:min(760px,calc(100% - 40px)); margin-inline:auto; }
+    .online-reading p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin:0 0 20px; }
+    .online-reading p:last-child:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin-bottom:0; }
+    .online-section h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:clamp(38px,4.8vw,58px); max-width:24ch; margin-bottom:26px; }
+    .online-introduction:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { background:var(--cream); }
+    .online-introduction .online-opening:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-weight:600; color:var(--plum); }
+    .online-questions:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { border-left:3px solid var(--gold); padding-left:24px; margin:28px 0; }
+    .online-understanding:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { background:var(--ivory); }
+    .online-understanding .online-reading:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { border-top:1px solid rgba(49,30,51,.15); padding-top:32px; }
+    .online-topics:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { background:var(--cream); }
+    .online-topic-list:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin:30px 0; border-top:1px solid rgba(49,30,51,.15); }
+    .online-topic:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding:24px 0; border-bottom:1px solid rgba(49,30,51,.15); }
+    .online-topic h3:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:30px; color:var(--plum); margin-bottom:10px; max-width:none; }
+    .online-topic p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin:0; }
+    .online-actions:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin-top:30px; }
+    .online-steps:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { background:var(--plum); color:var(--ivory); }
+    .online-steps h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { color:var(--ivory); }
+    .online-steps p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { color:var(--ivory); }
+    .online-step-list:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding:0; list-style:none; margin:0; counter-reset:step; }
+    .online-step-list li:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { position:relative; padding:0 0 24px 54px; counter-increment:step; }
+    .online-step-list li:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::before { content:counter(step,decimal-leading-zero); position:absolute; left:0; top:0; color:var(--gold); font-family:var(--serif); font-size:32px; line-height:1.2; }
+    .online-purpose:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { background:var(--cream); }
+    .online-purpose .online-question:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding:24px 0 24px 24px; border-left:3px solid var(--gold); font-family:var(--serif); color:var(--plum); font-size:30px!important; line-height:1.35!important; margin-block:28px; }
+    .online-final:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { background:var(--ivory); text-align:center; }
+    .online-final h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin-inline:auto; }
+    .online-final p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin-inline:auto; }
+    .online-final .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { margin-top:14px; }
+    .online-final .online-small:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:14px!important; line-height:1.6!important; margin-top:20px; }
+    .online-section .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { max-width:100%; }
+    @media(max-width:900px) { .online-hero-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { grid-template-columns:minmax(0,1fr); max-width:760px; } .online-hero h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { max-width:16ch; } .online-signup:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { max-width:600px; } }
+    @media(max-width:600px) { .online-hero h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { font-size:clamp(42px,11vw,60px); } .online-hero:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding-top:38px; } .online-hero-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { gap:28px; } .online-signup:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding:22px 16px; } .online-actions .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.online-final .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { width:100%; } .online-questions:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) { padding-left:18px; } }
   </style>
-<link rel="stylesheet" href="/assets/premium-system.css?v=2"><script defer src="/assets/premium-layout.js?v=2"></script></head>
+<link rel="stylesheet" href="/assets/premium-system.css?v=omni-isolated1"><script defer src="/assets/premium-layout.js?v=2"></script><link rel="stylesheet" href="/assets/omnisend-boundary.css?v=1"></head>
 <body class="premium-system tjm-simple">
   <a class="skip-link" href="#mainContent">Skip to main content</a>
   <header

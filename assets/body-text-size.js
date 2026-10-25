@@ -12,7 +12,7 @@ window.createBodyTextScaler = function () {
     }
     const values = [];
     document.body.querySelectorAll('*').forEach(el => {
-      if (el.closest('svg,script,style')) return;
+      if (el.closest('svg,script,style,[id^="omnisend-"]')) return;
       const text = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.trim());
       if (!text && !el.matches('input,textarea,select')) return;
       if (!originals.has(el)) originals.set(el, {size:el.style.getPropertyValue('font-size'),priority:el.style.getPropertyPriority('font-size'),line:el.style.getPropertyValue('line-height'),linePriority:el.style.getPropertyPriority('line-height')});

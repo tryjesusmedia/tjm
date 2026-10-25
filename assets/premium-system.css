@@ -1,107 +1,120 @@
 /* Shared screen typography and a quieter layout for every Try Jesus Media page. */
 @media screen {
-html body.premium-system.premium-system {--sans:Montserrat,Arial,sans-serif;--serif:Georgia,serif;--premium-body:22px;--premium-label:17px;font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;line-height:1.65}
-html body.premium-system.premium-system main :is(p,li,dd,dt,label,input,textarea,select,.panel-lead,.hero-lede,.muted,.source-task,.guide-item-copy small):not(.certificate *) {font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;line-height:1.65!important;letter-spacing:normal}
-html body.premium-system.premium-system main :is(h1,h2,h3,h4,h5,h6):not(.certificate *) {font-family:Georgia,serif!important;font-weight:600;line-height:1.25!important;letter-spacing:-.02em}
-html body.premium-system.premium-system main :is(h1,h2,h3,h4,h5,h6) :is(em,strong,span):not(.certificate *) {font-family:inherit!important;font-size:inherit!important;line-height:inherit!important}
-html body.premium-system.premium-system main :is(blockquote,td,th,legend,.notice,.form-intro span,.benefits span):not(.certificate *) {font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;line-height:1.65!important}
-html body.premium-system.premium-system main h1:not(.certificate *) {font-size:clamp(32px,5vw,40px)!important}
-html body.premium-system.premium-system main h2:not(.certificate *) {font-size:28px!important}
-html body.premium-system.premium-system main :is(h3,h4,h5,h6):not(.certificate *) {font-size:24px!important}
-html body.premium-system.premium-system main :is(.eyebrow,.card-kicker,.small,small,.save-note,.lesson-topline,.section-label,.panel-hint,.breadcrumb,.reading-number small):not(.certificate *) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.5!important;letter-spacing:.035em}
-html body.premium-system.premium-system :is(button,.button,.primary-button,.secondary-button,.header-link,.live-zoom-link,.channel-link,.social-link,.text-link,.reading-back,.account-menu a,.bd-menu a,.site-nav a,.store-label strong,.guide-footer-return) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;font-weight:600!important;line-height:1.45!important;letter-spacing:0!important;text-transform:none!important}
-html body.premium-system.premium-system :is(button,.button,.primary-button,.secondary-button,.live-zoom-link,.social-link) :is(span,b,strong,em) {font-family:inherit!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important}
-html body.premium-system.premium-system :is(.account-menu,.bd-menu,#guide-header-menu) :is(output,span,strong) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
-html body.premium-system.premium-system :is(#account-menu,#bd-menu,#guide-header-menu) :is(a,button,output,span,strong) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
-html body.premium-system.premium-system main :is(summary,.lesson-navigation a,.tools a) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
-html body.premium-system.premium-system main :is(#readings-heading,.book-summary h3,.reading-card h3,.journey-reading strong,.guide-item-copy strong,.lesson-card h3) {font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;font-weight:700!important;line-height:1.4!important;letter-spacing:normal}
-html body.premium-system.premium-system .chron-bottom-tabs a,html body.premium-system.premium-system .chron-bottom-tabs a span {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.4!important}
-html body.premium-system.premium-system .site-footer {font-family:Montserrat,Arial,sans-serif!important}
-html body.premium-system.premium-system .site-footer :is(p,a,small,.social-intro) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.6!important}
-html body.premium-system.premium-system .site-footer .footer-brand strong {font-family:"Cormorant Garamond",Georgia,serif!important;font-size:26px!important;line-height:1.2!important}
-html body.premium-system.premium-system .site-footer .footer-brand span {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.5!important;letter-spacing:0}
-html body.premium-system.premium-system .site-footer .reading-journey-link {font-size:17px!important}
+html body.premium-system.premium-system:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {--sans:Montserrat,Arial,sans-serif;--serif:Georgia,serif;--premium-body:22px;--premium-label:17px;font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;line-height:1.65}
+html body.premium-system.premium-system main :is(p,li,dd,dt,label,input,textarea,select,.panel-lead,.hero-lede,.muted,.source-task,.guide-item-copy small):not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;line-height:1.65!important;letter-spacing:normal}
+html body.premium-system.premium-system main :is(h1,h2,h3,h4,h5,h6):not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Georgia,serif!important;font-weight:600;line-height:1.25!important;letter-spacing:-.02em}
+html body.premium-system.premium-system main :is(h1,h2,h3,h4,h5,h6) :is(em,strong,span):not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:inherit!important;font-size:inherit!important;line-height:inherit!important}
+html body.premium-system.premium-system main :is(blockquote,td,th,legend,.notice,.form-intro span,.benefits span):not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;line-height:1.65!important}
+html body.premium-system.premium-system main h1:not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-size:clamp(32px,5vw,40px)!important}
+html body.premium-system.premium-system main h2:not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-size:28px!important}
+html body.premium-system.premium-system main :is(h3,h4,h5,h6):not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-size:24px!important}
+html body.premium-system.premium-system main :is(.eyebrow,.card-kicker,.small,small,.save-note,.lesson-topline,.section-label,.panel-hint,.breadcrumb,.reading-number small):not(.certificate *):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.5!important;letter-spacing:.035em}
+html body.premium-system.premium-system :is(button,.button,.primary-button,.secondary-button,.header-link,.live-zoom-link,.channel-link,.social-link,.text-link,.reading-back,.account-menu a,.bd-menu a,.site-nav a,.store-label strong,.guide-footer-return):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;font-weight:600!important;line-height:1.45!important;letter-spacing:0!important;text-transform:none!important}
+html body.premium-system.premium-system :is(button,.button,.primary-button,.secondary-button,.live-zoom-link,.social-link) :is(span,b,strong,em):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:inherit!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important}
+html body.premium-system.premium-system :is(.account-menu,.bd-menu,#guide-header-menu) :is(output,span,strong):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
+html body.premium-system.premium-system :is(#account-menu,#bd-menu,#guide-header-menu) :is(a,button,output,span,strong):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
+html body.premium-system.premium-system main :is(summary,.lesson-navigation a,.tools a):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
+html body.premium-system.premium-system main :is(#readings-heading,.book-summary h3,.reading-card h3,.journey-reading strong,.guide-item-copy strong,.lesson-card h3):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:22px!important;font-weight:700!important;line-height:1.4!important;letter-spacing:normal}
+html body.premium-system.premium-system .chron-bottom-tabs a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system.premium-system .chron-bottom-tabs a span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.4!important}
+html body.premium-system.premium-system .site-footer:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important}
+html body.premium-system.premium-system .site-footer :is(p,a,small,.social-intro):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.6!important}
+html body.premium-system.premium-system .site-footer .footer-brand strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:"Cormorant Garamond",Georgia,serif!important;font-size:26px!important;line-height:1.2!important}
+html body.premium-system.premium-system .site-footer .footer-brand span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.5!important;letter-spacing:0}
+html body.premium-system.premium-system .site-footer .reading-journey-link:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-size:17px!important}
 /* Preserve the established top-header lettering, independent of reading size. */
-html body.premium-system.premium-system :is(#page-title,.members-page-title,.guide-header-title,.header .brand),html body.premium-system.premium-system :is(#page-title,.members-page-title,.guide-header-title,.header .brand) * {font-family:"Cormorant Garamond",Georgia,serif!important}
-html body.premium-system.premium-system .brand-wordmark strong {font-family:"Cormorant Garamond",Georgia,serif!important}
-html body.premium-system.premium-system :is(.button,.primary-button,.secondary-button,.live-zoom-link) {min-height:52px;padding:12px 22px;border-radius:12px;box-shadow:none}
-html body.premium-system.premium-system :is(.hero-glow,.ambient,.section-curve,.hero-divider,.lesson-shell-glow) {display:none!important}
-html body.premium-system.premium-system :is(.card,.book-section,.progress-panel,.membership-perk,.lesson-shell,.chron-promo-window,.hero-form-panel) {box-shadow:none;border-width:1px;border-color:rgba(119,100,117,.2);border-radius:16px}
-html body.premium-system.premium-system main :is(.section,.membership-offer,.membership-perks,.guides-section,.watch-section,.live-section,.pk-section) {padding-block:48px}
-html body.premium-system.premium-system .lesson-shell {padding:clamp(20px,4vw,40px);margin-block:24px}
-html body.premium-system.premium-system main :is(.panel-copy,.panel-copy-wide,.hero-copy) {min-width:0}
-html body.premium-system.premium-system main :is(p,li) {overflow-wrap:break-word}
-.premium-fold {border:1px solid rgba(119,100,117,.25);border-radius:14px;margin:20px auto;max-width:1180px;overflow:hidden}
-.premium-fold > summary {cursor:pointer;padding:20px 24px;min-height:56px;font:600 20px/1.45 Montserrat,Arial,sans-serif;color:inherit;background:transparent}
-.premium-fold > summary::marker {color:var(--gold,#eebd4a)}
-.premium-fold > :not(summary) {margin-block:0}
-.premium-fold:focus-within {outline-offset:4px}
-.premium-socials {max-width:800px;margin:12px auto 24px;border-color:rgba(243,232,208,.2)}
-.premium-socials > summary {color:#f3e8d0;text-align:center}
-.premium-socials .social-links,.premium-socials .footer-social-links {padding:12px 20px 24px}
-.premium-socials .social-intro {display:none}
-.premium-member-start {max-width:1180px;margin:auto;padding:40px 20px}
-.premium-member-start > p {max-width:60ch}
-.premium-destinations {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:28px}
-.premium-destination {display:flex;flex-direction:column;padding:28px;border:1px solid #bba78e;border-radius:16px;background:#eadfcd;color:#311e33}
-.premium-destination .button {margin-top:auto;align-self:flex-start;background:#311e33;color:#f3e8d0}
-.premium-destination p {margin-block:16px 24px}
-.premium-members main > .premium-fold {margin-inline:20px;max-width:none;background:#241725;color:#f3e8d0}
-.premium-members main > .premium-fold > section {border:0}
-.premium-resources-title {margin:40px 20px 16px}
-html body.premium-system:is(.premium-home,.premium-members) .header-inner {display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:16px;min-height:86px;position:relative}
-html body.premium-system:is(.premium-home,.premium-members) .menu-toggle {display:block;width:48px;height:48px;padding:8px}
-html body.premium-system:is(.premium-home,.premium-members) .site-nav {display:none;position:absolute;top:100%;right:12px;left:auto;width:min(360px,calc(100vw - 24px));padding:16px;gap:12px;background:#241725;border:1px solid rgba(238,189,74,.22);border-radius:14px;z-index:50}
-html body.premium-system:is(.premium-home,.premium-members) .site-nav.is-open {display:grid}
-html body.premium-system:is(.premium-home,.premium-members) .site-nav a {padding:10px;border:1px solid rgba(238,189,74,.22);border-radius:9px;min-height:48px;text-align:center;white-space:normal;color:#f7d985;background:transparent}
-html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-expanded="true"] span:nth-child(1) {transform:translateY(7px) rotate(45deg)}
-html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-expanded="true"] span:nth-child(2) {opacity:0}
-html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-expanded="true"] span:nth-child(3) {transform:translateY(-7px) rotate(-45deg)}
-.premium-home .hero-copy .trust-row,.premium-home .hero-copy .eyebrow,.premium-home .hero-copy .button-row {display:none!important}
-.premium-home .hero-form-panel {padding:28px!important}
-.premium-home .hero-form-panel .form-intro strong {font-family:Montserrat,Arial,sans-serif;font-size:22px;line-height:1.4}
-.premium-home .hero-grid {display:block!important;max-width:800px;gap:32px!important}
-.premium-home .hero-copy {max-width:100%;margin-bottom:28px}
-.premium-home .hero-copy h1 {max-width:24ch}
-.premium-home .premium-fold.premium-signup {width:100%;margin:0;background:#241725;color:#f3e8d0}
-.premium-home .premium-signup > summary {background:#eebd4a;color:#311e33;text-align:center;border-radius:12px}
-.premium-home .premium-signup > summary::marker {color:#311e33}
-.premium-home #guide-form [class$="-opacity-layer"],.premium-home #guide-form input:not([type="checkbox"]) {background:#eadfcd!important}
-.premium-home {--cream:#e4d8c4;background:#e4d8c4}
-.premium-home .premium-fold {margin-inline:auto;width:min(1180px,calc(100% - 40px));background:#eadfcd;color:#311e33}
-.premium-home :is(.section-light,.membership-perks) {background:#e4d8c4}
-.premium-home .membership-perk {background:#eadfcd}
-html body.premium-system[data-page="sales"] .bd-poster {max-width:240px;margin:24px auto 0;background:transparent}
-html body.premium-system[data-page="sales"] .bd-poster img {width:100%;height:auto;border-radius:12px}
-html body.premium-system[data-page="sales"] .hero {padding:32px 0!important}
-html body.premium-system[data-page="sales"] .hero-grid {padding:0!important}
-html body.premium-system[data-page="sales"] .hero-copy {max-width:760px}
-html body.premium-system[data-page="sales"] .hero-copy .eyebrow {display:none}
-html body.premium-system[data-page="sales"] .band {display:none}
-html body.premium-system[data-page="sales"] .premium-fold {width:min(1180px,calc(100% - 40px));background:#eadfcd;color:#311e33}
-html body.premium-system[data-page="lesson"] .lesson-heading .eyebrow,html body.premium-system[data-page="lesson"] .lesson-heading .muted {display:none}
-html body.premium-system[data-page="lesson"] .video {margin-top:20px}
-html body.premium-system[data-page="lesson"] .premium-fold {background:#eadfcd;color:#311e33}
-html body.premium-system .chron-busy-label {display:none!important}
-html body.premium-system.chronbible .reading-number strong,html body.premium-system.chronbible .reading-badge-number {display:none!important}
-html body.premium-system.chronbible .journey-nav button,html body.premium-system.chronbible .journey-nav button span {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
-html body.premium-system.chronbible .reading-guide {border:0;box-shadow:none}
-html body.premium-system.chronbible #account-menu .store-badge-book {display:block;text-align:center;padding:10px;border:1px solid rgba(238,189,74,.22);border-radius:9px;background:transparent;color:#f7d985;text-decoration:none}
-html body.premium-system.chronbible #account-menu .store-badge-book svg {display:none}
-html body.premium-system.guide-reader-page .main-point,html body.premium-system.guide-reader-page .study-chips,html body.premium-system.guide-reader-page .guide-section-status,html body.premium-system.guide-reader-page #lessonDots {display:none!important}
-html body.premium-system.guide-reader-page .mobile-guide-navigation {display:none!important}
-html body.premium-system.guide-reader-page #lessonNavigation {display:flex!important;gap:16px;justify-content:space-between;border:0;padding:24px 0 0}
-html body.premium-system.guide-reader-page .lesson-panel [data-next] {display:none!important}
-html body.premium-system.guide-reader-page .guide-extra-tools {display:none!important}
-html body.premium-system.guide-reader-page .guide-simple-tools .guide-extra-tools {display:flex!important;background:transparent;padding:16px;justify-content:flex-start;flex-wrap:wrap}
-html body.premium-system.guide-reader-page {padding-bottom:0!important}
+html body.premium-system.premium-system :is(#page-title,.members-page-title,.guide-header-title,.header .brand):not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system.premium-system :is(#page-title,.members-page-title,.guide-header-title,.header .brand) *:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:"Cormorant Garamond",Georgia,serif!important}
+html body.premium-system.premium-system .brand-wordmark strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:"Cormorant Garamond",Georgia,serif!important}
+html body.premium-system.premium-system :is(.button,.primary-button,.secondary-button,.live-zoom-link):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {min-height:52px;padding:12px 22px;border-radius:12px;box-shadow:none}
+html body.premium-system.premium-system :is(.hero-glow,.ambient,.section-curve,.hero-divider,.lesson-shell-glow):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+html body.premium-system.premium-system :is(.card,.book-section,.progress-panel,.membership-perk,.lesson-shell,.chron-promo-window,.hero-form-panel):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {box-shadow:none;border-width:1px;border-color:rgba(119,100,117,.2);border-radius:16px}
+html body.premium-system.premium-system main :is(.section,.membership-offer,.membership-perks,.guides-section,.watch-section,.live-section,.pk-section):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-block:48px}
+html body.premium-system.premium-system .lesson-shell:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:clamp(20px,4vw,40px);margin-block:24px}
+html body.premium-system.premium-system main :is(.panel-copy,.panel-copy-wide,.hero-copy):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {min-width:0}
+html body.premium-system.premium-system main :is(p,li):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {overflow-wrap:break-word}
+.premium-fold:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {border:1px solid rgba(119,100,117,.25);border-radius:14px;margin:20px auto;max-width:1180px;overflow:hidden}
+.premium-fold > summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {cursor:pointer;padding:20px 24px;min-height:56px;font:600 20px/1.45 Montserrat,Arial,sans-serif;color:inherit;background:transparent}
+.premium-fold > summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::marker {color:var(--gold,#eebd4a)}
+.premium-fold > :not(summary):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin-block:0}
+.premium-fold:focus-within:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {outline-offset:4px}
+.premium-socials:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:800px;margin:12px auto 24px;border-color:rgba(243,232,208,.2)}
+.premium-socials > summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {color:#f3e8d0;text-align:center}
+.premium-socials .social-links:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.premium-socials .footer-social-links:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:12px 20px 24px}
+.premium-socials .social-intro:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none}
+.premium-member-start:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:1180px;margin:auto;padding:40px 20px}
+.premium-member-start > p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:60ch}
+.premium-destinations:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:28px}
+.premium-destination:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:flex;flex-direction:column;padding:28px;border:1px solid #bba78e;border-radius:16px;background:#eadfcd;color:#311e33}
+.premium-destination .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin-top:auto;align-self:flex-start;background:#311e33;color:#f3e8d0}
+.premium-destination p:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin-block:16px 24px}
+.premium-members main > .premium-fold:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin-inline:20px;max-width:none;background:#241725;color:#f3e8d0}
+.premium-members main > .premium-fold > section:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {border:0}
+.premium-resources-title:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin:40px 20px 16px}
+html body.premium-system:is(.premium-home,.premium-members) .header-inner:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:16px;min-height:86px;position:relative}
+html body.premium-system:is(.premium-home,.premium-members) .menu-toggle:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:block;width:48px;height:48px;padding:8px}
+html body.premium-system:is(.premium-home,.premium-members) .site-nav:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none;position:absolute;top:100%;right:12px;left:auto;width:min(360px,calc(100vw - 24px));padding:16px;gap:12px;background:#241725;border:1px solid rgba(238,189,74,.22);border-radius:14px;z-index:50}
+html body.premium-system:is(.premium-home,.premium-members) .site-nav.is-open:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:grid}
+html body.premium-system:is(.premium-home,.premium-members) .site-nav a:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:10px;border:1px solid rgba(238,189,74,.22);border-radius:9px;min-height:48px;text-align:center;white-space:normal;color:#f7d985;background:transparent}
+html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-expanded="true"] span:nth-child(1):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {transform:translateY(7px) rotate(45deg)}
+html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-expanded="true"] span:nth-child(2):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {opacity:0}
+html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-expanded="true"] span:nth-child(3):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {transform:translateY(-7px) rotate(-45deg)}
+.premium-home .hero-copy .trust-row:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.premium-home .hero-copy .eyebrow:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.premium-home .hero-copy .button-row:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+.premium-home .hero-form-panel:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:28px!important}
+.premium-home .hero-form-panel .form-intro strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif;font-size:22px;line-height:1.4}
+.premium-home .hero-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:block!important;max-width:800px;gap:32px!important}
+.premium-home .hero-copy:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:100%;margin-bottom:28px}
+.premium-home .hero-copy h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:24ch}
+.premium-home .premium-fold.premium-signup:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {width:100%;margin:0;background:#241725;color:#f3e8d0}
+.premium-home .premium-signup > summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {background:#eebd4a;color:#311e33;text-align:center;border-radius:12px}
+.premium-home .premium-signup > summary:not(:where([id^="omnisend-"], [id^="omnisend-"] *))::marker {color:#311e33}
+.premium-home #guide-form [class$="-opacity-layer"]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.premium-home #guide-form input:not([type="checkbox"]):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {background:#eadfcd!important}
+.premium-home:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {--cream:#e4d8c4;background:#e4d8c4}
+.premium-home .premium-fold:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin-inline:auto;width:min(1180px,calc(100% - 40px));background:#eadfcd;color:#311e33}
+.premium-home :is(.section-light,.membership-perks):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {background:#e4d8c4}
+.premium-home .membership-perk:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {background:#eadfcd}
+html body.premium-system[data-page="sales"] .bd-poster:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:240px;margin:24px auto 0;background:transparent}
+html body.premium-system[data-page="sales"] .bd-poster img:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {width:100%;height:auto;border-radius:12px}
+html body.premium-system[data-page="sales"] .hero:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:32px 0!important}
+html body.premium-system[data-page="sales"] .hero-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:0!important}
+html body.premium-system[data-page="sales"] .hero-copy:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:760px}
+html body.premium-system[data-page="sales"] .hero-copy .eyebrow:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none}
+html body.premium-system[data-page="sales"] .band:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none}
+html body.premium-system[data-page="sales"] .premium-fold:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {width:min(1180px,calc(100% - 40px));background:#eadfcd;color:#311e33}
+html body.premium-system[data-page="lesson"] .lesson-heading .eyebrow:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system[data-page="lesson"] .lesson-heading .muted:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none}
+html body.premium-system[data-page="lesson"] .video:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin-top:20px}
+html body.premium-system[data-page="lesson"] .premium-fold:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {background:#eadfcd;color:#311e33}
+html body.premium-system .chron-busy-label:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+html body.premium-system.chronbible .reading-number strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system.chronbible .reading-badge-number:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+html body.premium-system.chronbible .journey-nav button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system.chronbible .journey-nav button span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:20px!important;line-height:1.45!important}
+html body.premium-system.chronbible .reading-guide:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {border:0;box-shadow:none}
+html body.premium-system.chronbible #account-menu .store-badge-book:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:block;text-align:center;padding:10px;border:1px solid rgba(238,189,74,.22);border-radius:9px;background:transparent;color:#f7d985;text-decoration:none}
+html body.premium-system.chronbible #account-menu .store-badge-book svg:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none}
+html body.premium-system.guide-reader-page .main-point:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system.guide-reader-page .study-chips:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system.guide-reader-page .guide-section-status:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+html body.premium-system.guide-reader-page #lessonDots:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+html body.premium-system.guide-reader-page .mobile-guide-navigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+html body.premium-system.guide-reader-page #lessonNavigation:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:flex!important;gap:16px;justify-content:space-between;border:0;padding:24px 0 0}
+html body.premium-system.guide-reader-page .lesson-panel [data-next]:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+html body.premium-system.guide-reader-page .guide-extra-tools:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}
+html body.premium-system.guide-reader-page .guide-simple-tools .guide-extra-tools:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:flex!important;background:transparent;padding:16px;justify-content:flex-start;flex-wrap:wrap}
+html body.premium-system.guide-reader-page:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-bottom:0!important}
 @media(max-width:700px) {
- .premium-destinations {grid-template-columns:1fr;gap:16px}
- .premium-destination {padding:24px}
- html body.premium-system[data-page="sales"] .bd-poster {max-width:180px;margin-top:20px}
- html body.premium-system.premium-system main :is(.section,.membership-offer,.membership-perks,.guides-section,.watch-section,.live-section,.pk-section) {padding-block:32px}
- html body.premium-system.premium-system #lessonNavigation button {padding-inline:14px;min-width:0}
- .premium-member-start {padding-top:28px}
+ .premium-destinations:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {grid-template-columns:1fr;gap:16px}
+ .premium-destination:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:24px}
+ html body.premium-system[data-page="sales"] .bd-poster:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:180px;margin-top:20px}
+ html body.premium-system.premium-system main :is(.section,.membership-offer,.membership-perks,.guides-section,.watch-section,.live-section,.pk-section):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-block:32px}
+ html body.premium-system.premium-system #lessonNavigation button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-inline:14px;min-width:0}
+ .premium-member-start:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-top:28px}
 }
 }
-@media print {.premium-fold > :not(summary){display:block!important}.premium-socials,.premium-member-start{display:none!important}}
+@media print {.premium-fold > :not(summary):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:block!important}.premium-socials:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
+.premium-member-start:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}}
