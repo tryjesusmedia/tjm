@@ -138,10 +138,9 @@
     const isProphecyGuide = shell.classList.contains('prophecy-shell');
 
     const sizeCount = 40;
-    const defaultSize = 5;
-    const preferredSize = safeStorage.get('tjm-guide-text-size');
-    const legacySizes = { small: 3, default: defaultSize, large: 8 };
-    const savedSize = legacySizes[preferredSize] ?? Number(preferredSize);
+    const defaultSize = 11;
+    const preferredSize = safeStorage.get('tjm-body-text-level');
+    const savedSize = preferredSize === null ? defaultSize : Number(preferredSize) + 1;
     let textSize = Number.isInteger(savedSize) && savedSize >= 1 && savedSize <= sizeCount ? savedSize : defaultSize;
     const scaleBody = window.createBodyTextScaler();
 
@@ -173,8 +172,8 @@
 
     const sizeButtons = [...toolbar.querySelectorAll('[data-text-size]')];
     const applyTextSize = () => {
-      // Forty distinct settings: 80% through 275%, in five-percent steps.
-      const percentage = 80 + (textSize - 1) * 5;
+      // Forty distinct settings: 75% through 172.5%, in 2.5-percent steps.
+      const percentage = 75 + (textSize - 1) * 2.5;
       scaleBody(percentage / 100);
       document.documentElement.dataset.guideTextSize = String(textSize);
       document.documentElement.dataset.guideTextEnlarged = String(percentage > 100);
@@ -187,7 +186,7 @@
     sizeButtons.forEach((button) => {
       button.addEventListener('click', () => {
         textSize = Math.max(1, Math.min(sizeCount, textSize + (button.dataset.textSize === 'increase' ? 1 : -1)));
-        safeStorage.set('tjm-guide-text-size', String(textSize));
+        safeStorage.set('tjm-body-text-level', String(textSize - 1));
         applyTextSize();
       });
     });
@@ -273,7 +272,7 @@
     const panelCount = document.getElementById('panelCount');
 
     if (backButton) backButton.innerHTML = '<span aria-hidden="true">←</span> Previous Section';
-    if (nextButton) nextButton.innerHTML = 'Continue to Next Section <span aria-hidden="true">→</span>';
+    if (nextButton) nextButton.innerHTML = 'Continue <span aria-hidden="true">→</span>';
 
     const sectionStatus = document.createElement('div');
     sectionStatus.className = 'guide-section-status';

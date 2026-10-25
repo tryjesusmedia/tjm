@@ -95,13 +95,13 @@ async function api(path, method = "GET", body) {
 }
 function readingSize() {
   const scaleBody = window.createBodyTextScaler();
-  let n = Number(local.getItem("bd-reading-size") || 8);
-  n = Number.isFinite(n) ? Math.max(0, Math.min(39, n)) : 8;
+  let n = Number(local.getItem("tjm-body-text-level") ?? 10);
+  n = Number.isFinite(n) ? Math.max(0, Math.min(39, n)) : 10;
   const apply = () => {
-    scaleBody((16 + n * 0.5) / 20);
+    scaleBody(.75 + n * .025);
     document.documentElement.dataset.bdTextLevel = String(n);
     try {
-      local.setItem("bd-reading-size", String(n));
+      local.setItem("tjm-body-text-level", String(n));
     } catch {}
     $("#smaller").disabled = n === 0;
     $("#larger").disabled = n === 39;

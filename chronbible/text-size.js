@@ -1,7 +1,7 @@
 (() => {
 const menu=document.getElementById('account-menu'), profile=document.getElementById('profile-button');
 const smaller=document.getElementById('text-smaller'), larger=document.getElementById('text-larger'), status=document.getElementById('text-size-status');
-let level=10;try {const n=Number(localStorage.getItem('chron-text-size'));if(localStorage.getItem('chron-text-size')!==null && Number.isInteger(n))level=Math.max(0,Math.min(39,n));}catch{}
+let level=10;try {const n=Number(localStorage.getItem('tjm-body-text-level'));if(localStorage.getItem('tjm-body-text-level')!==null && Number.isInteger(n))level=Math.max(0,Math.min(39,n));}catch{}
 const scaleBody=window.createBodyTextScaler();let queued=false;
 function apply(){
  queued=false;scaleBody(.75+level*.025);
@@ -10,7 +10,7 @@ function apply(){
  const nav=document.querySelector('.chron-bottom-tabs');if(nav)document.body.style.paddingBottom=(nav.getBoundingClientRect().height+16)+'px';
 }
 function schedule(){if(!queued){queued=true;requestAnimationFrame(apply);}}
-function change(delta){level=Math.max(0,Math.min(39,level+delta));try{localStorage.setItem('chron-text-size',String(level));}catch{}apply();}
+function change(delta){level=Math.max(0,Math.min(39,level+delta));try{localStorage.setItem('tjm-body-text-level',String(level));}catch{}apply();}
 smaller.addEventListener('click',()=>change(-1));larger.addEventListener('click',()=>change(1));
 function syncMenu(){
  profile.setAttribute('aria-expanded',String(!menu.hidden));

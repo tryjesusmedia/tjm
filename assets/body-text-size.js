@@ -1,7 +1,7 @@
 /* Shared body-only reading scale. Keep roots, headings and controls stable. */
 window.createBodyTextScaler = function () {
   const originals = new Map();
-  const fixed = 'a,h1,h2,h3,h4,h5,h6,button,summary,nav,header,footer,[role="button"],[role="heading"],.button,.brand,.eyebrow,.card-kicker,.section-label,.number,.reading-number,.journey-reading strong,.book-progress-row header,.account-menu,.guide-reader-toolbar,.text-tools,.breadcrumb,.actions,.store-label';
+  const fixed = 'h1,h2,h3,h4,h5,h6,button,summary,nav,.site-header,.header,footer,[role="button"],[role="heading"],.button,.primary-button,.secondary-button,.header-link,.reading-back,.social-link,.text-link,.live-zoom-link,.channel-link,.nav-cta,.guide-footer-return,.store-badge,.brand,.eyebrow,.card-kicker,.section-label,.number,.reading-number,.journey-reading strong,.book-progress-row header,.account-menu,.guide-reader-toolbar,.text-tools,.breadcrumb,.actions,.store-label,.certificate';
   let scale = 1, queued = false;
   function apply() {
     queued = false;
