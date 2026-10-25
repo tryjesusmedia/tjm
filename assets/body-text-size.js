@@ -1,31 +1,53 @@
-/* Shared body-only reading scale. Keep roots, headings and controls stable. */
-window.createBodyTextScaler = function () {
+/* Site text has a 14-point floor. Stored reading scales no longer apply. */
+(() => {
+  'use strict';
+  if (window.tjmMinimumTextLoaded) return;
+  window.tjmMinimumTextLoaded = true;
+  const minimum = 14 * 96 / 72;
+  const excluded = 'svg,script,style,noscript,[id^="omnisend-"],[data-omnisend-shell]';
   const originals = new Map();
-  const fixed = 'h1,h2,h3,h4,h5,h6,button,summary,nav,.site-header,.header,footer,[role="button"],[role="heading"],.button,.primary-button,.secondary-button,.header-link,.reading-back,.social-link,.text-link,.live-zoom-link,.channel-link,.nav-cta,.guide-footer-return,.store-badge,.brand,.eyebrow,.card-kicker,.section-label,.number,.reading-number,.journey-reading strong,.book-progress-row header,.account-menu,.guide-reader-toolbar,.text-tools,.breadcrumb,.actions,.store-label,.certificate';
-  let scale = 1, queued = false;
+  let queued = false;
+  // Keep old page initializers compatible without applying saved font scales.
+  window.createBodyTextScaler = () => schedule;
+  const style = document.createElement('style');
+  style.textContent = 'html body .text-size-controls,html body .guide-text-controls,html body .text-tools {display:none!important}';
+  document.head.append(style);
   function apply() {
     queued = false;
+    if (!document.body) return;
     for (const [el, old] of originals) {
       if (!el.isConnected) { originals.delete(el); continue; }
       el.style.setProperty('font-size', old.size, old.priority);
-      el.style.setProperty('line-height', old.line, old.linePriority);
     }
+    // Snapshot first so enlarging a parent cannot enlarge an already-large child.
     const values = [];
     document.body.querySelectorAll('*').forEach(el => {
-      if (el.closest('svg,script,style,[id^="omnisend-"]')) return;
-      const text = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.trim());
-      if (!text && !el.matches('input,textarea,select')) return;
-      if (!originals.has(el)) originals.set(el, {size:el.style.getPropertyValue('font-size'),priority:el.style.getPropertyPriority('font-size'),line:el.style.getPropertyValue('line-height'),linePriority:el.style.getPropertyPriority('line-height')});
-      const css = getComputedStyle(el);
-      values.push([el, parseFloat(css.fontSize), parseFloat(css.lineHeight), el.closest(fixed) ? 1 : scale]);
+      if (el.closest(excluded)) return;
+      const hasText = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.trim());
+      if (!hasText && !el.matches('input,textarea,select,option')) return;
+      const size = parseFloat(getComputedStyle(el).fontSize);
+      if (Number.isFinite(size)) values.push([el, Math.max(minimum, size)]);
     });
-    for (const [el, size, line, factor] of values) {
-      el.style.setProperty('font-size', size * factor + 'px', 'important');
-      if (Number.isFinite(line)) el.style.setProperty('line-height', line * factor + 'px', 'important');
+    for (const [el, size] of values) {
+      if (Math.abs(parseFloat(getComputedStyle(el).fontSize) - size) < .001) continue;
+      if (!originals.has(el)) originals.set(el, {
+        size:el.style.getPropertyValue('font-size'), priority:el.style.getPropertyPriority('font-size')
+      });
+      el.style.setProperty('font-size', size + 'px', 'important');
     }
   }
-  function schedule() { if (!queued) { queued = true; requestAnimationFrame(apply); } }
-  new MutationObserver(schedule).observe(document.body, {childList:true,subtree:true});
-  window.addEventListener('resize', schedule);
-  return value => { scale = value; apply(); };
-};
+  function schedule() {
+    if (!queued) { queued = true; requestAnimationFrame(apply); }
+  }
+  function start() {
+    apply();
+    new MutationObserver(records => {
+      if (records.some(r => !r.target.parentElement?.closest(excluded))) schedule();
+    }).observe(document.body, { childList:true, characterData:true, subtree:true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule);
+    document.fonts?.ready.then(schedule);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
+  else start();
+})();

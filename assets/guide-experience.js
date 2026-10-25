@@ -139,7 +139,7 @@
 
     const sizeCount = 40;
     const defaultSize = 11;
-    const preferredSize = safeStorage.get('tjm-body-text-level');
+    const preferredSize = null; // Font-size controls retired; use authored layout.
     const savedSize = preferredSize === null ? defaultSize : Number(preferredSize) + 1;
     let textSize = Number.isInteger(savedSize) && savedSize >= 1 && savedSize <= sizeCount ? savedSize : defaultSize;
     const scaleBody = window.createBodyTextScaler();
