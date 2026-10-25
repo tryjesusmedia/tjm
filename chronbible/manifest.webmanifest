@@ -20,5 +20,13 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://tryjesusmedia.com/chronbible/manifest.webmanifest",
+      "id": "https://tryjesusmedia.com/chronbible/"
+    }
+  ],
+  "prefer_related_applications": false
 }

@@ -2,10 +2,15 @@
   'use strict';
   let installPrompt = null;
   let refreshReady = () => {};
+  const installedKey = 'tjm-chronbible-installed';
+  function rememberInstalled(value) {
+    try { if (value) localStorage.setItem(installedKey, '1'); else localStorage.removeItem(installedKey); } catch {}
+  }
   // Capture early, before deferred page scripts and UI initialization.
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
     installPrompt = event;
+    rememberInstalled(false);
     refreshReady();
   });
   function initialize() {
@@ -15,9 +20,16 @@
   const steps = document.getElementById('install-steps');
   if (!invite || !button || !help || !steps) return;
   const standalone = window.matchMedia('(display-mode: standalone)');
+  let installed = false;
+  try { installed = localStorage.getItem(installedKey) === '1'; } catch {}
+  const nativeInstall = 'onbeforeinstallprompt' in window;
   const measure = () => {};
   const update = () => {
-    invite.hidden = standalone.matches || navigator.standalone === true;
+    const runningInstalled = standalone.matches || navigator.standalone === true;
+    if (runningInstalled) { installed = true; rememberInstalled(true); }
+    // Chromium only advertises installation when its native prompt is available.
+    invite.hidden = runningInstalled || installed || (nativeInstall && !installPrompt);
+    if (invite.hidden && help.open) help.close();
     measure();
   };
   update();
@@ -25,6 +37,8 @@
   standalone.addEventListener('change', update);
   window.addEventListener('appinstalled', () => {
     installPrompt = null;
+    installed = true;
+    rememberInstalled(true);
     invite.hidden = true;
     if (help.open) help.close();
     measure();
@@ -37,11 +51,33 @@
   steps.before(ready);
   ready.addEventListener('click', requestInstall);
   refreshReady = () => {
+    if (installPrompt) installed = false;
+    update();
     ready.hidden = !installPrompt;
     if (installPrompt && help.open) {
       steps.innerHTML = '<p>Ready to install. Tap <strong>Install ChronBible</strong> above, then confirm in your browser.</p>';
     }
   };
+  refreshReady();
+  async function checkInstalled() {
+    if (typeof navigator.getInstalledRelatedApps !== 'function') return;
+    try {
+      const apps = await navigator.getInstalledRelatedApps();
+      if (apps.some(app => app.platform === 'webapp' && (app.id === 'https://tryjesusmedia.com/chronbible/' || app.id === '/chronbible/' || app.url === 'https://tryjesusmedia.com/chronbible/manifest.webmanifest'))) {
+        installed = true;
+        installPrompt = null;
+        rememberInstalled(true);
+        update();
+      }
+    } catch {}
+  }
+  checkInstalled();
+  window.addEventListener('pageshow', checkInstalled);
+  window.addEventListener('storage', event => {
+    if (event.key !== installedKey) return;
+    installed = event.newValue === '1';
+    update();
+  });
   function showHelp() {
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     if (ios) {
@@ -55,6 +91,7 @@
     refreshReady();
   }
   async function requestInstall() {
+    if (installed || standalone.matches || navigator.standalone === true) { update(); return; }
     if (!installPrompt) { showHelp(); return; }
     const prompt = installPrompt;
     installPrompt = null;
@@ -62,7 +99,9 @@
     if (help.open) help.close();
     try {
       await prompt.prompt();
-      await prompt.userChoice;
+      const choice = await prompt.userChoice;
+      if (choice.outcome === 'accepted') { installed = true; rememberInstalled(true); }
+      update();
     } catch { showHelp(); }
   }
   button.addEventListener('click', requestInstall);
