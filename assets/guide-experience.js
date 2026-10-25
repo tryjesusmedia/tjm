@@ -34,28 +34,6 @@
   // Scale the original declarations, preserving each guide's cascade, heading
   // hierarchy and responsive sizes. Inherited text then scales exactly once,
   // including content revealed later. The local sheets are loaded before us.
-  const prepareGuideTextScaling = () => {
-    const scaleRules = (rules) => {
-      [...rules].forEach((rule) => {
-        // Keep the existing large-print layout independent of screen settings.
-        if (rule.media?.mediaText.includes('print')) return;
-        if (rule.cssRules) scaleRules(rule.cssRules);
-        if (!rule.selectorText || !rule.style) return;
-        const size = rule.style.getPropertyValue('font-size');
-        if (!size || /^(inherit|initial|unset|revert|revert-layer|0)$/.test(size)) return;
-        // The rem basis must remain unscaled to avoid multiplying it twice.
-        if (rule.selectorText.split(',').some((selector) => /^(html|:root)$/.test(selector.trim()))) return;
-        if (size.includes('--tjm-guide-scale')) return;
-        rule.style.setProperty('font-size', `calc((${size}) * var(--tjm-guide-scale, 1))`, rule.style.getPropertyPriority('font-size'));
-      });
-    };
-    [...document.styleSheets].forEach((sheet) => {
-      // Cross-origin font-provider sheets contain font faces, not guide sizes.
-      if (sheet.href && new URL(sheet.href).origin !== window.location.origin) return;
-      scaleRules(sheet.cssRules);
-    });
-  };
-
   const enhanceGuideLibrary = () => {
     const library = document.getElementById('bible-guides');
     if (!library) return;
@@ -165,7 +143,7 @@
     const legacySizes = { small: 3, default: defaultSize, large: 8 };
     const savedSize = legacySizes[preferredSize] ?? Number(preferredSize);
     let textSize = Number.isInteger(savedSize) && savedSize >= 1 && savedSize <= sizeCount ? savedSize : defaultSize;
-    prepareGuideTextScaling();
+    const scaleBody = window.createBodyTextScaler();
 
     const toolbar = document.createElement('div');
     toolbar.className = 'guide-reader-toolbar';
@@ -197,7 +175,7 @@
     const applyTextSize = () => {
       // Forty distinct settings: 80% through 275%, in five-percent steps.
       const percentage = 80 + (textSize - 1) * 5;
-      document.body.style.setProperty('--tjm-guide-scale', String(percentage / 100));
+      scaleBody(percentage / 100);
       document.documentElement.dataset.guideTextSize = String(textSize);
       document.documentElement.dataset.guideTextEnlarged = String(percentage > 100);
       toolbar.querySelector('.guide-text-status').textContent = `Text size ${textSize} of ${sizeCount}, ${percentage} percent`;

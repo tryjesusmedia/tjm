@@ -94,10 +94,12 @@ async function api(path, method = "GET", body) {
   return data;
 }
 function readingSize() {
+  const scaleBody = window.createBodyTextScaler();
   let n = Number(local.getItem("bd-reading-size") || 8);
   n = Number.isFinite(n) ? Math.max(0, Math.min(39, n)) : 8;
   const apply = () => {
-    document.documentElement.style.fontSize = `${16 + n * 0.5}px`;
+    scaleBody((16 + n * 0.5) / 20);
+    document.documentElement.dataset.bdTextLevel = String(n);
     try {
       local.setItem("bd-reading-size", String(n));
     } catch {}
