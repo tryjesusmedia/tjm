@@ -1,0 +1,10 @@
+.conflict-app-invite[hidden] { display: none; }
+.conflict-app-invite button { display: block; padding: 12px 22px; border: 0; border-radius: 14px; background: #C79341; color: #010C18; font: 800 1.125rem/1.5 var(--sans); text-align: center; cursor: pointer; }
+.conflict-app-invite button:focus-visible { outline: 3px solid #FDFAF2; outline-offset: 3px; }
+#install-help { box-sizing: border-box; width: min(94vw, 580px); max-height: 85dvh; overflow-y: auto; padding: clamp(20px, 5vw, 32px); border: 2px solid #C79341; border-radius: 18px; background: #FDFAF2; color: #010C18; font: 1.125rem/1.65 var(--sans, sans-serif); }
+#install-help::backdrop { background: rgb(1 12 24 / 75%); }
+#install-help h2 { margin: 0 0 16px; font-size: 1.6rem; line-height: 1.25; }
+#install-help li { margin-bottom: 12px; }
+#install-help ol { padding-left: 26px; }
+#install-help .install-note { font-size: 1rem; }
+#install-help form { text-align: right; }
