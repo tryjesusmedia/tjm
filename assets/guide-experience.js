@@ -178,7 +178,7 @@
       scaleBody(percentage / 100);
       document.documentElement.dataset.guideTextSize = String(textSize);
       document.documentElement.dataset.guideTextEnlarged = String(percentage > 100);
-      toolbar.querySelector('.guide-text-status').textContent = `${textSize} / ${sizeCount}`;
+      document.querySelector('.guide-text-status').textContent = `${textSize} / ${sizeCount}`;
       sizeButtons.forEach((button) => {
         button.disabled = button.dataset.textSize === 'decrease' ? textSize === 1 : textSize === sizeCount;
       });
