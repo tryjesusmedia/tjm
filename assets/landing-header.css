@@ -1,0 +1,75 @@
+/* Landing-page composition. Shared font sizes and the original wordmark stay intact. */
+@media screen {
+  html body.premium-system.premium-home .site-header {
+    background:#201321;
+    border-bottom:1px solid rgba(238,189,74,.2);
+    box-shadow:none;
+  }
+  html body.premium-system.premium-home .site-header .header-inner {
+    width:min(1120px,calc(100% - 40px));
+    min-height:88px;
+    margin-inline:auto;
+    gap:20px;
+  }
+  html body.premium-system.premium-home .site-header .brand {justify-self:start}
+  html body.premium-system.premium-home .site-header .menu-toggle {justify-self:end}
+  html body.premium-system.premium-home .hero {
+    padding-block:clamp(44px,6vw,76px);
+    background:#1c111d;
+  }
+  html body.premium-system.premium-home .hero-grid {
+    width:min(800px,calc(100% - 40px));
+    padding-block:0;
+    margin-inline:auto;
+  }
+  html body.premium-system.premium-home .hero-copy {
+    max-width:none;
+    margin:0 0 32px;
+    text-align:center;
+  }
+  html body.premium-system.premium-home #heroProgramTitle {
+    max-width:none;
+    margin:0;
+    color:#f3e8d0;
+    letter-spacing:-.025em;
+    text-wrap:balance;
+  }
+  html body.premium-system.premium-home #heroProgramTitle .hero-title-small {
+    font-size:.64em!important;
+    font-weight:400;
+    letter-spacing:-.02em;
+  }
+  html body.premium-system.premium-home #heroProgramTitle em {
+    color:#eebd4a;
+    font-weight:500;
+  }
+  html body.premium-system.premium-home #heroTitle {
+    max-width:none;
+    margin:22px auto 0;
+    font-weight:400;
+    color:#f3e8d0;
+    letter-spacing:-.015em;
+    text-wrap:balance;
+  }
+  html body.premium-system.premium-home .hero-lede {
+    max-width:48ch;
+    margin:24px auto 0;
+    color:#d8cbbd;
+    text-wrap:pretty;
+  }
+  html body.premium-system.premium-home .premium-signup {
+    max-width:640px;
+    margin-inline:auto;
+    text-align:left;
+  }
+  @media(max-width:600px) {
+    html body.premium-system.premium-home .site-header .header-inner {
+      width:calc(100% - 32px);
+      min-height:80px;
+      gap:16px;
+    }
+    html body.premium-system.premium-home .hero-grid {width:calc(100% - 36px)}
+    html body.premium-system.premium-home #heroTitle {max-width:25ch;margin-top:20px}
+    html body.premium-system.premium-home .hero-lede {margin-top:20px}
+  }
+}
