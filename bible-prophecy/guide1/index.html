@@ -11,7 +11,7 @@
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css?v=20260904-2">
 
   <meta property="og:type" content="article">
@@ -23,27 +23,18 @@
   <script>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="/assets/readability.css?v=20260910-2" />
 <link rel="stylesheet" href="/assets/premium-simplicity.css?v=20261001-1" />
-</head>
+<link rel="stylesheet" href="/assets/member-footer.css?v=1"><link rel="stylesheet" href="/assets/guide-header.css?v=1"></head>
 <body class="prophecy-theme tjm-simple">
   <a class="skip-link" href="#lesson">Skip to guide</a>
 
-  <header class="site-header">
-    <a class="brand" href="/welcome/" aria-label="Try Jesus Media welcome page">
-      <span class="brand-mark">
-        <img src="assets/logo-orb.png" width="512" height="512" alt="Try Jesus Media lion and lamb emblem">
-      </span>
-      <span class="brand-type"><strong>TRY JESUS</strong><small>MEDIA</small></span>
-    </a>
-
-    <div class="header-actions">
-      <button class="header-link" type="button" id="restartLesson">Restart</button>
+  <header class="site-header"><a class="guide-header-title" href="/welcome/#bible-guides"><span>Bible</span> <em>Guides</em></a><button id="guide-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="guide-header-menu"><svg class="open-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 7h26M3 16h26M3 25h26"/></svg><svg class="close-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="m6 6 20 20M26 6 6 26"/></svg></button><div id="guide-header-menu" hidden><button type="button" id="restartLesson">Start Over</button></div></header><div class="guide-extra-tools">
+      
       <button class="header-link" type="button" onclick="window.print()">Print</button>
       <button class="listen-button" type="button" id="listenButton" aria-pressed="false">
         <span class="listen-icon" aria-hidden="true">▶</span>
         <span class="listen-label">Listen</span>
       </button>
     </div>
-  </header>
 
   <div class="page-progress" aria-hidden="true"><span id="pageProgress"></span></div>
 
@@ -454,40 +445,198 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
-      <a class="brand footer-brand" href="/" aria-label="Try Jesus Media home">
-        <span class="brand-mark"><img src="assets/logo-orb.png" width="512" height="512" alt=""></span>
-        <span class="brand-type"><strong>TRY JESUS</strong><small>MEDIA</small></span>
-      </a>
 
-      <p class="footer-tagline">Clear Bible answers. Honest questions. A community that welcomes you.</p>
 
-      <div class="lesson-return">
-        <a href="/welcome/#bible-guides" class="lesson-return-link">
-          <span aria-hidden="true">←</span>
-          Return to Bible Guides
-        </a>
+    <div class="footer-brand">
+
+      <a href="/" aria-label="Try Jesus Media home"><img
+        src="/welcome/assets/logo.webp"
+        width="92"
+        height="92"
+        alt="Try Jesus Media"
+      /></a>
+
+      <div>
+
+        <strong>
+          TRY JESUS MEDIA
+        </strong>
+
+        <span>
+          Clear Bible answers and a welcoming community
+        </span>
+
       </div>
 
-      <nav class="social-links footer-social-links" aria-label="Try Jesus Media social profiles">
-        <a class="social-link" id="socialYouTube" href="https://www.youtube.com/@TryJesusMedia" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span aria-hidden="true">▶</span><span>YouTube</span></a>
-        <a class="social-link" id="socialFacebook" href="https://www.facebook.com/tryjesusmedia" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span aria-hidden="true">f</span><span>Facebook</span></a>
-        <a class="social-link" id="socialInstagram" href="https://www.instagram.com/tryjesusmedia1/" target="_blank" rel="noopener noreferrer" aria-label="Try Jesus Media on Instagram" title="Follow Try Jesus Media on Instagram"><span aria-hidden="true">◎</span><span>Instagram</span></a>
-        <a class="social-link" id="socialTikTok" href="https://www.tiktok.com/@tryjesusmedia" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><span aria-hidden="true">♪</span><span>TikTok</span></a>
-        <a class="social-link" href="mailto:info@tryjesusmedia.com" aria-label="Email Try Jesus Media" title="Email Try Jesus Media"><span aria-hidden="true">✉</span><span>Email</span></a>
-        <a class="social-link" href="sms:+18162596486" aria-label="Text Try Jesus Media at 816-259-6486" title="Text Try Jesus Media"><span aria-hidden="true">▣</span><span>Text</span></a>
-        <a class="social-link" href="https://calendly.com/kalroller/tryjesusmedia" target="_blank" rel="noopener noreferrer" aria-label="Schedule a meeting with Try Jesus Media" title="Schedule a meeting"><span aria-hidden="true">▦</span><span>Book a Call</span></a>
-        <a class="social-link" href="https://try-jesus-new-york-shop.fourthwall.com/" target="_blank" rel="noopener noreferrer" aria-label="Shop Try Jesus Media merchandise"><span aria-hidden="true">◆</span><span>Merch</span></a>
-        <a class="social-link" href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM" target="_blank" rel="noopener noreferrer" aria-label="Join the WhatsApp family chat"><span aria-hidden="true">◉</span><span>WhatsApp</span></a>
-        <a class="social-link" href="mailto:info@tryjesusmedia.com?subject=Website%20accessibility%20help" aria-label="Get website accessibility help"><span aria-hidden="true">?</span><span>Help</span></a>
-      </nav>
-
-      <p class="copyright">© <span id="currentYear"></span> Try Jesus Media</p>
     </div>
+
+
+
+    <a class="guide-footer-return" href="/welcome/#bible-guides">Return to Bible Guides</a>
+<div
+      class="social-footer"
+      aria-label="Try Jesus Media social links"
+    >
+
+      <p class="social-intro">
+        Stay connected
+      </p>
+
+
+      <div class="social-links">
+
+
+        <a
+          class="social-link"
+          href="https://www.youtube.com/@TryJesusMedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube"
+        >
+          <span aria-hidden="true">▶</span>
+          <span>YouTube</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://www.facebook.com/tryjesusmedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook"
+        >
+          <span aria-hidden="true">f</span>
+          <span>Facebook</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://www.instagram.com/tryjesusmedia1/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+        >
+          <span aria-hidden="true">◎</span>
+          <span>Instagram</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://www.tiktok.com/@tryjesusmedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="TikTok"
+        >
+          <span aria-hidden="true">♪</span>
+          <span>TikTok</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="mailto:info@tryjesusmedia.com"
+          aria-label="Email Try Jesus Media"
+        >
+          <span aria-hidden="true">✉</span>
+          <span>Email</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="sms:+18162596486"
+          aria-label="Text Try Jesus Media at 816-259-6486"
+        >
+          <span aria-hidden="true">▣</span>
+          <span>Text</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://calendly.com/kalroller/tryjesusmedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Book a call"
+        >
+          <span aria-hidden="true">▦</span>
+          <span>Book a Call</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://try-jesus-new-york-shop.fourthwall.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Programs and merchandise"
+        >
+          <span aria-hidden="true">◆</span>
+          <span>Programs</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Join the WhatsApp family chat"
+        >
+          <span aria-hidden="true">◉</span>
+          <span>WhatsApp</span>
+        </a>
+
+
+      </div>
+
+      <a
+        class="reading-journey-link"
+        href="/bibleandconflictoftheages/"
+      >
+        Bible &amp; Conflict of the Ages Reading Journey
+      </a>
+
+    </div>
+
+
+
+    <div class="footer-bottom">
+
+      <p>
+        © <span id="currentYear">2026</span>
+        Try Jesus Media. All rights reserved.
+      </p>
+
+
+      <div class="footer-legal">
+
+        <a href="/privacy.html">
+          Privacy
+        </a>
+
+        <a href="mailto:info@tryjesusmedia.com?subject=Website%20accessibility%20help">
+          Accessibility Help
+        </a>
+
+        <a
+          href="https://faithcraft.agency/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by FaithCraft.agency
+        </a>
+
+      </div>
+
+    </div>
+
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="assets/script.js?v=20260907-1"></script>
-  <script src="/assets/guide-experience.js?v=body-only"></script>
-</body>
+  <script src="/assets/guide-experience.js?v=header-menu"></script>
+<script src="/assets/guide-header.js?v=1"></script></body>
 </html>

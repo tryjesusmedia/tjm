@@ -24,7 +24,7 @@ function styleSalesPage(html) {
 
 fs.mkdirSync('bibledecoded',{recursive:true});fs.writeFileSync('bibledecoded/index.html',styleSalesPage(sales));
 for(const [page,title] of [['welcome','Welcome to Bible Decoded'],['dashboard','Your Bible Decoded Dashboard'],['lesson','Your Bible Decoded Lesson'],['complete','Bible Decoded Completion']]){
- fs.mkdirSync(`bibledecoded/${page}`,{recursive:true});fs.writeFileSync(`bibledecoded/${page}/index.html`,`${head(title,'Your personal Bible Decoded course and study workspace.',true)}<body class="tjm-simple" data-page="${page}">${header}<main id="main" class="wrap app-content"><div id="global-message" class="notice" role="status"></div><div id="app"><p class="loading" role="status">Opening Bible Decoded…</p></div><noscript><div class="notice">Please enable JavaScript to sign in and save your workbook answers. Need help? Email info@tryjesusmedia.com.</div></noscript></main>${footer}</body></html>`);
+ fs.mkdirSync(`bibledecoded/${page}`,{recursive:true});fs.writeFileSync(`bibledecoded/${page}/index.html`,styleSalesPage(`${head(title,'Your personal Bible Decoded course and study workspace.',true)}<body class="tjm-simple" data-page="${page}">${header}<main id="main" class="wrap app-content"><div id="global-message" class="notice" role="status"></div><div id="app"><p class="loading" role="status">Opening Bible Decoded…</p></div><noscript><div class="notice">Please enable JavaScript to sign in and save your workbook answers. Need help? Email info@tryjesusmedia.com.</div></noscript></main>${footer}</body></html>`));
 }
 // Remove only the retired generated pages, including stale files from earlier builds.
 for (const retired of ['bibledecoded/final-tools/index.html', 'bibledecoded/study-lab/index.html']) {

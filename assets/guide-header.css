@@ -1,0 +1,25 @@
+body.guide-reader-page {--sans:Montserrat,Arial,sans-serif;--serif:Georgia,serif;font-family:var(--sans)}
+body.guide-reader-page main :is(h1,h2,h3,h4) {font-family:Georgia,serif}
+body.guide-reader-page .site-header {position:sticky;top:0;z-index:1000;display:grid;grid-template-columns:minmax(0,1fr) 48px;align-items:center;gap:12px;width:100%;max-width:none;padding:14px 18px;background:#201321;border-bottom:1px solid rgba(238,189,74,.22)}
+body .guide-header-title,body .guide-header-title * {font-family:"Cormorant Garamond",Georgia,serif!important}
+body .guide-header-title {font-size:clamp(32px,7.7vw,52px);font-weight:600;line-height:1.08;letter-spacing:-.035em;color:#f3e8d0;text-decoration:none}
+.guide-header-title span {font-size:.64em}
+.guide-header-title em {font-size:1em;font-weight:500;color:#eebd4a}
+#guide-menu-toggle {width:48px;height:48px;padding:8px;border:0;background:transparent;color:#eebd4a;cursor:pointer}
+#guide-menu-toggle svg {display:block;width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.8}
+#guide-menu-toggle .close-icon {display:none}
+#guide-menu-toggle[aria-expanded="true"] .open-icon {display:none}
+#guide-menu-toggle[aria-expanded="true"] .close-icon {display:block}
+#guide-header-menu {position:absolute;right:12px;top:100%;width:min(360px,calc(100vw - 24px));padding:16px;display:grid;gap:12px;background:#241725;border:1px solid rgba(238,189,74,.22);border-radius:14px;box-shadow:0 20px 40px #17141833;color:#f3e8d0}
+#guide-header-menu[hidden] {display:none!important}
+#guide-header-menu :is(button,span) {font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;font-size:20px!important;line-height:1.45;letter-spacing:0}
+#guide-header-menu button {width:100%;min-height:48px;padding:8px;margin:0;border:1px solid rgba(238,189,74,.22);border-radius:9px;background:transparent;color:#f7d985;font-weight:700;text-align:center;cursor:pointer}
+#guide-header-menu .guide-text-controls {display:grid;grid-template-columns:minmax(44px,1fr) auto minmax(44px,1fr);gap:12px;width:100%}
+#guide-header-menu .guide-text-status {display:block;position:static;width:auto;height:auto;clip:auto;clip-path:none;overflow:visible;white-space:nowrap;text-align:center}
+.guide-extra-tools {display:flex;gap:12px;justify-content:flex-end;padding:12px 18px;background:#201321}
+body.guide-reader-page .site-footer {display:block;padding:76px 24px 36px;background:#0e090f;color:#f3e8d0;text-align:center;--serif:"Cormorant Garamond",Georgia,serif;--gold:#eebd4a;--ivory:#f3e8d0}
+body.guide-reader-page .site-footer .footer-brand {display:inline-flex;text-align:left;margin-bottom:32px}
+body.guide-reader-page .site-footer .footer-brand strong {font-family:"Cormorant Garamond",Georgia,serif}
+body.guide-reader-page .site-footer .social-intro {color:#eebd4a}
+.guide-footer-return {display:block;width:fit-content;margin:0 auto 28px;color:#f3e8d0;text-underline-offset:4px}
+@media print {.guide-extra-tools,#guide-menu-toggle,#guide-header-menu{display:none!important}}

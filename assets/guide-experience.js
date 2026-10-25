@@ -151,8 +151,8 @@
     toolbar.innerHTML = `
       <div class="guide-reading-controls">
         <div class="guide-text-controls" role="group" aria-label="Text size">
-          <button type="button" data-text-size="decrease" aria-label="Decrease text size">A−</button>
-          <button type="button" data-text-size="increase" aria-label="Increase text size">A+</button>
+          <button type="button" data-text-size="decrease" aria-label="Decrease text size">−</button>
+          <button type="button" data-text-size="increase" aria-label="Increase text size">+</button>
           <span class="guide-text-status" role="status" aria-live="polite" aria-atomic="true"></span>
         </div>
         <label class="guide-audio-speed"><span>Listen speed</span>
@@ -178,7 +178,7 @@
       scaleBody(percentage / 100);
       document.documentElement.dataset.guideTextSize = String(textSize);
       document.documentElement.dataset.guideTextEnlarged = String(percentage > 100);
-      toolbar.querySelector('.guide-text-status').textContent = `Text size ${textSize} of ${sizeCount}, ${percentage} percent`;
+      toolbar.querySelector('.guide-text-status').textContent = `${textSize} / ${sizeCount}`;
       sizeButtons.forEach((button) => {
         button.disabled = button.dataset.textSize === 'decrease' ? textSize === 1 : textSize === sizeCount;
       });
