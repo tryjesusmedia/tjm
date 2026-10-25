@@ -208,7 +208,7 @@ function wireSignout() {
         }
         buttons.forEach((item) => (item.disabled = true));
         try {
-          await auth.auth.signOut();
+          await auth.auth.signOut({ scope: "local" });
           location.assign(ROOT + "welcome/");
         } catch {
           buttons.forEach((item) => (item.disabled = false));
@@ -935,6 +935,13 @@ window.addEventListener("storage", (event) => {
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) void refreshLabAccess();
 });
+function updateDecodedAccountLink(session) {
+  const link = $("#bd-auth-link");
+  if (!link) return;
+  link.textContent = session ? "Sign out" : "Sign in";
+  link.href = ROOT + "welcome/" + (session ? "?signout=1" : "");
+  link.hidden = false;
+}
 async function boot() {
   readingSize();
   if (params.get("checkout") === "cancelled") {
@@ -944,19 +951,24 @@ async function boot() {
     tell("Checkout was cancelled. You can return when you are ready.");
   }
   storeCarousel();
-  if (page === "sales") return;
   config = await api("config");
   // Implicit email links can be opened on a different device; Supabase consumes and removes the URL fragment.
   auth = createClient(config.authUrl, config.authKey, {
     auth: {
+      storageKey: "bibledecoded-auth-v1",
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
       flowType: "implicit",
     },
   });
+  // This menu observes only Bible Decoded's isolated session.
+  auth.auth.onAuthStateChange((_event, session) => updateDecodedAccountLink(session));
+  const initial = await auth.auth.getSession();
+  updateDecodedAccountLink(initial.data.session);
+  if (page === "sales") return;
   if (params.get("signout") === "1") {
-    await auth.auth.signOut();
+    await auth.auth.signOut({ scope: "local" });
     location.replace(ROOT + "welcome/");
     return;
   }
