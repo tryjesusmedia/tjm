@@ -33,7 +33,7 @@
         el('email-password-field').hidden = mode === 'reset';
         password.required = mode !== 'reset';
         password.autocomplete = mode === 'signup' || managing ? 'new-password' : 'current-password';
-        password.minLength = mode === 'signup' || managing ? 12 : 1;
+        password.minLength = mode === 'signup' || managing ? 6 : 1;
         el('email-confirm-field').hidden = !managing;
         confirm.required = managing;
         el('email-auth-submit').textContent = ({ signin: 'Sign in', signup: 'Create account', reset: 'Send reset link', password: 'Save password' })[mode];
@@ -67,7 +67,7 @@
         event.preventDefault();
         if (busy || !form.reportValidity()) return;
         error.textContent = ''; message.textContent = '';
-        if ((mode === 'signup' || mode === 'password') && password.value.length < 12) { error.textContent = 'Use at least 12 characters for your password.'; return; }
+        if ((mode === 'signup' || mode === 'password') && password.value.length < 6) { error.textContent = 'Use at least 6 characters for your password.'; return; }
         if (mode === 'password' && password.value !== confirm.value) { error.textContent = 'The passwords do not match.'; return; }
         setBusy(true);
         try {
