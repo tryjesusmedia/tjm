@@ -12,6 +12,11 @@
   <link rel="canonical" href="https://tryjesusmedia.com/bibleandconflictoftheages/">
   <link rel="icon" href="../assets/favicon.png">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Bible &amp; Conflict">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" href="install.css?v=20261025-1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -48,7 +53,14 @@
 <body class="conflict-reading tjm-simple">
   <a class="skip-link" href="#journey-main">Skip to reading</a>
 
-  <aside class="conflict-app-invite" aria-label="Get the Bible and Conflict app"><a href="https://play.google.com/store/apps/details?id=com.tryjesusmedia.bibleandconflict" target="_blank" rel="noopener noreferrer">Download the Bible &amp; Conflict app</a></aside>
+  <aside class="conflict-app-invite" aria-label="Add Bible and Conflict to your home screen"><button id="install-conflict" type="button">Add to Home Screen</button></aside>
+  <dialog id="install-help" aria-labelledby="install-title">
+    <h2 id="install-title">Bible &amp; Conflict on your Home Screen</h2>
+    <p>Add an icon for quick access. Open it to return to your last reading on this device.</p>
+    <div id="install-steps"></div>
+    <p class="install-note">An internet connection is needed. Your place is remembered in this browser or installed web app. Sign in to sync reading progress across devices.</p>
+    <form method="dialog"><button class="button button-primary">Got it</button></form>
+  </dialog>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Try Jesus Media home">
       <img src="../assets/logo.png" alt="" width="52" height="52">
@@ -163,7 +175,7 @@
   <script src="config.js?v=20260918-separate-accounts"></script>
   <script src="reading-badges.js?v=20260918-1" defer></script>
   <script src="badge-viewer.js?v=20260919-badges-names" defer></script>
-  <script src="app-invite.js?v=20260919" defer></script>
-  <script src="app.js?v=20260920-welcome" defer></script>
+  <script src="app-invite.js?v=20261025-1" defer></script>
+  <script src="app.js?v=20261025-home-screen" defer></script>
 </body>
 </html>

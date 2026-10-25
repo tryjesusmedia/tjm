@@ -57,6 +57,60 @@
   let leaderboardRequestId = 0;
   let visitRefreshId = 0;
 
+  // Reading location is device-local and separate from completion records.
+  let placeReady = false;
+  let placeSaveTimer = null;
+  const placeKey = () => `tjm-conflict-place-v1:${session?.user?.id || "guest"}`;
+
+  function readPlace() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(placeKey()));
+      return saved && typeof saved === "object" ? saved : null;
+    } catch { return null; }
+  }
+
+  function savePlace() {
+    if (!placeReady || !plan || (!session && !guestBrowsing)) return;
+    try {
+      localStorage.setItem(placeKey(), JSON.stringify({
+        readingId: currentReading().id,
+        view: activeView,
+        book: activeBook,
+        scrollY: Math.max(0, window.scrollY),
+      }));
+    } catch { /* Reading remains usable when storage is unavailable. */ }
+  }
+
+  function restorePlace() {
+    const saved = readPlace();
+    const index = plan.readings.findIndex(reading => reading.id === resolveReadingId(saved?.readingId));
+    if (index >= 0) {
+      currentIndex = index;
+      activeView = ["readings", "journey", "progress", "rewards"].includes(saved.view) ? saved.view : "readings";
+      activeBook = saved.book === "" || plan.books.some(book => book.code === saved.book)
+        ? saved.book : currentReading().code;
+    }
+    render();
+    document.querySelectorAll("[data-view]").forEach(button => button.classList.toggle("active", button.dataset.view === activeView));
+    const userId = session?.user?.id;
+    requestAnimationFrame(() => {
+      if (userId !== session?.user?.id) return;
+      if (index >= 0 && Number.isFinite(saved.scrollY) && saved.scrollY >= 0) {
+        window.scrollTo({ top: saved.scrollY, behavior: "instant" });
+      }
+      placeReady = true;
+    });
+  }
+
+  window.addEventListener("scroll", () => {
+    clearTimeout(placeSaveTimer);
+    placeSaveTimer = setTimeout(savePlace, 150);
+  }, { passive: true });
+  window.addEventListener("pagehide", savePlace);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") savePlace();
+  });
+
   function resolveReadingId(readingId) {
   return plan?.readingAliases?.[readingId] || readingId;
 }
@@ -245,7 +299,7 @@ function taskGroupComplete(reading, kind) {
   function defaultReadingIndex() {
     if (settings?.last_reading_id) {
       const last = plan.readings.findIndex((reading) => reading.id === resolveReadingId(settings.last_reading_id));
-      if (last >= 0 && !readingComplete(plan.readings[last])) return last;
+      if (last >= 0) return last;
     }
     const firstIncomplete = plan.readings.findIndex((reading) => !readingComplete(reading));
     return firstIncomplete >= 0 ? firstIncomplete : plan.readings.length - 1;
@@ -256,6 +310,7 @@ function taskGroupComplete(reading, kind) {
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
+    savePlace();
     if (name === "rewards" && session) void refreshJourneyFromVisit();
     if (focusMain) {
       document.getElementById("journey-main").focus({ preventScroll: true });
@@ -288,6 +343,7 @@ function taskGroupComplete(reading, kind) {
     activeBook = currentReading().code;
     updateLastReading(currentReading().id);
     showView(view, true);
+    savePlace();
   }
 
   function reviewFlag(reading) {
@@ -897,6 +953,8 @@ function taskGroupComplete(reading, kind) {
   }
 
   async function applySession(nextSession) {
+    savePlace();
+    placeReady = false;
     const previousUserId = session?.user?.id || "";
     const nextUserId = nextSession?.user?.id || "";
     if (previousUserId !== nextUserId) {
@@ -919,10 +977,11 @@ function taskGroupComplete(reading, kind) {
       settings = guestSettings();
       currentIndex = 0;
       clearInterval(refreshTimer);
+      guestBrowsing = guestBrowsing || Boolean(readPlace());
       authGate.hidden = guestBrowsing;
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
-      render();
+      restorePlace();
       return;
     }
     guestBrowsing = false;
@@ -937,7 +996,7 @@ function taskGroupComplete(reading, kind) {
         loadJourneyIdentity({ userId, version }),
       ]);
       if (!loaded || !identityLoaded || !isCurrentSession(userId, version)) return;
-      render();
+      restorePlace();
       if (activeView === "rewards") await loadJourneyRewards({ identityReady: true });
       scheduleRefresh();
     } catch (error) {
@@ -1002,7 +1061,7 @@ function taskGroupComplete(reading, kind) {
     else if (target.hasAttribute("data-require-sign-in")) showSignIn();
     else if (target.dataset.dayNav) goToReading(currentIndex + (target.dataset.dayNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex !== undefined) goToReading(Number(target.dataset.readingIndex));
-    else if (target.dataset.book) { activeBook = activeBook === target.dataset.book ? "" : target.dataset.book; render(); }
+    else if (target.dataset.book) { activeBook = activeBook === target.dataset.book ? "" : target.dataset.book; render(); savePlace(); }
     else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.hasAttribute("data-retry-leaderboard")) loadJourneyRewards();
     else if (target.dataset.openSource) recordOpen(target.dataset.readingId, target.dataset.openSource);
@@ -1051,6 +1110,8 @@ function taskGroupComplete(reading, kind) {
     settings = guestSettings();
     setSync("Viewing only — not saved");
     render();
+    placeReady = true;
+    savePlace();
   });
   headerSignIn.addEventListener("click", showSignIn);
   document.addEventListener("visibilitychange", async () => {
