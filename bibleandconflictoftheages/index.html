@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <script src="/assets/body-text-size.js?v=2"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#010c18">
@@ -45,25 +46,33 @@
 }
   </script>
 <link rel="stylesheet" href="/assets/premium-simplicity.css?v=20261001-1" />
-<link rel="stylesheet" href="/assets/premium-system.css?v=2"><script defer src="/assets/premium-layout.js?v=2"></script></head>
+<link rel="stylesheet" href="/assets/member-footer.css?v=1">
+<link rel="stylesheet" href="/assets/premium-system.css?v=2">
+<link rel="stylesheet" href="site-layout.css?v=1"><script defer src="/assets/premium-layout.js?v=2"></script></head>
 <body class="premium-system conflict-reading tjm-simple">
   <a class="skip-link" href="#journey-main">Skip to reading</a>
 
   
   
   <header class="site-header">
-    <a class="brand" href="/" aria-label="Try Jesus Media home">
-      <img src="../assets/logo.png" alt="" width="52" height="52">
-      <span><strong>TRY JESUS</strong><small>MEDIA</small></span>
-    </a>
-    <div class="header-actions">
+    <h1 id="page-title"><span>The Bible and</span> <em>Conflict of the Ages</em></h1>
+    <button class="profile-button" id="profile-button" type="button" aria-expanded="false" aria-controls="account-menu" aria-label="Open menu">
+      <svg class="menu-open-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
+      <svg class="menu-close-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg>
+      <img id="profile-avatar" alt="" hidden>
+      <span id="profile-initial" hidden>T</span>
+      <span id="profile-name" hidden>Member</span>
+    </button>
+    <div class="account-menu" id="account-menu" hidden>
+      <strong id="account-email" hidden></strong>
+      <div class="text-size-controls" role="group" aria-label="Body text size">
+        <button type="button" id="text-smaller" aria-label="Decrease text size">−</button>
+        <span id="text-size-status" aria-live="polite">11 / 40</span>
+        <button type="button" id="text-larger" aria-label="Increase text size">+</button>
+      </div>
       <span class="sync-status" id="sync-status" aria-live="polite"><i></i> Waiting to sync</span>
-      <button class="profile-button" id="profile-button" type="button" hidden aria-expanded="false">
-        <img id="profile-avatar" alt="" hidden>
-        <span id="profile-initial">T</span>
-        <span id="profile-name">Member</span>
-      </button>
-      <button class="header-sign-in" id="header-sign-in" type="button" hidden>Sign in to save</button>
+      <button class="header-sign-in" id="header-sign-in" type="button" title="Sign in to save your reading progress">Sign in</button>
+      <button type="button" id="sign-out" hidden>Sign out</button>
     </div>
   </header>
 
@@ -71,8 +80,6 @@
     <div class="hero-glow hero-glow-one"></div>
     <div class="hero-glow hero-glow-two"></div>
     <div class="hero-copy">
-      <p class="eyebrow">A SPIRITUAL READING JOURNEY</p>
-      <h1 id="page-title">The Bible <em>&</em><br>Conflict of the Ages</h1>
       <div class="hero-intro">
         <details class="hero-intro-more">
           <summary>Read more about this journey</summary>
@@ -121,12 +128,193 @@
   </main>
 
   <footer class="site-footer">
-    <a class="brand footer-brand" href="/">
-      <img src="../assets/logo.png" alt="" width="46" height="46">
-      <span><strong>TRY JESUS</strong><small>MEDIA</small></span>
-    </a>
-    <a class="faithcraft-credit" href="https://faithcraft.agency/" target="_blank" rel="noopener noreferrer">Powered by FaithCraft.Agency</a>
-    <small>© 2026 Try Jesus Media. Your reading progress remains private. Only your public leaderboard name and reading totals appear on the leaderboard.</small>
+
+
+    <div class="footer-brand">
+
+      <a href="/" aria-label="Try Jesus Media home"><img
+        src="/welcome/assets/logo.webp"
+        width="92"
+        height="92"
+        alt="Try Jesus Media"
+      /></a>
+
+      <div>
+
+        <strong>
+          TRY JESUS MEDIA
+        </strong>
+
+        <span>
+          Clear Bible answers and a welcoming community
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <div
+      class="social-footer"
+      aria-label="Try Jesus Media social links"
+    >
+
+      <p class="social-intro">
+        Stay connected
+      </p>
+
+
+      <div class="social-links">
+
+
+        <a
+          class="social-link"
+          href="https://www.youtube.com/@TryJesusMedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube"
+        >
+          <span aria-hidden="true">▶</span>
+          <span>YouTube</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://www.facebook.com/tryjesusmedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook"
+        >
+          <span aria-hidden="true">f</span>
+          <span>Facebook</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://www.instagram.com/tryjesusmedia1/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+        >
+          <span aria-hidden="true">◎</span>
+          <span>Instagram</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://www.tiktok.com/@tryjesusmedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="TikTok"
+        >
+          <span aria-hidden="true">♪</span>
+          <span>TikTok</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="mailto:info@tryjesusmedia.com"
+          aria-label="Email Try Jesus Media"
+        >
+          <span aria-hidden="true">✉</span>
+          <span>Email</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="sms:+18162596486"
+          aria-label="Text Try Jesus Media at 816-259-6486"
+        >
+          <span aria-hidden="true">▣</span>
+          <span>Text</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://calendly.com/kalroller/tryjesusmedia"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Book a call"
+        >
+          <span aria-hidden="true">▦</span>
+          <span>Book a Call</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://try-jesus-new-york-shop.fourthwall.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Programs and merchandise"
+        >
+          <span aria-hidden="true">◆</span>
+          <span>Programs</span>
+        </a>
+
+
+        <a
+          class="social-link"
+          href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Join the WhatsApp family chat"
+        >
+          <span aria-hidden="true">◉</span>
+          <span>WhatsApp</span>
+        </a>
+
+
+      </div>
+
+      <a
+        class="reading-journey-link"
+        href="/bibleandconflictoftheages/"
+      >
+        Bible &amp; Conflict of the Ages Reading Journey
+      </a>
+
+    </div>
+
+
+
+    <div class="footer-bottom">
+
+      <p>
+        © <span id="currentYear">2026</span>
+        Try Jesus Media. All rights reserved.
+      </p>
+
+
+      <div class="footer-legal">
+
+        <a href="/privacy.html">
+          Privacy
+        </a>
+
+        <a href="mailto:info@tryjesusmedia.com?subject=Website%20accessibility%20help">
+          Accessibility Help
+        </a>
+
+        <a
+          href="https://faithcraft.agency/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by FaithCraft.agency
+        </a>
+
+      </div>
+
+    </div>
+
   </footer>
 
   <div class="auth-gate" id="auth-gate" role="dialog" aria-modal="true" aria-labelledby="auth-title" hidden>
@@ -145,10 +333,6 @@
     </div>
   </div>
 
-  <div class="account-menu" id="account-menu" hidden>
-    <strong id="account-email"></strong>
-    <button type="button" id="sign-out">Sign out</button>
-  </div>
   <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
   <dialog class="reading-badge-viewer" id="reading-badge-viewer" aria-label="Earned reading badge" aria-describedby="badge-viewer-source">
     <div class="badge-viewer-content">
@@ -166,6 +350,8 @@
   <script src="reading-badges.js?v=20260918-1" defer></script>
   <script src="badge-viewer.js?v=20260919-badges-names" defer></script>
   
-  <script src="app.js?v=20261025-home-screen" defer></script>
+  <script src="app.js?v=consistent-layout-1" defer></script>
+  <script src="site-layout.js?v=1" defer></script>
 </body>
 </html>
+

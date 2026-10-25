@@ -1,0 +1,126 @@
+/* Shared Try Jesus Media proportions; the existing Conflict palette stays intact. */
+body.conflict-reading .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 12px;
+  min-height: 86px;
+  padding: 14px max(18px, calc((100% - 1240px) / 2));
+}
+body.conflict-reading #page-title {
+  margin: 0;
+  min-width: 0;
+  font-size: clamp(32px, 7.7vw, 52px) !important;
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -.035em;
+  color: var(--white);
+  text-wrap: balance;
+}
+body.conflict-reading #page-title span { font-size: .64em; font-weight: 600; }
+body.conflict-reading #page-title em { font-size: 1em; font-weight: 500; color: var(--gold-light); }
+body.conflict-reading #profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  width: 48px;
+  height: 48px;
+  padding: 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--gold);
+}
+body.conflict-reading #profile-button > span,
+body.conflict-reading #profile-avatar { display: none; }
+body.conflict-reading #profile-button svg { width: 30px; height: 30px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; }
+body.conflict-reading #profile-button .menu-close-icon,
+body.conflict-reading #profile-button[aria-expanded="true"] .menu-open-icon { display: none; }
+body.conflict-reading #profile-button[aria-expanded="true"] .menu-close-icon { display: block; }
+body.conflict-reading .account-menu {
+  position: absolute;
+  top: 100%;
+  right: max(12px, calc((100% - 1240px) / 2));
+  width: min(360px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  border-radius: 14px;
+}
+body.conflict-reading #account-email { white-space: normal; overflow-wrap: anywhere; overflow: visible; text-overflow: clip; }
+body.conflict-reading .text-size-controls { display: grid; grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr); gap: 12px; align-items: center; }
+body.conflict-reading #text-size-status { white-space: nowrap; text-align: center; }
+body.conflict-reading .account-menu button { width: 100%; min-height: 48px; padding: 8px; margin: 0; border-radius: 9px; }
+body.conflict-reading .account-menu button:disabled { opacity: .4; cursor: not-allowed; }
+body.conflict-reading #sync-status { display: flex; font-size: 17px !important; line-height: 1.5 !important; letter-spacing: 0; }
+body.conflict-reading #sync-status i { flex: 0 0 7px; }
+body.conflict-reading .journey-nav { top: var(--conflict-header-height, 86px); }
+body.conflict-reading .journey-hero { padding-block: 24px; }
+body.conflict-reading .journey-hero .hero-copy { width: 100%; max-width: 1180px; }
+body.conflict-reading .journey-hero .hero-intro { margin-top: 0; max-width: none; }
+body.conflict-reading .hero-intro-more { max-width: none; border-radius: 14px; }
+body.conflict-reading .hero-intro-more > summary { font: 600 20px/1.45 Montserrat, Arial, sans-serif; min-height: 56px; padding: 16px 20px; }
+body.conflict-reading .hero-intro-more-content { padding: 20px; gap: 20px; }
+body.conflict-reading .journey-hero .hero-intro-more-content p,
+body.conflict-reading .journey-hero .hero-intro-more-content .hero-book-list li,
+body.conflict-reading .auth-card > p:not(.eyebrow) { font: 400 22px/1.65 Montserrat, Arial, sans-serif; }
+body.conflict-reading .journey-hero .hero-intro-more-content .hero-mark > strong { font: 600 28px/1.25 Georgia, serif; }
+body.conflict-reading .journey-hero .hero-intro-more-content :is(.hero-mark > span, .hero-book-list small),
+body.conflict-reading .hero-stats span { font: 600 17px/1.5 Montserrat, Arial, sans-serif; }
+body.conflict-reading .hero-stats strong { font-family: Montserrat, Arial, sans-serif; font-size: 22px; }
+body.conflict-reading .auth-card { max-height: calc(100dvh - 32px); overflow-y: auto; }
+body.conflict-reading .auth-card h2 { font: 600 28px/1.25 Georgia, serif; }
+body.conflict-reading .auth-card .auth-note { font-size: 17px !important; line-height: 1.5; }
+body.conflict-reading #view-root { padding-block: 40px 64px; }
+body.conflict-reading .reading-card { border-radius: 16px; padding: clamp(20px, 4vw, 32px); box-shadow: none; }
+body.conflict-reading .reading-switcher { flex-wrap: wrap; }
+body.conflict-reading .card-kicker { flex-wrap: wrap; gap: 12px; }
+body.conflict-reading .card-kicker span { font-size: 17px; line-height: 1.5; }
+body.conflict-reading .source-task { min-width: 0; }
+body.conflict-reading .source-task .button { white-space: normal; }
+body.conflict-reading .stat-card strong { font-family: Georgia, serif; font-size: 40px; line-height: 1.25; }
+body.conflict-reading .save-banner strong { font-family: Georgia, serif; font-size: 24px; line-height: 1.25; }
+body.conflict-reading :is(.stat-card span, .save-banner span, .book-progress-row header, .toast) { font-size: 17px; line-height: 1.5; }
+body.conflict-reading .save-banner { flex-wrap: wrap; gap: 20px; }
+
+/* Use the welcome footer's exact structure and spacing with this journey's colors. */
+body.conflict-reading .site-footer {
+  display: block;
+  padding: 76px 24px calc(36px + env(safe-area-inset-bottom, 0px));
+  background: var(--paper-2);
+  color: var(--ivory);
+  border-color: var(--line-dark);
+  text-align: center;
+}
+body.conflict-reading .footer-brand { display: inline-flex; max-width: 100%; gap: 16px; margin-bottom: 32px; text-align: left; }
+body.conflict-reading .footer-brand img { width: 82px; height: 82px; object-fit: contain; }
+body.conflict-reading .footer-brand :is(strong, span) { display: block; }
+body.conflict-reading .footer-brand strong { color: var(--white); }
+body.conflict-reading .footer-brand span,
+body.conflict-reading .footer-bottom,
+body.conflict-reading .footer-bottom :is(p, a),
+body.conflict-reading .reading-journey-link { color: var(--muted); }
+body.conflict-reading .site-footer .social-intro { margin: 0 0 15px; color: var(--gold-light); }
+body.conflict-reading .site-footer .social-link { color: var(--ivory); border-color: var(--line-dark); }
+body.conflict-reading .site-footer .premium-socials { border-color: var(--line-dark); }
+body.conflict-reading .site-footer .premium-socials > summary { color: var(--ivory); }
+body.conflict-reading .site-footer a:hover { color: var(--gold-light); }
+body.conflict-reading .footer-bottom { border-color: var(--line-dark); }
+body.conflict-reading .footer-bottom p { margin: 0; }
+body.conflict-reading .footer-legal { align-items: center; }
+@media (max-width: 680px) {
+  body.conflict-reading #page-title span { display: block; }
+  body.conflict-reading .site-header { padding-inline: 18px; }
+  body.conflict-reading .journey-hero { padding: 20px 18px; }
+  body.conflict-reading .reading-switcher { width: 100%; justify-content: space-between; gap: 8px; }
+  body.conflict-reading .reading-number { min-width: 0; }
+  body.conflict-reading .icon-button.nav-button { min-width: 0; padding-inline: 12px; }
+  body.conflict-reading .site-footer { padding-inline: 18px; }
+  body.conflict-reading .footer-brand { gap: 12px; }
+  body.conflict-reading .footer-brand img { width: 64px; height: 64px; }
+}

@@ -940,7 +940,14 @@ function taskGroupComplete(reading, kind) {
   }
 
   function updateProfile() {
-    if (!session) { profileButton.hidden = true; return; }
+    profileButton.hidden = false;
+    document.getElementById("sign-out").hidden = !session;
+    document.getElementById("account-email").hidden = !session;
+    headerSignIn.hidden = Boolean(session);
+    if (!session) {
+      document.getElementById("account-email").textContent = "";
+      return;
+    }
     const name = journeyFirstName || displayName();
     const avatar = avatarUrl();
     document.getElementById("profile-name").textContent = name.split(" ")[0] || "Member";
@@ -969,7 +976,7 @@ function taskGroupComplete(reading, kind) {
       resetRewardState();
     }
     session = nextSession;
-    accountMenu.hidden = true;
+    if (previousUserId !== nextUserId) accountMenu.hidden = true;
     if (!session) {
       updateProfile();
       progress = new Map();
@@ -979,7 +986,7 @@ function taskGroupComplete(reading, kind) {
       clearInterval(refreshTimer);
       guestBrowsing = guestBrowsing || Boolean(readPlace());
       authGate.hidden = guestBrowsing;
-      headerSignIn.hidden = !guestBrowsing;
+      headerSignIn.hidden = false;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
       restorePlace();
       return;
@@ -989,7 +996,7 @@ function taskGroupComplete(reading, kind) {
     headerSignIn.hidden = true;
     const userId = session.user.id;
     const version = sessionVersion;
-    profileButton.hidden = true;
+    updateProfile();
     try {
       const [loaded, identityLoaded] = await Promise.all([
         loadMemberData({ userId, version }),
@@ -1168,3 +1175,4 @@ function taskGroupComplete(reading, kind) {
 
   init();
 })();
+
