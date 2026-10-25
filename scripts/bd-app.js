@@ -148,22 +148,24 @@ function albumLink() {
 }
 function authForm(message = "") {
   $("#app").innerHTML =
-    `<div class="auth-card"><p class="eyebrow">YOUR PERSONAL STUDY SPACE</p><h1>Welcome to<br>Bible Decoded.</h1><p class="muted">Sign in to open your lessons and saved studies.</p>${message ? `<p class="notice">${esc(message)}</p>` : ""}<button id="google-signin" class="button secondary wide"><span class="google-mark" aria-hidden="true">G</span> Continue with Google</button><div class="divider">or use your email</div><form id="email-signin"><label for="signin-email">Email address</label><input id="signin-email" class="study-title" type="email" autocomplete="email" required placeholder="you@example.com"><button class="button wide" type="submit">Continue with Email</button></form><p class="small muted">We’ll email you a sign-in link. No password to remember.</p><p class="small">Use the email address you used at checkout. <a href="${ROOT}">View the program</a></p><div id="auth-message" class="notice" role="status"></div></div>`;
-  $("#google-signin").onclick = async () => {
-    const b = $("#google-signin");
-    b.disabled = true;
-    try {
-      const { error } = await auth.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: location.origin + ROOT + "welcome/" },
-      });
-      if (error) throw error;
-    } catch (e) {
-      $("#auth-message").textContent =
-        "Google sign-in could not start. Please try again or continue with email.";
-      b.disabled = false;
-    }
-  };
+    `<div class="auth-card"><p class="eyebrow">YOUR PERSONAL STUDY SPACE</p><h1>Welcome to<br>Bible Decoded.</h1><p class="muted">Sign in to open your lessons and saved studies.</p>${message ? `<p class="notice">${esc(message)}</p>` : ""}<button id="google-signin" class="button secondary wide"><span class="google-mark" aria-hidden="true">G</span> Continue with Google</button><button id="apple-signin" class="button secondary wide apple-sign-in" style="margin-top:12px">Continue with Apple</button><div class="divider">or use your email</div><form id="email-signin"><label for="signin-email">Email address</label><input id="signin-email" class="study-title" type="email" autocomplete="email" required placeholder="you@example.com"><button class="button wide" type="submit">Continue with Email</button></form><p class="small muted">We’ll email you a sign-in link. No password to remember.</p><p class="small">Use the email address you used at checkout. With Apple, choose Share My Email if that matches your checkout email. <a href="${ROOT}">View the program</a></p><div id="auth-message" class="notice" role="status"></div></div>`;
+  for (const provider of ["google", "apple"]) {
+    $("#" + provider + "-signin").onclick = async () => {
+      const button = $("#" + provider + "-signin");
+      button.disabled = true;
+      $("#auth-message").textContent = "";
+      try {
+        const { error } = await auth.auth.signInWithOAuth({
+          provider,
+          options: { redirectTo: location.origin + ROOT + "welcome/" },
+        });
+        if (error) throw error;
+      } catch {
+        $("#auth-message").textContent = "We could not start sign-in. Please try again or continue with email.";
+        button.disabled = false;
+      }
+    };
+  }
   $("#email-signin").onsubmit = async (event) => {
     event.preventDefault();
     const button = event.currentTarget.querySelector("button");

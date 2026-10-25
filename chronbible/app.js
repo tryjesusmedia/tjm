@@ -11,6 +11,9 @@
   const authGate = document.getElementById("auth-gate");
   const authError = document.getElementById("auth-error");
   const signInButton = document.getElementById("google-sign-in");
+  const appleSignInButton = document.getElementById("apple-sign-in");
+  const emailSignInForm = document.getElementById("email-sign-in");
+  const emailSignInStatus = document.getElementById("email-sign-in-status");
   const guestButton = document.getElementById("continue-without-sign-in");
   const headerSignIn = document.getElementById("header-sign-in");
   const profileButton = document.getElementById("profile-button");
@@ -646,7 +649,7 @@
     const avatar = avatarUrl();
     document.getElementById("profile-name").textContent = name.split(" ")[0] || "Member";
     document.getElementById("profile-initial").textContent = initials(name);
-    document.getElementById("account-email").textContent = session.user.email || "Signed in with Google";
+    document.getElementById("account-email").textContent = session.user.email || "Signed in";
     const image = document.getElementById("profile-avatar");
     if (avatar) {
       image.src = avatar;
@@ -724,21 +727,46 @@
     } catch (error) {
       console.error(error);
       setSync("Sync unavailable", "error");
-      authError.textContent = "Your Google sign-in worked, but your progress could not be loaded. Please try again or contact Try Jesus Media.";
+      authError.textContent = "Your sign-in worked, but your progress could not be loaded. Please try again or contact Try Jesus Media.";
       authGate.hidden = false;
     }
   }
 
-  async function signInGoogle() {
+  async function signInProvider(provider, button) {
     authError.textContent = "";
-    signInButton.disabled = true;
-    const { error } = await db.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: CONFIG.siteUrl },
-    });
-    if (error) {
-      authError.textContent = error.message;
-      signInButton.disabled = false;
+    if (!db) { authError.textContent = "Sign-in is still loading. Please try again in a moment."; return; }
+    button.disabled = true;
+    try {
+      const { error } = await db.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: CONFIG.siteUrl },
+      });
+      if (error) throw error;
+    } catch {
+      authError.textContent = "We could not start sign-in. Please try again or use your email.";
+      button.disabled = false;
+    }
+  }
+
+  async function signInEmail(event) {
+    event.preventDefault();
+    authError.textContent = "";
+    if (!db) { authError.textContent = "Sign-in is still loading. Please try again in a moment."; return; }
+    const button = emailSignInForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+    emailSignInStatus.textContent = "Sending your sign-in link…";
+    try {
+      const { error } = await db.auth.signInWithOtp({
+        email: document.getElementById("signin-email").value.trim(),
+        options: { emailRedirectTo: CONFIG.siteUrl },
+      });
+      if (error) throw error;
+      emailSignInStatus.textContent = "Check your email for a sign-in link. If needed, check your spam folder. You can request another link in one minute.";
+      setTimeout(() => { button.disabled = false; }, 60000);
+    } catch {
+      emailSignInStatus.textContent = "";
+      authError.textContent = "We could not send the sign-in email. Please try again shortly or continue with Google or Apple.";
+      button.disabled = false;
     }
   }
 
@@ -812,7 +840,9 @@
     guestBrowsing = false;
     await db.auth.signOut({ scope: "local" });
   });
-  signInButton.addEventListener("click", signInGoogle);
+  signInButton.addEventListener("click", () => signInProvider("google", signInButton));
+  appleSignInButton.addEventListener("click", () => signInProvider("apple", appleSignInButton));
+  emailSignInForm.addEventListener("submit", signInEmail);
   guestButton.addEventListener("click", () => {
     guestBrowsing = true;
     authError.textContent = "";
@@ -855,7 +885,7 @@
       render();
       if (!window.supabase?.createClient) throw new Error("The secure account service could not be loaded. Please refresh and try again.");
       db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, {
-        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" },
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit" },
       });
       const { data, error } = await db.auth.getSession();
       if (error) throw error;

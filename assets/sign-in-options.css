@@ -1,0 +1,9 @@
+/* Sign-in choices: fixed control sizes; body text can still use reader settings. */
+body.chronbible .auth-gate { align-items:safe center; }
+body.chronbible .auth-card { max-height:calc(100dvh - 40px); overflow-y:auto; }
+body.chronbible .apple-sign-in { background:#171418; color:#f3e8d0; border:1px solid #a89a87; }
+body.chronbible .email-sign-in-option { margin-top:12px; text-align:left; }
+body.chronbible .email-sign-in-option summary { padding:14px 16px; border:1px solid #a89a87; border-radius:13px; cursor:pointer; font:700 20px/1.45 var(--sans); text-align:center; }
+body.chronbible #email-sign-in label { display:block; margin:16px 0 8px; font:600 18px/1.5 var(--sans); }
+body.chronbible #email-sign-in input { display:block; box-sizing:border-box; width:100%; min-height:52px; padding:12px; border:1px solid #a89a87; border-radius:10px; background:#f3e8d0; color:#311e33; font:400 18px/1.5 var(--sans); }
+body.chronbible .email-sign-in-option p { font-size:16px; line-height:1.5; }

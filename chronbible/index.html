@@ -52,7 +52,7 @@
 <link rel="stylesheet" href="app-typography.css?v=20261025-buttons">
 <script src="text-size.js?v=6" defer></script>
 <link rel="stylesheet" href="cream-theme.css?v=2">
-<link rel="stylesheet" href="/assets/member-footer.css?v=1"><link rel="stylesheet" href="/assets/premium-system.css?v=2"><script defer src="/assets/premium-layout.js?v=2"></script></head>
+<link rel="stylesheet" href="/assets/member-footer.css?v=1"><link rel="stylesheet" href="/assets/premium-system.css?v=2"><script defer src="/assets/premium-layout.js?v=2"></script><link rel="stylesheet" href="/assets/sign-in-options.css?v=1"></head>
 <body class="premium-system chronbible tjm-simple">
   <a class="skip-link" href="#journey-main">Skip to reading</a>
 
@@ -286,13 +286,23 @@
 <div class="auth-gate" id="auth-gate" role="dialog" aria-modal="true" aria-labelledby="auth-title" hidden>
     <div class="auth-card">
       <img src="../assets/logo.png" alt="" width="90" height="90">
-      <p class="eyebrow">GOOGLE SIGN-IN IS OPTIONAL</p>
+      <p class="eyebrow">SIGN-IN IS OPTIONAL</p>
       <h2 id="auth-title">Keep your place everywhere.</h2>
       <p>Sign in to save your progress.</p>
       <button class="google-button" id="google-sign-in" type="button">
         <svg aria-hidden="true" viewBox="0 0 24 24"><path fill="#4285f4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.06H12v3.9h5.38a4.6 4.6 0 0 1-2 3.02v2.53h3.24c1.9-1.75 2.98-4.33 2.98-7.39Z"/><path fill="#34a853" d="M12 22c2.7 0 4.97-.9 6.62-2.38l-3.24-2.53c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.76-5.59-4.13H3.06v2.61A10 10 0 0 0 12 22Z"/><path fill="#fbbc05" d="M6.41 13.92A6 6 0 0 1 6.1 12c0-.67.12-1.32.31-1.92V7.47H3.06A10 10 0 0 0 2 12c0 1.61.39 3.14 1.06 4.53l3.35-2.61Z"/><path fill="#ea4335" d="M12 5.95c1.47 0 2.78.5 3.82 1.49l2.87-2.87A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.94 5.47l3.35 2.61C7.2 7.71 9.4 5.95 12 5.95Z"/></svg>
         Continue with Google
       </button>
+      <button class="google-button apple-sign-in" id="apple-sign-in" type="button">Continue with Apple</button>
+      <details class="email-sign-in-option"><summary>Continue with Email</summary>
+        <form id="email-sign-in">
+          <label for="signin-email">Email address</label>
+          <input id="signin-email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="you@example.com">
+          <button class="google-button" type="submit">Email me a sign-in link</button>
+        </form>
+        <p>No password to remember.</p>
+        <p id="email-sign-in-status" role="status" aria-live="polite"></p>
+      </details>
       <button class="guest-button" id="continue-without-sign-in" type="button">Explore without saving</button>
       <p class="auth-error" id="auth-error" role="alert"></p>
     </div>
@@ -321,7 +331,7 @@
   <script src="reading-badges.js?v=20261005-doc-plan" defer></script>
   <script src="badge-viewer.js?v=20260919-badges-names" defer></script>
   <script src="plan-progress.js?v=20261005-doc-plan" defer></script>
-  <script src="app.js?v=20261025-collapsed-entry" defer></script>
+  <script src="app.js?v=apple-email-signin" defer></script>
 <dialog id="install-help" aria-labelledby="install-title"><h2 id="install-title">Install ChronBible</h2><p>Add your Bible reading plan to your phone or computer for quick access.</p><div id="install-steps"></div><p>An internet connection is required. Sign in to sync your reading progress.</p><form method="dialog"><button class="button button-primary">Got it</button></form></dialog>
   <nav class="chron-bottom-tabs" aria-label="Main app navigation">
     <a href="/chronbible/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2Z"/></svg><span>ChronBible</span></a>
