@@ -21,14 +21,13 @@
   if (!invite || !button || !help || !steps) return;
   const standalone = window.matchMedia('(display-mode: standalone)');
   let installed = false;
-  try { installed = localStorage.getItem(installedKey) === '1'; } catch {}
-  const nativeInstall = 'onbeforeinstallprompt' in window;
+  // A saved flag can survive uninstalling the app. Only trust current evidence.
   const measure = () => {};
   const update = () => {
     const runningInstalled = standalone.matches || navigator.standalone === true;
     if (runningInstalled) { installed = true; rememberInstalled(true); }
-    // Chromium only advertises installation when its native prompt is available.
-    invite.hidden = runningInstalled || installed || (nativeInstall && !installPrompt);
+    // Keep installation help available while the browser prepares its native prompt.
+    invite.hidden = runningInstalled || installed;
     if (invite.hidden && help.open) help.close();
     measure();
   };
@@ -73,17 +72,12 @@
   }
   checkInstalled();
   window.addEventListener('pageshow', checkInstalled);
-  window.addEventListener('storage', event => {
-    if (event.key !== installedKey) return;
-    installed = event.newValue === '1';
-    update();
-  });
   function showHelp() {
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     if (ios) {
       steps.innerHTML = '<ol><li>Open this page in <strong>Safari</strong>.</li><li>Tap <strong>Share</strong> (the square with an upward arrow). It may be inside the page menu.</li><li>Choose <strong>Add to Home Screen</strong>. Scroll down if needed.</li><li>Leave <strong>Open as Web App</strong> on if shown, then tap <strong>Add</strong>.</li></ol>';
     } else if (/Android/.test(navigator.userAgent)) {
-      steps.innerHTML = '<p>Your browser has not made direct installation available yet. Keep this page open; an <strong>Install ChronBible</strong> button will appear here when it is ready.</p><details><summary>Another way to install</summary><p>In Chrome, tap the three-dot menu, choose <strong>Add to Home screen</strong> or <strong>Install app</strong>, then confirm. If already installed, open ChronBible from your home screen.</p></details>';
+      steps.innerHTML = '<p>Add ChronBible to your phone from your browser menu:</p><ol><li>Tap the <strong>three-dot menu</strong> at the top right in Chrome.</li><li>Choose <strong>Add to Home screen</strong> or <strong>Install app</strong>.</li><li>Tap <strong>Install</strong> or <strong>Add</strong> to confirm.</li></ol><p>If you are using another browser and cannot find this option, open this page in Chrome. If already installed, open ChronBible from your home screen.</p>';
     } else {
       steps.innerHTML = '<p>On a Windows laptop or Mac, open this page in <strong>Chrome or Edge</strong> and use the install icon in the address bar or the browser menu. In Safari on a supported Mac, choose <strong>File → Add to Dock</strong>. You can then pin ChronBible to your taskbar or Dock.</p>';
     }
