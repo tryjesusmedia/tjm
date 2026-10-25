@@ -18,3 +18,12 @@ body.chronbible .brand strong { font-size:18px; line-height:24px; }
 body.chronbible .store-label small { font-size:13px !important; line-height:18px; }
 body.chronbible .store-label strong { font-size:17px; line-height:23px; }
 body.chronbible .reading-guidance[open] summary { margin-bottom:12px; }
+
+/* Restore the original decorative title independently of reading text size. */
+body.chronbible .hero-copy #page-title, body.chronbible .hero-copy #page-title * { font-family:"Cormorant Garamond", Georgia, serif !important; }
+body.chronbible .hero-copy #page-title { font-size:clamp(54px,8vw,102px) !important; line-height:.86; font-weight:600; letter-spacing:-.035em; }
+body.chronbible .hero-copy #page-title em { font-size:.72em !important; line-height:1.08; font-weight:500; }
+.text-size-controls { display:flex; align-items:center; gap:12px; margin:16px 0; }
+.text-size-controls button { min-width:44px; min-height:44px; flex:0 0 auto; }
+.text-size-controls span { flex:1; text-align:center; }
+body.chronbible .account-menu { max-width:calc(100vw - 24px); max-height:75dvh; overflow:auto; }

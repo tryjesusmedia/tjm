@@ -191,7 +191,7 @@
     const section = plan.sections.find(s => s.title === reading.section);
     const sectionReadings = plan.readings.filter(r => r.section === reading.section);
     const last = sectionReadings.at(-1).index === reading.index;
-    return `<div class="reading-guide"><details class="reading-guidance"><summary>In this reading</summary>${reading.guidance.map(t => `<p>${escapeHTML(t)}</p>`).join("")}</details>${last ? `<details open><summary>Pause and reflect</summary>${guideBlocks(section.reflection)}</details>` : ""}<p class="guide-note">A few notes in your own notebook can help you remember what you noticed.</p></div>`;
+    return `<div class="reading-guide"><details class="reading-guidance"><summary>In this reading</summary>${reading.guidance.map(t => `<p>${escapeHTML(t)}</p>`).join("")}</details>${last ? `<details open><summary>Pause and reflect</summary>${guideBlocks(section.reflection)}</details>` : ""}</div>`;
   }
 
   function renderGuide() {
@@ -246,7 +246,7 @@
       </article>`;
     }).join("");
 
-    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p><h2 id="journey-heading">The chronological journey</h2></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
+    return `<section aria-label="Chronological journey"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE SEQUENCE</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied reference marked for review</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
   }
 
   function renderReadingBadge(reading) {
@@ -272,7 +272,7 @@
     }).join("");
 
     const tasksComplete = completedTaskCount();
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p><h2 id="progress-heading">Continue the story</h2></div></header>${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Readings complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Passages complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
+    return `<section aria-label="Reading progress"><header class="view-heading"><div><p class="eyebrow">YOUR READING PROGRESS</p></div></header>${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Readings complete</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Passages complete</span></article><article class="stat-card"><strong>${percent}%</strong><span>Journey complete</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progress by section</h3>${rows}</article></div></section>`;
   }
 
   function renderMilestones(rewards) {
