@@ -26,6 +26,14 @@ ui.open();assert.equal(el('email-auth-form').hidden,true);el('apple-sign-in').cl
 ui.authChanged('PASSWORD_RECOVERY',session);assert.equal(el('email-auth-form').hidden,false);assert.equal(el('email-address-field').hidden,true);
 el('auth-password').value='abcdef';el('auth-confirm').value='does-not-match';await submit();assert.match(el('auth-error').textContent,/do not match/);
 el('auth-confirm').value='abcdef';await submit();assert.equal(calls.at(-1).name,'updateUser');assert.match(el('auth-message').textContent,/Password saved/);assert.equal(el('auth-password').value,'');
+for (const [failure, expected] of [
+  [{code:'same_password'}, /already your password/],
+  [{code:'weak_password',message:'Password should be at least 12 characters.'}, /requires at least 12 characters/],
+  [{code:'weak_password',reasons:['pwned']}, /known data breach/],
+  [{code:'reauthentication_needed'}, /sign out, sign in again/],
+]) {
+  apiError=failure;ui.authChanged('PASSWORD_RECOVERY',session);el('auth-password').value='abcdef';el('auth-confirm').value='abcdef';await submit();assert.match(el('auth-error').textContent,expected);assert.equal(ui.busy(),false);
+}
 ui.authChanged('SIGNED_OUT',null);session=null;ui.open();apiError=new Error('private provider error');el('auth-email').value='reader@example.com';el('auth-password').value='wrong';await submit();assert.match(el('auth-error').textContent,/Sign-in failed/);assert.doesNotMatch(el('auth-error').textContent,/private provider/);assert.equal(ui.busy(),false);
 await window.happyDOM.abort();
 console.log('ChronBible forms passed: email sign-in, confirmation, reset, Apple OAuth, account linking, password validation, credential clearing and safe errors.');
