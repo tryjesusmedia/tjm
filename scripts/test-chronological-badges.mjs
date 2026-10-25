@@ -21,7 +21,7 @@ class Element {
 const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
 const document={getElementById:get,body:get('body'),documentElement:get('html'),querySelectorAll:()=>[],querySelector:()=>get('replacement-trigger'),addEventListener(){}};
 const window={TJM_CHRONBIBLE_CONFIG:{},matchMedia:()=>({matches:reducedMotion}),addEventListener(){},location:{hash:''},scrollTo(){}};
-const context=vm.createContext({window,document,console,URL,Map,Set,Date,setTimeout:(fn)=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id),clearInterval(){},requestAnimationFrame:fn=>fn()});
+const context=vm.createContext({window,document,console,URL,URLSearchParams,Map,Set,Date,setTimeout:(fn)=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id),clearInterval(){},requestAnimationFrame:fn=>fn()});
 for(const filename of ['reading-badges.js','badge-viewer.js'])vm.runInContext(await readFile(new URL(filename,base),'utf8'),context);
 const art=window.TJMReadingBadges;
 const viewer=window.TJMReadingBadgeViewer;
