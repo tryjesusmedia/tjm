@@ -165,3 +165,22 @@
 @media (prefers-reduced-motion: reduce) {
   .chronbible .store-badge { transition: none; }
 }
+
+/* Sign-in options share the existing account and reading progress. */
+.auth-card { margin-block: auto; }
+.auth-card > img { width: 64px; height: 64px; }
+.auth-card > p:not(.eyebrow), .auth-card label, .auth-card input, .auth-card button { font-size: 17px; line-height: 1.5; }
+.auth-card .apple-button { display: block; width: 100%; padding: 0; border: 0; background: #000; border-radius: 12px; margin-top: 18px; cursor: pointer; }
+.auth-card .apple-button img { display: block; max-width: 100%; width: 100%; height: 56px; object-fit: contain; }
+#email-auth-form { text-align: left; margin-top: 24px; }
+#email-auth-form h3 { font-size: 22px; }
+#email-auth-form label { display: block; margin: 12px 0 6px; }
+#email-auth-form input { display: block; width: 100%; box-sizing: border-box; min-height: 52px; padding: 12px; border: 1px solid #a89a87; border-radius: 10px; background: #fff9ee; color: #171418; }
+#email-auth-submit { width: 100%; margin-top: 18px; min-height: 54px; }
+.email-auth-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 18px; }
+.email-auth-actions button { background: transparent; border: 0; color: #eebd4a; text-decoration: underline; cursor: pointer; min-height: 44px; }
+#auth-message { color: #a8edbc; }
+.auth-card :focus-visible { outline: 3px solid #eebd4a; outline-offset: 4px; }
+.auth-card [disabled] { opacity: .55; cursor: wait; }
+.auth-card [hidden] { display: none !important; }
+@media (max-width: 380px) { .auth-card { padding: 24px 18px; } .auth-card h2 { font-size: 32px; } }

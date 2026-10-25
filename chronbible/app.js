@@ -10,7 +10,6 @@
   const loading = document.getElementById("loading-state");
   const authGate = document.getElementById("auth-gate");
   const authError = document.getElementById("auth-error");
-  const signInButton = document.getElementById("google-sign-in");
   const guestButton = document.getElementById("continue-without-sign-in");
   const headerSignIn = document.getElementById("header-sign-in");
   const profileButton = document.getElementById("profile-button");
@@ -19,6 +18,7 @@
   const syncStatus = document.getElementById("sync-status");
 
   let db = null;
+  let authUI = null;
   let plan = null;
   let session = null;
   let guestBrowsing = false;
@@ -157,6 +157,7 @@
   function showSignIn() {
     authError.textContent = "";
     authGate.hidden = false;
+    authUI?.open(session);
   }
 
   function showView(name, focusMain = false) {
@@ -628,7 +629,7 @@
     const avatar = avatarUrl();
     document.getElementById("profile-name").textContent = name.split(" ")[0] || "Member";
     document.getElementById("profile-initial").textContent = initials(name);
-    document.getElementById("account-email").textContent = session.user.email || "Signed in with Google";
+    document.getElementById("account-email").textContent = session.user.email || "Try Jesus member";
     const image = document.getElementById("profile-avatar");
     if (avatar) {
       image.src = avatar;
@@ -705,21 +706,8 @@
     } catch (error) {
       console.error(error);
       setSync("Sync unavailable", "error");
-      authError.textContent = "Your Google sign-in worked, but your progress could not be loaded. Please try again or contact Try Jesus Media.";
+      authError.textContent = "Your sign-in worked, but your progress could not be loaded. Please try again or contact Try Jesus Media.";
       authGate.hidden = false;
-    }
-  }
-
-  async function signInGoogle() {
-    authError.textContent = "";
-    signInButton.disabled = true;
-    const { error } = await db.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: CONFIG.siteUrl },
-    });
-    if (error) {
-      authError.textContent = error.message;
-      signInButton.disabled = false;
     }
   }
 
@@ -793,8 +781,11 @@
     guestBrowsing = false;
     await db.auth.signOut({ scope: "local" });
   });
-  signInButton.addEventListener("click", signInGoogle);
+  document.getElementById("manage-sign-in").addEventListener("click", () => { accountMenu.hidden = true; showSignIn(); });
   guestButton.addEventListener("click", () => {
+    if (authUI?.busy()) return;
+    authUI?.close();
+    if (session) { authGate.hidden = true; return; }
     guestBrowsing = true;
     authError.textContent = "";
     authGate.hidden = true;
@@ -838,13 +829,18 @@
       db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, {
         auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" },
       });
+      authUI = window.TJMChronBibleAuth.create(db, CONFIG.siteUrl, () => session);
+      db.auth.onAuthStateChange((event, nextSession) => {
+        // Keep Supabase calls outside its synchronous auth callback/lock.
+        setTimeout(async () => {
+          if (nextSession?.access_token !== session?.access_token) await applySession(nextSession);
+          authUI.authChanged(event, nextSession);
+        }, 0);
+      });
       const { data, error } = await db.auth.getSession();
       if (error) throw error;
       await applySession(data.session);
-      db.auth.onAuthStateChange((_event, nextSession) => {
-        if (nextSession?.access_token === session?.access_token) return;
-        setTimeout(() => applySession(nextSession), 0);
-      });
+      authUI.resume(data.session);
     } catch (error) {
       console.error(error);
       loading.innerHTML = `<strong>We could not prepare the journey.</strong><p>${escapeHTML(error.message)}</p><button class="button button-primary" type="button" onclick="location.reload()">Try again</button>`;
