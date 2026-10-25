@@ -1,0 +1,11 @@
+/* Members header matches the ChronBible title's type scale and palette. */
+body.welcome-readable .members-page-title { min-width:0; font-family:"Cormorant Garamond",Georgia,serif; font-size:clamp(32px,7.7vw,52px); line-height:1.08; font-weight:600; letter-spacing:-.035em; text-decoration:none; color:#51453c; white-space:nowrap; }
+body.welcome-readable .members-page-title em { font-family:inherit; font-size:1em; font-weight:500; color:#80633f; }
+body.welcome-readable .members-page-title span { font-family:inherit; font-size:.64em; font-weight:600; color:#51453c; }
+body.welcome-readable .site-header .header-inner { background:#e9dfce; width:100%; padding-inline:max(18px,calc((100% - 1240px)/2)); }
+body.welcome-readable .site-header .menu-toggle span { background:#80633f; }
+body.welcome-readable .site-footer .reading-journey-link { font-size:16px !important; font-weight:400; color:#a99caa; text-decoration:none; margin-top:18px; }
+body.welcome-readable .site-footer .reading-journey-link:hover { text-decoration:underline; color:#f3e8d0; }
+body.welcome-readable .site-footer { padding-bottom:calc(36px + env(safe-area-inset-bottom,0px)); }
+body.welcome-readable .footer-legal a { overflow-wrap:anywhere; }
+body.welcome-readable.credit-visible .pk-launcher { visibility:hidden; pointer-events:none; }

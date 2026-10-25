@@ -25,7 +25,7 @@
   let completed = new Set();
   let currentIndex = 0;
   let lastIndex = 0;
-  let activeView = "readings";
+  let activeView = new URLSearchParams(window.location.search).get("view") === "journey" ? "journey" : "readings";
   let activeSection = "";
   let refreshTimer = null;
   let journeyAlias = "";
@@ -306,6 +306,7 @@
 
   function render() {
     if (!plan) return;
+    document.querySelectorAll("[data-view]").forEach(button => button.classList.toggle("active", button.dataset.view === activeView));
     const selectedBadge = window.TJMReadingBadgeViewer?.selectedId();
     if (selectedBadge) {
       const reading = plan.readings.find(item => item.id === selectedBadge);
