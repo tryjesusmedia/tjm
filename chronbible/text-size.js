@@ -8,7 +8,7 @@ function apply(){
  for(const [el,old] of originals){if(!el.isConnected){originals.delete(el);continue;}el.style.setProperty('font-size',old.size,old.priority);el.style.setProperty('line-height',old.line,old.linePriority);}
  const values=[];
  document.body.querySelectorAll('*').forEach(el=>{
- if(el.closest('#page-title, #readings-heading, .scripture-card .card-kicker, .scripture-card > h3')||['SCRIPT','STYLE','SVG','PATH'].includes(el.tagName)||el.closest('svg'))return;
+ if(el.closest('#page-title, h2, h3, .journey-reading strong, .book-progress-row header, .view-heading .eyebrow, .journey-nav, .scripture-card .card-kicker')||['SCRIPT','STYLE','SVG','PATH'].includes(el.tagName)||el.closest('svg'))return;
  if(!originals.has(el))originals.set(el,{size:el.style.getPropertyValue('font-size'),priority:el.style.getPropertyPriority('font-size'),line:el.style.getPropertyValue('line-height'),linePriority:el.style.getPropertyPriority('line-height')});
  const s=getComputedStyle(el);values.push([el,parseFloat(s.fontSize),parseFloat(s.lineHeight)]);
  });

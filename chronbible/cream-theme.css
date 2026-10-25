@@ -1,0 +1,43 @@
+/* ChronBible-only soft cream palette. Keep text dark and surfaces gently shaded. */
+body.chronbible {
+ --ink:#433b35; --ink-soft:#5d534a; --plum:#4e423b; --plum-2:#625249; --plum-3:#726052;
+ --gold:#92764d; --gold-light:#e3d4b8; --ivory:#efe6d7; --paper:#f2ede3; --paper-2:#e8dfd0; --white:#f8f3e9;
+ --muted:#786c60; --green:#8b947b; --line:#cfc1ac; --line-dark:#d6cbbd;
+ --shadow:0 12px 32px rgba(82,67,49,.10);
+ background:var(--paper); color:var(--ink);
+}
+body.chronbible .site-header, body.chronbible .chron-bottom-brand { background:#e9dfce; color:var(--ink); border-color:var(--line); }
+body.chronbible #page-title, body.chronbible #page-title span { color:#51453c; }
+body.chronbible #page-title em, body.chronbible #profile-button, body.chronbible .brand small { color:#80633f; }
+body.chronbible .store-badge { background:linear-gradient(145deg,#f5eddf,#e5d8c1); color:#504135; border-color:#bba887; box-shadow:0 3px 10px #5144350d; }
+body.chronbible .store-badge:hover { color:#504135; background:#e2d4bd; }
+body.chronbible .store-badge-book .store-icon { color:#80633f; }
+body.chronbible .sync-status { color:#665b4f; }
+body.chronbible .journey-nav { background:#f2ede3; border-color:var(--line-dark); }
+body.chronbible .journey-nav button, body.chronbible .journey-nav button span { color:#6b6055; }
+body.chronbible .journey-nav button.active, body.chronbible .journey-nav button:hover { background:#e5d9c4; color:#4e4237; border-bottom-color:#ad9470; }
+body.chronbible .journey-nav button.active span { color:#76603e; }
+body.chronbible .book-section, body.chronbible .progress-panel { background:#f8f3e9; }
+body.chronbible .book-badge { background:#ded0b8; color:#5c4a32; }
+body.chronbible .journey-reading.done .reading-check { background:#d2d7c6; border-color:#a4ac93; color:#46543a; }
+body.chronbible .book-summary p, body.chronbible .book-progress small,
+body.chronbible .journey-reading small, body.chronbible .reading-number small { color:#706457; }
+body.chronbible .scripture-card { background:linear-gradient(145deg,#ede3d3,#e3d7c4); color:#433b35; }
+body.chronbible .scripture-card h3, body.chronbible .scripture-card .card-kicker span { color:#655138; }
+body.chronbible .source-order { opacity:1; border-color:#bba98e; }
+body.chronbible .button-primary { background:#d9c5a2; color:#473b2c; box-shadow:none; }
+body.chronbible .button-primary:hover { background:#cfb990; }
+body.chronbible .reading-guide details, body.chronbible .guide-sections details { background:#f5efe4; border-color:#d2c4ae; color:#433b35; }
+body.chronbible .progress-track i { background:#a68e68; }
+body.chronbible .reward-stat, body.chronbible .leaderboard-row.is-current { background:#e9dfcc; border-color:#c5b596; }
+body.chronbible .chron-bottom-tabs { background:#e7ddcc; border-color:#c6b694; box-shadow:0 -4px 18px #51443512; }
+body.chronbible .chron-bottom-tabs a { color:#5c5044; }
+body.chronbible .chron-bottom-tabs a[aria-current="page"], body.chronbible .chron-bottom-tabs a:hover { background:#d9c9ad; color:#51412c; }
+body.chronbible .account-menu { background:#f1e8da; color:#433b35; border-color:#c8b99f; }
+body.chronbible #account-email { color:#605346; }
+body.chronbible .account-menu button { color:#5f4a2d; border-color:#bead90; }
+body.chronbible .auth-card { background:#eee4d4; color:#433b35; box-shadow:var(--shadow); }
+body.chronbible .auth-card h2 { color:#51453c; }
+body.chronbible .auth-card > p:not(.eyebrow), body.chronbible .guest-button { color:#66594b; }
+body.chronbible .auth-error { color:#954b40 !important; }
+body.chronbible :is(a,button,input,textarea,select,summary):focus-visible { outline-color:#92764d; }

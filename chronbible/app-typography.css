@@ -56,3 +56,10 @@ body.chronbible .scripture-card .card-kicker,
 body.chronbible .scripture-card .card-kicker * { font-size:15px !important; line-height:22px !important; }
 body.chronbible .scripture-card > h3 { font-size:23px !important; line-height:30px !important; }
 body.chronbible #readings-heading { font-size:19px !important; line-height:25px !important; }
+
+/* Stable navigation and reading/section headings at every text-size setting. */
+body.chronbible .journey-nav button, body.chronbible .journey-nav button span { font-size:16px !important; line-height:24px !important; }
+body.chronbible .journey-reading strong { font-size:19px !important; line-height:25px !important; }
+body.chronbible .book-summary h3 { font-size:23px !important; line-height:30px !important; }
+body.chronbible .view-heading .eyebrow { font-size:15px !important; line-height:22px !important; }
+body.chronbible .book-progress-row header { font-size:16px !important; line-height:23px !important; }
