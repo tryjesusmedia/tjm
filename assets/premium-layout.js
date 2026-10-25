@@ -39,10 +39,6 @@
       q('#watch',main)?.closest('.premium-fold')?.before(resources);
       const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="#member-resources">More resources</a>';
     }
-    if(document.body.classList.contains('chronbible')) {
-      const book=q('.store-badge-book'),menu=q('#account-menu');
-      if(book&&menu){menu.append(book);}
-    }
     if(document.body.dataset.page==='sales') {
       fold(q('#curriculum'),'Explore the six lessons');
       fold(q('.faq'),'Frequently asked questions');
