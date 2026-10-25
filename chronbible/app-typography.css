@@ -1,0 +1,20 @@
+/* Native Journey app typography. No color or background overrides. */
+body.chronbible { --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; --serif: var(--sans); font-family:var(--sans); font-size:17px; line-height:27px; }
+body.chronbible *, body.chronbible *::before, body.chronbible *::after { font-family:var(--sans) !important; }
+body.chronbible .hero-copy h1 { font-size:32px !important; line-height:39px; font-weight:800; letter-spacing:normal; }
+body.chronbible .view-heading h2, body.chronbible .auth-card h2, body.chronbible #install-title { font-size:28px !important; line-height:35px; font-weight:900; letter-spacing:normal; }
+body.chronbible #readings-heading { font-size:19px !important; line-height:25px; font-weight:900; }
+body.chronbible .book-summary h3, body.chronbible .reading-card h3 { font-size:23px !important; line-height:30px; font-weight:900; }
+body.chronbible p, body.chronbible .reading-guide p, body.chronbible .hero-copy p { font-size:17px !important; line-height:27px !important; }
+body.chronbible summary { font-size:18px !important; line-height:26px; font-weight:700; min-height:44px; cursor:pointer; }
+body.chronbible .journey-reading strong { font-size:19px !important; line-height:25px; font-weight:900; }
+body.chronbible small, body.chronbible .eyebrow, body.chronbible .card-kicker, body.chronbible .sync-status { font-size:15px !important; line-height:22px; }
+body.chronbible button, body.chronbible input, body.chronbible select, body.chronbible textarea, body.chronbible .button { font-size:16px; line-height:24px; }
+body.chronbible .source-task { font-size:17px !important; line-height:27px; }
+body.chronbible .chron-bottom-tabs a { font-size:15px; line-height:20px; }
+body.chronbible .chron-bottom-tabs a span { overflow-wrap:normal; }
+body.chronbible .reading-number strong { font-size:19px; line-height:25px; }
+body.chronbible .brand strong { font-size:18px; line-height:24px; }
+body.chronbible .store-label small { font-size:13px !important; line-height:18px; }
+body.chronbible .store-label strong { font-size:17px; line-height:23px; }
+body.chronbible .reading-guidance[open] summary { margin-bottom:12px; }

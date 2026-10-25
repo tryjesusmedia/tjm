@@ -191,7 +191,7 @@
     const section = plan.sections.find(s => s.title === reading.section);
     const sectionReadings = plan.readings.filter(r => r.section === reading.section);
     const last = sectionReadings.at(-1).index === reading.index;
-    return `<div class="reading-guide"><details ${sectionReadings[0].index === reading.index ? "open" : ""}><summary>About this section</summary>${guideBlocks(section.introduction)}</details>${reading.guidance.map(t => `<p>${escapeHTML(t)}</p>`).join("")}${last ? `<details open><summary>Pause and reflect</summary>${guideBlocks(section.reflection)}</details>` : ""}<p class="guide-note">A few notes in your own notebook can help you remember what you noticed.</p></div>`;
+    return `<div class="reading-guide"><details class="reading-guidance"><summary>In this reading</summary>${reading.guidance.map(t => `<p>${escapeHTML(t)}</p>`).join("")}</details>${last ? `<details open><summary>Pause and reflect</summary>${guideBlocks(section.reflection)}</details>` : ""}<p class="guide-note">A few notes in your own notebook can help you remember what you noticed.</p></div>`;
   }
 
   function renderGuide() {
