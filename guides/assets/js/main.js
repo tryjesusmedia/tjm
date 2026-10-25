@@ -28,6 +28,23 @@
     });
   });
 
+  // Target the form wrapper, never the introductory copy or provider-owned fields.
+  const formShell = document.getElementById('request-form');
+  const stickyRequest = $('.mobile-sticky');
+  if (formShell && stickyRequest && 'IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      stickyRequest.hidden = entries[0].isIntersecting;
+    }, { threshold: 0 }).observe(formShell);
+  }
+  function redirectOldRequestAnchor() {
+    if (location.hash !== '#request' || !formShell) return;
+    history.replaceState(null, '', '#request-form');
+    formShell.scrollIntoView({ block: 'start', behavior: 'auto' });
+  }
+  window.addEventListener('hashchange', redirectOldRequestAnchor);
+  if (document.readyState === 'complete') redirectOldRequestAnchor();
+  else window.addEventListener('load', redirectOldRequestAnchor, { once: true });
+
   const loadOmnisend = () => {
     const config = window.TJM_CONFIG || {};
     const shell = $('[data-omnisend-shell]');

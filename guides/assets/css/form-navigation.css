@@ -1,0 +1,9 @@
+/* Page-owned navigation only. Omnisend controls keep their own styling. */
+#request-form { scroll-margin-top:16px; align-self:start; opacity:1; transform:none; transition:none; }
+html body .mobile-sticky {
+  width:auto!important; max-width:none!important; box-sizing:border-box!important;
+  left:max(12px,env(safe-area-inset-left,0px)); right:max(12px,env(safe-area-inset-right,0px));
+  bottom:calc(12px + env(safe-area-inset-bottom,0px)); margin:0!important;
+  white-space:normal; text-align:center; gap:8px;
+}
+html body .mobile-sticky[hidden] { display:none!important; }
