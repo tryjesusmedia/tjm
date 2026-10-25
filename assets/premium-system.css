@@ -118,3 +118,17 @@ html body.premium-system.guide-reader-page:not(:where([id^="omnisend-"], [id^="o
 }
 @media print {.premium-fold > :not(summary):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:block!important}.premium-socials:not(:where([id^="omnisend-"], [id^="omnisend-"] *)),
 .premium-member-start:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {display:none!important}}
+
+/* Keep the entire poster visible on wide screens; mobile stays edge to edge. */
+@media (min-width: 900px) {
+  html body.premium-system[data-page="sales"] .bd-poster { padding:24px 0; }
+  html body.premium-system[data-page="sales"] .bd-poster img {
+    display:block;
+    width:auto;
+    height:auto;
+    max-width:100%;
+    max-height:calc(100svh - 180px);
+    margin-inline:auto;
+    object-fit:contain;
+  }
+}
