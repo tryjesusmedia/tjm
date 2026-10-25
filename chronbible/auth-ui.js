@@ -89,7 +89,24 @@
             const url = new URL(location.href); url.searchParams.delete('next'); history.replaceState(null, '', url.pathname + url.search);
             message.textContent = 'Password saved. Use your account email and this password to sign in. Your progress stays in this account.';
           } else gate.hidden = true;
-        } catch { error.textContent = mode === 'signin' ? 'Sign-in failed. Check your email and password, confirm your email, or choose Forgot password.' : 'We could not complete this request. Try again, or sign in again before changing your password.'; }
+        } catch (failure) {
+          const passwordErrors = {
+            same_password: 'This is already your password. Choose a different password, or sign out and use this password to sign in.',
+            reauthentication_needed: 'Please sign out, sign in again with Apple or Google, then return here to save your password.',
+            reauthentication_not_valid: 'Your password-change verification expired. Sign in again before trying again.',
+            session_not_found: 'Your sign-in session expired. Please sign in again before saving your password.',
+            bad_jwt: 'Your sign-in session expired. Please sign in again before saving your password.',
+            over_request_rate_limit: 'Please wait a few minutes before trying to save your password again.',
+            email_provider_disabled: 'Email sign-in is currently unavailable. Please use Apple or Google.',
+          };
+          if ((mode === 'signup' || mode === 'password') && failure?.code === 'weak_password') {
+            const minimum = /at least (\d{1,3}) characters/i.exec(failure.message || '')?.[1];
+            error.textContent = minimum ? `Your account currently requires at least ${minimum} characters.`
+              : failure.reasons?.includes('pwned') ? 'This password appeared in a known data breach. Choose a different password.'
+              : 'This password does not meet the account password requirements. Try a different password with letters, numbers and a symbol.';
+          } else error.textContent = mode === 'password' && passwordErrors[failure?.code]
+            || (mode === 'signin' ? 'Sign-in failed. Check your email and password, confirm your email, or choose Forgot password.' : 'We could not complete this request. Try again, or sign in again before changing your password.');
+        }
         finally { setBusy(false); }
       });
       // Escape dismisses the optional dialog; never changes account or progress.
