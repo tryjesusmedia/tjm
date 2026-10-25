@@ -20,7 +20,7 @@ function styleSalesPage(html) {
  .replace('style="background:#f0ebe3"','style="background:#d8c9b0"')
  .replace(/<footer class="footer">[\s\S]*?<\/footer>/,membersFooter)
  .replace('</body>',"<script defer src=\"/bibledecoded/assets/members-menu.js?v=3\"></script>"+'</body>')
- .replace('</head>','<link rel="stylesheet" href="/assets/premium-system.css?v=1"><script defer src="/assets/premium-layout.js?v=1"></script>'+'</head>')
+ .replace('</head>','<link rel="stylesheet" href="/assets/premium-system.css?v=2"><script defer src="/assets/premium-layout.js?v=2"></script>'+'</head>')
  .replace('<body class="tjm-simple"','<body class="tjm-simple premium-system"');
 }
 

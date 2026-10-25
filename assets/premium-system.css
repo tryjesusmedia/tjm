@@ -60,7 +60,13 @@ html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-ex
 .premium-home .hero-copy .trust-row,.premium-home .hero-copy .eyebrow,.premium-home .hero-copy .button-row {display:none!important}
 .premium-home .hero-form-panel {padding:28px!important}
 .premium-home .hero-form-panel .form-intro strong {font-family:Montserrat,Arial,sans-serif;font-size:22px;line-height:1.4}
-.premium-home .hero-grid {gap:32px!important}
+.premium-home .hero-grid {display:block!important;max-width:800px;gap:32px!important}
+.premium-home .hero-copy {max-width:100%;margin-bottom:28px}
+.premium-home .hero-copy h1 {max-width:24ch}
+.premium-home .premium-fold.premium-signup {width:100%;margin:0;background:#241725;color:#f3e8d0}
+.premium-home .premium-signup > summary {background:#eebd4a;color:#311e33;text-align:center;border-radius:12px}
+.premium-home .premium-signup > summary::marker {color:#311e33}
+.premium-home #guide-form [class$="-opacity-layer"],.premium-home #guide-form input:not([type="checkbox"]) {background:#eadfcd!important}
 .premium-home {--cream:#e4d8c4;background:#e4d8c4}
 .premium-home .premium-fold {margin-inline:auto;width:min(1180px,calc(100% - 40px));background:#eadfcd;color:#311e33}
 .premium-home :is(.section-light,.membership-perks) {background:#e4d8c4}

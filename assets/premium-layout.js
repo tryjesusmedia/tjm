@@ -27,6 +27,7 @@
       const title=q('#heroTitle'),lead=q('.hero-lede');
       if(title)title.textContent='Read the Bible, one step at a time.';
       if(lead)lead.textContent='Get free Bible guides and a chronological reading plan. Start at your own pace.';
+      fold(q('.hero-form-panel'),'Start my free journey','premium-signup');
       fold(q('#bible-decoded'),'Explore the optional Bible Decoded program');
       fold(q('#membership-perks'),'More included with your free membership');
     }
