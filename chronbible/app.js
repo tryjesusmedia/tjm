@@ -27,6 +27,7 @@
   let lastIndex = 0;
   let activeView = new URLSearchParams(window.location.search).get("view") === "journey" ? "journey" : "readings";
   let activeSection = "";
+  let journeyReturn = null;
   let refreshTimer = null;
   let journeyAlias = "";
   let journeyFirstName = "";
@@ -161,10 +162,22 @@
 
   function showView(name, focusMain = false) {
     window.TJMReadingBadgeViewer?.close(true);
+    const returningToJourney = name === "journey" && activeView === "readings";
+    if (returningToJourney) activeSection = journeyReturn?.section || currentReading().section;
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
     if (name === "rewards" && session) void refreshJourneyFromVisit();
+    if (returningToJourney) {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const index = journeyReturn?.index ?? currentIndex;
+        const item = root.querySelector(`[data-reading-index="${index}"]`);
+        item?.focus({ preventScroll: true });
+        if (journeyReturn) window.scrollTo({ top: journeyReturn.scrollY, behavior: "instant" });
+        else item?.scrollIntoView({ block: "center", behavior: "smooth" });
+      }));
+      return;
+    }
     if (focusMain) {
       document.getElementById("journey-main").focus({ preventScroll: true });
       const hero = document.querySelector(".journey-hero");
@@ -203,6 +216,7 @@
     const percent = percentComplete();
     return `
       <section aria-labelledby="readings-heading">
+        <button class="reading-back" type="button" data-view-shortcut="journey" aria-label="Back to Journey"><span aria-hidden="true">←</span> Back to Journey</button>
         <header class="view-heading">
           <div>
             <p class="eyebrow">${escapeHTML(reading.section)} · READING ${reading.number} OF ${plan.readings.length}</p>
@@ -548,6 +562,7 @@
 
   async function goToReading(index, view = "readings") {
     const nextIndex = normalizeIndex(index);
+    if (activeView === "journey") journeyReturn = { section: activeSection, index: nextIndex, scrollY: window.scrollY };
     const previousCompleted = new Set(completed);
     const previousLastIndex = lastIndex;
     currentIndex = nextIndex;
@@ -666,6 +681,7 @@
     const previousUserId = session?.user?.id || "";
     const nextUserId = nextSession?.user?.id || "";
     if (previousUserId !== nextUserId) {
+      journeyReturn = null;
       window.TJMReadingBadgeViewer?.close(true);
       sessionVersion += 1;
       clearInterval(refreshTimer);
