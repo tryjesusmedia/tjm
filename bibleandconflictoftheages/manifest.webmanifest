@@ -10,14 +10,16 @@
   "theme_color": "#010c18",
   "icons": [
     {
-      "src": "/bibleandconflictoftheages/icons/lion-lamb-192.png",
+      "src": "/bibleandconflictoftheages/icons/lion-lamb-192.png?v=adaptive-2",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/bibleandconflictoftheages/icons/lion-lamb-512.png",
+      "src": "/bibleandconflictoftheages/icons/lion-lamb-512.png?v=adaptive-2",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
