@@ -66,3 +66,6 @@ body.chronbible .book-progress-row header { font-size:16px !important; line-heig
 
 body.chronbible .reading-back { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:8px 12px; margin:0 0 18px; border:1px solid var(--line-dark); border-radius:10px; background:var(--white); color:var(--plum); font-size:16px; line-height:24px; font-weight:700; cursor:pointer; }
 body.chronbible .reading-back:hover { background:var(--paper-2); }
+
+/* Consistent action labels; fixed reading headings and navigation retain their own scale. */
+body.chronbible :is(.button,.reading-back,.account-menu button,.header-sign-in,.google-button,.guest-button,.store-label strong) { font-family:var(--sans) !important; font-size:20px !important; font-weight:700; line-height:1.45; letter-spacing:0; text-transform:none; }

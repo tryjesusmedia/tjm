@@ -622,7 +622,7 @@
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
     if (!preservePlace) {
       currentIndex = lastIndex;
-      activeSection = currentReading().section;
+      activeSection = activeView === "journey" ? "" : currentReading().section;
     }
     setSync("Progress saved", "synced");
     return true;
@@ -688,7 +688,7 @@
       completed = new Set();
       currentIndex = 0;
       lastIndex = 0;
-      activeSection = plan.readings[0].section;
+      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
       resetRewardState();
     }
     session = nextSession;
@@ -698,7 +698,7 @@
       completed = new Set();
       currentIndex = 0;
       lastIndex = 0;
-      activeSection = plan.readings[0].section;
+      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
       clearInterval(refreshTimer);
       authGate.hidden = guestBrowsing;
       headerSignIn.hidden = !guestBrowsing;
@@ -849,7 +849,7 @@
       const chapterIndices = plan.readings.flatMap((reading) => reading.bibleTasks.map((task) => task.progressIndex));
       const passagesAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
       if (plan.planId !== CONFIG.planId || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.verseCount !== 31102 || !indicesAreValid || !passagesAreValid) throw new Error("Reading plan validation failed.");
-      activeSection = plan.readings[0].section;
+      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
       loading.hidden = true;
       root.hidden = false;
       render();

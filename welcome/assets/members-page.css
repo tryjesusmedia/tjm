@@ -19,3 +19,9 @@ body.welcome-readable .membership-perks { background:#e4d8c4; }
 body.welcome-readable .membership-perk { background:#eadfcd; }
 body.welcome-readable #chronPromoTitle span { font-size:.64em; font-style:normal; color:var(--plum); }
 body.welcome-readable #chronPromoTitle em { color:var(--plum-3,#6f4868); }
+
+/* Decorative content uses Georgia; header and logo wordmarks retain their fonts. */
+body.welcome-readable main { --serif:Georgia,serif; }
+body.welcome-readable main :is(h1,h2,h3) { font-family:Georgia,serif; }
+body.welcome-readable :is(button,.button,.live-zoom-link,.channel-link,.social-link,.text-link) { font-family:Montserrat,Arial,sans-serif !important; font-size:20px !important; font-weight:700; line-height:1.45; letter-spacing:0 !important; text-transform:none !important; }
+body.welcome-readable :is(.button,.live-zoom-link,.channel-link,.social-link,.text-link) :is(span,b,strong) { font-family:inherit !important; font-size:inherit !important; letter-spacing:0; }
