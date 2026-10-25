@@ -93,49 +93,14 @@
   <meta property="og:site_name" content="Try Jesus Media">
 
   <style>
-    /* A dedicated row in the existing sticky header reserves its own space. */
-    .app-download-row {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 8px 16px 10px;
-      border-top: 1px solid rgba(238,189,74,.2);
-      background: #311e33;
-    }
-    .app-download-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 10px 26px;
-      border: 1px solid #f7d983;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #f7d983, #eebd4a);
-      color: #211323;
-      font: 700 17px/1.4 Montserrat, Arial, sans-serif;
-      text-decoration: none;
-      text-align: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,.18);
-    }
-    .app-download-link:hover { background: #f7d983; }
-    .app-download-link:focus-visible { outline: 3px solid #fffdf9; outline-offset: 3px; }
-    html { scroll-padding-top: 190px; }
-    @media (max-width: 860px) {
-      .site-header .site-nav { top: 100%; max-height: calc(100dvh - 170px); overflow-y: auto; }
-    }
-    @media (max-width: 600px) {
-      .app-download-row { flex-direction: column; align-items: stretch; }
-      html { scroll-padding-top: 250px; }
-      .site-header .site-nav { max-height: calc(100dvh - 250px); }
-    }
-    @media print { .app-download-row { display: none; } }
+    html { scroll-padding-top:110px; }
+    @media(max-width:860px) { .site-header .site-nav { top:100%; max-height:calc(100dvh - 100px); overflow-y:auto; } }
   </style>
 <link rel="stylesheet" href="/assets/membership-offers.css?v=20260914-2" />
 <link rel="stylesheet" href="/welcome/assets/readable-welcome.css?v=20260914-3" />
 <script defer src="/assets/perk-carousels.js?v=20260914-1"></script>
 <link rel="stylesheet" href="/assets/premium-simplicity.css?v=20261001-1" />
-<link rel="stylesheet" href="/welcome/assets/members-page.css?v=1">
+<link rel="stylesheet" href="/welcome/assets/members-page.css?v=2">
 <script defer src="/welcome/assets/members-page.js?v=1"></script>
 </head>
 
@@ -191,16 +156,6 @@
   </div>
 
 
-  <div class="app-download-row">
-    <a class="app-download-link"
-       href="https://play.google.com/store/apps/details?id=com.tryjesusmedia.journey"
-       target="_blank" rel="noopener noreferrer"
-       aria-label="Download the app: Try Jesus: The Journey on Google Play">Get it on Google Play</a>
-    <a class="app-download-link"
-       href="https://apps.apple.com/app/id6818312685"
-       target="_blank" rel="noopener noreferrer"
-       aria-label="Download Try Jesus: The Journey on the App Store">Download on the App Store</a>
-  </div>
 </header>
 
 
@@ -219,7 +174,7 @@
             READ THE BIBLE AS ONE UNFOLDING STORY
           </p>
 
-          <h1 id="chronPromoTitle">Chronological<br /><em>Bible</em></h1>
+          <h1 id="chronPromoTitle"><span>The</span> <em>ChronBible</em> <span>Guide</span></h1>
 
           <p>See how the Bible fits together with guided readings. Read one chapter at a time, save your place, and move at your own pace.</p>
 
