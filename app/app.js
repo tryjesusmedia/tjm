@@ -10,7 +10,6 @@
   const sidebar = document.getElementById("sidebar");
   const menuButton = document.getElementById("menu-button");
   const drawerBackdrop = document.getElementById("drawer-backdrop");
-  const installHeaderButton = document.getElementById("install-header-button");
 
   let deferredInstallPrompt = null;
   let state = loadState();
@@ -99,7 +98,6 @@
     const initial = (state.name || "Guest").trim().charAt(0).toUpperCase() || "G";
     const initialEl = document.getElementById("profile-initial");
     if (initialEl) initialEl.textContent = initial;
-    installHeaderButton.hidden = !state.onboarded || state.installed;
   }
 
   function showToast(message, type = "success") {
@@ -134,62 +132,7 @@
     return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   }
 
-  function installCardHTML(light = false, locationLabel = "welcome") {
-    if (state.installed) return "";
-    return `
-      <div class="install-card ${light ? "light" : ""}" data-install-location="${locationLabel}">
-        <img src="assets/icon-192.png" alt="Try Jesus app icon" width="58" height="58">
-        <div>
-          <h3>Take Your Journey With You</h3>
-          <p>Install the free app to save your progress, keep private notes, and return to your next Bible guide with one tap.</p>
-        </div>
-        <button class="button ${light ? "button-dark" : "button-primary"} button-small" type="button" data-install-app>Install App</button>
-      </div>`;
-  }
-
-  async function promptInstall() {
-    if (state.installed) {
-      showToast("The app is already installed.");
-      return;
-    }
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      const choice = await deferredInstallPrompt.userChoice;
-      if (choice.outcome === "accepted") {
-        state.installed = true;
-        state.installDismissed = false;
-        saveState();
-        showToast("Try Jesus has been added to your device.");
-      }
-      deferredInstallPrompt = null;
-      return;
-    }
-    if (isIOS()) {
-      openModal(`
-        <button class="modal-close" aria-label="Close">×</button>
-        <img class="modal-logo" src="assets/icon-192.png" alt="">
-        <h2>Install on iPhone or iPad</h2>
-        <p>Apple places the install command in Safari’s Share menu.</p>
-        <ol class="ios-steps">
-          <li>Open this page in <strong>Safari</strong>${isSafari() ? "." : " if it is not already open there."}</li>
-          <li>Tap the <strong>Share</strong> icon.</li>
-          <li>Choose <strong>Add to Home Screen</strong>.</li>
-          <li>Tap <strong>Add</strong>.</li>
-        </ol>
-        <div class="modal-actions"><button class="button button-dark" data-modal-done>Got It</button></div>
-      `);
-      modalRoot.querySelector("[data-modal-done]")?.addEventListener("click", closeModal);
-      return;
-    }
-    openModal(`
-      <button class="modal-close" aria-label="Close">×</button>
-      <img class="modal-logo" src="assets/icon-192.png" alt="">
-      <h2>Install Try Jesus</h2>
-      <p>Your browser has not exposed the one-tap install button yet. Open the browser menu and choose <strong>Install app</strong>, <strong>Add to Home Screen</strong>, or the install icon in the address bar.</p>
-      <div class="modal-actions"><button class="button button-dark" data-modal-done>Got It</button></div>
-    `);
-    modalRoot.querySelector("[data-modal-done]")?.addEventListener("click", closeModal);
-  }
+  function installCardHTML() { return ""; }
 
   function openFourthwall() {
     const url = CONFIG.FOURTHWALL_URL || "";
@@ -209,7 +152,6 @@
 
   function attachGlobalActions() {
     appMain.querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", () => routeTo(el.dataset.go)));
-    appMain.querySelectorAll("[data-install-app]").forEach(el => el.addEventListener("click", promptInstall));
     appMain.querySelectorAll("[data-fourthwall]").forEach(el => el.addEventListener("click", openFourthwall));
     appMain.querySelectorAll("[data-live]").forEach(el => {
       if (el.tagName === "A") el.href = CONFIG.LIVE_DISCUSSION_URL;
@@ -277,25 +219,7 @@
     });
   }
 
-  function renderInstallLanding() {
-    appMain.innerHTML = `
-      <section class="intro-screen" style="background:linear-gradient(135deg,#171418,#3a223b);color:var(--ivory)">
-        <div class="intro-card" style="background:rgba(255,255,255,.06);border-color:rgba(238,189,74,.25);box-shadow:var(--shadow-dark)">
-          <img src="assets/icon-192.png" alt="Try Jesus app icon" style="width:92px;height:92px;border-radius:24px;margin:0 auto 22px;box-shadow:0 18px 42px rgba(0,0,0,.35)">
-          <p class="eyebrow gold">WELCOME TO TRY JESUS: THE JOURNEY</p>
-          <h1 class="display" style="color:var(--ivory)">Take Your Journey With You.</h1>
-          <p class="lead" style="color:rgba(243,232,208,.72)">Install the free app to save your progress, keep private notes, receive a clear next step, and return to Thursday’s live discussion invitation with one tap.</p>
-          <div class="intro-points">
-            <div class="intro-point" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)"><strong style="color:var(--gold)">Save Progress</strong><span style="color:rgba(243,232,208,.6)">Return exactly where you stopped.</span></div>
-            <div class="intro-point" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)"><strong style="color:var(--gold)">Private Notes</strong><span style="color:rgba(243,232,208,.6)">Keep reflections on your device.</span></div>
-            <div class="intro-point" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)"><strong style="color:var(--gold)">One Clear Step</strong><span style="color:rgba(243,232,208,.6)">No overwhelming content library.</span></div>
-          </div>
-          ${state.installed ? '<div class="locked-badge" style="display:inline-block;margin-bottom:15px">APP ALREADY INSTALLED</div>' : '<button class="button button-primary" data-install-app>Install the Free App</button>'}
-          <button class="button button-light" data-go="intro" style="margin-left:8px">Begin My Journey →</button>
-          <p style="font-size:.7rem;color:rgba(243,232,208,.45);margin-top:17px">No payment. No pressure. Install only when it serves your journey.</p>
-        </div>
-      </section>`;
-  }
+  function renderInstallLanding() { renderIntro(); }
 
   function renderIntro() {
     appMain.innerHTML = `
@@ -566,37 +490,9 @@
     const firstCompletion = state.progress.future.length === 1;
     saveState();
 
-    if (firstCompletion && !state.installed && !state.firstLessonInstallShown) {
-      state.firstLessonInstallShown = true;
-      saveState();
-      openInstallAfterLessonModal(nextLessonItem);
-      return;
-    }
 
     if (nextLessonItem) routeTo(`lesson/${nextLessonItem.id}`);
     else openJourneyCompleteModal();
-  }
-
-  function openInstallAfterLessonModal(nextLessonItem) {
-    openModal(`
-      <button class="modal-close" aria-label="Close">×</button>
-      <img class="modal-logo" src="assets/icon-192.png" alt="">
-      <p class="eyebrow">YOUR FIRST MILESTONE</p>
-      <h2>Your Journey Has Officially Begun.</h2>
-      <p>Install the free app now to protect the momentum you just created, return to your next lesson with one tap, and keep your private notes close.</p>
-      <div class="modal-actions"><button class="button button-primary" data-modal-install>Install the Free App</button><button class="button button-ghost" data-modal-continue>Continue Without Installing</button></div>
-    `);
-    modalRoot.querySelector("[data-modal-install]")?.addEventListener("click", async () => {
-      closeModal();
-      await promptInstall();
-      if (nextLessonItem) routeTo(`lesson/${nextLessonItem.id}`);
-      else routeTo("home");
-    });
-    modalRoot.querySelector("[data-modal-continue]")?.addEventListener("click", () => {
-      closeModal();
-      if (nextLessonItem) routeTo(`lesson/${nextLessonItem.id}`);
-      else routeTo("home");
-    });
   }
 
   function openJourneyCompleteModal() {
@@ -659,7 +555,7 @@
           <article class="more-card dark"><div class="more-icon">◉</div><p class="eyebrow gold">WHATSAPP FAMILY CHAT</p><h2>Stay connected between Bible discussions.</h2><p>Ask questions, receive updates, and connect with the Try Jesus Media family.</p><a class="button button-primary" href="${CONFIG.WHATSAPP_URL}" target="_blank" rel="noopener noreferrer">Join the WhatsApp Group</a></article>
           <article class="more-card dark"><div class="more-icon">●</div><p class="eyebrow gold">LIVE THURSDAY</p><h2>A real question deserves a real conversation.</h2><p>Join the live online Bible discussion. Participate, listen quietly, or keep your camera off.</p><a class="button button-primary" data-live href="${CONFIG.LIVE_DISCUSSION_URL}" target="_blank" rel="noopener">Join Through the Welcome Page</a></article>
           <article class="more-card"><div class="more-icon">◆</div><p class="eyebrow">PROGRAMS & RESOURCES</p><h2>Knowing what is true is powerful. Living it is transformational.</h2><p>Explore additional Try Jesus Media programs and resources hosted on Fourthwall.</p><button class="button button-dark" data-fourthwall>Explore the Collection</button></article>
-          <article class="more-card"><div class="more-icon">⇩</div><p class="eyebrow">INSTALL THE APP</p><h2>Take your journey with you.</h2><p>Save progress, keep private notes, and return with one tap.</p>${state.installed ? '<span class="locked-badge">APP INSTALLED</span>' : '<button class="button button-dark" data-install-app>Install the Free App</button>'}</article>
+
           <article class="more-card"><div class="more-icon">⚙</div><p class="eyebrow">SETTINGS</p><h2>Your journey, your pace.</h2><div class="settings-list"><div class="settings-row"><span>Completed lessons</span><strong>${completedCount()} / 7</strong></div><div class="settings-row"><span>Saved reflections</span><strong>${state.reflections.length}</strong></div><div class="settings-row"><span>Reset demonstration data</span><button id="reset-app">Reset</button></div></div></article>
         </div>
       </div>`;
@@ -693,24 +589,10 @@
     if (el.tagName === "A") event.preventDefault();
     routeTo(el.dataset.route);
   }));
-  installHeaderButton.addEventListener("click", promptInstall);
   document.getElementById("profile-chip")?.addEventListener("click", () => routeTo("more"));
 
   window.addEventListener("hashchange", renderRoute);
-  window.addEventListener("beforeinstallprompt", event => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    installHeaderButton.hidden = !state.onboarded || state.installed;
-  });
-  window.addEventListener("appinstalled", () => {
-    state.installed = true;
-    saveState();
-    showToast("Try Jesus has been installed.");
-  });
-
-  if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=20260904-2").catch(() => {}));
-  }
+  window.addEventListener("beforeinstallprompt", event => event.preventDefault());
 
   if (!location.hash) history.replaceState(null, "", `#/${state.onboarded ? "home" : "welcome"}`);
   renderRoute();
