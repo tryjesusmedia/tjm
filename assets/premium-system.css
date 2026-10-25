@@ -77,8 +77,8 @@ html body.premium-system:is(.premium-home,.premium-members) .menu-toggle[aria-ex
 .premium-home .premium-fold:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {margin-inline:auto;width:min(1180px,calc(100% - 40px));background:#eadfcd;color:#311e33}
 .premium-home :is(.section-light,.membership-perks):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {background:#e4d8c4}
 .premium-home .membership-perk:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {background:#eadfcd}
-html body.premium-system[data-page="sales"] .bd-poster:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:240px;margin:24px auto 0;background:transparent}
-html body.premium-system[data-page="sales"] .bd-poster img:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {width:100%;height:auto;border-radius:12px}
+html body.premium-system[data-page="sales"] .bd-poster:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {width:100%;max-width:none;margin:0;background:transparent}
+html body.premium-system[data-page="sales"] .bd-poster img:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {width:100%;height:auto;border-radius:0}
 html body.premium-system[data-page="sales"] .hero:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:32px 0!important}
 html body.premium-system[data-page="sales"] .hero-grid:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:0!important}
 html body.premium-system[data-page="sales"] .hero-copy:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:760px}
@@ -110,7 +110,7 @@ html body.premium-system.guide-reader-page:not(:where([id^="omnisend-"], [id^="o
 @media(max-width:700px) {
  .premium-destinations:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {grid-template-columns:1fr;gap:16px}
  .premium-destination:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding:24px}
- html body.premium-system[data-page="sales"] .bd-poster:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:180px;margin-top:20px}
+ html body.premium-system[data-page="sales"] .bd-poster:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {max-width:none;margin:0}
  html body.premium-system.premium-system main :is(.section,.membership-offer,.membership-perks,.guides-section,.watch-section,.live-section,.pk-section):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-block:32px}
  html body.premium-system.premium-system #lessonNavigation button:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-inline:14px;min-width:0}
  .premium-member-start:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {padding-top:28px}
