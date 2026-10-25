@@ -1,0 +1,24 @@
+{
+  "id": "/chronbible/",
+  "name": "Chronological Bible — Try Jesus",
+  "short_name": "ChronBible",
+  "start_url": "/chronbible/",
+  "scope": "/chronbible/",
+  "display": "standalone",
+  "background_color": "#311E33",
+  "theme_color": "#311E33",
+  "icons": [
+    {
+      "src": "/chronbible/icons/journey-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/chronbible/icons/journey-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
