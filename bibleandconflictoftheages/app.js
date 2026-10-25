@@ -313,8 +313,12 @@ function taskGroupComplete(reading, kind) {
     savePlace();
     if (name === "rewards" && session) void refreshJourneyFromVisit();
     if (focusMain) {
-      document.getElementById("journey-main").focus({ preventScroll: true });
-      window.scrollTo({ top: document.querySelector(".journey-nav").offsetTop, behavior: "smooth" });
+      const main = document.getElementById("journey-main");
+      main.focus({ preventScroll: true });
+      const headerHeight = document.querySelector(".site-header").getBoundingClientRect().height;
+      const navHeight = document.querySelector(".journey-nav").getBoundingClientRect().height;
+      const top = main.getBoundingClientRect().top + window.scrollY - headerHeight - navHeight;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
     }
   }
 
