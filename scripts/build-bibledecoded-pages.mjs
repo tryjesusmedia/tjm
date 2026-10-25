@@ -19,7 +19,7 @@ function styleSalesPage(html) {
  .replace(/<div><div class="hero-art">[\s\S]*?<\/div><div class="hero-note">[\s\S]*?<\/div><\/div>/,'')
  .replace('style="background:#f0ebe3"','style="background:#d8c9b0"')
  .replace(/<footer class="footer">[\s\S]*?<\/footer>/,membersFooter)
- .replace('</body>',"<script>\n(()=> {\nconst button=document.getElementById('bd-menu-toggle'), menu=document.getElementById('bd-menu');\nfunction toggle(open){button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Close menu':'Open menu');menu.hidden=!open;}\nbutton.addEventListener('click',()=>toggle(menu.hidden));\ndocument.addEventListener('keydown',event=>{if(event.key==='Escape'&&!menu.hidden){toggle(false);button.focus();}});\nfunction sizeStatus(){const size=parseFloat(document.documentElement.style.fontSize)||20;document.getElementById('bd-size-status').textContent=(Math.round((size-16)/.5)+1)+' / 40';}\nnew MutationObserver(sizeStatus).observe(document.documentElement,{attributes:true,attributeFilter:['style']});sizeStatus();\ndocument.getElementById('currentYear').textContent=new Date().getFullYear();\n})();\n</script>"+'</body>');
+ .replace('</body>',"<script defer src=\"/bibledecoded/assets/members-menu.js?v=1\"></script>"+'</body>');
 }
 
 fs.mkdirSync('bibledecoded',{recursive:true});fs.writeFileSync('bibledecoded/index.html',styleSalesPage(sales));
