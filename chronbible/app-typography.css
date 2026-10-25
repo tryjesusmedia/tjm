@@ -27,3 +27,21 @@ body.chronbible .hero-copy #page-title em { font-size:.72em !important; line-hei
 .text-size-controls button { min-width:44px; min-height:44px; flex:0 0 auto; }
 .text-size-controls span { flex:1; text-align:center; }
 body.chronbible .account-menu { max-width:calc(100vw - 24px); max-height:75dvh; overflow:auto; }
+
+/* Keep the menu toggle on the brand row and every menu control in view. */
+body.chronbible .site-header { display:grid; grid-template-columns:minmax(0,1fr) 48px; gap:12px; }
+body.chronbible .header-actions { grid-column:1 / -1; width:100%; min-width:0; }
+body.chronbible .brand { min-width:0; }
+body.chronbible .brand strong { overflow-wrap:anywhere; }
+body.chronbible #profile-button { display:flex; align-items:center; justify-content:center; width:48px; height:48px; padding:8px; border:0; border-radius:0; background:transparent; color:var(--gold); justify-self:end; }
+body.chronbible #profile-button > span, body.chronbible #profile-avatar { display:none; }
+body.chronbible #profile-button svg { width:30px; height:30px; flex:none; fill:none; stroke:currentColor; stroke-width:1.8; }
+body.chronbible #profile-button .menu-close-icon { display:none; }
+body.chronbible #profile-button[aria-expanded="true"] .menu-open-icon { display:none; }
+body.chronbible #profile-button[aria-expanded="true"] .menu-close-icon { display:block; }
+body.chronbible .account-menu { right:12px; width:min(360px,calc(100vw - 24px)); max-width:calc(100vw - 24px); max-height:none; overflow:visible; padding:16px; }
+body.chronbible #account-email { white-space:normal; overflow-wrap:anywhere; overflow:visible; text-overflow:clip; }
+body.chronbible .text-size-controls { display:grid; grid-template-columns: minmax(44px,1fr) auto minmax(44px,1fr); gap:12px; align-items:center; margin:16px 0; }
+body.chronbible .text-size-controls button { width:100%; min-width:44px; min-height:48px; margin:0; padding:8px; }
+body.chronbible #text-size-status { white-space:nowrap; min-width:0; }
+body.chronbible #sign-out, body.chronbible #header-sign-in { margin-top:0; white-space:normal; }

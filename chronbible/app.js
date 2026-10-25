@@ -620,8 +620,10 @@
   }
 
   function updateProfile() {
+    document.getElementById("sign-out").hidden = !session;
+    document.getElementById("account-email").hidden = !session;
     if (!session) {
-      profileButton.hidden = true;
+      profileButton.hidden = false;
       return;
     }
     const name = journeyFirstName || displayName();
@@ -692,7 +694,7 @@
     headerSignIn.hidden = true;
     const userId = session.user.id;
     const version = sessionVersion;
-    profileButton.hidden = true;
+    profileButton.hidden = false;
     try {
       const [loaded, identityLoaded] = await Promise.all([
         loadMemberData({ userId, version }),

@@ -21,7 +21,18 @@ function apply(){
 function schedule(){if(!queued){queued=true;requestAnimationFrame(apply);}}
 function change(delta){level=Math.max(0,Math.min(39,level+delta));try{localStorage.setItem('chron-text-size',String(level));}catch{}apply();}
 smaller.addEventListener('click',()=>change(-1));larger.addEventListener('click',()=>change(1));
-function close(){menu.hidden=true;profile.setAttribute('aria-expanded','false');}
+function syncMenu(){
+ profile.setAttribute('aria-expanded',String(!menu.hidden));
+ profile.setAttribute('aria-label',menu.hidden?'Open menu':'Close menu');
+ const bottom=profile.getBoundingClientRect().bottom;
+ menu.style.top=Math.max(8,bottom+8)+'px';
+}
+function close(){menu.hidden=true;syncMenu();}
+new MutationObserver(syncMenu).observe(menu,{attributes:true,attributeFilter:['hidden']});
+window.addEventListener('scroll',()=>{if(!menu.hidden)close();},{passive:true});
+window.addEventListener('resize',syncMenu);
+menu.addEventListener('click',e=>{if(e.target.closest('#sign-out, #header-sign-in'))close();});
+syncMenu();
 document.addEventListener('pointerdown',e=>{if(!menu.contains(e.target)&&!profile.contains(e.target))close();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){close();profile.focus();}});
 new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});
