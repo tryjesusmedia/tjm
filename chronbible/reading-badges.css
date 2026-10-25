@@ -10,7 +10,10 @@
 .reading-title-with-badge .reading-badge { width: 88px; flex: none; }
 .earned-badges { margin: 0 0 28px; }
 .earned-badges h3 { margin: 0 0 16px; color: #E5B55B; font-family: var(--sans); font-size: 18px; line-height: 25px; }
-.earned-badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 22px 12px; align-items: start; }
+.earned-badge-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px 4px; align-items: start; }
+.earned-badge-grid .reading-badge { min-width: 0; width: 100%; padding: 2px 0; gap: 2px; }
+.earned-badge-grid .reading-badge img { width: min(64px, 100%); height: auto; aspect-ratio: 1; }
+.earned-badge-grid .reading-badge-number { max-width: 100%; overflow-wrap: anywhere; }
 .earned-badge-empty { margin: 0; color: #B9C2C5; font-size: 17px; line-height: 26px; }
 .earned-badges + .earned-badge-empty { margin-bottom: 24px; }
 .badge-viewer-open { overflow: hidden; }
