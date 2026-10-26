@@ -134,6 +134,38 @@ html body.premium-system.guide-reader-page:not(:where([id^="omnisend-"], [id^="o
 
 
 /* Premium TJM1 hardcover shortcut with the original Amazon wordmark. */
-html body.chronbible .site-header > .header-amazon-button { grid-column:1 / -1; justify-self:center; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; width:200px; max-width:100%; min-height:44px; padding:6px 14px; border:1px solid #EEBD4A; border-radius:8px; background:linear-gradient(160deg,#FAF6EE 0%,#F3E8D0 38%,#EEBD4A 100%); color:#311E33; box-shadow:inset 0 1px 0 #ffffffcc,0 3px 12px #1C111D66; font-size:19px; font-weight:600; line-height:1.3; text-decoration:none; }
+html body.chronbible .site-header .header-amazon-button { grid-column:1 / -1; justify-self:center; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; width:200px; max-width:100%; min-height:44px; padding:6px 14px; border:1px solid #EEBD4A; border-radius:8px; background:linear-gradient(160deg,#FAF6EE 0%,#F3E8D0 38%,#EEBD4A 100%); color:#311E33; box-shadow:inset 0 1px 0 #ffffffcc,0 3px 12px #1C111D66; font-size:19px; font-weight:600; line-height:1.3; text-decoration:none; }
 html body.chronbible .header-amazon-button img { display:block; width:90px; height:auto; }
 html body.chronbible .header-amazon-button:focus-visible { outline:3px solid #EEBD4A; outline-offset:3px; }
+
+/* ChronBible: keep store actions together without changing the phone's title row. */
+html body.chronbible .site-header .header-actions {
+  display:flex; flex-direction:column; align-items:center; gap:8px; min-width:0;
+}
+html body.chronbible .site-header .store-links {
+  display:flex; flex-wrap:nowrap; justify-content:center; align-items:stretch;
+  gap:12px; width:100%; min-width:0;
+}
+html body.chronbible .site-header .header-amazon-button,
+html body.chronbible .site-header #install-chronbible {
+  box-sizing:border-box; flex:0 1 200px; width:200px; min-width:0;
+  max-width:200px; min-height:68px; margin:0; padding:6px 10px;
+}
+html body.chronbible .site-header #install-chronbible { gap:8px; }
+html body.chronbible .site-header #install-chronbible .store-label {
+  min-width:0; white-space:normal; text-align:center; align-items:center;
+}
+html body.chronbible .site-header #install-chronbible[hidden] { display:none; }
+@media (min-width: 1000px) {
+  html body.chronbible .site-header {
+    grid-template-columns:auto minmax(0,1fr) 48px; align-items:center;
+  }
+  html body.chronbible .site-header #page-title { grid-column:1; grid-row:1; }
+  html body.chronbible .site-header #profile-button { grid-column:3; grid-row:1; }
+  html body.chronbible .site-header .header-actions { grid-column:2; grid-row:1; }
+}
+@media (max-width: 999px) {
+  html body.chronbible .site-header .header-actions { grid-column:1 / -1; grid-row:2; }
+  html body.chronbible .site-header #install-chronbible { flex-direction:column; gap:2px; }
+  html body.chronbible .site-header #install-chronbible .store-icon { width:24px; height:24px; }
+}
