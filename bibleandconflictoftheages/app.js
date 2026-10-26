@@ -38,6 +38,7 @@
   let activeView = "readings";
   let currentIndex = 0;
   let activeBook = "PP";
+  let journeyReturn = null;
   let refreshTimer = null;
   let journeyAlias = "";
   let journeyFirstName = "";
@@ -73,6 +74,7 @@
     if (!placeReady || !plan || (!session && !guestBrowsing)) return;
     try {
       localStorage.setItem(placeKey(), JSON.stringify({
+        journeyReturn,
         readingId: currentReading().id,
         view: activeView,
         book: activeBook,
@@ -83,6 +85,10 @@
 
   function restorePlace() {
     const saved = readPlace();
+    journeyReturn = saved?.journeyReturn && Number.isFinite(saved.journeyReturn.scrollY)
+      && saved.journeyReturn.scrollY >= 0
+      && (saved.journeyReturn.book === "" || plan.books.some(book => book.code === saved.journeyReturn.book))
+      ? saved.journeyReturn : null;
     const index = plan.readings.findIndex(reading => reading.id === resolveReadingId(saved?.readingId));
     if (index >= 0) {
       currentIndex = index;
@@ -338,11 +344,24 @@ function taskGroupComplete(reading, kind) {
   }
 
   function goToReading(index, view = "readings") {
+    if (activeView === "journey") journeyReturn = { book: activeBook, scrollY: Math.max(0, window.scrollY) };
     currentIndex = Math.max(0, Math.min(Number(index), plan.readings.length - 1));
     activeBook = currentReading().code;
     updateLastReading(currentReading().id);
     showView(view, true);
     savePlace();
+  }
+
+  function backToJourney() {
+    activeBook = journeyReturn ? journeyReturn.book : currentReading().code;
+    showView("journey");
+    document.getElementById("journey-main").focus({ preventScroll: true });
+    requestAnimationFrame(() => {
+      if (activeView !== "journey") return;
+      if (journeyReturn) window.scrollTo({ top: journeyReturn.scrollY, behavior: "instant" });
+      else root.querySelector(`[data-reading-index="${currentIndex}"]`)?.scrollIntoView({ block: "center", behavior: "instant" });
+      savePlace();
+    });
   }
 
   function reviewFlag(reading) {
@@ -417,6 +436,7 @@ function taskGroupComplete(reading, kind) {
             </article>` : "";
     return `
       <section aria-labelledby="readings-heading">
+        <button class="button button-secondary" type="button" data-back-to-journey style="margin-bottom:18px"><span aria-hidden="true">←</span> Back to Journey</button>
         <header class="view-heading">
           <div>
             <p class="eyebrow">CONFLICT OF THE AGES</p>
@@ -1057,7 +1077,8 @@ function taskGroupComplete(reading, kind) {
   root.addEventListener("click", (event) => {
     const target = event.target.closest("button, a");
     if (!target) return;
-    if (target.dataset.readingBadge) {
+    if (target.hasAttribute("data-back-to-journey")) backToJourney();
+    else if (target.dataset.readingBadge) {
       const reading = plan.readings.find(item => item.id === target.dataset.readingBadge);
       if (reading && readingComplete(reading)) window.TJMReadingBadgeViewer?.open(reading.id, target);
     }
