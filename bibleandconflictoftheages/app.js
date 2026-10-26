@@ -20,6 +20,9 @@
   const authGate = document.getElementById("auth-gate");
   const authError = document.getElementById("auth-error");
   const signInButton = document.getElementById("google-sign-in");
+  const appleSignInButton = document.getElementById("apple-sign-in");
+  const emailSignInForm = document.getElementById("email-sign-in");
+  const emailSignInStatus = document.getElementById("email-sign-in-status");
   const guestButton = document.getElementById("continue-without-sign-in");
   const headerSignIn = document.getElementById("header-sign-in");
   const profileButton = document.getElementById("profile-button");
@@ -317,8 +320,7 @@ function taskGroupComplete(reading, kind) {
       const main = document.getElementById("journey-main");
       main.focus({ preventScroll: true });
       const headerHeight = document.querySelector(".site-header").getBoundingClientRect().height;
-      const navHeight = document.querySelector(".journey-nav").getBoundingClientRect().height;
-      const top = main.getBoundingClientRect().top + window.scrollY - headerHeight - navHeight;
+      const top = main.getBoundingClientRect().top + window.scrollY - headerHeight;
       window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
     }
   }
@@ -480,7 +482,7 @@ function taskGroupComplete(reading, kind) {
       </section>`;
     }).join("");
 
-    return `<section aria-labelledby="journey-heading"><header class="view-heading"><div><p class="eyebrow">THE COMPLETE STORY</p><h2 id="journey-heading">Your journey</h2><p>Every pairing appears in the order supplied. Open a book to revisit any reading, with completed readings visible at a glance.</p></div></header><div class="book-grid">${bookSections}</div></section>`;
+    return `<section aria-label="Reading journey"><header class="view-heading"><p class="eyebrow">THE COMPLETE STORY</p></header><div class="book-grid">${bookSections}</div></section>`;
   }
 
   function bestStreak() {
@@ -513,7 +515,7 @@ function taskGroupComplete(reading, kind) {
     const reviewQueue = plan.reviewQueue?.length
       ? `<details class="review-queue"><summary>${plan.reviewQueue.length} supplied references in the review queue</summary>${plan.reviewQueue.map((item) => { const reading = plan.readings.find((entry) => entry.day === item.day); return `<div class="review-item"><strong>${escapeHTML(reading ? companionIdentity(reading) : "Source entry")}</strong><br>${escapeHTML(item.reviewNote)}</div>`; }).join("")}</details>`
       : "";
-    return `<section aria-labelledby="progress-heading"><header class="view-heading"><div><p class="eyebrow">YOUR READING JOURNEY</p><h2 id="progress-heading">Progress</h2></div></header>
+    return `<section aria-label="Reading progress">
       ${renderEarnedBadges()}
       <p class="earned-badge-empty">${session ? "Your completion state is saved to your account and available on every signed-in device." : "This preview starts at zero. Sign in to save your completion state across devices."}</p>
       <div class="stat-grid"><article class="stat-card"><strong>${Math.round((completed / plan.readings.length) * 100)}%</strong><span>Journey complete</span></article><article class="stat-card"><strong>${completed}</strong><span>Complete readings</span></article><article class="stat-card"><strong>${bestStreak()}</strong><span>Best reading run</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Journey Points</span></article></div>
@@ -1028,7 +1030,7 @@ function taskGroupComplete(reading, kind) {
     } catch (error) {
       console.error(error);
       setSync("Backend setup required", "error");
-      authError.textContent = "Your Google sign-in worked, but the reading-plan database has not been installed yet. The site owner must run the included Supabase migration.";
+      authError.textContent = "Your sign-in worked, but the reading-plan database has not been installed yet. The site owner must run the included Supabase migration.";
       authGate.hidden = false;
     }
   }
@@ -1049,23 +1051,53 @@ function taskGroupComplete(reading, kind) {
     }, 60000);
   }
 
-  async function signInGoogle() {
+  async function signInProvider(provider, button) {
     authError.textContent = "";
-    signInButton.disabled = true;
-    signInButton.lastChild.textContent = " Connecting…";
+    if (!db) { authError.textContent = "Sign-in is still loading. Please try again in a moment."; return; }
+    button.disabled = true;
     try {
-      if (!db?.auth) throw new Error("The secure account service is still loading. Please refresh and try again.");
-      const redirectTo = CONFIG.siteUrl || `${location.origin}${location.pathname}`;
+      if (provider === "apple") {
+        const response = await fetch(`${CONFIG.supabaseUrl}/auth/v1/settings`, {
+          headers: { apikey: CONFIG.supabasePublishableKey },
+        });
+        if (!response.ok) throw new Error("Sign-in settings could not be loaded.");
+        const settings = await response.json();
+        if (!settings.external?.apple) {
+          authError.textContent = "Apple sign-in is not available yet. Please continue with Google or Email.";
+          button.disabled = false;
+          return;
+        }
+      }
       const { error } = await db.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo },
+        provider,
+        options: { redirectTo: CONFIG.siteUrl },
       });
       if (error) throw error;
-    } catch (error) {
-      console.error("Google sign-in", error);
-      authError.textContent = error?.message || "Google sign-in could not be started. Please refresh and try again.";
-      signInButton.disabled = false;
-      signInButton.lastChild.textContent = " Continue with Google";
+    } catch {
+      authError.textContent = "We could not start sign-in. Please try again or use your email.";
+      button.disabled = false;
+    }
+  }
+
+  async function signInEmail(event) {
+    event.preventDefault();
+    authError.textContent = "";
+    if (!db) { authError.textContent = "Sign-in is still loading. Please try again in a moment."; return; }
+    const button = emailSignInForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+    emailSignInStatus.textContent = "Sending your sign-in link…";
+    try {
+      const { error } = await db.auth.signInWithOtp({
+        email: document.getElementById("signin-email").value.trim(),
+        options: { emailRedirectTo: CONFIG.siteUrl },
+      });
+      if (error) throw error;
+      emailSignInStatus.textContent = "Check your email for a sign-in link and open it in this browser. If needed, check your spam folder. You can request another link in one minute.";
+      setTimeout(() => { button.disabled = false; }, 60000);
+    } catch {
+      emailSignInStatus.textContent = "";
+      authError.textContent = "We could not send the sign-in email. Please try again shortly or continue with Google or Apple.";
+      button.disabled = false;
     }
   }
 
@@ -1128,7 +1160,9 @@ function taskGroupComplete(reading, kind) {
     profileButton.setAttribute("aria-expanded", String(opening));
   });
   document.getElementById("sign-out").addEventListener("click", async () => { guestBrowsing = false; await db.auth.signOut({ scope: "local" }); });
-  signInButton.addEventListener("click", signInGoogle);
+  signInButton.addEventListener("click", () => signInProvider("google", signInButton));
+  appleSignInButton.addEventListener("click", () => signInProvider("apple", appleSignInButton));
+  emailSignInForm.addEventListener("submit", signInEmail);
   guestButton.addEventListener("click", () => {
     guestBrowsing = true;
     authError.textContent = "";

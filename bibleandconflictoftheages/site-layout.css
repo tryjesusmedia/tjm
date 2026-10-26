@@ -42,24 +42,24 @@ body.conflict-reading #profile-button .menu-close-icon,
 body.conflict-reading #profile-button[aria-expanded="true"] .menu-open-icon { display: none; }
 body.conflict-reading #profile-button[aria-expanded="true"] .menu-close-icon { display: block; }
 body.conflict-reading .account-menu {
-  position: absolute;
-  top: 100%;
-  right: max(12px, calc((100% - 1240px) / 2));
+  position: fixed;
+  z-index: 80;
+  top: 70px;
+  right: 12px;
   width: min(360px, calc(100vw - 24px));
   max-width: calc(100vw - 24px);
   padding: 16px;
-  display: grid;
-  gap: 12px;
+  display: block;
   border-radius: 14px;
 }
 body.conflict-reading #account-email { white-space: normal; overflow-wrap: anywhere; overflow: visible; text-overflow: clip; }
 body.conflict-reading .text-size-controls { display: grid; grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr); gap: 12px; align-items: center; }
 body.conflict-reading #text-size-status { white-space: nowrap; text-align: center; }
-body.conflict-reading .account-menu button { width: 100%; min-height: 48px; padding: 8px; margin: 0; border-radius: 9px; }
+body.conflict-reading .account-menu button { width: 100%; min-height: 0; padding: 10px; margin: 0; border-radius: 9px; }
 body.conflict-reading .account-menu button:disabled { opacity: .4; cursor: not-allowed; }
 body.conflict-reading #sync-status { display: flex; font-size: 17px !important; line-height: 1.5 !important; letter-spacing: 0; }
 body.conflict-reading #sync-status i { flex: 0 0 7px; }
-body.conflict-reading .journey-nav { top: var(--conflict-header-height, 86px); }
+body.conflict-reading .journey-nav { position: relative; top: auto; }
 body.conflict-reading .journey-hero { padding-block: 24px; }
 body.conflict-reading .journey-hero .hero-copy { width: 100%; max-width: 1180px; }
 body.conflict-reading .journey-hero .hero-intro { margin-top: 0; max-width: none; }
@@ -124,3 +124,15 @@ body.conflict-reading .footer-legal { align-items: center; }
   body.conflict-reading .footer-brand { gap: 12px; }
   body.conflict-reading .footer-brand img { width: 64px; height: 64px; }
 }
+
+/* Match ChronBible account choices with the Conflict palette. */
+body.conflict-reading .auth-gate { align-items: safe center; }
+body.conflict-reading .auth-card { max-height: calc(100dvh - 40px); }
+body.conflict-reading .auth-card h2 { font: 900 28px/35px Montserrat, Arial, sans-serif; letter-spacing: normal; }
+body.conflict-reading .auth-card > p:not(.eyebrow) { font-size: 18.667px !important; line-height: 27px !important; }
+body.conflict-reading .apple-sign-in { background: var(--paper); color: var(--ivory); border: 1px solid var(--muted); }
+body.conflict-reading .email-sign-in-option { margin-top: 12px; text-align: left; }
+body.conflict-reading .email-sign-in-option summary { padding: 14px 16px; border: 1px solid var(--muted); border-radius: 13px; cursor: pointer; font: 700 20px/1.45 var(--sans); text-align: center; }
+body.conflict-reading #email-sign-in label { display: block; margin: 16px 0 8px; font: 600 18.667px/1.5 var(--sans); }
+body.conflict-reading #email-sign-in input { display: block; box-sizing: border-box; width: 100%; min-height: 52px; padding: 12px; border: 1px solid var(--muted); border-radius: 10px; background: var(--ivory); color: var(--paper); font: 400 18.667px/1.5 var(--sans); }
+body.conflict-reading .email-sign-in-option p { font-size: 18.667px; line-height: 1.5; }
