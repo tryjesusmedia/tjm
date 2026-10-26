@@ -319,8 +319,7 @@ function taskGroupComplete(reading, kind) {
     if (focusMain) {
       const main = document.getElementById("journey-main");
       main.focus({ preventScroll: true });
-      const headerHeight = document.querySelector(".site-header").getBoundingClientRect().height;
-      const top = main.getBoundingClientRect().top + window.scrollY - headerHeight;
+      const top = document.querySelector(".journey-nav").getBoundingClientRect().top + window.scrollY;
       window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
     }
   }
@@ -420,7 +419,7 @@ function taskGroupComplete(reading, kind) {
     const commentaryPages = companionPageSummary(reading);
     const scriptureCard = reading.bibleReference ? `
             <article class="reading-card scripture-card">
-              <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">READ FIRST</span></div>
+              <div class="card-kicker"><span>THE&nbsp;BIBLE</span></div>
               <h3>${escapeHTML(reading.bibleReference)}</h3>
               <div class="reading-actions">
                 ${scriptureActions}
@@ -429,7 +428,7 @@ function taskGroupComplete(reading, kind) {
             </article>` : "";
     const companionCard = reading.commentaryCitation ? `
             <article class="reading-card companion-card${reading.bibleReference ? "" : " companion-only"}">
-              <div class="card-kicker"><span>${escapeHTML(reading.commentaryBook).toUpperCase()}</span><span class="source-order">COMPANION READING</span></div>
+              <div class="card-kicker"><span>${escapeHTML(reading.commentaryBook).toUpperCase()}</span></div>
               ${commentaryPages ? `<p class="citation">${escapeHTML(commentaryPages)}</p>` : ""}
               <div class="reading-actions">
                 ${commentaryActions}
@@ -438,16 +437,16 @@ function taskGroupComplete(reading, kind) {
             </article>` : "";
     return `
       <section aria-labelledby="readings-heading">
-        <button class="button button-secondary" type="button" data-back-to-journey style="margin-bottom:18px"><span aria-hidden="true">←</span> Back to Journey</button>
+        <button class="reading-back" type="button" data-back-to-journey><span aria-hidden="true">←</span> Back to Journey</button>
         <header class="view-heading">
           <div>
             <p class="eyebrow">CONFLICT OF THE AGES</p>
             <div class="reading-title-with-badge"><h2 id="readings-heading" class="chapter-heading">${companionHeading(reading)}</h2>${readingComplete(reading) ? renderReadingBadge(reading) : ""}</div>
           </div>
           <div class="reading-switcher" aria-label="Reading navigation">
-            <button class="icon-button nav-button" type="button" data-day-nav="prev" ${currentIndex === 0 ? "disabled" : ""}>Previous</button>
+            <button class="icon-button" type="button" data-day-nav="prev" aria-label="Previous reading" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
             <span class="reading-number"><small>${Math.round((completedCount() / plan.readings.length) * 100)}% COMPLETE</small></span>
-            <button class="icon-button nav-button" type="button" data-day-nav="next" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>Next</button>
+            <button class="icon-button" type="button" data-day-nav="next" aria-label="Next reading" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
           </div>
         </header>
 

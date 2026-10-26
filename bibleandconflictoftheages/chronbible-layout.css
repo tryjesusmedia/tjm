@@ -1,0 +1,106 @@
+/* ChronBible typography and proportions, with colors supplied only by the TJM2 theme. */
+/* Native Journey app typography. No color or background overrides. */
+body.conflict-reading { --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; --serif: var(--sans); font-family:var(--sans); font-size:17px; line-height:27px; }
+body.conflict-reading *, body.conflict-reading *::before, body.conflict-reading *::after { font-family:var(--sans) !important; }
+body.conflict-reading .hero-copy h1 { font-size:32px !important; line-height:39px; font-weight:800; letter-spacing:normal; }
+body.conflict-reading .view-heading h2, body.conflict-reading .auth-card h2, body.conflict-reading #install-title { font-size:28px !important; line-height:35px; font-weight:900; letter-spacing:normal; }
+body.conflict-reading #readings-heading { font-size:19px !important; line-height:25px; font-weight:900; }
+body.conflict-reading .book-summary h3, body.conflict-reading .reading-card h3 { font-size:23px !important; line-height:30px; font-weight:900; }
+body.conflict-reading p, body.conflict-reading .reading-guide p, body.conflict-reading .hero-copy p { font-size:17px !important; line-height:27px !important; }
+body.conflict-reading summary { font-size:18px !important; line-height:26px; font-weight:700; min-height:44px; cursor:pointer; }
+body.conflict-reading .journey-reading strong { font-size:19px !important; line-height:25px; font-weight:900; }
+body.conflict-reading small, body.conflict-reading .eyebrow, body.conflict-reading .card-kicker, body.conflict-reading .sync-status { font-size:15px !important; line-height:22px; }
+body.conflict-reading button, body.conflict-reading input, body.conflict-reading select, body.conflict-reading textarea, body.conflict-reading .button { font-size:16px; line-height:24px; }
+body.conflict-reading .source-task { font-size:17px !important; line-height:27px; }
+body.conflict-reading .chron-bottom-tabs a { font-size:15px; line-height:20px; }
+body.conflict-reading .chron-bottom-tabs a span { overflow-wrap:normal; }
+body.conflict-reading .reading-number strong { font-size:19px; line-height:25px; }
+body.conflict-reading .brand strong { font-size:18px; line-height:24px; }
+body.conflict-reading .store-label small { font-size:13px !important; line-height:18px; }
+body.conflict-reading .store-label strong { font-size:17px; line-height:23px; }
+body.conflict-reading .reading-guidance[open] summary { margin-bottom:12px; }
+
+/* Restore the original decorative title independently of reading text size. */
+body.conflict-reading .hero-copy #page-title, body.conflict-reading .hero-copy #page-title * { font-family:"Cormorant Garamond", Georgia, serif !important; }
+body.conflict-reading .hero-copy #page-title { font-size:clamp(54px,8vw,102px) !important; line-height:.86; font-weight:600; letter-spacing:-.035em; }
+body.conflict-reading .hero-copy #page-title em { font-size:.72em !important; line-height:1.08; font-weight:500; }
+.text-size-controls { display:flex; align-items:center; gap:12px; margin:16px 0; }
+.text-size-controls button { min-width:44px; min-height:44px; flex:0 0 auto; }
+.text-size-controls span { flex:1; text-align:center; }
+body.conflict-reading .account-menu { max-width:calc(100vw - 24px); max-height:75dvh; overflow:auto; }
+
+/* Keep the menu toggle on the brand row and every menu control in view. */
+body.conflict-reading .site-header { display:grid; grid-template-columns:minmax(0,1fr) 48px; gap:12px; }
+body.conflict-reading .header-actions { grid-column:1 / -1; width:100%; min-width:0; }
+body.conflict-reading .brand { min-width:0; }
+body.conflict-reading .brand strong { overflow-wrap:anywhere; }
+body.conflict-reading #profile-button { display:flex; align-items:center; justify-content:center; width:48px; height:48px; padding:8px; border:0; border-radius:0; justify-self:end; }
+body.conflict-reading #profile-button > span, body.conflict-reading #profile-avatar { display:none; }
+body.conflict-reading #profile-button svg { width:30px; height:30px; flex:none; fill:none; stroke:currentColor; stroke-width:1.8; }
+body.conflict-reading #profile-button .menu-close-icon { display:none; }
+body.conflict-reading #profile-button[aria-expanded="true"] .menu-open-icon { display:none; }
+body.conflict-reading #profile-button[aria-expanded="true"] .menu-close-icon { display:block; }
+body.conflict-reading .account-menu { right:12px; width:min(360px,calc(100vw - 24px)); max-width:calc(100vw - 24px); max-height:none; overflow:visible; padding:16px; }
+body.conflict-reading #account-email { white-space:normal; overflow-wrap:anywhere; overflow:visible; text-overflow:clip; }
+body.conflict-reading .text-size-controls { display:grid; grid-template-columns: minmax(44px,1fr) auto minmax(44px,1fr); gap:12px; align-items:center; margin:16px 0; }
+body.conflict-reading .text-size-controls button { width:100%; min-width:44px; min-height:48px; margin:0; padding:8px; }
+body.conflict-reading #text-size-status { white-space:nowrap; min-width:0; }
+body.conflict-reading #sign-out, body.conflict-reading #header-sign-in { margin-top:0; white-space:normal; }
+
+/* The guide title now occupies the header's brand position. */
+body.conflict-reading #page-title, body.conflict-reading #page-title * { font-family:"Cormorant Garamond",Georgia,serif !important; }
+body.conflict-reading #page-title { margin:0; min-width:0; font-size:clamp(32px,7.7vw,52px) !important; line-height:1.08; font-weight:600; letter-spacing:-.035em; }
+body.conflict-reading #page-title em { font-size:1em !important; font-weight:500; }
+body.conflict-reading #page-title span { font-size:.64em !important; font-weight:600; font-style:normal; }
+body.conflict-reading .chron-bottom-brand { display:flex; justify-content:center; padding:28px 16px; }
+body.conflict-reading .scripture-card .card-kicker,
+body.conflict-reading .scripture-card .card-kicker * { font-size:15px !important; line-height:22px !important; }
+body.conflict-reading .scripture-card > h3 { font-size:23px !important; line-height:30px !important; }
+body.conflict-reading #readings-heading { font-size:19px !important; line-height:25px !important; }
+
+/* Stable navigation and reading/section headings at every text-size setting. */
+body.conflict-reading .journey-nav button, body.conflict-reading .journey-nav button span { font-size:16px !important; line-height:24px !important; }
+body.conflict-reading .journey-reading strong { font-size:19px !important; line-height:25px !important; }
+body.conflict-reading .book-summary h3 { font-size:23px !important; line-height:30px !important; }
+body.conflict-reading .view-heading .eyebrow { font-size:15px !important; line-height:22px !important; }
+body.conflict-reading .book-progress-row header { font-size:16px !important; line-height:23px !important; }
+
+body.conflict-reading .reading-back { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:8px 12px; margin:0 0 18px; border:1px solid var(--line-dark); border-radius:10px; font-size:16px; line-height:24px; font-weight:700; cursor:pointer; }
+body.conflict-reading .reading-back:hover { }
+
+/* Consistent action labels; fixed reading headings and navigation retain their own scale. */
+body.conflict-reading :is(.button,.reading-back,.account-menu button,.header-sign-in,.google-button,.guest-button,.store-label strong) { font-family:var(--sans) !important; font-size:20px !important; font-weight:700; line-height:1.45; letter-spacing:0; text-transform:none; }
+
+/* The shared base stylesheet supplies identical card and view measurements. */
+body.conflict-reading .site-header { position: relative; top: auto; min-height: 78px; padding: 10px max(18px, calc((100% - 1240px) / 2)); }
+body.conflict-reading #page-title { text-wrap: wrap; }
+body.conflict-reading #page-title span { display: inline; }
+body.conflict-reading #view-root { padding: 54px 0 90px; }
+body.conflict-reading .readings-grid,
+body.conflict-reading .progress-layout { grid-template-columns: minmax(0, 1fr); }
+body.conflict-reading .reading-card { padding: 30px; border-radius: 26px; }
+body.conflict-reading .reading-switcher { flex-wrap: nowrap; gap: 10px; }
+body.conflict-reading .card-kicker { flex-wrap: nowrap; gap: 15px; }
+body.conflict-reading .card-kicker span { font-size: 15px !important; line-height: 22px !important; }
+body.conflict-reading .source-task-list { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+body.conflict-reading .source-task-row { grid-template-columns: 28px minmax(0, 1fr); gap: 11px; }
+body.conflict-reading .stat-card strong { font-family: var(--sans); font-size: 38px; line-height: 1; }
+body.conflict-reading .stat-card span,
+body.conflict-reading .save-banner span { font-size: 16px; line-height: 1.4; }
+body.conflict-reading .save-banner strong { font-family: var(--sans); font-size: 17px; }
+body.conflict-reading .save-banner { flex-wrap: nowrap; gap: 20px; }
+body.conflict-reading .toast { font-size: 18.667px; line-height: normal; }
+body.conflict-reading .auth-card h2 { font-family: var(--sans); }
+body.conflict-reading .reading-back { background: var(--paper-2); color: var(--gold-light); }
+body.conflict-reading .reading-back:hover { background: var(--paper); }
+body.conflict-reading .site-footer { padding: 76px 24px 36px; }
+body.conflict-reading .site-footer * { font-family: Montserrat, Arial, sans-serif !important; }
+body.conflict-reading .site-footer .footer-brand strong { font-family: "Cormorant Garamond", Georgia, serif !important; }
+@media (max-width: 680px) {
+  body.conflict-reading .site-header { min-height: 68px; padding: 8px 12px; }
+  body.conflict-reading #view-root { padding-top: 36px; }
+  body.conflict-reading .reading-card { padding: 23px 20px; border-radius: 20px; }
+  body.conflict-reading .reading-switcher { width: 100%; justify-content: space-between; }
+  body.conflict-reading .stat-card strong { font-size: 31px; }
+  body.conflict-reading .save-banner { flex-wrap: wrap; }
+}
