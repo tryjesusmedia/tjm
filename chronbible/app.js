@@ -234,7 +234,7 @@
 
         <div class="readings-grid">
           <article class="reading-card scripture-card">
-            <div class="card-kicker"><span>THE BIBLE</span><span class="source-order">SCRIPTURE READING</span></div>
+            <div class="card-kicker"><span>THE&nbsp;BIBLE</span></div>
             <h3>${escapeHTML(reading.reference)}</h3>
             <div class="reading-actions">
               ${sourceTaskLinks(reading)}
