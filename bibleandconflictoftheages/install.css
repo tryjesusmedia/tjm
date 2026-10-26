@@ -8,3 +8,24 @@
 #install-help ol { padding-left: 26px; }
 #install-help .install-note { font-size: 1rem; }
 #install-help form { text-align: right; }
+
+/* Compact header install action; keep the phone's title and menu on row one. */
+html body.conflict-reading #install-conflict {
+  grid-column:1 / -1; grid-row:2; justify-self:center; box-sizing:border-box;
+  display:inline-flex; flex-direction:row; align-items:center; justify-content:center;
+  gap:10px; width:320px; max-width:100%; min-height:60px; padding:4px 12px;
+  border:1.5px solid #C79341; border-radius:10px;
+  background:linear-gradient(155deg,#186059,#03101D 68%,#010C18); color:#FDFAF2;
+  box-shadow:inset 0 1px 0 #ffffff29,0 3px 10px #010c1829;
+  font:600 20px/1.2 Montserrat,Arial,sans-serif!important; cursor:pointer;
+}
+html body.conflict-reading #install-conflict span { font:inherit!important; line-height:1.2!important; }
+html body.conflict-reading #install-conflict img { display:block; width:32px; height:32px; flex:none; }
+html body.conflict-reading #install-conflict[hidden] { display:none; }
+html body.conflict-reading #install-conflict:focus-visible { outline:3px solid #E5B55B; outline-offset:3px; }
+@media (min-width:1100px) {
+  html body.conflict-reading .site-header { grid-template-columns:minmax(0,1fr) 320px 48px; }
+  html body.conflict-reading #page-title { grid-column:1; grid-row:1; }
+  html body.conflict-reading #install-conflict { grid-column:2; grid-row:1; }
+  html body.conflict-reading #profile-button { grid-column:3; grid-row:1; }
+}
