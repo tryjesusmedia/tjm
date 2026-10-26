@@ -171,11 +171,6 @@ function escapeHTML(value = "") {
     authGate.hidden = false;
   }
 
-  function guestBanner() {
-    if (session || !guestBrowsing) return "";
-    return `<aside class="save-banner" aria-label="Saving requires sign-in"><div><strong>Viewing without an account</strong><span>You can explore every reading. Sign in to sync your progress across devices.</span></div><button class="button button-primary" type="button" data-require-sign-in>Sign in to sync</button></aside>`;
-  }
-
   function prepareChapterProgressIndex() {
   const tasks = plan.readings.flatMap((reading) => [
     ...(reading.bibleTasks ?? []),
@@ -552,7 +547,7 @@ function taskGroupComplete(reading, kind) {
     else if (activeView === "progress") content = renderProgress();
     else if (activeView === "rewards") content = renderRewards();
     else content = renderReadings();
-    root.innerHTML = `${activeView === "rewards" ? "" : guestBanner()}${content}`;
+    root.innerHTML = content;
   }
 
   function renderPreservingPlace() {
@@ -827,7 +822,7 @@ function taskGroupComplete(reading, kind) {
     await syncAggregateReadingProgress(reading, userId, version);
     if (!isCurrentSession(userId, version)) return;
     updateLastReading(reading.id, { userId, version });
-    setSync("Synced across devices", "synced");
+    setSync("Progress saved", "synced");
     render();
   }
 
@@ -864,7 +859,7 @@ function taskGroupComplete(reading, kind) {
       return;
     }
     progress.set(readingId, data);
-    setSync("Synced across devices", "synced");
+    setSync("Progress saved", "synced");
     renderPreservingPlace();
   }
 
@@ -939,7 +934,7 @@ function taskGroupComplete(reading, kind) {
       currentIndex = defaultReadingIndex();
       activeBook = currentReading().code;
     }
-    setSync("Synced across devices", "synced");
+    setSync("Progress saved", "synced");
     return true;
   }
 
