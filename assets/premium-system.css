@@ -174,3 +174,10 @@ html body.chronbible .site-header #install-chronbible[hidden] { display:none; }
 html body.chronbible .site-header .header-amazon-button { gap:0; line-height:1.1; }
 html body.premium-system.chronbible .site-header #install-chronbible .store-label,
 html body.premium-system.chronbible .site-header #install-chronbible .store-label strong { line-height:1.2!important; }
+
+/* Let the reading tabs and Bible Decoded landing header scroll with the page. */
+html body.chronbible .journey-nav,
+html body.premium-system[data-page="sales"] > .header {
+  position:relative;
+  top:auto;
+}
