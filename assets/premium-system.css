@@ -149,7 +149,7 @@ html body.chronbible .site-header .store-links {
 html body.chronbible .site-header .header-amazon-button,
 html body.chronbible .site-header #install-chronbible {
   box-sizing:border-box; flex:0 1 200px; width:200px; min-width:0;
-  max-width:200px; min-height:68px; margin:0; padding:6px 10px;
+  max-width:200px; min-height:60px; margin:0; padding:4px 10px;
 }
 html body.chronbible .site-header #install-chronbible { gap:8px; }
 html body.chronbible .site-header #install-chronbible .store-label {
@@ -166,6 +166,11 @@ html body.chronbible .site-header #install-chronbible[hidden] { display:none; }
 }
 @media (max-width: 999px) {
   html body.chronbible .site-header .header-actions { grid-column:1 / -1; grid-row:2; }
-  html body.chronbible .site-header #install-chronbible { flex-direction:column; gap:2px; }
+  html body.chronbible .site-header #install-chronbible { flex-direction:row; gap:8px; }
   html body.chronbible .site-header #install-chronbible .store-icon { width:24px; height:24px; }
 }
+
+/* Compact store buttons retain their widths and readable two-line labels. */
+html body.chronbible .site-header .header-amazon-button { gap:0; line-height:1.1; }
+html body.premium-system.chronbible .site-header #install-chronbible .store-label,
+html body.premium-system.chronbible .site-header #install-chronbible .store-label strong { line-height:1.2!important; }
