@@ -26,7 +26,7 @@
       box.className = 'lesson-fold-check';
       const earned = card.querySelector('.lesson-status')?.textContent.includes('Completed');
       const scoreText = card.querySelector('.dashboard-quiz-score')?.textContent?.trim() || 'Quiz: 0%';
-      const score = Number(scoreText.match(/(\\d+)\\s*%/)?.[1] || 0);
+      const score = Number(scoreText.match(/(\d+)\s*%/)?.[1] || 0);
       // Completion follows the app's earned-completion status, never an editable checkbox.
       if (earned && score >= 90) {
         box.classList.add('is-complete');
