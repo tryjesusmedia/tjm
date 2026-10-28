@@ -41,3 +41,40 @@ body.premium-system:is(.chronbible,.conflict-reading) :is(.reading-back,.journey
 @media(prefers-reduced-motion:reduce) {
  body.premium-system:not(.premium-home) :is(.button,.button-gold,.primary-button,a.button,button.primary) {transition:none;transform:none;}
 }
+
+/* Footer contrast repair, October 2026. Keep all original content and link behavior. */
+html body.premium-system .site-footer {
+  background:#1c111d !important;
+  color:#f3e8d0 !important;
+  border-top:1px solid rgba(238,189,74,.2);
+}
+html body.premium-system .site-footer .footer-brand strong {color:#f3e8d0!important;}
+html body.premium-system .site-footer .footer-brand span {color:#e0d3dc!important;}
+html body.premium-system .site-footer .footer-bottom {border-top-color:rgba(243,232,208,.18);color:#d7cbd5!important;}
+html body.premium-system .site-footer .footer-bottom :is(p,span,a),
+html body.premium-system .site-footer .reading-journey-link {
+  color:#e5dce4!important;
+}
+html body.premium-system .site-footer .footer-bottom a:hover,
+html body.premium-system .site-footer .reading-journey-link:hover {color:#eebd4a!important;}
+html body.premium-system .site-footer .premium-socials {
+  background:#f3e8d0!important;
+  border:1px solid #d7c4a7!important;
+  border-radius:18px;
+  color:#311e33!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.16);
+}
+html body.premium-system .site-footer .premium-socials > summary {
+  color:#311e33!important;
+  font-weight:700!important;
+}
+html body.premium-system .site-footer .premium-socials .social-link {
+  background:#fffaf1!important;
+  color:#311e33!important;
+  border:1px solid #ad947d!important;
+  text-decoration:none;
+}
+html body.premium-system .site-footer .premium-socials .social-link :is(span,strong,em) {color:#311e33!important;}
+html body.premium-system .site-footer .premium-socials .social-link:hover {background:#fff!important;border-color:#8d6536!important;}
+html body.premium-system .site-footer .premium-socials .reading-journey-link {color:#311e33!important;}
+html body.premium-system .site-footer .premium-socials :is(p,a,span,summary) {text-shadow:none;}
