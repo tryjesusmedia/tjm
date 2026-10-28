@@ -11,3 +11,31 @@
 #app .lesson-fold-toggle:focus-visible {outline:3px solid #c79341;outline-offset:-4px;border-radius:12px;}
 @media(max-width:600px) {#app .lesson-fold-toggle {padding:13px 16px;min-height:64px;}#app .lesson-fold-name {gap:11px;}}
 @media(prefers-reduced-motion:reduce){#app .lesson-fold-chevron {transition:none;}}
+
+/* Readable single-line lesson labels and earned quiz status */
+#app .lesson-fold {list-style:none!important;}
+#app .lesson-fold-toggle {display:flex!important;list-style:none!important;gap:10px!important}
+#app .lesson-fold-toggle::marker {content:"";}
+#app .lesson-fold-toggle::-webkit-details-marker {display:none!important}
+#app .lesson-fold-name {display:flex!important;gap:10px!important;flex:1 1 auto;min-width:0;align-items:center;}
+#app .lesson-fold-number {margin-right:1px;}
+#app .lesson-fold-title {margin-left:2px;}
+#app .lesson-fold-check {display:inline-grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border:2px solid #786a72;border-radius:6px;background:#faf6ee;color:transparent;font:800 18px/1 Montserrat,Arial,sans-serif;}
+#app .lesson-fold-check.is-complete {background:#20834d;border-color:#20834d;color:#fff;}
+#app .lesson-fold-meta {display:flex;align-items:center;gap:8px;flex:none;min-width:0;}
+#app .lesson-fold-score {font:700 15px/1.3 Montserrat,Arial,sans-serif;color:#573b5c;white-space:nowrap;}
+#app .lesson-fold-chevron {font-size:26px;}
+#app .lesson-fold-toggle {font-size:clamp(17px,3.2vw,21px)!important;}
+#app .coaching-fold {margin:25px 0;border:1px solid #d3b982;border-radius:18px;overflow:hidden;background:#eee2d1;}
+#app .coaching-fold > summary {display:block;list-style:none;cursor:pointer;padding:21px 25px;font:700 21px/1.4 Montserrat,Arial,sans-serif;color:#311e33;}
+#app .coaching-fold > summary::-webkit-details-marker {display:none;}
+#app .coaching-fold > summary::after {content:"⌄";float:right;color:#8b692b;font-size:26px;}
+#app .coaching-fold[open] > summary::after {transform:rotate(180deg);}
+#app .coaching-fold > .coaching-invite {margin:0;border-radius:0;}
+@media(max-width:440px) {
+ #app .lesson-fold-toggle {padding:12px 10px!important;gap:7px!important;}
+ #app .lesson-fold-name {gap:6px!important;}
+ #app .lesson-fold-check {width:22px;height:22px;flex-basis:22px;}
+ #app .lesson-fold-score {font-size:13px!important;}
+ #app .lesson-fold-chevron {font-size:21px;}
+}
