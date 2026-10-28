@@ -1,0 +1,13 @@
+/* Single-line premium collapsible rows, with original lesson cards inside. */
+#app .lesson-fold {display:block;min-width:0;margin:0 0 16px;border:1px solid #d5c5b6;border-radius:16px;background:#eee2d1;overflow:hidden;box-shadow:0 6px 18px rgba(49,30,51,.07);}
+#app .lesson-fold-toggle {list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:70px;padding:14px 20px;color:#311e33;font:700 clamp(18px,3.5vw,22px)/1.35 Montserrat,Arial,sans-serif;}
+#app .lesson-fold-toggle::-webkit-details-marker {display:none}
+#app .lesson-fold-name {display:flex;gap:15px;align-items:center;min-width:0;white-space:nowrap;}
+#app .lesson-fold-title {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#app .lesson-fold-number {color:#8b692b;flex-shrink:0;font-weight:700;}
+#app .lesson-fold-chevron {font-size:27px;color:#7b5420;line-height:1;flex-shrink:0;transition:transform .18s ease;}
+#app .lesson-fold[open] .lesson-fold-chevron {transform:rotate(180deg);}
+#app .lesson-fold > .lesson-card {margin:0!important;border:0!important;border-top:1px solid #d5c5b6!important;border-radius:0!important;box-shadow:none!important;}
+#app .lesson-fold-toggle:focus-visible {outline:3px solid #c79341;outline-offset:-4px;border-radius:12px;}
+@media(max-width:600px) {#app .lesson-fold-toggle {padding:13px 16px;min-height:64px;}#app .lesson-fold-name {gap:11px;}}
+@media(prefers-reduced-motion:reduce){#app .lesson-fold-chevron {transition:none;}}
