@@ -1,4 +1,4 @@
-/* Landing-page composition. Shared font sizes and the original wordmark stay intact. */
+/* Landing-page composition and responsive program title. */
 @media screen {
   html body.premium-system.premium-home .site-header:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     background:#201321;
@@ -29,11 +29,15 @@
     text-align:center;
   }
   html body.premium-system.premium-home #heroProgramTitle:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
+    width:50vw;
     max-width:none;
-    margin:0;
+    margin:0 0 0 50%;
+    transform:translateX(-50%);
+    font-size:5.4vw!important;
+    text-align:center;
     color:#f3e8d0;
     letter-spacing:-.025em;
-    text-wrap:balance;
+    white-space:nowrap;
   }
   html body.premium-system.premium-home #heroProgramTitle .hero-title-small:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     font-size:.64em!important;
@@ -62,6 +66,12 @@
     max-width:640px;
     margin-inline:auto;
     text-align:left;
+  }
+  @media(max-width:767px) {
+    html body.premium-system.premium-home #heroProgramTitle:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
+      width:90vw;
+      font-size:9.72vw!important;
+    }
   }
   @media(max-width:600px) {
     html body.premium-system.premium-home .site-header .header-inner:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
