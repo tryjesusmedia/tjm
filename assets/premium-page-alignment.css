@@ -1,0 +1,43 @@
+/* Try Jesus Media: premium simple alignment for non-home pages.
+   Presentation only: no text, link, form, quiz, reading, or navigation rewrites. */
+:root { --tjm-premium-plum:#311e33; --tjm-premium-gold:#eebd4a; --tjm-premium-ivory:#f3e8d0; --tjm-premium-cream:#faf6ee; }
+html { scroll-padding-top: 100px; }
+body.premium-system:not(.premium-home) { -webkit-font-smoothing:antialiased; }
+body.premium-system:not(.premium-home) :is(a,button,summary,input,textarea,select):focus-visible { outline:3px solid #c79341; outline-offset:4px; }
+body.premium-system:not(.premium-home) :is(.container,.wrap,.overview-width) { min-width:0; }
+body.premium-system:not(.premium-home) main :is(h1,h2,h3) { text-wrap:balance; }
+body.premium-system:not(.premium-home) main :is(p,li) { overflow-wrap:break-word; }
+body.premium-system:not(.premium-home) :is(.button,.button-gold,.primary-button,a.button,button.primary):not(:where([id^="omnisend-"],[id^="omnisend-"] *)) {
+  border-radius:12px; min-height:56px; padding:15px 25px;
+  max-width:100%; white-space:normal; text-align:center;
+  transition:box-shadow .18s ease,filter .18s ease,transform .18s ease;
+}
+@media (hover:hover) {
+ body.premium-system:not(.premium-home) :is(.button,.button-gold,.primary-button,a.button,button.primary):hover {filter:brightness(1.035);box-shadow:0 9px 23px rgba(28,17,29,.16);transform:translateY(-1px);}
+}
+body.premium-system:not(.premium-home) :is(.card,.membership-perk,.premium-destination,.overview-card,.study-preview):not(:where([id^="omnisend-"],[id^="omnisend-"] *)) {border-radius:18px;box-shadow:0 9px 30px rgba(28,17,29,.075);}
+body.premium-system:not(.premium-home) :is(.card,.membership-perk,.premium-destination) :is(h2,h3) {margin-bottom:.65em;}
+/* Marketing/overview pages, not reading and study tools. */
+body.premium-system.study-overview .overview-hero {padding-block:clamp(48px,7vw,90px);}
+body.premium-system.study-overview .overview-width {max-width:960px;}
+body.premium-system.study-overview .overview-section {padding-block:clamp(50px,6vw,82px);}
+body.premium-system.study-overview .overview-topics li {padding-block:22px;}
+body.premium-system.study-overview .overview-lead {max-width:55ch;}
+body.premium-system.study-overview .overview-header-cta {border-radius:10px;}
+body.premium-system:has(#request-form) .overview-section,body.premium-system:has(#request-form) .section {scroll-margin-top:95px;}
+body.premium-system:has(#guide-form) .overview-section {scroll-margin-top:95px;}
+body.premium-system.welcome-readable :is(.membership-perk,.premium-destination) {border-radius:18px;}
+body.premium-system.welcome-readable :is(.membership-perks,.chron-promo) {padding-block:clamp(48px,6vw,84px);}
+body.premium-system[data-page="sales"] :is(.hero,.section,.study-preview) {scroll-margin-top:110px;}
+body.premium-system[data-page="sales"] .card {border-radius:18px;}
+/* Preserve reading app / lesson UI colors and state-dependent dimensions. */
+body.premium-system:is(.chronbible,.conflict-reading) :is(.reading-back,.journey-nav button,.profile-button,.reading-item button,.badge-grid button) {transform:none;box-shadow:none;}
+/* All overlays remain accessible at higher OS font sizes. */
+@media(max-width:700px) {
+ body.premium-system:not(.premium-home) :is(.container,.wrap,.overview-width) {max-width:100%;}
+ body.premium-system:not(.premium-home) :is(.button,.button-gold,.primary-button,a.button,button.primary) {overflow-wrap:anywhere;}
+ body.premium-system.study-overview .overview-hero {padding-block:44px 52px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ body.premium-system:not(.premium-home) :is(.button,.button-gold,.primary-button,a.button,button.primary) {transition:none;transform:none;}
+}
