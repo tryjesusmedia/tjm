@@ -181,3 +181,242 @@ html body.premium-system[data-page="sales"] > .header {
   position:relative;
   top:auto;
 }
+
+
+/* TJM footer unification — dark, readable, mobile-safe (2026-10-27). */
+@media screen {
+  html body.premium-system .site-footer,
+  html body.premium-system > footer.overview-footer,
+  html body.premium-system > footer.tjm-compact-footer {
+    box-sizing:border-box;
+    background:#1c111d !important;
+    color:#f3e8d0 !important;
+    border-top:1px solid rgba(238,189,74,.27) !important;
+    padding:clamp(36px,6vw,72px) clamp(18px,4vw,32px) calc(36px + env(safe-area-inset-bottom,0px)) !important;
+    text-align:left;
+    overflow:visible;
+  }
+  html body.premium-system .site-footer .footer-brand {
+    box-sizing:border-box;
+    display:flex !important;
+    flex-direction:row !important;
+    justify-content:flex-start !important;
+    align-items:center !important;
+    gap:clamp(12px,2.8vw,20px) !important;
+    width:min(100%,1080px);
+    margin:0 auto 32px !important;
+    padding:0 !important;
+    min-width:0;
+    text-align:left !important;
+    overflow:visible;
+  }
+  html body.premium-system .site-footer .footer-brand > a {
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:clamp(64px,16vw,86px);
+    height:clamp(64px,16vw,86px);
+    max-width:24%;
+    min-width:0;
+    overflow:visible;
+    border:0;
+    padding:0;
+    background:transparent;
+  }
+  html body.premium-system .site-footer .footer-brand img {
+    box-sizing:border-box;
+    display:block;
+    width:100% !important;
+    height:100% !important;
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain !important;
+    object-position:center !important;
+    border:0 !important;
+    border-radius:0 !important;
+    clip-path:none !important;
+    overflow:visible;
+    flex-shrink:0;
+  }
+  html body.premium-system .site-footer .footer-brand > div {
+    flex:1 1 auto;
+    min-width:0;
+    overflow-wrap:break-word;
+    text-align:left !important;
+  }
+  html body.premium-system .site-footer .footer-brand strong {
+    display:block;
+    color:#f3e8d0 !important;
+    text-align:left !important;
+    font-family:"Cormorant Garamond",Georgia,serif !important;
+    font-size:clamp(21px,4.8vw,28px) !important;
+    line-height:1.2 !important;
+    letter-spacing:.045em;
+  }
+  html body.premium-system .site-footer .footer-brand span {
+    display:block;
+    color:#e8dbe2 !important;
+    text-align:left !important;
+    font-size:clamp(15px,3.8vw,17px) !important;
+    line-height:1.45 !important;
+    letter-spacing:0 !important;
+  }
+  html body.premium-system .site-footer .premium-socials {
+    box-sizing:border-box;
+    width:min(100%,800px);
+    max-width:100%;
+    margin:16px auto 32px !important;
+    padding:0 !important;
+    background:#311e33 !important;
+    color:#f3e8d0 !important;
+    border:1px solid rgba(238,189,74,.38) !important;
+    border-radius:16px !important;
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+    overflow:hidden;
+  }
+  html body.premium-system .site-footer .premium-socials > summary {
+    background:#311e33 !important;
+    color:#f3e8d0 !important;
+    font-family:Montserrat,Arial,sans-serif !important;
+    font-size:20px !important;
+    font-weight:700 !important;
+    text-align:center !important;
+    text-shadow:none !important;
+    padding:18px 22px !important;
+    cursor:pointer;
+  }
+  html body.premium-system .site-footer .premium-socials > summary::marker,
+  html body.premium-system .site-footer .premium-socials > summary::-webkit-details-marker { color:#eebd4a !important; }
+  html body.premium-system .site-footer .premium-socials :is(.social-footer,.social-links,.footer-social-links) {
+    background:transparent !important;
+    color:#f3e8d0 !important;
+    box-shadow:none !important;
+  }
+  html body.premium-system .site-footer .premium-socials .social-links {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    padding:8px clamp(12px,3vw,24px) 26px !important;
+  }
+  html body.premium-system .site-footer .premium-socials .social-link {
+    box-sizing:border-box;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:48px;
+    max-width:100%;
+    padding:10px 16px !important;
+    background:#241527 !important;
+    border:1px solid rgba(238,189,74,.4) !important;
+    border-radius:999px !important;
+    color:#f3e8d0 !important;
+    text-decoration:none !important;
+    text-shadow:none !important;
+    opacity:1 !important;
+  }
+  html body.premium-system .site-footer .premium-socials .social-link :is(span,strong,em) {
+    color:#f3e8d0 !important;
+    opacity:1 !important;
+    text-shadow:none !important;
+  }
+  html body.premium-system .site-footer .premium-socials .social-link > span:first-child {
+    color:#eebd4a !important;
+  }
+  html body.premium-system .site-footer .premium-socials .social-link:is(:hover,:focus-visible) {
+    background:#4a2a58 !important;
+    border-color:#eebd4a !important;
+  }
+  html body.premium-system .site-footer .premium-socials .reading-journey-link,
+  html body.premium-system .site-footer .reading-journey-link {
+    color:#f3e8d0 !important;
+    opacity:1 !important;
+    text-decoration-color:#eebd4a !important;
+    overflow-wrap:anywhere;
+  }
+  html body.premium-system .site-footer .footer-bottom {
+    box-sizing:border-box;
+    max-width:1080px;
+    width:100%;
+    margin:38px auto 0 !important;
+    padding-top:22px;
+    border-top:1px solid rgba(243,232,208,.24) !important;
+    color:#e8dbe2 !important;
+    gap:14px 24px;
+    justify-content:center;
+    text-align:center;
+  }
+  html body.premium-system .site-footer .footer-bottom :is(p,span,a),
+  html body.premium-system .site-footer .footer-legal a,
+  html body.premium-system .site-footer .footer-inner :is(p,nav a) {
+    color:#e8dbe2 !important;
+    opacity:1 !important;
+    text-shadow:none !important;
+  }
+  html body.premium-system .site-footer :is(.footer-bottom a,.footer-legal a,.footer-help a):is(:hover,:focus-visible) {
+    color:#eebd4a !important;
+  }
+  html body.premium-system .site-footer .footer-inner {
+    box-sizing:border-box;
+    width:min(100%,1080px);
+    max-width:100%;
+    margin-inline:auto;
+  }
+  html body.premium-system .site-footer .footer-inner .brand-footer {
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    width:max-content;
+    max-width:100%;
+    margin:0 0 24px !important;
+    padding:0 !important;
+  }
+  html body.premium-system .site-footer .footer-inner .brand-logo-footer {
+    display:block;
+    width:76px !important;
+    height:76px !important;
+    max-width:100%;
+    object-fit:contain !important;
+    border-radius:0 !important;
+    clip-path:none !important;
+  }
+  html body.premium-system > footer.overview-footer .tjm-footer-logo,
+  html body.premium-system > footer.tjm-compact-footer .tjm-footer-logo {
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    width:min(100%,1080px);
+    margin:0 auto 20px;
+  }
+  html body.premium-system > footer.overview-footer .tjm-footer-logo img,
+  html body.premium-system > footer.tjm-compact-footer .tjm-footer-logo img {
+    display:block;
+    width:76px;
+    height:76px;
+    object-fit:contain;
+    border-radius:0;
+  }
+  html body.premium-system > footer.overview-footer :is(p,a,span),
+  html body.premium-system > footer.tjm-compact-footer :is(p,a,span) {
+    color:#e8dbe2 !important;
+    opacity:1 !important;
+  }
+  html body.premium-system > footer.overview-footer a:hover,
+  html body.premium-system > footer.tjm-compact-footer a:hover { color:#eebd4a !important; }
+  html body.premium-system > footer.overview-footer .overview-width {
+    width:min(100%,1080px);
+    max-width:100%;
+    margin-inline:auto;
+  }
+  html body.premium-system > footer.overview-footer nav { display:flex; flex-wrap:wrap; gap:14px 24px; justify-content:flex-start; }
+  @media(max-width:600px) {
+    html body.premium-system .site-footer { padding-inline:18px !important; }
+    html body.premium-system .site-footer .footer-brand { gap:12px !important; }
+    html body.premium-system .site-footer .footer-brand > a { width:64px; height:64px; max-width:22%; }
+    html body.premium-system .site-footer .footer-brand strong { font-size:21px !important; letter-spacing:.02em; }
+    html body.premium-system .site-footer .footer-brand span { font-size:15px !important; }
+    html body.premium-system .site-footer .footer-bottom { flex-direction:column; align-items:center; }
+    html body.premium-system .site-footer .premium-socials .social-link { flex:0 1 auto; }
+  }
+}
