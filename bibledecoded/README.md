@@ -37,6 +37,10 @@ npx wrangler pages functions build --outdir .wrangler/build-check --compatibilit
 
 Cloudflare's existing `tjm` Pages project builds with `npm run build:bibledecoded`
 and serves the repository root. Its production branch remains `main`.
+The deployment build bundles JavaScript and preserves the checked-in HTML pages,
+including their current layout and dashboard completion-script references.
+`npm run build:bibledecoded:pages` explicitly regenerates the starter pages;
+review and reapply page customizations before committing generated output.
 Both environments bind `BD_DB` to `tjm-bibledecoded`. The initial schema is in
 `migrations/0001_bibledecoded.sql`; private course content uses
 `migrations/0002_private_course_content.sql`. Both have been applied.

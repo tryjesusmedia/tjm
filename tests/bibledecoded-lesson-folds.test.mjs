@@ -7,13 +7,17 @@ import {load} from 'cheerio';
 const source = fs.readFileSync(new URL('../bibledecoded/assets/lesson-folds.js', import.meta.url), 'utf8');
 
 // Run the shipped script against real parsed markup, with a small DOM adapter.
-function dashboard(score, earned = score >= 90, readyState = 'complete') {
+function dashboard(score, earned = score >= 90, readyState = 'complete', alreadyFolded = false) {
   const $ = load(`<div id="app"><article class="lesson-card">
     <div class="card-status"><span class="number">01</span></div>
     <h3>Foundations</h3><span class="lesson-status">${earned ? '✓ Completed' : 'In progress'}</span>
     ${score === null ? '' : `<span class="dashboard-quiz-score">Quiz: ${score}%</span>`}
     <a href="/bibledecoded/lesson/?lesson=foundations">Open Workbook</a>
   </article></div>`);
+  if (alreadyFolded) {
+    $('.lesson-card').wrap('<details class="lesson-fold" open></details>');
+    $('.lesson-fold').prepend('<summary>Foundations</summary>');
+  }
   const wrap = node => node && ({
     node,
     get textContent() { return $(node).text(); },
@@ -28,6 +32,7 @@ function dashboard(score, earned = score >= 90, readyState = 'complete') {
     append: (...children) => children.forEach(child => $(node).append(child.node)),
     prepend: child => $(node).prepend(child.node),
     before: child => $(node).before(child.node),
+    replaceWith: child => $(node).replaceWith(child.node),
   });
   let start, notify;
   vm.runInNewContext(source, {
@@ -69,4 +74,22 @@ test('lesson row checkmarks reflect saved quiz scores on load and reload', () =>
 test('a score label alone cannot award completion', () => {
   const $ = dashboard(100, false);
   assert.equal($('.lesson-fold-check').hasClass('is-complete'), false);
+});
+
+test('pre-folded dashboard cards receive one completion summary and keep their open state', () => {
+  for (const score of [89, 90, 100]) {
+    const $ = dashboard(score, score >= 90, 'complete', true);
+    assert.equal($('.lesson-fold-check').length, 1);
+    assert.equal($('.lesson-fold-check').hasClass('is-complete'), score >= 90);
+    assert.equal($('details.lesson-fold').length, 1);
+    assert.equal($('details.lesson-fold[open]').length, 1);
+    assert.equal($('.lesson-card a').text(), 'Open Workbook');
+  }
+});
+
+test('deployment preserves the customized dashboard and its versioned completion script', () => {
+  const pkg = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  const html = fs.readFileSync(new URL('../bibledecoded/dashboard/index.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(pkg.scripts['build:bibledecoded'], /build-bibledecoded-pages/);
+  assert.match(html, /lesson-folds\.js\?v=4/);
 });

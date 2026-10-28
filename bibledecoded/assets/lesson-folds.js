@@ -6,11 +6,12 @@
     const root = document.getElementById('app');
     if (!root) return;
     root.querySelectorAll('article.lesson-card').forEach(card => {
-      if (card.parentElement?.matches('details.lesson-fold')) return;
+      const existingFold = card.parentElement?.matches('details.lesson-fold') ? card.parentElement : null;
+      if (existingFold?.querySelector('.lesson-fold-check')) return;
       const heading = card.querySelector('h3');
       const number = card.querySelector('.card-status .number');
       if (!heading) return;
-      const details = document.createElement('details');
+      const details = existingFold || document.createElement('details');
       details.className = 'lesson-fold';
       const summary = document.createElement('summary');
       summary.className = 'lesson-fold-toggle';
@@ -51,8 +52,12 @@
       meta.className = 'lesson-fold-meta';
       meta.append(scoreLabel,chevron);
       summary.append(name,meta);
-      card.before(details);
-      details.append(summary,card);
+      if (existingFold) {
+        existingFold.querySelector('summary').replaceWith(summary);
+      } else {
+        card.before(details);
+        details.append(summary,card);
+      }
     });
   }
   function foldCoaching() {
