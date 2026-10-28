@@ -21,6 +21,16 @@
       if(social) fold(social,'Stay connected','premium-socials');
       footer.querySelectorAll('img').forEach(img=>{if(/logo|Try Jesus/i.test(img.src+' '+img.alt)){const a=img.closest('a');if(a)a.href='/';}});
     });
+    // Simple overview/legal footers keep their original links and wording, but receive the same left-aligned brand mark.
+    document.querySelectorAll('body > footer.overview-footer, body > footer:not(.site-footer):not(.overview-footer)').forEach(footer=>{
+      if(!footer.classList.contains('overview-footer'))footer.classList.add('tjm-compact-footer');
+      const host=footer.querySelector(':scope > .container')||footer;
+      if(!host.querySelector('.tjm-footer-logo, .footer-brand, .brand-footer')){
+        const a=document.createElement('a');a.className='tjm-footer-logo';a.href='/';a.setAttribute('aria-label','Try Jesus Media home');
+        const img=document.createElement('img');img.src='/welcome/assets/logo.webp';img.alt='Try Jesus Media';img.width=76;img.height=76;
+        a.append(img);host.prepend(a);
+      }
+    });
     const path=location.pathname.replace(/\/$/,'');
     if(path==='' || path==='/index.html') {
       document.body.classList.add('premium-home');
