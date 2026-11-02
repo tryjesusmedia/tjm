@@ -27,7 +27,9 @@
     const runningInstalled = standalone.matches || navigator.standalone === true;
     if (runningInstalled) { installed = true; rememberInstalled(true); }
     // Keep installation help available while the browser prepares its native prompt.
-    invite.hidden = runningInstalled || installed;
+    // Keep this menu entry available in the browser even if Chrome knows the app is installed.
+    // Inside the installed standalone app, installation is not relevant.
+    invite.hidden = runningInstalled;
     if (invite.hidden && help.open) help.close();
     measure();
   };
@@ -38,7 +40,7 @@
     installPrompt = null;
     installed = true;
     rememberInstalled(true);
-    invite.hidden = true;
+    update();
     if (help.open) help.close();
     measure();
   });
@@ -85,7 +87,12 @@
     refreshReady();
   }
   async function requestInstall() {
-    if (installed || standalone.matches || navigator.standalone === true) { update(); return; }
+    if (standalone.matches || navigator.standalone === true) { update(); return; }
+    if (installed) {
+      steps.innerHTML = '<p><strong>ChronBible is already installed.</strong> Use the <strong>Open in app</strong> button in Chrome’s address bar to launch it.</p>';
+      if (!help.open) help.showModal();
+      return;
+    }
     if (!installPrompt) { showHelp(); return; }
     const prompt = installPrompt;
     installPrompt = null;
