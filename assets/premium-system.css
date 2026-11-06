@@ -21,6 +21,10 @@ html body.premium-system.premium-system .site-footer:not(:where([id^="omnisend-"
 html body.premium-system.premium-system .site-footer :is(p,a,small,.social-intro):not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.6!important}
 html body.premium-system.premium-system .site-footer .footer-brand strong:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:"Cormorant Garamond",Georgia,serif!important;font-size:26px!important;line-height:1.2!important}
 html body.premium-system.premium-system .site-footer .footer-brand span:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-family:Montserrat,Arial,sans-serif!important;font-size:17px!important;line-height:1.5!important;letter-spacing:0}
+html body.premium-system .site-footer .footer-brand span.footer-community-tagline {
+  font-size: 16px !important;
+  text-transform: none;
+}
 html body.premium-system.premium-system .site-footer .reading-journey-link:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {font-size:17px!important}
 /* Preserve the established top-header lettering, independent of reading size. */
 html body.premium-system.premium-system :is(#page-title,.members-page-title,.guide-header-title,.header .brand):not(:where([id^="omnisend-"], [id^="omnisend-"] *)),

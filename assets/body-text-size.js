@@ -4,7 +4,7 @@
   if (window.tjmMinimumTextLoaded) return;
   window.tjmMinimumTextLoaded = true;
   const minimum = 14 * 96 / 72;
-  const excluded = 'svg,script,style,noscript,[id^="omnisend-"],[data-omnisend-shell]';
+  const excluded = 'svg,script,style,noscript,[id^="omnisend-"],[data-omnisend-shell],.site-footer .footer-community-tagline';
   const originals = new Map();
   let queued = false;
   // Keep old page initializers compatible without applying saved font scales.
