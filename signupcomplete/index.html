@@ -38,13 +38,13 @@
 
   <link
     rel="icon"
-    href="assets/favicon.png"
+    href="/welcome/assets/favicon.png"
     type="image/png"
   />
 
   <link
     rel="apple-touch-icon"
-    href="assets/apple-touch-icon.png"
+    href="/welcome/assets/apple-touch-icon.png"
   />
 
   <link
@@ -70,22 +70,22 @@
 
   <link
     rel="stylesheet"
-    href="assets/style.css?v=20260914-3"
+    href="/welcome/assets/style.css?v=20260914-3"
   />
 
   <link
     rel="stylesheet"
-    href="assets/pastor-kal-chat.css?v=20260904-2"
+    href="/welcome/assets/pastor-kal-chat.css?v=20260904-2"
   />
 
   <script
     defer
-    src="assets/script.js?v=20260914-sync"
+    src="/welcome/assets/script.js?v=20260914-sync"
   ></script>
 
   <script
     defer
-    src="assets/pastor-kal-chat.js?v=20260904-2"
+    src="/welcome/assets/pastor-kal-chat.js?v=signup-parity-1"
   ></script>
   <link rel="stylesheet" href="/assets/readability.css?v=premium1" />
   <script defer src="/assets/guide-experience.js?v=premium1"></script>
@@ -93,44 +93,18 @@
   <meta property="og:site_name" content="Try Jesus Media">
 
   <style>
-    /* A dedicated row in the existing sticky header reserves its own space. */
-    .app-download-row {
-      display: flex;
-      justify-content: center;
-      padding: 8px 16px 10px;
-      border-top: 1px solid rgba(238,189,74,.2);
-      background: #311e33;
-    }
-    .app-download-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 10px 26px;
-      border: 1px solid #f7d983;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #f7d983, #eebd4a);
-      color: #211323;
-      font: 700 17px/1.4 Montserrat, Arial, sans-serif;
-      text-decoration: none;
-      text-align: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,.18);
-    }
-    .app-download-link:hover { background: #f7d983; }
-    .app-download-link:focus-visible { outline: 3px solid #fffdf9; outline-offset: 3px; }
-    html { scroll-padding-top: 190px; }
-    @media (max-width: 860px) {
-      .site-header .site-nav { top: 100%; max-height: calc(100dvh - 170px); overflow-y: auto; }
-    }
-    @media print { .app-download-row { display: none; } }
+    html { scroll-padding-top:110px; }
+    @media(max-width:860px) { .site-er .site-nav { top:100%; max-height:calc(100dvh - 100px); overflow-y:auto; } }
   </style>
 <link rel="stylesheet" href="/assets/membership-offers.css?v=20260914-2" />
 <link rel="stylesheet" href="/welcome/assets/readable-welcome.css?v=20260914-3" />
 <script defer src="/assets/perk-carousels.js?v=20260914-1"></script>
 <link rel="stylesheet" href="/assets/premium-simplicity.css?v=20261001-1" />
-<link rel="stylesheet" href="/assets/premium-system.css?v=20261027-unified-dark-footer"><script defer src="/assets/premium-layout.js?v=20261027-unified-dark-footer"></script><link rel="stylesheet" href="/assets/premium-page-alignment.css?v=20261027-unified-dark-footer">
+<link rel="stylesheet" href="/welcome/assets/members-page.css?v=3">
+<script defer src="/welcome/assets/members-page.js?v=2"></script>
+<link rel="stylesheet" href="/assets/premium-system.css?v=20261027-unified-dark-footer"><script defer src="/assets/premium-layout.js?v=20261027-unified-dark-footer"></script><link rel="stylesheet" href="/assets/bottom-tabs.css?v=1"><script defer src="/assets/bottom-tabs.js?v=2"></script><link rel="stylesheet" href="/assets/premium-page-alignment.css?v=20261027-unified-dark-footer">
 
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18526309797"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -140,12 +114,12 @@
   gtag('config', 'AW-18526309797');
 </script>
 
-  <!-- Event snippet for Sign-up conversion page -->
+<!-- Event snippet for Sign-up conversion page -->
 <script>
   gtag('event', 'conversion', {'send_to': 'AW-18526309797/X3IuCLWn5rIdEKWbhIJF'});
 </script>
 
-
+<link rel="stylesheet" href="/assets/member-masthead.css?v=1" media="screen">
 </head>
 
 
@@ -171,46 +145,25 @@
      HEADER
 =================================================== -->
 
-<header
+<header data-tjm-masthead
   class="site-header"
   id="top"
 >
 
-  <div class="header-inner">
+  <div class="header-inner tjm-masthead-row">
 
-    <a
-      class="brand"
-      href="https://tryjesusmedia.com/"
-      aria-label="Try Jesus Media home"
-    >
-
-      <img
-        src="/assets/logo.png"
-        width="64"
-        height="64"
-        alt="Try Jesus Media lion and lamb logo"
-      />
-
-      
-  <span class="brand-wordmark">
-    <strong>TRY JESUS</strong>
-    <small>MEDIA</small>
-  </span>
-      
-    </a>
+    <a class="members-page-title tjm-masthead-title" href="/welcome/" aria-label="Members Page"><em>Members</em> <span>Page</span></a>
 
 
     <button
-      class="menu-toggle"
+      class="menu-toggle tjm-menu-button"
       id="menuToggle"
       type="button"
       aria-controls="siteNav"
       aria-expanded="false"
       aria-label="Open navigation"
     >
-      <span></span>
-      <span></span>
-      <span></span>
+      <svg class="tjm-menu-icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path class="tjm-menu-lines" d="M1 6h26M1 14h26M1 22h26"/><path class="tjm-menu-cross" d="m5 5 18 18M23 5 5 23"/></svg>
     </button>
 
 
@@ -219,7 +172,6 @@
   </div>
 
 
-  
 </header>
 
 
@@ -238,13 +190,13 @@
             READ THE BIBLE AS ONE UNFOLDING STORY
           </p>
 
-          <h1 id="chronPromoTitle">Chronological<br /><em>Bible</em></h1>
+          <h1 id="chronPromoTitle"><span>The</span> <em>ChronBible</em> <span>Guide</span></h1>
 
           <p>See how the Bible fits together with guided readings. Read one chapter at a time, save your place, and move at your own pace.</p>
 
           <a
             class="button button-gold"
-            href="/chronbible/"
+            href="/chronbible/?view=journey"
           >
             Start reading Chronological Bible
           </a>
@@ -254,7 +206,7 @@
 
         <a
           class="chron-promo-window reveal"
-          href="/chronbible/"
+          href="/chronbible/?view=journey"
           aria-label="Open the chronological Bible reading journey"
         >
 
@@ -1347,7 +1299,7 @@
         <div class="pk-photo-ring">
 
           <img
-            src="assets/pastor-kal-avatar.jpg"
+            src="/welcome/assets/pastor-kal-avatar.jpg"
             width="190"
             height="190"
             loading="lazy"
@@ -1386,7 +1338,7 @@
     <div class="footer-brand">
 
       <a href="/" aria-label="Try Jesus Media home"><img
-        src="assets/logo.webp"
+        src="/welcome/assets/logo.webp"
         width="92"
         height="92"
         alt="Try Jesus Media"

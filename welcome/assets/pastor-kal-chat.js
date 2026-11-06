@@ -1,5 +1,5 @@
 (() => {
-  const ALLOWED_PATHS = new Set(["/welcome", "/welcome/"]);
+  const ALLOWED_PATHS = new Set(["/welcome", "/welcome/", "/signupcomplete", "/signupcomplete/"]);
   if (!ALLOWED_PATHS.has(window.location.pathname)) return;
 
   const API_URL = "/api/chat";

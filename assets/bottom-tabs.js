@@ -1,7 +1,9 @@
 /* One bottom bar, deliberately restricted to these three top-level pages. */
 (() => {
   'use strict';
-  const path = location.pathname.replace(/\/index\.html$/i, '').replace(/\/+$/, '').toLowerCase();
+  const pathname = location.pathname.replace(/\/index\.html$/i, '').replace(/\/+$/, '').toLowerCase();
+  // Signup confirmation displays the Members Page without redirecting its tracking URL.
+  const path = pathname === '/signupcomplete' ? '/welcome' : pathname;
   const allowed = ['/chronbible', '/bibledecoded', '/welcome'];
   if (!allowed.includes(path)) return;
   let bar = document.querySelector('.chron-bottom-tabs');

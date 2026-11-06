@@ -21,7 +21,7 @@ function isAllowedWelcomeRequest(request) {
 
   try {
     const url = new URL(referer);
-    const isWelcomePath = url.pathname === "/welcome" || url.pathname === "/welcome/";
+    const isWelcomePath = ["/welcome", "/welcome/", "/signupcomplete", "/signupcomplete/"].includes(url.pathname);
     const host = url.hostname.toLowerCase();
     const isProductionHost = host === "tryjesusmedia.com" || host === "www.tryjesusmedia.com";
     const isCloudflarePreview = host.endsWith(".pages.dev");
