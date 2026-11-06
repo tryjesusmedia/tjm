@@ -1,0 +1,95 @@
+/* One title row for the three top-level member destinations. */
+html body.premium-system header[data-tjm-masthead] {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(238,189,74,.2);
+  border-radius: 0;
+  background: #201321;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+html body.premium-system header[data-tjm-masthead] > .tjm-masthead-row {
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 48px;
+  grid-template-rows: 86px;
+  align-items: center;
+  width: 100%;
+  max-width: 1276px;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0 18px;
+  gap: 0 12px;
+  background: transparent;
+}
+html body.premium-system [data-tjm-masthead] :is(#page-title,.tjm-masthead-title) {
+  display: block;
+  grid-area: 1 / 1;
+  justify-self: start;
+  margin: 0;
+  padding: 0;
+  font: 600 clamp(32px,7.7vw,52px)/1.08 "Cormorant Garamond",Georgia,serif !important;
+  letter-spacing: -.035em;
+  color: #f3e8d0;
+  white-space: nowrap;
+  text-decoration: none;
+}
+html body.premium-system [data-tjm-masthead] :is(#page-title,.tjm-masthead-title) > :is(span,em) {
+  display: inline;
+  font: inherit !important;
+  letter-spacing: inherit;
+}
+html body.premium-system [data-tjm-masthead] :is(#page-title,.tjm-masthead-title) > span {
+  font-size: .64em !important;
+  color: #f3e8d0;
+}
+html body.premium-system [data-tjm-masthead] :is(#page-title,.tjm-masthead-title) > em {
+  font-style: italic !important;
+  font-weight: 500 !important;
+  color: #eebd4a;
+}
+html body.premium-system [data-tjm-masthead] :is(#profile-button,.tjm-menu-button) {
+  box-sizing: border-box;
+  grid-column: -2;
+  grid-row: 1;
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #eebd4a;
+}
+html body.premium-system [data-tjm-masthead] :is(#profile-button,.tjm-menu-button) .tjm-menu-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+[data-tjm-masthead] .tjm-menu-cross,
+[data-tjm-masthead] [aria-expanded="true"] .tjm-menu-lines { display: none; }
+[data-tjm-masthead] [aria-expanded="true"] .tjm-menu-cross { display: inline; }
+
+/* ChronBible alone has a store link. Keep the primary row identical on phones. */
+@media (min-width: 1000px) {
+  html body.chronbible header[data-tjm-masthead] > .tjm-masthead-row {
+    grid-template-columns: minmax(0,1fr) 200px minmax(0,1fr);
+  }
+}
+@media (max-width: 999px) {
+  html body.chronbible header[data-tjm-masthead] .header-actions { padding-bottom: 10px; }
+}
