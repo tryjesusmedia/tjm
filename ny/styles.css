@@ -1,0 +1,97 @@
+/* Try Jesus New York /ny/ — TJM1 premium-simple landing page.
+   Shared header/footer styling intentionally comes from the main website styles. */
+:root {
+  --ny-plum:#311e33;--ny-midnight:#1c111d;--ny-gold:#eebd4a;
+  --ny-ivory:#f3e8d0;--ny-cream:#faf6ee;--ny-ink:#311e33;
+}
+html {scroll-behavior:smooth;scroll-padding-top:100px;}
+body.ny-home {background:var(--ny-cream);}
+body.ny-home * {box-sizing:border-box;}
+body.ny-home :is(a,summary,button):focus-visible {outline:3px solid var(--ny-gold);outline-offset:4px;}
+body.ny-home .ny-hero {background:var(--ny-midnight);color:var(--ny-ivory);padding:clamp(46px,6vw,88px) 0 clamp(58px,7vw,96px);position:relative;isolation:isolate;overflow:hidden;}
+body.ny-home .ny-hero::before {content:"";position:absolute;inset:-120px auto auto -160px;width:550px;height:550px;border-radius:50%;background:radial-gradient(circle,rgba(238,189,74,.08),transparent 68%);pointer-events:none;z-index:-1;}
+body.ny-home .ny-hero-inner,.ny-container {width:min(1140px,calc(100% - 48px));margin:0 auto;}
+body.ny-home .ny-hero-inner {display:grid;grid-template-columns:minmax(0,1.13fr) minmax(360px,.87fr);align-items:start;gap:clamp(30px,4.5vw,70px);}
+html body.ny-home main .ny-eyebrow {font:700 14px/1.4 Montserrat,Arial,sans-serif!important;letter-spacing:.17em!important;color:var(--ny-gold)!important;text-transform:uppercase;max-width:none;margin:0 0 18px;}
+html body.ny-home main .ny-eyebrow-dark {color:#916c27!important;}
+html body.premium-system.premium-home.ny-home main h1.ny-title {font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(39px,4.7vw,64px)!important;line-height:1.08!important;font-weight:600;color:var(--ny-ivory)!important;letter-spacing:-.025em!important;margin:0 0 20px;}
+html body.premium-system.premium-home.ny-home main h1.ny-title em {color:var(--ny-gold)!important;font:inherit!important;font-style:normal!important;}
+html body.premium-system.premium-home.ny-home main h2.ny-tagline {font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:600;font-size:clamp(28px,2.8vw,39px)!important;line-height:1.2!important;color:var(--ny-gold)!important;margin:0 0 28px;}
+html body.ny-home main p,html body.ny-home main li {font-size:clamp(18px,1.6vw,20px)!important;line-height:1.58!important;letter-spacing:0!important;}
+body.ny-home .ny-hero p {color:#e6dce2;}
+body.ny-home .ny-hero p strong {color:#fff8e8;}
+body.ny-home .ny-offer-intro {font-weight:800;margin:26px 0 15px;}
+body.ny-home .ny-offer-list {padding:0;margin:0 0 24px;display:grid;gap:12px;list-style:none;}
+body.ny-home .ny-offer-list li {display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1px solid rgba(238,189,74,.19);background:rgba(255,255,255,.035);border-radius:14px;color:#eee4e9;}
+body.ny-home .ny-offer-list strong {color:var(--ny-gold);}
+body.ny-home .ny-offer-icon {width:30px;flex:none;font-size:23px;line-height:1.2;}
+body.ny-home .ny-small-print {font-size:15px!important;line-height:1.6!important;color:#e0d5dd!important;margin:14px 0 0;}
+html body.premium-system.premium-home.ny-home main a.ny-cta {display:inline-flex;justify-content:center;align-items:center;max-width:100%;min-height:65px;padding:17px 24px!important;font:800 clamp(16px,1.55vw,19px)/1.4 Montserrat,Arial,sans-serif!important;text-align:center;text-transform:none!important;letter-spacing:0!important;white-space:normal;background:linear-gradient(180deg,#f7d983 0%,#eebd4a 100%)!important;border:1px solid #c49332;color:#311e33!important;border-radius:12px;box-shadow:0 9px 25px rgba(0,0,0,.15);text-decoration:none;overflow-wrap:break-word;transition:transform .2s ease,box-shadow .2s ease;}
+html body.premium-system.premium-home.ny-home main a.ny-cta:hover {transform:translateY(-2px);box-shadow:0 13px 32px rgba(0,0,0,.24);}
+body.ny-home #guide-form {scroll-margin-top:115px;}
+body.ny-home .ny-form-panel {border-radius:22px;background:#f9f4e9;border:1px solid rgba(238,189,74,.6);color:var(--ny-plum);padding:clamp(24px,3.5vw,38px);box-shadow:0 22px 60px rgba(0,0,0,.3);}
+html body.premium-system.premium-home.ny-home main .ny-form-panel h2 {font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(33px,3.5vw,48px)!important;line-height:1.14!important;color:var(--ny-plum)!important;margin:0 0 10px;}
+body.ny-home .ny-form-panel .ny-form-intro p {color:#50414b!important;margin-bottom:14px;}
+body.ny-home .ny-form-panel .ny-form-intro p.ny-eyebrow {color:#946d27!important;}
+body.ny-home .ny-form-preview {border-radius:14px;border:1px dashed #ab977c;padding:20px;background:#fffdfa;display:grid;gap:16px;}
+body.ny-home .ny-placeholder-field {display:grid;gap:8px;}
+body.ny-home .ny-placeholder-field > span {font:700 16px/1.45 Montserrat,Arial,sans-serif;color:#362539;}
+body.ny-home .ny-fake-input {background:#fff;border:1px solid #c7b5b5;min-height:56px;display:flex;align-items:center;padding:12px 16px;border-radius:9px;color:#776b77;font:500 17px/1.45 Montserrat,Arial,sans-serif;}
+body.ny-home .ny-fake-submit {background:linear-gradient(180deg,#f7d983,#eebd4a);border:1px solid #c49332;color:#311e33;text-align:center;font:800 17px/1.4 Montserrat,Arial,sans-serif;padding:16px 18px;border-radius:10px;opacity:.65;}
+html body.premium-system.premium-home.ny-home main p.ny-form-pending {margin:0;font-size:14px!important;color:#665265!important;line-height:1.6!important;}
+html body.premium-system.premium-home.ny-home main p.ny-form-assurance {font-size:15px!important;color:#564659!important;margin:16px 0 0;text-align:center;}
+body.ny-home .ny-section {padding:clamp(65px,7.5vw,105px) 0;}
+body.ny-home .ny-section-light {background:#faf6ee;}
+body.ny-home .ny-section-dark {background:#311e33;color:var(--ny-ivory);}
+body.ny-home .ny-split {display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);align-items:center;gap:clamp(35px,6vw,90px);}
+body.ny-home .ny-split-reverse {grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);}
+html body.premium-system.premium-home.ny-home main .ny-section-copy h2,html body.premium-system.premium-home.ny-home main .ny-community h2,html body.premium-system.premium-home.ny-home main .ny-resources h2 {font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(38px,4.2vw,56px)!important;line-height:1.11!important;font-weight:600!important;color:#311e33!important;margin:0 0 22px;}
+html body.premium-system.premium-home.ny-home main .ny-section-copy h3 {font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(27px,2.7vw,35px)!important;line-height:1.22!important;color:#53304f!important;margin:0 0 22px;}
+body.ny-home .ny-section-copy p {color:#473a49;}
+body.ny-home .ny-section-copy .ny-cta {margin-top:16px;}
+body.ny-home .ny-question-list {padding-left:27px;color:#311e33;line-height:1.55;}
+body.ny-home .ny-question-list li {margin-bottom:11px;padding-left:4px;}
+body.ny-home .ny-question-list li::marker {color:#966921;}
+html body.premium-system.premium-home.ny-home main .ny-section-dark :is(h2,h3) {color:#f3e8d0!important;}
+body.ny-home .ny-section-dark .ny-section-copy p {color:#eee4e9;}
+body.ny-home .ny-section-dark .ny-section-copy p em {color:#f4ce79;}
+body.ny-home .ny-media-stack {display:grid;gap:20px;max-width:600px;width:100%;}
+body.ny-home .ny-image-placeholder {background:linear-gradient(160deg,#332039 0%,#211521 70%);border:1px solid rgba(238,189,74,.48);border-radius:18px;box-shadow:0 20px 35px rgba(28,17,29,.16);min-width:0;aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:9px;padding:16px;color:#f3e8d0;}
+body.ny-home .ny-image-placeholder .ny-placeholder-icon {width:64px;height:64px;display:grid;place-items:center;border-radius:50%;background:rgba(238,189,74,.16);border:1px solid rgba(238,189,74,.5);font-size:29px;color:#eebd4a;}
+body.ny-home .ny-image-placeholder strong {font:700 clamp(18px,2.3vw,23px)/1.3 Montserrat,Arial,sans-serif;color:#f3e8d0;}
+body.ny-home .ny-image-placeholder small {font:600 12px/1.4 Montserrat,Arial,sans-serif;color:#e4c895;letter-spacing:.1em;}
+body.ny-home .ny-image-small {max-width:72%;margin-left:auto;aspect-ratio:16/8.2;}
+body.ny-home .ny-merch-photo {background:linear-gradient(140deg,#f6e7c7,#caad83);border-color:#e5c579;color:#311e33;}
+body.ny-home .ny-merch-photo .ny-placeholder-icon {background:#311e33;color:#eebd4a;}
+body.ny-home .ny-merch-photo :is(strong,small) {color:#311e33;}
+body.ny-home .ny-image-placeholder img {display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit;}
+body.ny-home .ny-image-placeholder:has(img) {padding:0;overflow:hidden;}
+body.ny-home .ny-narrow {max-width:820px;text-align:center;}
+body.ny-home .ny-community {background:#f1e5d4;}
+body.ny-home .ny-community h2 {max-width:730px;margin-inline:auto!important;}
+body.ny-home .ny-community p {color:#473a49;max-width:710px;margin-left:auto;margin-right:auto;}
+body.ny-home .ny-community .ny-cta {margin-top:18px;}
+body.ny-home .ny-resources {background:#1c111d;color:#f3e8d0;text-align:center;}
+html body.premium-system.premium-home.ny-home main .ny-resources h2 {color:#f3e8d0!important;}
+body.ny-home .ny-resources p {color:#e6dce2;max-width:800px;margin-left:auto;margin-right:auto;}
+body.ny-home .ny-resources .ny-cta {margin-top:19px;}
+body.ny-home .ny-form-panel:target {box-shadow:0 0 0 4px rgba(238,189,74,.7),0 22px 60px rgba(0,0,0,.3);}
+@media(max-width:950px) {
+  body.ny-home .ny-hero-inner {grid-template-columns:minmax(0,1fr);max-width:760px;}
+  body.ny-home .ny-hero-content {max-width:760px;}
+  body.ny-home .ny-split,body.ny-home .ny-split-reverse {grid-template-columns:minmax(0,1fr);gap:45px;}
+  body.ny-home .ny-media-stack {max-width:700px;margin:0 auto;}
+  body.ny-home .ny-section-dark .ny-split-reverse > .ny-media-stack {order:2;}
+  body.ny-home .ny-section-dark .ny-split-reverse > .ny-section-copy {order:1;}
+}
+@media(max-width:600px) {
+  body.ny-home .ny-hero-inner,.ny-container {width:calc(100% - 34px);}
+  body.ny-home .ny-hero {padding-block:38px 57px;}
+  html body.premium-system.premium-home.ny-home main h1.ny-title {font-size:clamp(36px,9vw,49px)!important;}
+  body.ny-home .ny-offer-list li {padding:13px 12px;gap:11px;}
+  body.ny-home .ny-form-panel {padding:24px 18px;}
+  html body.premium-system.premium-home.ny-home main a.ny-cta {width:100%;}
+  body.ny-home .ny-image-small {max-width:87%;}
+  body.ny-home .ny-section {padding:60px 0;}
+}
+@media(prefers-reduced-motion:reduce) {html {scroll-behavior:auto;}html body.ny-home main a.ny-cta {transition:none!important;}html body.ny-home main a.ny-cta:hover {transform:none!important;}}
