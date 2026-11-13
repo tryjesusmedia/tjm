@@ -1262,3 +1262,94 @@ html body.premium-home .home-signup-inline > .omnisend-form-host {
   background:transparent;
   box-shadow:none;
 }
+
+
+/* TJM location selector — shared by the main, New York, and New Orleans landing pages. */
+.site-nav .locations-dropdown {
+  position:relative;
+  min-width:0;
+  color:#f3e8d0;
+}
+.site-nav .locations-dropdown > summary {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-height:44px;
+  padding:8px 2px;
+  cursor:pointer;
+  list-style:none;
+  color:#f3e8d0;
+  font-family:Montserrat,Arial,sans-serif;
+  font-size:clamp(13px,1.05vw,16px);
+  font-weight:700;
+  line-height:1.4;
+  letter-spacing:0;
+  text-transform:none;
+}
+.site-nav .locations-dropdown > summary::-webkit-details-marker { display:none; }
+.site-nav .locations-dropdown > summary::after {
+  content:"⌄";
+  font-size:18px;
+  line-height:1;
+  color:#eebd4a;
+  transition:transform .2s ease;
+}
+.site-nav .locations-dropdown[open] > summary::after {transform:rotate(180deg);}
+.site-nav .locations-dropdown > summary:focus-visible {
+  outline:3px solid #eebd4a;
+  outline-offset:3px;
+  border-radius:6px;
+}
+.site-nav .locations-submenu {
+  display:grid;
+  gap:4px;
+  position:absolute;
+  z-index:200;
+  top:calc(100% + 4px);
+  left:0;
+  width:max-content;
+  min-width:200px;
+  max-width:calc(100vw - 32px);
+  padding:10px;
+  background:#241527;
+  border:1px solid rgba(238,189,74,.5);
+  border-radius:12px;
+  box-shadow:0 12px 28px rgba(0,0,0,.22);
+}
+.site-nav .locations-submenu a {
+  display:block !important;
+  color:#f3e8d0 !important;
+  font:600 16px/1.5 Montserrat,Arial,sans-serif !important;
+  text-decoration:none;
+  letter-spacing:0 !important;
+  text-transform:none !important;
+  white-space:normal !important;
+  padding:12px 14px !important;
+  border-radius:8px;
+}
+.site-nav .locations-submenu a:is(:hover,:focus-visible) {
+  color:#311e33 !important;
+  background:#eebd4a;
+}
+@media (max-width:860px) {
+  .site-nav .locations-dropdown {width:100%;}
+  .site-nav .locations-dropdown > summary {
+    width:100%;
+    padding:12px;
+    justify-content:space-between;
+    font-size:19px;
+    min-height:50px;
+  }
+  .site-nav .locations-submenu {
+    position:static;
+    width:100%;
+    max-width:100%;
+    margin:0 0 10px;
+    box-shadow:none;
+    background:#311e33;
+  }
+  .site-nav .locations-submenu a {min-height:46px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  .site-nav .locations-dropdown > summary::after {transition:none;}
+}
