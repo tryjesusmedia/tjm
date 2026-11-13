@@ -1,0 +1,37 @@
+/* Baptism landing page: TJM1. Keep every typography rule outside the embed. */
+html {scroll-behavior:smooth;scroll-padding-top:100px;}
+body.baptism-home {background:#faf6ee;}
+.baptism-wrap {width:min(1120px,calc(100% - 48px));margin-inline:auto;}
+.baptism-centered {max-width:760px;text-align:center;}
+body.baptism-home .baptism-hero {padding:clamp(64px,8vw,112px) 0;background:radial-gradient(ellipse at 50% 0%,#422a43 0%,#1c111d 75%);color:#f3e8d0;border-bottom:1px solid #74552a;}
+html body.baptism-home main #baptism-title {font:600 clamp(56px,7.5vw,100px)/.98 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.035em!important;color:#f3e8d0!important;margin:0 auto 30px;max-width:none;text-wrap:balance;}
+html body.baptism-home main #baptism-title em {font:inherit!important;color:#eebd4a!important;font-style:normal!important;}
+html body.baptism-home main :is(.baptism-wrap,.baptism-scripture) h2 {font:600 clamp(38px,4.5vw,58px)/1.08 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.025em!important;color:#311e33!important;margin:0 0 26px;text-wrap:balance;}
+html body.baptism-home main .baptism-wrap p {font:400 clamp(19px,1.65vw,21px)/1.7 Montserrat,Arial,sans-serif!important;letter-spacing:0!important;margin:0 0 22px;max-width:none;color:inherit;}
+html body.baptism-home main .baptism-wrap .baptism-eyebrow {font:700 16px/1.5 Montserrat,Arial,sans-serif!important;letter-spacing:.12em!important;text-transform:uppercase;color:#76551b!important;margin-bottom:24px;}
+html body.baptism-home main .baptism-hero .baptism-eyebrow {color:#eebd4a!important;}
+html body.baptism-home main .baptism-wrap .baptism-lead {font-size:clamp(22px,2vw,26px)!important;line-height:1.45!important;}
+html body.baptism-home main .baptism-wrap .baptism-note {font-size:18px!important;margin:22px auto 0;color:#e0d4dd;max-width:48ch;}
+html body.baptism-home main a.baptism-cta {display:inline-flex;align-items:center;justify-content:center;gap:16px;min-height:62px;max-width:100%;padding:18px 28px;border:1px solid #d5a43d;border-radius:10px;background:linear-gradient(180deg,#f6d782,#eebd4a);color:#311e33!important;box-shadow:0 8px 24px #0002;font:800 19px/1.4 Montserrat,Arial,sans-serif!important;text-decoration:none;text-align:center;letter-spacing:0!important;transition:transform .18s,box-shadow .18s;margin-top:8px;}
+html body.baptism-home main a.baptism-cta:hover {transform:translateY(-2px);box-shadow:0 12px 30px #0003;}
+html body.baptism-home main a.baptism-cta:focus-visible {outline:3px solid #eebd4a;outline-offset:5px;}
+.baptism-section {padding:clamp(64px,7vw,100px) 0;}
+.baptism-story {background:#faf6ee;color:#473a49;}
+.baptism-split {display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:start;}
+.baptism-scripture {border-top:2px solid #c69b43;padding-top:32px;}
+html body.baptism-home main .baptism-scripture h2 {font-size:clamp(32px,3vw,42px)!important;}
+body.baptism-home blockquote {margin:30px 0;padding:0 0 0 24px;border:0;border-left:3px solid #eebd4a;background:none;box-shadow:none;}
+html body.baptism-home main blockquote p {font:600 clamp(28px,3vw,38px)/1.25 'Cormorant Garamond',Georgia,serif!important;color:#311e33!important;margin-bottom:16px!important;}
+body.baptism-home blockquote cite {font:500 17px/1.5 Montserrat,Arial,sans-serif;color:inherit;}
+.baptism-peace {background:#311e33;color:#f3e8d0;}
+html body.baptism-home main .baptism-peace h2 {color:#f3e8d0!important;}
+body.baptism-home .baptism-peace blockquote {border-left:0;padding:16px 0;margin:20px 0 34px;}
+html body.baptism-home main .baptism-peace blockquote p {color:#eebd4a!important;font-size:clamp(32px,4vw,48px)!important;}
+.baptism-next {background:#f3e8d0;color:#473a49;}
+/* Layout boundary only. No descendant selectors or overrides for the form. */
+body.baptism-home #baptism-form {width:min(680px,calc(100% - 32px));margin:36px auto;scroll-margin-top:110px;min-width:0;}
+body.baptism-home #baptism-form:focus-visible {outline:2px solid #76551b;outline-offset:8px;}
+body.baptism-home .baptism-after-form {max-width:680px;}
+@media(max-width:800px) {.baptism-split {grid-template-columns:1fr;gap:40px;}.baptism-wrap {width:calc(100% - 36px);}.baptism-centered {max-width:680px;}}
+@media(max-width:480px) {html body.baptism-home main a.baptism-cta {width:100%;font-size:18px!important;padding:17px 18px;}.baptism-hero {padding-block:60px!important;}html body.baptism-home main #baptism-title {font-size:clamp(51px,13vw,64px)!important;}.baptism-section {padding-block:58px;}}
+@media(prefers-reduced-motion:reduce) {html {scroll-behavior:auto;}html body.baptism-home main a.baptism-cta {transition:none;transform:none;}}
