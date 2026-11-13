@@ -571,3 +571,69 @@ html body.premium-system > footer.tjm-compact-footer .tjm-copyright-last {
   }
   html body.premium-system.premium-home .site-header .brand .brand-wordmark > small {font-size:6px !important;}
 }
+
+
+/* Footer wrapping regression repair: preserve natural link widths.
+   The copyright spans its own last row without squeezing siblings. */
+@media screen {
+  html body.premium-system.premium-system .site-footer .footer-bottom {
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:wrap !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:14px 24px !important;
+    width:100% !important;
+    max-width:1080px !important;
+    min-width:0 !important;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom > a:not(.reading-journey-link) {
+    flex:0 1 auto !important;
+    width:auto !important;
+    min-width:min-content !important;
+    max-width:100% !important;
+    overflow-wrap:normal !important;
+    word-break:normal !important;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom > a.reading-journey-link {
+    flex:0 0 100% !important;
+    justify-content:center !important;
+    width:100% !important;
+    min-width:0 !important;
+    white-space:normal !important;
+    word-break:normal !important;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom > .footer-legal {
+    display:flex !important;
+    flex:0 0 100% !important;
+    flex-wrap:wrap !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:100% !important;
+    min-width:0 !important;
+    gap:12px 24px !important;
+    overflow:visible !important;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom .footer-legal a {
+    display:inline-block !important;
+    flex:0 1 auto !important;
+    min-width:min-content !important;
+    max-width:100% !important;
+    width:auto !important;
+    white-space:normal !important;
+    overflow-wrap:normal !important;
+    word-break:normal !important;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom > .tjm-copyright-last {
+    display:block !important;
+    flex:0 0 100% !important;
+    order:999 !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    margin:18px 0 0 !important;
+    text-align:center !important;
+    overflow-wrap:normal !important;
+    word-break:normal !important;
+  }
+}
