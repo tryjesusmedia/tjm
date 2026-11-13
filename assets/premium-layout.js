@@ -150,7 +150,7 @@
       if(shopFold && !q('.premium-pastor-form',main)){
         // Only the control is styled by the website; Omnisend owns its entire form.
         const pastorFold=document.createElement('details');
-        pastorFold.className='premium-pastor-form';
+        pastorFold.className='premium-fold premium-pastor-form';
         const pastorToggle=document.createElement('summary');
         pastorToggle.textContent='Talk to a Pastor';
         const pastorEmbed=document.createElement('div');
