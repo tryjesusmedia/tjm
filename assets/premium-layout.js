@@ -147,14 +147,32 @@
       q('#watch',main)?.closest('.premium-fold')?.before(resources);
       const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/mo/">Missouri</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
       const shopFold=q('#shop',main)?.closest('.premium-fold');
-      if(shopFold && !q('.premium-pastor-link',main)){
-        const pastorLink=document.createElement('a');
-        pastorLink.className='premium-pastor-link';
-        pastorLink.href='https://calendly.com/kalroller/tryjesusmedia';
-        pastorLink.target='_blank';
-        pastorLink.rel='noopener noreferrer';
-        pastorLink.textContent='Talk to a Pastor';
-        shopFold.after(pastorLink);
+      if(shopFold && !q('.premium-pastor-form',main)){
+        // Only the control is styled by the website; Omnisend owns its entire form.
+        const pastorFold=document.createElement('details');
+        pastorFold.className='premium-pastor-form';
+        const pastorToggle=document.createElement('summary');
+        pastorToggle.textContent='Talk to a Pastor';
+        const pastorEmbed=document.createElement('div');
+        pastorEmbed.id='omnisend-embedded-v2-6af73ec26e39df0b955367c0';
+        pastorFold.append(pastorToggle,pastorEmbed);
+        let omniloaded=false;
+        pastorFold.addEventListener('toggle',()=>{
+          if(!pastorFold.open || omniloaded)return;
+          omniloaded=true;
+          // Load only when expanded: third-party layout can measure visible form dimensions.
+          window.omnisend=window.omnisend||[];
+          window.omnisend.push(['brandID','6995f37d2de8216a26d88410']);
+          window.omnisend.push(['track','$pageViewed']);
+          if(!document.querySelector('script[data-omnisend-loader],script[src*="omnisnippet1.com/inshop/launcher-v2.js"]')){
+            const launcher=document.createElement('script');
+            launcher.dataset.omnisendLoader='true';
+            launcher.async=true;
+            launcher.src='https://omnisnippet1.com/inshop/launcher-v2.js';
+            document.head.append(launcher);
+          }
+        });
+        shopFold.after(pastorFold);
       }
     }
     if(document.body.dataset.page==='sales') {
