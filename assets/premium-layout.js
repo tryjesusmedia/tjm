@@ -49,6 +49,7 @@
       '<a'+(i===0?' class="reading-journey-link"':'')+' href="'+esc(href)+'"'+linkAttrs(href)+'>'+esc(label)+'</a>'
     ).join('');
     // Preserve the guide-specific return action outside the standardized footer.
+    const preservedBottom=footer.querySelector('.footer-bottom');
     const guideReturn=footer.querySelector('.guide-footer-return');
     if(guideReturn) {
       const wrap=document.createElement('div');
@@ -69,6 +70,16 @@
         '<nav class="tjm-footer-links" aria-label="Footer links">'+legalLinks+'</nav>'+
         '<p class="tjm-copyright-last">© <span id="currentYear">'+new Date().getFullYear()+'</span> Try Jesus Media. All rights reserved.</p>'+
       '</div>';
+    // Reuse the same footer-bottom node so an existing IntersectionObserver
+    // (on the members page) continues tracking footer visibility.
+    if(preservedBottom){
+      const generated=footer.querySelector('.footer-bottom');
+      if(generated){
+        preservedBottom.className=generated.className;
+        preservedBottom.innerHTML=generated.innerHTML;
+        generated.replaceWith(preservedBottom);
+      }
+    }
   }
   function setup() {
     document.body.classList.add('premium-system');
