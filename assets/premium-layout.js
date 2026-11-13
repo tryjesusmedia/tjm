@@ -13,8 +13,66 @@
     let target; try {target=document.getElementById(decodeURIComponent(hash.slice(1)));} catch {return;}
     for(let node=target;node;node=node.parentElement) if(node.tagName==='DETAILS')node.open=true;
   }
+  // Single source of truth for sitewide footer markup. Regional pages retain
+  // their lead-capture destinations for YouTube and merch.
+  function unifiedFooter(footer) {
+    if(footer.classList.contains('tjm-unified-footer'))return;
+    const regional=/^\/(?:ny|nola)(?:\/|$)/.test(location.pathname);
+    const signup=regional?'#guide-form':null;
+    const social=[
+      ['▶','YouTube',signup||'https://www.youtube.com/@TryJesusMedia'],
+      ['f','Facebook','https://www.facebook.com/tryjesusmedia'],
+      ['◎','Instagram','https://www.instagram.com/tryjesusmedia1/'],
+      ['♪','TikTok','https://www.tiktok.com/@tryjesusmedia'],
+      ['✉','Email','mailto:info@tryjesusmedia.com'],
+      ['▣','Text','sms:+18162596486'],
+      ['▦','Book a Call','https://calendly.com/kalroller/tryjesusmedia'],
+      ['◆','Merch',signup||'https://try-jesus-new-york-shop.fourthwall.com/'],
+      ['◉','WhatsApp','https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM']
+    ];
+    const legal=[
+      ['Bible & Conflict of the Ages Reading Journey','/bibleandconflictoftheages/'],
+      ['Get to Know Jesus Bible Studies','/get-to-know-jesus/'],
+      ['Bible Prophecy Studies','/bible-prophecy/'],
+      ['Privacy','/privacy'],
+      ['Accessibility Help','mailto:info@tryjesusmedia.com?subject=Website%20accessibility%20help'],
+      ['Powered by FaithCraft.agency','https://faithcraft.agency/'],
+      ['Back to Top','#']
+    ];
+    const esc=value=>String(value).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const linkAttrs=href=>/^(?:https?:)?\/\//.test(href)?' target="_blank" rel="noopener noreferrer"':'';
+    const socialLinks=social.map(([icon,label,href])=>
+      '<a class="social-link" href="'+esc(href)+'" aria-label="'+esc(label)+'"'+linkAttrs(href)+
+      '><span aria-hidden="true">'+esc(icon)+'</span><span>'+esc(label)+'</span></a>'
+    ).join('');
+    const legalLinks=legal.map(([label,href],i)=>
+      '<a'+(i===0?' class="reading-journey-link"':'')+' href="'+esc(href)+'"'+linkAttrs(href)+'>'+esc(label)+'</a>'
+    ).join('');
+    // Preserve the guide-specific return action outside the standardized footer.
+    const guideReturn=footer.querySelector('.guide-footer-return');
+    if(guideReturn) {
+      const wrap=document.createElement('div');
+      wrap.className='tjm-guide-footer-return';
+      footer.before(wrap);
+      wrap.append(guideReturn);
+    }
+    footer.className='site-footer tjm-unified-footer';
+    footer.innerHTML=
+      '<div class="footer-brand">'+
+        '<a href="/" aria-label="Try Jesus Media home"><img src="/assets/logo.png" width="76" height="76" alt="Try Jesus Media logo"></a>'+
+        '<div><strong>TRY JESUS MEDIA</strong><span class="footer-community-tagline">Clear Bible answers. Practical help for your journey with Jesus.</span></div>'+
+      '</div>'+
+      '<details class="premium-fold premium-socials"><summary>Stay connected</summary>'+
+        '<div class="social-footer"><div class="social-links">'+socialLinks+'</div></div>'+
+      '</details>'+
+      '<div class="footer-bottom">'+
+        '<nav class="tjm-footer-links" aria-label="Footer links">'+legalLinks+'</nav>'+
+        '<p class="tjm-copyright-last">© <span id="currentYear">'+new Date().getFullYear()+'</span> Try Jesus Media. All rights reserved.</p>'+
+      '</div>';
+  }
   function setup() {
     document.body.classList.add('premium-system');
+    document.querySelectorAll('footer').forEach(unifiedFooter);
     // Footer branding and legal links remain visible; optional social links share one drawer.
     document.querySelectorAll('footer').forEach(footer=>{
       // Keep the Bible & Conflict journey alongside the footer's small utility links.
