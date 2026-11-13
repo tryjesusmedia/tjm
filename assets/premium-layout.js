@@ -17,7 +17,7 @@
   // their lead-capture destinations for YouTube and merch.
   function unifiedFooter(footer) {
     if(footer.classList.contains('tjm-unified-footer'))return;
-    const regional=/^\/(?:ny|nola|hi)(?:\/|$)/.test(location.pathname);
+    const regional=/^\/(?:ny|nola|hi|mo)(?:\/|$)/.test(location.pathname);
     const signup=regional?'#guide-form':null;
     const social=[
       ['▶','YouTube',signup||'https://www.youtube.com/@TryJesusMedia'],
@@ -145,7 +145,7 @@
       [['#bible-guides','Choose a Bible guide'],['#watch','Watch Bible conversations'],['#live-discussion','Join the weekly Zoom discussion'],['#whatsapp-group','Connect with our WhatsApp family'],['#ask-pastor-kal','Ask Pastor Kal AI'],['#shop','Explore the store']].forEach(([s,t])=>fold(q(s,main),t));
       const resources=document.createElement('h2');resources.id='member-resources';resources.className='premium-resources-title';resources.textContent='More member resources';
       q('#watch',main)?.closest('.premium-fold')?.before(resources);
-      const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
+      const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/mo/">Missouri</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
       const shopFold=q('#shop',main)?.closest('.premium-fold');
       if(shopFold && !q('.premium-pastor-link',main)){
         const pastorLink=document.createElement('a');
