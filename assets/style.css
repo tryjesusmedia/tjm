@@ -1223,3 +1223,19 @@ main li:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Footer text fallback for pages not using the premium-system class. */
+@media screen {
+  html body .site-footer .footer-brand > div > span,
+  html body .site-footer .footer-brand span.footer-community-tagline {
+    font-size:14px !important;line-height:1.5 !important;
+    letter-spacing:0 !important;text-transform:none !important;font-weight:400 !important;
+  }
+  html body .site-footer .footer-bottom,
+  html body .site-footer .footer-bottom :is(p,a,span,small),
+  html body .site-footer .footer-legal :is(p,a,span,small) {
+    font-size:14px !important;line-height:1.55 !important;
+    letter-spacing:0 !important;text-transform:none !important;
+  }
+}
