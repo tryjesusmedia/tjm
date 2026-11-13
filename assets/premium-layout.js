@@ -17,7 +17,7 @@
   // their lead-capture destinations for YouTube and merch.
   function unifiedFooter(footer) {
     if(footer.classList.contains('tjm-unified-footer'))return;
-    const regional=/^\/(?:ny|nola)(?:\/|$)/.test(location.pathname);
+    const regional=/^\/(?:ny|nola|hi)(?:\/|$)/.test(location.pathname);
     const signup=regional?'#guide-form':null;
     const social=[
       ['▶','YouTube',signup||'https://www.youtube.com/@TryJesusMedia'],
