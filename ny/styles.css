@@ -6,10 +6,9 @@
 }
 html {scroll-behavior:smooth;scroll-padding-top:100px;}
 body.ny-home {background:var(--ny-cream);}
-body.ny-home * {box-sizing:border-box;}
-body.ny-home :is(a,summary,button):focus-visible {outline:3px solid var(--ny-gold);outline-offset:4px;}
-body.ny-home .ny-hero {background:var(--ny-midnight);color:var(--ny-ivory);padding:clamp(46px,6vw,88px) 0 clamp(58px,7vw,96px);position:relative;isolation:isolate;overflow:hidden;}
-body.ny-home .ny-hero::before {content:"";position:absolute;inset:-120px auto auto -160px;width:550px;height:550px;border-radius:50%;background:radial-gradient(circle,rgba(238,189,74,.08),transparent 68%);pointer-events:none;z-index:-1;}
+body.ny-home main a.ny-cta:focus-visible {outline:3px solid var(--ny-gold);outline-offset:4px;}
+body.ny-home .ny-hero {background:var(--ny-midnight);color:var(--ny-ivory);padding:clamp(46px,6vw,88px) 0 clamp(58px,7vw,96px);position:relative;isolation:isolate;}
+body.ny-home .ny-hero {background-image:radial-gradient(circle at top left,rgba(238,189,74,.07),transparent 50%);}
 body.ny-home .ny-hero-inner,.ny-container {width:min(1140px,calc(100% - 48px));margin:0 auto;}
 body.ny-home .ny-hero-inner {display:grid;grid-template-columns:minmax(0,1.13fr) minmax(360px,.87fr);align-items:start;gap:clamp(30px,4.5vw,70px);}
 html body.ny-home main .ny-eyebrow {font:700 14px/1.4 Montserrat,Arial,sans-serif!important;letter-spacing:.17em!important;color:var(--ny-gold)!important;text-transform:uppercase;max-width:none;margin:0 0 18px;}
@@ -17,29 +16,19 @@ html body.ny-home main .ny-eyebrow-dark {color:#916c27!important;}
 html body.premium-system.premium-home.ny-home main h1.ny-title {font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(39px,4.7vw,64px)!important;line-height:1.08!important;font-weight:600;color:var(--ny-ivory)!important;letter-spacing:-.025em!important;margin:0 0 20px;}
 html body.premium-system.premium-home.ny-home main h1.ny-title em {color:var(--ny-gold)!important;font:inherit!important;font-style:normal!important;}
 html body.premium-system.premium-home.ny-home main h2.ny-tagline {font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:600;font-size:clamp(28px,2.8vw,39px)!important;line-height:1.2!important;color:var(--ny-gold)!important;margin:0 0 28px;}
-html body.ny-home main p,html body.ny-home main li {font-size:clamp(18px,1.6vw,20px)!important;line-height:1.58!important;letter-spacing:0!important;}
-body.ny-home .ny-hero p {color:#e6dce2;}
-body.ny-home .ny-hero p strong {color:#fff8e8;}
+html body.ny-home main :is(.ny-hero-content,.ny-section-copy,.ny-community,.ny-resources) :is(p,li) {font-size:clamp(18px,1.6vw,20px)!important;line-height:1.58!important;letter-spacing:0!important;}
+body.ny-home .ny-hero-content p {color:#e6dce2;}
+body.ny-home .ny-hero-content p strong {color:#fff8e8;}
 body.ny-home .ny-offer-intro {font-weight:800;margin:26px 0 15px;}
 body.ny-home .ny-offer-list {padding:0;margin:0 0 24px;display:grid;gap:12px;list-style:none;}
-body.ny-home .ny-offer-list li {display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1px solid rgba(238,189,74,.19);background:rgba(255,255,255,.035);border-radius:14px;color:#eee4e9;}
+body.ny-home .ny-offer-list li {display:flex;align-items:flex-start;gap:13px;padding:14px 16px;border:1px solid rgba(238,189,74,.19);background:rgba(255,255,255,.035);border-radius:14px;color:#eee4e9;}
+body.ny-home .ny-offer-list li::before {content:"";width:9px;height:9px;flex:0 0 9px;margin-top:.7em;border-radius:50%;background:#eebd4a;}
 body.ny-home .ny-offer-list strong {color:var(--ny-gold);}
-body.ny-home .ny-offer-icon {width:30px;flex:none;font-size:23px;line-height:1.2;}
 body.ny-home .ny-small-print {font-size:15px!important;line-height:1.6!important;color:#e0d5dd!important;margin:14px 0 0;}
 html body.premium-system.premium-home.ny-home main a.ny-cta {display:inline-flex;justify-content:center;align-items:center;max-width:100%;min-height:65px;padding:17px 24px!important;font:800 clamp(16px,1.55vw,19px)/1.4 Montserrat,Arial,sans-serif!important;text-align:center;text-transform:none!important;letter-spacing:0!important;white-space:normal;background:linear-gradient(180deg,#f7d983 0%,#eebd4a 100%)!important;border:1px solid #c49332;color:#311e33!important;border-radius:12px;box-shadow:0 9px 25px rgba(0,0,0,.15);text-decoration:none;overflow-wrap:break-word;transition:transform .2s ease,box-shadow .2s ease;}
 html body.premium-system.premium-home.ny-home main a.ny-cta:hover {transform:translateY(-2px);box-shadow:0 13px 32px rgba(0,0,0,.24);}
-body.ny-home #guide-form {scroll-margin-top:115px;}
-body.ny-home .ny-form-panel {border-radius:22px;background:#f9f4e9;border:1px solid rgba(238,189,74,.6);color:var(--ny-plum);padding:clamp(24px,3.5vw,38px);box-shadow:0 22px 60px rgba(0,0,0,.3);}
-html body.premium-system.premium-home.ny-home main .ny-form-panel h2 {font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(33px,3.5vw,48px)!important;line-height:1.14!important;color:var(--ny-plum)!important;margin:0 0 10px;}
-body.ny-home .ny-form-panel .ny-form-intro p {color:#50414b!important;margin-bottom:14px;}
-body.ny-home .ny-form-panel .ny-form-intro p.ny-eyebrow {color:#946d27!important;}
-body.ny-home .ny-form-preview {border-radius:14px;border:1px dashed #ab977c;padding:20px;background:#fffdfa;display:grid;gap:16px;}
-body.ny-home .ny-placeholder-field {display:grid;gap:8px;}
-body.ny-home .ny-placeholder-field > span {font:700 16px/1.45 Montserrat,Arial,sans-serif;color:#362539;}
-body.ny-home .ny-fake-input {background:#fff;border:1px solid #c7b5b5;min-height:56px;display:flex;align-items:center;padding:12px 16px;border-radius:9px;color:#776b77;font:500 17px/1.45 Montserrat,Arial,sans-serif;}
-body.ny-home .ny-fake-submit {background:linear-gradient(180deg,#f7d983,#eebd4a);border:1px solid #c49332;color:#311e33;text-align:center;font:800 17px/1.4 Montserrat,Arial,sans-serif;padding:16px 18px;border-radius:10px;opacity:.65;}
-html body.premium-system.premium-home.ny-home main p.ny-form-pending {margin:0;font-size:14px!important;color:#665265!important;line-height:1.6!important;}
-html body.premium-system.premium-home.ny-home main p.ny-form-assurance {font-size:15px!important;color:#564659!important;margin:16px 0 0;text-align:center;}
+/* A layout slot only. No typography, borders, backgrounds or spacing on Omnisend content. */
+body.ny-home #guide-form.ny-form-slot {scroll-margin-top:115px;align-self:start;min-width:0;width:100%;}
 body.ny-home .ny-section {padding:clamp(65px,7.5vw,105px) 0;}
 body.ny-home .ny-section-light {background:#faf6ee;}
 body.ny-home .ny-section-dark {background:#311e33;color:var(--ny-ivory);}
@@ -75,7 +64,6 @@ body.ny-home .ny-resources {background:#1c111d;color:#f3e8d0;text-align:center;}
 html body.premium-system.premium-home.ny-home main .ny-resources h2 {color:#f3e8d0!important;}
 body.ny-home .ny-resources p {color:#e6dce2;max-width:800px;margin-left:auto;margin-right:auto;}
 body.ny-home .ny-resources .ny-cta {margin-top:19px;}
-body.ny-home .ny-form-panel:target {box-shadow:0 0 0 4px rgba(238,189,74,.7),0 22px 60px rgba(0,0,0,.3);}
 @media(max-width:950px) {
   body.ny-home .ny-hero-inner {grid-template-columns:minmax(0,1fr);max-width:760px;}
   body.ny-home .ny-hero-content {max-width:760px;}
@@ -89,28 +77,23 @@ body.ny-home .ny-form-panel:target {box-shadow:0 0 0 4px rgba(238,189,74,.7),0 2
   body.ny-home .ny-hero {padding-block:38px 57px;}
   html body.premium-system.premium-home.ny-home main h1.ny-title {font-size:clamp(36px,9vw,49px)!important;}
   body.ny-home .ny-offer-list li {padding:13px 12px;gap:11px;}
-  body.ny-home .ny-form-panel {padding:24px 18px;}
   html body.premium-system.premium-home.ny-home main a.ny-cta {width:100%;}
   body.ny-home .ny-image-small {max-width:87%;}
   body.ny-home .ny-section {padding:60px 0;}
 }
 @media(prefers-reduced-motion:reduce) {html {scroll-behavior:auto;}html body.ny-home main a.ny-cta {transition:none!important;}html body.ny-home main a.ny-cta:hover {transform:none!important;}}
 
-/* Native Omnisend embed in the first-section signup panel. Avoid altering Omnisend's own form styling. */
-body.ny-home .ny-omnisend-mount {width:100%;min-width:0;}
-body.ny-home .ny-omnisend-mount #omnisend-embedded-v2-6af65231709b4cb49a4eba96 {width:100%;min-width:0;}
-
-
-/* 2026-11-12: YouTube episode previews (never direct-outbound links). */
-html body.ny-home .ny-video-gallery {width:100%;max-width:650px;min-width:0;display:grid;gap:18px;}
+/* Three actual episode thumbnails, no outbound links. */
+html body.ny-home .ny-video-gallery {width:100%;max-width:none;min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start;}
 html body.ny-home .ny-video-gallery figure {min-width:0;overflow:hidden;margin:0;background:#fffdf9;border:1px solid rgba(49,30,51,.13);border-radius:17px;box-shadow:0 12px 30px rgba(49,30,51,.10);}
-html body.ny-home .ny-video-gallery img {display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#311e33;}
+html body.ny-home .ny-video-gallery img {display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#311e33;}
 html body.ny-home .ny-video-gallery figcaption {padding:14px 17px 17px;display:grid;gap:5px;}
 html body.ny-home .ny-video-gallery figcaption span {color:#795723;font:750 12px/1.4 Montserrat,Arial,sans-serif;letter-spacing:.07em;}
 html body.ny-home .ny-video-gallery figcaption strong {color:#311e33;font:700 17px/1.45 Montserrat,Arial,sans-serif;}
-html body.ny-home .ny-video-pair {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
-html body.ny-home main p.ny-gallery-note {font-size:15px!important;color:#625668!important;margin:0;text-align:center;}
-
+html body.ny-home main p.ny-gallery-note {grid-column:1/-1;font-size:15px!important;color:#625668!important;margin:0;text-align:center;}
+@media(max-width:820px) {
+ html body.ny-home .ny-video-gallery {grid-template-columns:1fr;gap:18px;max-width:680px;margin-inline:auto;}
+}
 /* Tilted overlapping product collage: intentional layered image layout. */
 html body.ny-home .ny-merch-collage {position:relative;width:100%;max-width:610px;aspect-ratio:1/1.05;min-width:0;margin:4px auto 12px;isolation:isolate;}
 html body.ny-home .ny-merch-collage::before {content:"";position:absolute;inset:10% 5%;background:radial-gradient(ellipse,rgba(238,189,74,.18),transparent 70%);pointer-events:none;}
@@ -121,10 +104,13 @@ html body.ny-home .ny-product-polo {width:41%;height:62%;right:2%;top:3%;z-index
 html body.ny-home .ny-product-cap {width:46%;height:54%;left:13%;bottom:3%;z-index:4;transform:rotate(7deg);}
 html body.ny-home .ny-product-mug {width:43%;height:46%;right:2%;bottom:3%;z-index:3;transform:rotate(-9deg);}
 @media(max-width:650px){
- html body.ny-home .ny-video-pair {gap:10px;}
- html body.ny-home .ny-video-gallery figcaption {padding:11px 11px 13px;}
- html body.ny-home .ny-video-gallery figcaption strong {font-size:15px;line-height:1.38;}
+ html body.ny-home .ny-video-gallery figcaption {padding:12px 14px 15px;}
+ html body.ny-home .ny-video-gallery figcaption strong {font-size:16px;line-height:1.4;}
  html body.ny-home .ny-merch-collage {aspect-ratio:1/1.15;max-width:480px;}
  html body.ny-home .ny-product {padding:4px;border-radius:10px;}
 }
-@media(max-width:410px) {html body.ny-home .ny-video-pair {grid-template-columns:1fr;} }
+
+/* NY videos: wide 16:9 image cards in a three-column row on laptop/desktop;
+   full-width single-column cards on phones. Images never crop. */
+html body.ny-home #youtube .ny-split {display:grid;grid-template-columns:minmax(0,1fr);gap:34px;}
+html body.ny-home #youtube .ny-section-copy {max-width:920px;}
