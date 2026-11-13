@@ -36,6 +36,18 @@
       if(social) fold(social,'Stay connected','premium-socials');
       footer.querySelectorAll('img').forEach(img=>{if(/logo|Try Jesus/i.test(img.src+' '+img.alt)){const a=img.closest('a');if(a)a.href='/';}});
     });
+    // Keep the copyright notice literally last, after every footer link.
+    document.querySelectorAll('footer').forEach(footer=>{
+      const bottom=q('.footer-bottom',footer);
+      if(bottom){
+        const copyright=Array.from(bottom.children).find(el=>el.tagName==='P' && /©|all rights reserved/i.test(el.textContent));
+        if(copyright){copyright.classList.add('tjm-copyright-last');bottom.append(copyright);}
+      } else {
+        const host=q('.overview-width',footer)||q('.footer-inner',footer)||footer;
+        const copyright=Array.from(host.children).find(el=>el.tagName==='P' && /©|all rights reserved/i.test(el.textContent));
+        if(copyright){copyright.classList.add('tjm-copyright-last');host.append(copyright);}
+      }
+    });
     // Simple overview/legal footers keep their original links and wording, but receive the same left-aligned brand mark.
     document.querySelectorAll('body > footer.overview-footer, body > footer:not(.site-footer):not(.overview-footer)').forEach(footer=>{
       if(!footer.classList.contains('overview-footer'))footer.classList.add('tjm-compact-footer');
