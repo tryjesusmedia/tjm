@@ -1239,3 +1239,26 @@ main li:not(:where([id^="omnisend-"], [id^="omnisend-"] *)) {
     letter-spacing:0 !important;text-transform:none !important;
   }
 }
+
+
+/* Home landing: Omnisend itself is the always-visible signup block.
+   No decorative card, modal, accordion, or separate reveal button. */
+html body.premium-home .home-signup-inline {
+  display:block;
+  width:min(100%,680px);
+  margin:0 auto;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  overflow:visible;
+}
+html body.premium-home .home-signup-inline > .omnisend-form-host {
+  width:100%;
+  max-width:680px;
+  margin:0 auto;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
