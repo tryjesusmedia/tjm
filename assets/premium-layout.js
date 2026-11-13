@@ -23,10 +23,10 @@
       if(journey&&footerBottom&&!footerBottom.contains(journey))footerBottom.append(journey);
       // Existing store destinations are unchanged; only the visible footer label is shortened.
       footer.querySelectorAll('a.social-link').forEach(link=>{
-        const label=link.textContent.trim();
+        const spans=link.querySelectorAll('span');
+        const label=(spans.length?spans[spans.length-1].textContent:link.textContent).trim();
         if(/^(?:Programs\s*(?:&|and)\s*Merch|Programs|Merchandise)$/i.test(label)
             && /fourthwall|#guide-form/.test(link.getAttribute('href')||'')){
-          const spans=link.querySelectorAll('span');
           if(spans.length)spans[spans.length-1].textContent='Merch';
           else link.textContent='Merch';
           link.setAttribute('aria-label','Merch');
