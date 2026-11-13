@@ -424,3 +424,40 @@ html body.premium-system[data-page="sales"] > .header {
     html body.premium-system .site-footer .premium-socials .social-link { flex:0 1 auto; }
   }
 }
+
+
+/* Footer editorial typography, Nov 2026: small, sentence case, consistent. 
+   This intentionally overrides the general large-reading body type rules. */
+@media screen {
+  html body.premium-system.premium-system .site-footer .footer-brand > div > span,
+  html body.premium-system.premium-system .site-footer .footer-brand span.footer-community-tagline,
+  html body.premium-system.premium-system .site-footer .footer-brand .footer-community-tagline {
+    font-family:Montserrat,Arial,sans-serif !important;
+    font-size:14px !important;
+    font-weight:400 !important;
+    line-height:1.5 !important;
+    letter-spacing:0 !important;
+    text-transform:none !important;
+    font-variant:normal !important;
+    color:#e8dbe2 !important;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom,
+  html body.premium-system.premium-system .site-footer .footer-bottom :is(p,a,span,small),
+  html body.premium-system.premium-system .site-footer .footer-legal,
+  html body.premium-system.premium-system .site-footer .footer-legal :is(p,a,span,small),
+  html body.premium-system.premium-system .site-footer .footer-inner :is(p,small,nav a),
+  html body.premium-system.premium-system > footer.overview-footer :is(p,a,span,small),
+  html body.premium-system.premium-system > footer.tjm-compact-footer :is(p,a,span,small) {
+    font-family:Montserrat,Arial,sans-serif !important;
+    font-size:14px !important;
+    font-weight:400 !important;
+    line-height:1.55 !important;
+    letter-spacing:0 !important;
+    text-transform:none !important;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom,
+  html body.premium-system.premium-system .site-footer .footer-bottom :is(p,a,span,small),
+  html body.premium-system.premium-system .site-footer .footer-legal :is(p,a,span,small) {
+    color:#e8dbe2 !important;
+  }
+}
