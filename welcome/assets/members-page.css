@@ -134,23 +134,31 @@ body.premium-members main > details.premium-pastor-form {
   padding:0;
   border:1px solid rgba(119,100,117,.25);
   border-radius:14px;
-  background:transparent;
+  background:#241725;
   color:#f3e8d0;
   overflow:visible;
 }
+/* Same native disclosure arrow and heading treatment as every .premium-fold. */
 body.premium-members main > details.premium-pastor-form > summary {
-  box-sizing:border-box;
   display:list-item;
+  box-sizing:border-box;
   width:100%;
   min-height:56px;
   margin:0;
   padding:20px 24px;
-  border-radius:13px;
-  background:#241725;
-  color:#f3e8d0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:inherit;
   font:600 20px/1.45 Montserrat,Arial,sans-serif;
   text-align:left;
   cursor:pointer;
+}
+body.premium-members main > details.premium-pastor-form > summary::marker {
+  color:#eebd4a;
+}
+body.premium-members main > details.premium-pastor-form > summary::-webkit-details-marker {
+  color:#eebd4a;
 }
 body.premium-members main > details.premium-pastor-form > summary:is(:hover,:focus-visible) {
   color:#eebd4a;
