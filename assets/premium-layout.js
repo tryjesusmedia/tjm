@@ -17,6 +17,21 @@
     document.body.classList.add('premium-system');
     // Footer branding and legal links remain visible; optional social links share one drawer.
     document.querySelectorAll('footer').forEach(footer=>{
+      // Keep the Bible & Conflict journey alongside the footer's small utility links.
+      const journey=q('.reading-journey-link',footer);
+      const footerBottom=q('.footer-bottom',footer)||q('.footer-legal',footer);
+      if(journey&&footerBottom&&!footerBottom.contains(journey))footerBottom.append(journey);
+      // Existing store destinations are unchanged; only the visible footer label is shortened.
+      footer.querySelectorAll('a.social-link').forEach(link=>{
+        const label=link.textContent.trim();
+        if(/^(?:Programs\s*(?:&|and)\s*Merch|Programs|Merchandise)$/i.test(label)
+            && /fourthwall|#guide-form/.test(link.getAttribute('href')||'')){
+          const spans=link.querySelectorAll('span');
+          if(spans.length)spans[spans.length-1].textContent='Merch';
+          else link.textContent='Merch';
+          link.setAttribute('aria-label','Merch');
+        }
+      });
       const social=q('.social-footer',footer)||q('.footer-social-links',footer)||q('.social-links',footer);
       if(social) fold(social,'Stay connected','premium-socials');
       footer.querySelectorAll('img').forEach(img=>{if(/logo|Try Jesus/i.test(img.src+' '+img.alt)){const a=img.closest('a');if(a)a.href='/';}});
