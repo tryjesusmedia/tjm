@@ -1264,91 +1264,96 @@ html body.premium-home .home-signup-inline > .omnisend-form-host {
 }
 
 
-/* TJM location selector — shared by the main, New York, and New Orleans landing pages. */
+/* TJM Locations: match the existing landing-menu buttons, arrow is the only distinction. */
 .site-nav .locations-dropdown {
   position:relative;
+  width:100%;
   min-width:0;
-  color:#f3e8d0;
 }
-.site-nav .locations-dropdown > summary {
+html body.premium-system.premium-home .site-nav .locations-dropdown > summary {
+  box-sizing:border-box;
   display:flex;
   align-items:center;
-  gap:7px;
-  min-height:44px;
-  padding:8px 2px;
-  cursor:pointer;
-  list-style:none;
-  color:#f3e8d0;
-  font-family:Montserrat,Arial,sans-serif;
-  font-size:clamp(13px,1.05vw,16px);
-  font-weight:700;
-  line-height:1.4;
-  letter-spacing:0;
-  text-transform:none;
-}
-.site-nav .locations-dropdown > summary::-webkit-details-marker { display:none; }
-.site-nav .locations-dropdown > summary::after {
-  content:"⌄";
-  font-size:18px;
-  line-height:1;
-  color:#eebd4a;
-  transition:transform .2s ease;
-}
-.site-nav .locations-dropdown[open] > summary::after {transform:rotate(180deg);}
-.site-nav .locations-dropdown > summary:focus-visible {
-  outline:3px solid #eebd4a;
-  outline-offset:3px;
-  border-radius:6px;
-}
-.site-nav .locations-submenu {
-  display:grid;
-  gap:4px;
-  position:absolute;
-  z-index:200;
-  top:calc(100% + 4px);
-  left:0;
-  width:max-content;
-  min-width:200px;
-  max-width:calc(100vw - 32px);
-  padding:10px;
-  background:#241527;
-  border:1px solid rgba(238,189,74,.5);
-  border-radius:12px;
-  box-shadow:0 12px 28px rgba(0,0,0,.22);
-}
-.site-nav .locations-submenu a {
-  display:block !important;
-  color:#f3e8d0 !important;
-  font:600 16px/1.5 Montserrat,Arial,sans-serif !important;
-  text-decoration:none;
+  justify-content:center;
+  gap:9px;
+  min-height:48px;
+  width:100%;
+  padding:10px !important;
+  border:1px solid rgba(238,189,74,.22) !important;
+  border-radius:9px !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#f7d985 !important;
+  font-family:Montserrat,Arial,sans-serif !important;
+  font-size:20px !important;
+  font-weight:600 !important;
+  line-height:1.45 !important;
   letter-spacing:0 !important;
   text-transform:none !important;
+  text-align:center;
+  cursor:pointer;
+  list-style:none;
+}
+.site-nav .locations-dropdown > summary::-webkit-details-marker {display:none;}
+.site-nav .locations-dropdown > summary::marker {content:"";}
+html body.premium-system.premium-home .site-nav .locations-dropdown > summary::after {
+  content:"▾";
+  color:#f7d985;
+  display:inline-block;
+  font-size:15px;
+  line-height:1;
+  transition:transform .2s ease;
+}
+html body.premium-system.premium-home .site-nav .locations-dropdown[open] > summary::after {
+  transform:rotate(180deg);
+}
+html body.premium-system.premium-home .site-nav .locations-dropdown > summary:is(:hover,:focus-visible) {
+  color:#eebd4a !important;
+}
+html body.premium-system.premium-home .site-nav .locations-dropdown > summary:focus-visible {
+  outline:3px solid #eebd4a;
+  outline-offset:3px;
+}
+html body.premium-system.premium-home .site-nav .locations-submenu {
+  display:grid;
+  gap:2px;
+  position:static;
+  width:100%;
+  max-width:none;
+  min-width:0;
+  margin:0;
+  padding:5px 0 9px;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+html body.premium-system.premium-home .site-nav .locations-submenu a {
+  box-sizing:border-box;
+  display:block;
+  width:100%;
+  min-height:44px;
+  padding:9px 12px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#fff !important;
+  opacity:1 !important;
+  font-family:Montserrat,Arial,sans-serif !important;
+  font-size:18px !important;
+  font-weight:500 !important;
+  line-height:1.45 !important;
+  letter-spacing:0 !important;
+  text-align:center;
+  text-transform:none !important;
+  text-decoration:none !important;
   white-space:normal !important;
-  padding:12px 14px !important;
-  border-radius:8px;
 }
-.site-nav .locations-submenu a:is(:hover,:focus-visible) {
-  color:#311e33 !important;
-  background:#eebd4a;
-}
-@media (max-width:860px) {
-  .site-nav .locations-dropdown {width:100%;}
-  .site-nav .locations-dropdown > summary {
-    width:100%;
-    padding:12px;
-    justify-content:space-between;
-    font-size:19px;
-    min-height:50px;
-  }
-  .site-nav .locations-submenu {
-    position:static;
-    width:100%;
-    max-width:100%;
-    margin:0 0 10px;
-    box-shadow:none;
-    background:#311e33;
-  }
-  .site-nav .locations-submenu a {min-height:46px;}
+html body.premium-system.premium-home .site-nav .locations-submenu a:is(:hover,:focus-visible) {
+  color:#eebd4a !important;
+  background:transparent !important;
+  text-decoration:underline !important;
 }
 @media (prefers-reduced-motion:reduce) {
   .site-nav .locations-dropdown > summary::after {transition:none;}
