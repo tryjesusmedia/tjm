@@ -34,7 +34,7 @@
     const path=location.pathname.replace(/\/$/,'');
     if(path==='' || path==='/index.html') {
       document.body.classList.add('premium-home');
-      fold(q('.hero-form-panel'),'Start my free journey','premium-signup');
+      // The homepage Omnisend signup form stays visible (no accordion).
       const decodedFold = fold(q('#bible-decoded'),'Explore Bible Decoded');
       const perksFold = fold(q('#membership-perks'),'More included with your free membership');
       // Keep the two optional program drawers together, directly below the hero.
