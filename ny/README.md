@@ -50,3 +50,14 @@ The homepage logo, menu, footer and social links reuse existing site assets and 
 ## Launch note
 
 Do not send paid traffic to `/ny/` until the Omnisend form has been added and tested. This ZIP intentionally contains no fake submission endpoint or live lead capture form.
+
+
+## Updated media (November 12, 2026)
+
+The YouTube section now shows the channel's three most recent **long-form** episode thumbnails, verified on November 12, 2026 (episodes 37, 36, and 35). YouTube thumbnails are loaded from `i.ytimg.com` when the page is online, and the preview cards deliberately contain **no outbound YouTube links**. Update the episode IDs in `index.html` later if you wish to feature newer videos.
+
+The merch section contains four supplied photos as locally bundled optimized `.webp` files in `ny/images/`, shown as an overlapping, tilted collage. The photos and YouTube preview cards are not links.
+
+**CTA policy:** All signup buttons continue to point to `#guide-form`. The YouTube and Programs & Merch footer links also point to the signup form (rather than going directly to YouTube/Fourthwall), while their footer design and wording remain unchanged. The rest of the site navigation retains its destinations.
+
+Upload the entire updated `ny/` folder including `images/`, and overwrite existing `ny/index.html`, `ny/styles.css`, and `ny/README.md`.
