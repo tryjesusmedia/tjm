@@ -145,7 +145,17 @@
       [['#bible-guides','Choose a Bible guide'],['#watch','Watch Bible conversations'],['#live-discussion','Join the weekly Zoom discussion'],['#whatsapp-group','Connect with our WhatsApp family'],['#ask-pastor-kal','Ask Pastor Kal AI'],['#shop','Explore the store']].forEach(([s,t])=>fold(q(s,main),t));
       const resources=document.createElement('h2');resources.id='member-resources';resources.className='premium-resources-title';resources.textContent='More member resources';
       q('#watch',main)?.closest('.premium-fold')?.before(resources);
-      const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="#member-resources">More resources</a>';
+      const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
+      const shopFold=q('#shop',main)?.closest('.premium-fold');
+      if(shopFold && !q('.premium-pastor-link',main)){
+        const pastorLink=document.createElement('a');
+        pastorLink.className='premium-pastor-link';
+        pastorLink.href='https://calendly.com/kalroller/tryjesusmedia';
+        pastorLink.target='_blank';
+        pastorLink.rel='noopener noreferrer';
+        pastorLink.textContent='Talk to a Pastor';
+        shopFold.after(pastorLink);
+      }
     }
     if(document.body.dataset.page==='sales') {
       fold(q('#curriculum'),'Explore the six lessons');

@@ -25,3 +25,119 @@ body.welcome-readable main { --serif:Georgia,serif; }
 body.welcome-readable main :is(h1,h2,h3) { font-family:Georgia,serif; }
 body.welcome-readable :is(button,.button,.live-zoom-link,.channel-link,.social-link,.text-link) { font-family:Montserrat,Arial,sans-serif !important; font-size:20px !important; font-weight:700; line-height:1.45; letter-spacing:0 !important; text-transform:none !important; }
 body.welcome-readable :is(.button,.live-zoom-link,.channel-link,.social-link,.text-link) :is(span,b,strong) { font-family:inherit !important; font-size:inherit !important; letter-spacing:0; }
+
+
+/* Match the homepage Locations dropdown on both member pages. */
+body.premium-members .site-nav .locations-dropdown {
+  position:relative;
+  width:100%;
+  min-width:0;
+}
+html body.premium-system.premium-members .site-nav .locations-dropdown > summary {
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-height:48px;
+  width:100%;
+  padding:10px !important;
+  border:1px solid rgba(238,189,74,.22) !important;
+  border-radius:9px !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#f7d985 !important;
+  font-family:Montserrat,Arial,sans-serif !important;
+  font-size:20px !important;
+  font-weight:600 !important;
+  line-height:1.45 !important;
+  letter-spacing:0 !important;
+  text-transform:none !important;
+  text-align:center;
+  cursor:pointer;
+  list-style:none;
+}
+body.premium-members .site-nav .locations-dropdown > summary::-webkit-details-marker {display:none;}
+body.premium-members .site-nav .locations-dropdown > summary::marker {content:"";}
+html body.premium-system.premium-members .site-nav .locations-dropdown > summary::after {
+  content:"▾";
+  color:#f7d985;
+  display:inline-block;
+  font-size:15px;
+  line-height:1;
+  transition:transform .2s ease;
+}
+html body.premium-system.premium-members .site-nav .locations-dropdown[open] > summary::after {
+  transform:rotate(180deg);
+}
+html body.premium-system.premium-members .site-nav .locations-dropdown > summary:is(:hover,:focus-visible) {
+  color:#eebd4a !important;
+}
+html body.premium-system.premium-members .site-nav .locations-dropdown > summary:focus-visible {
+  outline:3px solid #eebd4a;
+  outline-offset:3px;
+}
+html body.premium-system.premium-members .site-nav .locations-submenu {
+  display:grid;
+  gap:2px;
+  position:static;
+  width:100%;
+  max-width:none;
+  min-width:0;
+  margin:0;
+  padding:5px 0 9px;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+html body.premium-system.premium-members .site-nav .locations-submenu a {
+  box-sizing:border-box;
+  display:block;
+  width:100%;
+  min-height:44px;
+  padding:9px 12px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#fff !important;
+  opacity:1 !important;
+  font-family:Montserrat,Arial,sans-serif !important;
+  font-size:18px !important;
+  font-weight:500 !important;
+  line-height:1.45 !important;
+  letter-spacing:0 !important;
+  text-align:center;
+  text-transform:none !important;
+  text-decoration:none !important;
+  white-space:normal !important;
+}
+html body.premium-system.premium-members .site-nav .locations-submenu a:is(:hover,:focus-visible) {
+  color:#eebd4a !important;
+  background:transparent !important;
+  text-decoration:underline !important;
+}
+@media (prefers-reduced-motion:reduce) {
+  body.premium-members .site-nav .locations-dropdown > summary::after {transition:none;}
+}
+
+/* Direct pastor-booking action immediately below the store drawer. */
+body.premium-members main > .premium-pastor-link {
+  box-sizing:border-box;
+  display:block;
+  margin:20px;
+  padding:20px 24px;
+  min-height:56px;
+  border:1px solid rgba(119,100,117,.25);
+  border-radius:14px;
+  background:#241725;
+  color:#f3e8d0;
+  font:600 20px/1.45 Montserrat,Arial,sans-serif;
+  text-align:left;
+  text-decoration:none;
+}
+body.premium-members main > .premium-pastor-link:is(:hover,:focus-visible) {
+  color:#eebd4a;
+  border-color:#eebd4a;
+}
