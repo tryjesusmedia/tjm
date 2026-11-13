@@ -527,3 +527,47 @@ html body.premium-system > footer.tjm-compact-footer .tjm-copyright-last {
   width:100%;
   text-align:center;
 }
+
+
+/* Keep Try Jesus Media masthead wordmark and footer brand title identical to homepage. */
+@media screen {
+  html body.premium-system.premium-system .site-footer .footer-brand > div > strong {
+    display:block !important;
+    font-family:"Cormorant Garamond",Georgia,serif !important;
+    font-size:26px !important;
+    font-weight:600 !important;
+    line-height:1.2 !important;
+    letter-spacing:.045em !important;
+    text-align:left !important;
+    color:#f3e8d0 !important;
+    text-transform:uppercase !important;
+  }
+  html body.premium-system.premium-home .site-header .brand .brand-wordmark > strong {
+    font-family:"Cormorant Garamond",Georgia,serif !important;
+    font-size:22px !important;
+    font-weight:600 !important;
+    line-height:.9 !important;
+    letter-spacing:.13em !important;
+    color:#fffdf9 !important;
+  }
+  html body.premium-system.premium-home .site-header .brand .brand-wordmark > small {
+    font-family:Montserrat,Arial,sans-serif !important;
+    font-size:7px !important;
+    font-weight:600 !important;
+    line-height:1 !important;
+    letter-spacing:.58em !important;
+    color:#eebd4a !important;
+    text-transform:uppercase !important;
+  }
+}
+@media (max-width:600px) {
+  html body.premium-system.premium-system .site-footer .footer-brand > div > strong {
+    font-size:21px !important;
+    letter-spacing:.02em !important;
+  }
+  html body.premium-system.premium-home .site-header .brand .brand-wordmark > strong {
+    font-size:16px !important;
+    letter-spacing:.1em !important;
+  }
+  html body.premium-system.premium-home .site-header .brand .brand-wordmark > small {font-size:6px !important;}
+}
