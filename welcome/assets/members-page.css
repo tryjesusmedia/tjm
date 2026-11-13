@@ -122,22 +122,58 @@ html body.premium-system.premium-members .site-nav .locations-submenu a:is(:hove
   body.premium-members .site-nav .locations-dropdown > summary::after {transition:none;}
 }
 
-/* Direct pastor-booking action immediately below the store drawer. */
-body.premium-members main > .premium-pastor-link {
-  box-sizing:border-box;
+/* Expandable Talk to a Pastor form beneath the store.
+   All typography, buttons, fields and consent inside the Omnisend root
+   are controlled exclusively by Omnisend, not by this stylesheet. */
+body.premium-members main > details.premium-pastor-form {
   display:block;
+  box-sizing:border-box;
+  width:calc(100% - 40px);
+  max-width:none;
   margin:20px;
-  padding:20px 24px;
-  min-height:56px;
+  padding:0;
   border:1px solid rgba(119,100,117,.25);
   border-radius:14px;
+  background:transparent;
+  color:#f3e8d0;
+  overflow:visible;
+}
+body.premium-members main > details.premium-pastor-form > summary {
+  box-sizing:border-box;
+  display:list-item;
+  width:100%;
+  min-height:56px;
+  margin:0;
+  padding:20px 24px;
+  border-radius:13px;
   background:#241725;
   color:#f3e8d0;
   font:600 20px/1.45 Montserrat,Arial,sans-serif;
   text-align:left;
-  text-decoration:none;
+  cursor:pointer;
 }
-body.premium-members main > .premium-pastor-link:is(:hover,:focus-visible) {
+body.premium-members main > details.premium-pastor-form > summary:is(:hover,:focus-visible) {
   color:#eebd4a;
-  border-color:#eebd4a;
+}
+body.premium-members main > details.premium-pastor-form > summary:focus-visible {
+  outline:3px solid #eebd4a;
+  outline-offset:3px;
+}
+body.premium-members main > details.premium-pastor-form > #omnisend-embedded-v2-6af73ec26e39df0b955367c0 {
+  all:initial;
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+@media (max-width:600px){
+  body.premium-members main > details.premium-pastor-form {
+    width:calc(100% - 32px);
+    margin:16px;
+  }
 }
