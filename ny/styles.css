@@ -95,3 +95,7 @@ body.ny-home .ny-form-panel:target {box-shadow:0 0 0 4px rgba(238,189,74,.7),0 2
   body.ny-home .ny-section {padding:60px 0;}
 }
 @media(prefers-reduced-motion:reduce) {html {scroll-behavior:auto;}html body.ny-home main a.ny-cta {transition:none!important;}html body.ny-home main a.ny-cta:hover {transform:none!important;}}
+
+/* Native Omnisend embed in the first-section signup panel. Avoid altering Omnisend's own form styling. */
+body.ny-home .ny-omnisend-mount {width:100%;min-width:0;}
+body.ny-home .ny-omnisend-mount #omnisend-embedded-v2-6af65231709b4cb49a4eba96 {width:100%;min-width:0;}

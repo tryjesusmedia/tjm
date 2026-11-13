@@ -9,19 +9,17 @@ The live page will resolve to https://tryjesusmedia.com/ny/ when your existing h
 - `styles.css`: TJM1 premium-simple page styling. The main site's CSS, logo and scripts are intentionally referenced as absolute `/assets/...` paths.
 - `images/`: reserved for future promotional images.
 
-## Before using for signups — ADD OMNISEND
+## Omnisend form installed
 
-The page has a **visual form placeholder** only. No email or mobile number is collected, stored or submitted.
-
-Open `ny/index.html`, find:
+The first-section signup form is now integrated using the exact embed container supplied:
 
 ```html
-<div id="ny-omnisend-mount" class="ny-omnisend-mount" data-omnisend-placeholder="true">
+<div id="omnisend-embedded-v2-6af65231709b4cb49a4eba96"></div>
 ```
 
-Replace the **inner contents** of that element (the `ny-form-preview` div) with the Omnisend embedded form markup. You may remove the `data-omnisend-placeholder` attribute. Paste any required Omnisend loading script exactly as supplied by Omnisend (prefer just before `</body>`, unless their instructions say otherwise).
+The page includes the same Omnisend brand loader as the Try Jesus Media homepage (`brandID` 6995f37d2de8216a26d88410). The embedded form's field selection, SMS consent, submission action, and post-signup redirect must be configured and verified in Omnisend. The actual form requires an internet connection and publication of this embed ID in your Omnisend account. Previewing the HTML file directly from your computer may not load the embed.
 
-**Do not remove or rename `id="guide-form"`** on the enclosing `aside`; all CTA buttons and the header signup button scroll there. If the embedded form has its own CTA, let Omnisend manage submission, consent, validation and redirects. Ensure the Omnisend form actually collects BOTH email and phone number, with any necessary SMS consent language and privacy disclosures.
+**Do not remove `id="guide-form"`** on the surrounding panel: all CTA buttons scroll there. The page does not create a separate email or phone collection system.
 
 ## Add images later
 

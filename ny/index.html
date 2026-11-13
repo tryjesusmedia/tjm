@@ -78,18 +78,9 @@
             <h2 id="ny-form-title">Join Our Family — It's FREE!</h2>
             <p>Enter your email and cell phone number to receive our welcome message, YouTube channel links, merchandise store information, and helpful updates.</p>
           </div>
-          <!-- OMNISEND INSTALLATION POINT:
-               Replace the CONTENTS of #ny-omnisend-mount with the actual Omnisend embedded form code.
-               Do not remove id="guide-form" above: every CTA scrolls to this section.
-               The visual preview below is intentionally NOT a working form.
-               See ny/README.md for details. -->
-          <div id="ny-omnisend-mount" class="ny-omnisend-mount" data-omnisend-placeholder="true">
-            <div class="ny-form-preview" aria-label="Visual signup form placeholder; awaiting Omnisend code">
-              <div class="ny-placeholder-field"><span>Email Address</span><div class="ny-fake-input" aria-hidden="true">Enter your email</div></div>
-              <div class="ny-placeholder-field"><span>Cell Phone Number</span><div class="ny-fake-input" aria-hidden="true">Enter your phone number</div></div>
-              <div class="ny-fake-submit" aria-hidden="true">YES! JOIN THE TRY JESUS NEW YORK FAMILY — FREE!</div>
-              <p class="ny-form-pending" role="status">The signup form will appear here once Omnisend is connected.</p>
-            </div>
+          <!-- Try Jesus NY Omnisend embedded signup form. Manage email/SMS fields, consent and redirects inside Omnisend. -->
+          <div id="ny-omnisend-mount" class="ny-omnisend-mount" aria-label="Try Jesus New York signup form">
+            <div id="omnisend-embedded-v2-6af65231709b4cb49a4eba96"></div>
           </div>
           <p class="ny-form-assurance">Free Membership • No Purchase Required • Unsubscribe Anytime</p>
         </aside>
@@ -207,5 +198,19 @@
     <a href="mailto:info@tryjesusmedia.com?subject=Website%20accessibility%20help">Accessibility Help</a>
   </div>
 </footer>
+  <!-- Omnisend website loader, matching the existing Try Jesus Media homepage. -->
+  <script data-omnisend-loader="true" type="text/javascript">
+    window.omnisend = window.omnisend || [];
+    window.omnisend.push(["brandID", "6995f37d2de8216a26d88410"]);
+    window.omnisend.push(["track", "$pageViewed"]);
+    (function () {
+      var el = document.createElement("script");
+      el.type = "text/javascript";
+      el.async = true;
+      el.src = "https://omnisnippet1.com/inshop/launcher-v2.js";
+      var first = document.getElementsByTagName("script")[0];
+      first.parentNode.insertBefore(el, first);
+    })();
+  </script>
 </body>
 </html>
