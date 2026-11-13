@@ -873,3 +873,51 @@ html body.premium-system > footer.tjm-compact-footer .tjm-copyright-last {
     html body.premium-system footer.tjm-unified-footer .premium-socials .social-link {font-size:16px !important;}
     html body.premium-system footer.tjm-unified-footer .tjm-footer-links {gap:12px 18px !important;}
 }
+
+
+/* LANDING PAGE WORDMARK PARITY — normalize differences caused by the
+   main homepage's 14pt text floor versus regional pages without that script. */
+@media screen {
+  html body.premium-system.premium-home .site-header a.brand .brand-wordmark {
+    display:grid !important;
+    justify-items:center !important;
+    align-content:center !important;
+    gap:3px !important;
+    min-width:0 !important;
+    line-height:1 !important;
+  }
+  html body.premium-system.premium-home .site-header a.brand .brand-wordmark > strong {
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+    font-family:"Cormorant Garamond",Georgia,serif !important;
+    font-size:22px !important;
+    font-weight:600 !important;
+    line-height:.9 !important;
+    letter-spacing:.13em !important;
+    color:#fffdf9 !important;
+    white-space:nowrap !important;
+  }
+  html body.premium-system.premium-home .site-header a.brand .brand-wordmark > small {
+    display:block !important;
+    margin:0 !important;
+    padding-left:.58em !important;
+    font-family:Montserrat,Arial,sans-serif !important;
+    font-size:18.667px !important;
+    font-weight:600 !important;
+    line-height:1 !important;
+    letter-spacing:.58em !important;
+    text-align:center !important;
+    text-transform:uppercase !important;
+    color:#eebd4a !important;
+    white-space:nowrap !important;
+  }
+}
+@media(max-width:600px) {
+  html body.premium-system.premium-home .site-header a.brand .brand-wordmark > strong {
+    font-size:18.667px !important;
+  }
+  html body.premium-system.premium-home .site-header a.brand .brand-wordmark > small {
+    font-size:18.667px !important;
+  }
+}
