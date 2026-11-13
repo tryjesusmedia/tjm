@@ -1,11 +1,11 @@
 /* Welcome-page reading sizes; preserve the existing section colors and branding. */
 .welcome-readable { font-size:22px; }
-.welcome-readable main :is(p,li,dd,dt) { font-size:clamp(22px,1.3rem + .3vw,24px) !important; line-height:1.7 !important; }
-.welcome-readable main :is(.eyebrow,[class*="kicker"],[class*="label"],[class*="meta"],[class*="caption"],small,.microcopy) { font-size:18px !important; line-height:1.55 !important; letter-spacing:.05em; }
-.welcome-readable main :is(.button,.text-link,.live-zoom-link,.journey-toggle,.journey-toggle span,.meeting-details,.meeting-schedule span,.meeting-schedule em,.chron-promo-features span,.chron-window-link,.pk-cue strong) { font-size:20px !important; line-height:1.5; }
-.welcome-readable main .button { white-space:normal; min-height:56px; text-align:center; }
-.welcome-readable main h2 { font-size:clamp(40px,4.6vw,68px); }
-.welcome-readable main h3 { font-size:clamp(32px,3vw,42px); }
+.welcome-readable main :is(p,li,dd,dt):not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) { font-size:clamp(22px,1.3rem + .3vw,24px) !important; line-height:1.7 !important; }
+.welcome-readable main :is(.eyebrow,[class*="kicker"],[class*="label"],[class*="meta"],[class*="caption"],small,.microcopy):not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) { font-size:18px !important; line-height:1.55 !important; letter-spacing:.05em; }
+.welcome-readable main :is(.button,.text-link,.live-zoom-link,.journey-toggle,.journey-toggle span,.meeting-details,.meeting-schedule span,.meeting-schedule em,.chron-promo-features span,.chron-window-link,.pk-cue strong):not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) { font-size:20px !important; line-height:1.5; }
+.welcome-readable main .button:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) { white-space:normal; min-height:56px; text-align:center; }
+.welcome-readable main h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) { font-size:clamp(40px,4.6vw,68px); }
+.welcome-readable main h3:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) { font-size:clamp(32px,3vw,42px); }
 .welcome-readable .guide-item-copy strong { font-size:1.625rem !important; line-height:1.4; }
 .welcome-readable .guide-item-copy small { font-size:20px !important; }
 .welcome-readable .guide-item { height:auto; min-height:90px; }

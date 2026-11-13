@@ -6,8 +6,8 @@ body.baptism-home {background:#faf6ee;}
 body.baptism-home .baptism-hero {padding:clamp(64px,8vw,112px) 0;background:radial-gradient(ellipse at 50% 0%,#422a43 0%,#1c111d 75%);color:#f3e8d0;border-bottom:1px solid #74552a;}
 html body.baptism-home main #baptism-title {font:600 clamp(56px,7.5vw,100px)/.98 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.035em!important;color:#f3e8d0!important;margin:0 auto 30px;max-width:none;text-wrap:balance;}
 html body.baptism-home main #baptism-title em {font:inherit!important;color:#eebd4a!important;font-style:normal!important;}
-html body.baptism-home main :is(.baptism-wrap,.baptism-scripture) h2 {font:600 clamp(38px,4.5vw,58px)/1.08 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.025em!important;color:#311e33!important;margin:0 0 26px;text-wrap:balance;}
-html body.baptism-home main .baptism-wrap p {font:400 clamp(19px,1.65vw,21px)/1.7 Montserrat,Arial,sans-serif!important;letter-spacing:0!important;margin:0 0 22px;max-width:none;color:inherit;}
+html body.baptism-home main :is(.baptism-wrap,.baptism-scripture) h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {font:600 clamp(38px,4.5vw,58px)/1.08 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.025em!important;color:#311e33!important;margin:0 0 26px;text-wrap:balance;}
+html body.baptism-home main .baptism-wrap p:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {font:400 clamp(19px,1.65vw,21px)/1.7 Montserrat,Arial,sans-serif!important;letter-spacing:0!important;margin:0 0 22px;max-width:none;color:inherit;}
 html body.baptism-home main .baptism-wrap .baptism-eyebrow {font:700 16px/1.5 Montserrat,Arial,sans-serif!important;letter-spacing:.12em!important;text-transform:uppercase;color:#76551b!important;margin-bottom:24px;}
 html body.baptism-home main .baptism-hero .baptism-eyebrow {color:#eebd4a!important;}
 html body.baptism-home main .baptism-wrap .baptism-lead {font-size:clamp(22px,2vw,26px)!important;line-height:1.45!important;}

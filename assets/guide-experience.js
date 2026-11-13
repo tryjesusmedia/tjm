@@ -47,7 +47,11 @@
 
     const headingCopy = library.querySelector('.section-heading > p:not(.eyebrow)');
     if (headingCopy) {
-      headingCopy.textContent = 'Choose one of your two guide journeys. Your progress is saved separately for each set.';
+      headingCopy.textContent = 'Choose one of your two guide journeys. Your progress is saved separately for each set. Prefer printed guides? ';
+      const printedGuides = document.createElement('a');
+      printedGuides.href = '/guides/';
+      printedGuides.textContent = 'Click here';
+      headingCopy.append(printedGuides, '.');
     }
 
     library.querySelectorAll('.journey-card').forEach((journey) => {

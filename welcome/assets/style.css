@@ -23,7 +23,7 @@
    GLOBAL
 ================================================== */
 
-* {
+*:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   box-sizing: border-box;
 }
 
@@ -40,16 +40,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img {
+img:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   display: block;
   max-width: 100%;
 }
 
-a {
+a:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   color: inherit;
 }
 
-::selection {
+:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *))::selection {
   color: var(--midnight-plum);
   background: var(--gold);
 }
@@ -343,9 +343,9 @@ a {
   color: #946407;
 }
 
-h1,
-h2,
-h3 {
+h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)),
+h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)),
+h3:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   margin-top: 0;
 
   font-family: var(--serif);
@@ -355,7 +355,7 @@ h3 {
   text-wrap: balance;
 }
 
-h1 {
+h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   margin-bottom: 22px;
 
   font-size:
@@ -364,7 +364,7 @@ h1 {
   letter-spacing: -.045em;
 }
 
-h2 {
+h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   margin-bottom: 22px;
 
   color: var(--plum);
@@ -379,8 +379,8 @@ h2 {
   color: var(--white);
 }
 
-h1 em,
-h2 em {
+h1 em:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)),
+h2 em:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   color: var(--gold);
 
   font-weight: 600;
@@ -436,8 +436,8 @@ h2 em {
     0 16px 42px rgba(238,189,74,.22);
 }
 
-a:focus-visible,
-button:focus-visible {
+a:focus-visible:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)),
+button:focus-visible:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
   outline:
     3px solid rgba(238,189,74,.58);
 
@@ -2063,12 +2063,12 @@ button:focus-visible {
       min(100% - 26px, 1180px);
   }
 
-  h1 {
+  h1:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
     font-size:
       clamp(43px, 13vw, 63px);
   }
 
-  h2 {
+  h2:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)) {
     font-size:
       clamp(36px, 11vw, 52px);
   }
@@ -2231,9 +2231,9 @@ button:focus-visible {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
+  *:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *)),
+  *:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *))::before,
+  *:not(:where([id^="omnisend-"], [id^="omnisend-"] *, .omnisend-forms-wrapper, .omnisend-forms-wrapper *))::after {
     animation: none !important;
 
     transition-duration:
