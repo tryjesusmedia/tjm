@@ -77,8 +77,7 @@
         <!-- Omnisend owns the form heading, copy, fields, consent and submit button.
              Keep the container unstyled so Omnisend's own design isn't overridden. -->
         <div id="guide-form" class="ny-form-slot" tabindex="-1" aria-label="Try Jesus Missouri signup form">
-          <!-- Replace this notice with the Missouri Omnisend embed when supplied. -->
-          <p class="ny-signup-pending" role="status">Missouri signup is coming soon. Please check back shortly.</p>
+          <div id="omnisend-embedded-v2-6af739cc884bde93471b4728"></div>
         </div>
       </div>
     </section>
@@ -194,6 +193,19 @@
     <a href="mailto:info@tryjesusmedia.com?subject=Website%20accessibility%20help">Accessibility Help</a>
   </div>
 </footer>
-  <!-- Add the Omnisend website loader when the Missouri form is supplied. -->
+  <!-- Omnisend website loader, matching the existing Try Jesus Media homepage. -->
+  <script data-omnisend-loader="true" type="text/javascript">
+    window.omnisend = window.omnisend || [];
+    window.omnisend.push(["brandID", "6995f37d2de8216a26d88410"]);
+    window.omnisend.push(["track", "$pageViewed"]);
+    (function () {
+      var el = document.createElement("script");
+      el.type = "text/javascript";
+      el.async = true;
+      el.src = "https://omnisnippet1.com/inshop/launcher-v2.js";
+      var first = document.getElementsByTagName("script")[0];
+      first.parentNode.insertBefore(el, first);
+    })();
+  </script>
 </body>
 </html>
