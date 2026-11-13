@@ -490,3 +490,23 @@ html body.premium-system .site-footer .footer-bottom > a.reading-journey-link:fo
   color:#eebd4a !important;
   text-decoration:underline;
 }
+
+
+/* Illuminate every linked sub-footer item like the Bible & Conflict link.
+   Higher specificity is needed because the 14px footer rules set !important colors. */
+@media screen {
+  html body.premium-system.premium-system .site-footer .footer-bottom a:is(:hover,:focus-visible),
+  html body.premium-system.premium-system .site-footer .footer-legal a:is(:hover,:focus-visible),
+  html body.premium-system.premium-system .site-footer .footer-inner nav a:is(:hover,:focus-visible),
+  html body.premium-system.premium-system footer.overview-footer nav a:is(:hover,:focus-visible),
+  html body.premium-system.premium-system footer.tjm-compact-footer a:is(:hover,:focus-visible) {
+    color:#eebd4a !important;
+    text-decoration:underline !important;
+    text-decoration-color:#eebd4a !important;
+    text-underline-offset:4px;
+  }
+  html body.premium-system.premium-system .site-footer .footer-bottom a:is(:hover,:focus-visible) :is(span,strong),
+  html body.premium-system.premium-system .site-footer .footer-legal a:is(:hover,:focus-visible) :is(span,strong) {
+    color:#eebd4a !important;
+  }
+}
