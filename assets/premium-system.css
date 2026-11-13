@@ -510,3 +510,20 @@ html body.premium-system .site-footer .footer-bottom > a.reading-journey-link:fo
     color:#eebd4a !important;
   }
 }
+
+
+/* Copyright always follows the footer's other links, on its own final line. */
+html body.premium-system .site-footer .footer-bottom > .tjm-copyright-last {
+  order:999;
+  flex:0 0 100%;
+  width:100%;
+  margin:16px 0 0 !important;
+  text-align:center;
+}
+html body.premium-system > footer.overview-footer .tjm-copyright-last,
+html body.premium-system > footer.tjm-compact-footer .tjm-copyright-last {
+  display:block;
+  margin:20px 0 0 !important;
+  width:100%;
+  text-align:center;
+}
