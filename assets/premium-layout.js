@@ -148,14 +148,20 @@
       const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="/baptism/">Baptism</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/mo/">Missouri</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
       const shopFold=q('#shop',main)?.closest('.premium-fold');
       if(shopFold && !q('.premium-pastor-form',main)){
-        // Only the control is styled by the website; Omnisend owns its entire form.
+        // Style the introduction and layout only; Omnisend owns its entire form.
         const pastorFold=document.createElement('details');
         pastorFold.className='premium-fold premium-pastor-form';
         const pastorToggle=document.createElement('summary');
         pastorToggle.textContent='Talk to a Pastor';
         const pastorEmbed=document.createElement('div');
         pastorEmbed.id='omnisend-embedded-v2-6af73ec26e39df0b955367c0';
-        pastorFold.append(pastorToggle,pastorEmbed);
+        const pastorContent=document.createElement('div');
+        pastorContent.className='premium-pastor-content';
+        const pastorIntro=document.createElement('div');
+        pastorIntro.className='premium-pastor-intro';
+        pastorIntro.innerHTML='<h2>You don’t have to walk alone.</h2><p>Whether you have a question about faith, would like prayer, or simply need someone to listen, we’re here for you. Fill out the form, and someone from our pastoral team will reach out personally. We look forward to getting to know you and walking alongside you.</p>';
+        pastorContent.append(pastorIntro,pastorEmbed);
+        pastorFold.append(pastorToggle,pastorContent);
         let omniloaded=false;
         pastorFold.addEventListener('toggle',()=>{
           if(!pastorFold.open || omniloaded)return;
