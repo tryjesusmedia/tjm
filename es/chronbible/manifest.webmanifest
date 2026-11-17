@@ -1,0 +1,32 @@
+{
+  "id": "/es/chronbible/",
+  "name": "Biblia cronológica — Try Jesus",
+  "short_name": "ChronBible",
+  "start_url": "/es/chronbible/",
+  "scope": "/es/chronbible/",
+  "display": "standalone",
+  "background_color": "#311E33",
+  "theme_color": "#311E33",
+  "icons": [
+    {
+      "src": "/chronbible/icons/journey-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/chronbible/icons/journey-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://tryjesusmedia.com/es/chronbible/manifest.webmanifest",
+      "id": "https://tryjesusmedia.com/es/chronbible/"
+    }
+  ],
+  "prefer_related_applications": false
+}
