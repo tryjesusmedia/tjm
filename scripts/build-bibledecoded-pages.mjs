@@ -20,11 +20,11 @@ function styleSalesPage(html) {
  .replace('style="background:#f0ebe3"','style="background:#d8c9b0"')
  .replace(/<footer class="footer">[\s\S]*?<\/footer>/,membersFooter)
  .replace('</body>',"<script defer src=\"/bibledecoded/assets/members-menu.js?v=3\"></script>"+'</body>')
- .replace('</head>','<link rel="stylesheet" href="/assets/premium-system.css?v=20261117-language-switch2"><script defer src="/assets/premium-layout.js?v=20261117-language-switch2"></script>'+'</head>')
+ .replace('</head>','<link rel="stylesheet" href="/assets/premium-system.css?v=20261117-language-switch2"><script defer src="/assets/premium-layout.js?v=20261117-language-sticky1"></script><link rel="stylesheet" href="/assets/bottom-tabs.css?v=2"><script defer src="/assets/bottom-tabs.js?v=2"></script>'+'</head>')
  .replace('<body class="tjm-simple"','<body class="tjm-simple premium-system"');
 }
 
-fs.mkdirSync('bibledecoded',{recursive:true});fs.writeFileSync('bibledecoded/index.html',styleSalesPage(sales).replace('</head>', "<link rel=\"stylesheet\" href=\"/assets/bottom-tabs.css?v=1\"><script defer src=\"/assets/bottom-tabs.js?v=1\"></script>" + '</head>'));
+fs.mkdirSync('bibledecoded',{recursive:true});fs.writeFileSync('bibledecoded/index.html',styleSalesPage(sales));
 for(const [page,title] of [['welcome','Welcome to Bible Decoded'],['dashboard','Your Bible Decoded Dashboard'],['lesson','Your Bible Decoded Lesson'],['complete','Bible Decoded Completion']]){
  fs.mkdirSync(`bibledecoded/${page}`,{recursive:true});fs.writeFileSync(`bibledecoded/${page}/index.html`,styleSalesPage(`${head(title,'Your personal Bible Decoded course and study workspace.',true)}<body class="tjm-simple" data-page="${page}">${header}<main id="main" class="wrap app-content"><div id="global-message" class="notice" role="status"></div><div id="app"><p class="loading" role="status">Opening Bible Decoded…</p></div><noscript><div class="notice">Please enable JavaScript to sign in and save your workbook answers. Need help? Email info@tryjesusmedia.com.</div></noscript></main>${footer}</body></html>`));
 }
