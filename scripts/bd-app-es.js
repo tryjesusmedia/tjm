@@ -85,7 +85,7 @@ const fieldList = (blocks) =>
         : [],
   );
 async function api(path, method = "GET", body) {
-  const headers = {};
+  const headers = {"X-TJM-Language":"es"};
   if (auth) {
     const { data, error } = await auth.auth.getSession();
     if (error) throw error;
@@ -571,7 +571,7 @@ async function printDownload(id = scope, button = $("#download-workbook")) {
   try {
     const { data } = await auth.auth.getSession();
     const response = await fetch(API + `printable/${encodeURIComponent(id)}`, {
-      headers: { Authorization: `Bearer ${data.session.access_token}` },
+      headers: { Authorization: `Bearer ${data.session.access_token}`, "X-TJM-Language": "es" },
       cache: "no-store",
     });
     if (!response.ok)
