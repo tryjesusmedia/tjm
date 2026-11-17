@@ -15,6 +15,7 @@ if (window.location.pathname.replace(/\/$/, '') === '/signupcomplete') {
 (() => {
   'use strict';
 
+  const spanish = document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(window.location.pathname);
   const menuToggle = document.getElementById('menuToggle');
   const siteNav = document.getElementById('siteNav');
   const progress = document.getElementById('pageProgress');
@@ -26,7 +27,7 @@ if (window.location.pathname.replace(/\/$/, '') === '/signupcomplete') {
     menuToggle.addEventListener('click', () => {
       const open = menuToggle.getAttribute('aria-expanded') === 'true';
       menuToggle.setAttribute('aria-expanded', String(!open));
-      menuToggle.setAttribute('aria-label', open ? 'Open navigation' : 'Close navigation');
+      menuToggle.setAttribute('aria-label', open ? (spanish ? 'Abrir navegación' : 'Open navigation') : (spanish ? 'Cerrar navegación' : 'Close navigation'));
       siteNav.classList.toggle('is-open', !open);
     });
 
@@ -109,7 +110,7 @@ if (window.location.pathname.replace(/\/$/, '') === '/signupcomplete') {
       hourCycle: 'h23'
     });
 
-    const displayFormatter = new Intl.DateTimeFormat('en-US', {
+    const displayFormatter = new Intl.DateTimeFormat(spanish ? 'es-US' : 'en-US', {
       timeZone,
       weekday: 'long',
       month: 'long',
@@ -119,7 +120,7 @@ if (window.location.pathname.replace(/\/$/, '') === '/signupcomplete') {
       timeZoneName: 'short'
     });
 
-    const localDisplayFormatter = new Intl.DateTimeFormat(undefined, {
+    const localDisplayFormatter = new Intl.DateTimeFormat(spanish ? 'es-US' : undefined, {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
@@ -190,8 +191,8 @@ if (window.location.pathname.replace(/\/$/, '') === '/signupcomplete') {
     };
 
     let nextMeeting = getNextMeeting();
-    if (dateElement) dateElement.textContent = `Eastern time: ${displayFormatter.format(nextMeeting)}`;
-    if (localDateElement) localDateElement.textContent = `Your local time: ${localDisplayFormatter.format(nextMeeting)}`;
+    if (dateElement) dateElement.textContent = spanish ? `Hora del Este: ${displayFormatter.format(nextMeeting)}` : `Eastern time: ${displayFormatter.format(nextMeeting)}`;
+    if (localDateElement) localDateElement.textContent = spanish ? `Tu hora local: ${localDisplayFormatter.format(nextMeeting)}` : `Your local time: ${localDisplayFormatter.format(nextMeeting)}`;
 
     const twoDigits = (value) => String(value).padStart(2, '0');
 
@@ -202,8 +203,8 @@ if (window.location.pathname.replace(/\/$/, '') === '/signupcomplete') {
       if (remaining <= 0) {
         nextMeeting = getNextMeeting(new Date(now.getTime() + 1000));
         remaining = nextMeeting.getTime() - now.getTime();
-        if (dateElement) dateElement.textContent = `Eastern time: ${displayFormatter.format(nextMeeting)}`;
-        if (localDateElement) localDateElement.textContent = `Your local time: ${localDisplayFormatter.format(nextMeeting)}`;
+        if (dateElement) dateElement.textContent = spanish ? `Hora del Este: ${displayFormatter.format(nextMeeting)}` : `Eastern time: ${displayFormatter.format(nextMeeting)}`;
+        if (localDateElement) localDateElement.textContent = spanish ? `Tu hora local: ${localDisplayFormatter.format(nextMeeting)}` : `Your local time: ${localDisplayFormatter.format(nextMeeting)}`;
       }
 
       const totalSeconds = Math.max(0, Math.floor(remaining / 1000));
