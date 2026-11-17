@@ -72,23 +72,39 @@
   border-bottom: 1px solid rgba(238,189,74,.38);
 }
 
-.pk-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  flex: 0 0 44px;
-  display: grid;
-  place-items: center;
-  background: radial-gradient(circle at 35% 25%, #fff4bf, var(--pk-gold) 58%, #a87517);
-  color: var(--pk-charcoal);
-  font: 800 14px/1 Montserrat, Arial, sans-serif;
-  box-shadow: 0 0 0 3px rgba(255,255,255,.08);
+.pk-intro { min-width: 0; flex: 1; }
+.pk-description {
+  margin: 0 0 6px;
+  color: var(--pk-white);
+  font: 500 14px/1.5 Montserrat, Arial, sans-serif;
 }
-
-.pk-title { min-width: 0; flex: 1; }
-.pk-title strong { display: block; font: 700 16px/1.25 Montserrat, Arial, sans-serif; }
-.pk-title span { display: block; opacity: .82; margin-top: 2px; font: 500 14px/1.35 Montserrat, Arial, sans-serif; }
-.pk-close { width: 48px; height: 48px; flex: 0 0 48px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: rgba(255,255,255,.08); color: inherit; font-size: 28px; line-height: 1; cursor: pointer; padding: 0; opacity: 1; }
+.pk-human-link {
+  display: inline-block;
+  color: var(--pk-gold);
+  font: 700 14px/1.45 Montserrat, Arial, sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.pk-human-link:hover, .pk-human-link:focus-visible { color: #fff3c5; }
+.pk-close {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  align-self: flex-start;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  color: var(--pk-white);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  opacity: 1;
+}
+.pk-close:hover, .pk-close:focus-visible {
+  background: rgba(255,255,255,.18);
+  border-color: var(--pk-gold);
+}
 
 .pk-body {
   overflow-y: auto;
@@ -142,13 +158,16 @@
 
 .pk-typing { opacity: .6; font-style: italic; }
 
-.pk-footer {
+/* The message composer is part of the chat, not a website footer. */
+.pk-form {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 8px;
+  align-items: end;
   padding: 10px;
   border-top: 1px solid rgba(49,30,51,.12);
   background: #fff;
 }
-
-.pk-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
 .pk-input {
   width: 100%;
   min-height: 52px;
@@ -176,10 +195,6 @@
   font-weight: 800;
 }
 .pk-send:disabled { opacity: .45; cursor: wait; }
-.pk-disclaimer { margin: 9px 4px 0; color: #5f5660; text-align: center; font: 500 13px/1.45 Montserrat, Arial, sans-serif; }
-.pk-disclaimer a { color: var(--pk-plum); font-weight: 700; text-underline-offset: 2px; }
-.pk-safety { display: block; margin-top: 4px; }
-
 @media (max-width: 520px) {
   .pk-launcher {
     right: 12px;
@@ -197,5 +212,5 @@
 
   .pk-header { padding: 12px 13px; }
   .pk-body { padding: 16px 13px 18px; }
-  .pk-footer { padding: 10px 10px 12px; }
+  .pk-form { padding: 10px 10px 12px; }
 }
