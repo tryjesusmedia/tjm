@@ -101,6 +101,8 @@
     }
   }
   function setup() {
+    const path=location.pathname.replace(/\/$/,'');
+    const spanish=document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(path);
     document.body.classList.add('premium-system');
     document.querySelectorAll('footer').forEach(unifiedFooter);
     // Footer branding and legal links remain visible; optional social links share one drawer.
@@ -146,8 +148,6 @@
         a.append(img);host.prepend(a);
       }
     });
-    const path=location.pathname.replace(/\/$/,'');
-    const spanish=document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(path);
     if(path==='' || path==='/index.html') {
       document.body.classList.add('premium-home');
       // The homepage Omnisend signup form stays visible (no accordion).
