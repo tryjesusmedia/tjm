@@ -144,6 +144,21 @@
     sin: 'Distrusting God and choosing attitudes or actions that harm our relationship with Him and others.'
   };
 
+  const glossaryEs = {
+    anticristo: 'Persona o poder que se opone a Cristo o intenta ocupar su lugar.',
+    expiación: 'La obra de Dios de reconciliar a las personas consigo mismo mediante Jesús.',
+    pacto: 'Una promesa solemne que establece una relación entre Dios y su pueblo.',
+    evangelio: 'Las buenas noticias de que Jesús nos salva y restaura.',
+    juicio: 'El examen justo de Dios sobre la verdad, las decisiones y el carácter.',
+    milenio: 'El período de mil años descrito en Apocalipsis 20.',
+    profecía: 'Un mensaje de Dios que explica su voluntad o revela acontecimientos futuros.',
+    resurrección: 'La acción de Dios de devolverle la vida a una persona.',
+    justicia: 'Estar en paz con Dios y vivir reflejando su carácter.',
+    salvación: 'Dios nos rescata del pecado y nos da vida nueva mediante Jesús.',
+    santuario: 'El centro de adoración bíblico que ilustra el plan de Dios para salvar y restaurar.',
+    pecado: 'Desconfiar de Dios y escoger actitudes o acciones que dañan nuestras relaciones.'
+  };
+
   const enhanceLesson = () => {
     const shell = document.querySelector('.lesson-shell');
     const stage = document.getElementById('panelStage');
@@ -240,12 +255,12 @@
     });
 
     const fullText = cleanText(stage.textContent).toLowerCase();
-    const usedTerms = Object.entries(glossary).filter(([term]) => fullText.includes(term));
+    const usedTerms = Object.entries(spanish ? glossaryEs : glossary).filter(([term]) => fullText.includes(term));
     if (usedTerms.length) {
       const plainLanguage = document.createElement('details');
       plainLanguage.className = 'guide-glossary';
       plainLanguage.innerHTML = `
-        <summary><span>Plain-Language Bible Words</span><span aria-hidden="true">＋</span></summary>
+        <summary><span>${spanish ? 'Palabras bíblicas explicadas de manera sencilla' : 'Plain-Language Bible Words'}</span><span aria-hidden="true">＋</span></summary>
         <dl>${usedTerms.map(([term, definition]) => `<div><dt>${term}</dt><dd>${definition}</dd></div>`).join('')}</dl>`;
       shell.insertBefore(plainLanguage, stage);
     }
@@ -351,6 +366,13 @@
     if (printButton) {
       printButton.textContent = spanish ? 'Letra grande' : 'Large Print';
       printButton.setAttribute('aria-label', spanish ? 'Abrir la versión de letra grande' : 'Open the large-print version');
+    }
+    if (spanish) {
+      const listenControl = document.getElementById('listenButton');
+      listenControl?.addEventListener('click', () => {
+        const listenLabel = listenControl.querySelector('.listen-label');
+        if (listenLabel) listenLabel.textContent = listenControl.getAttribute('aria-pressed') === 'true' ? 'Detener' : 'Escuchar';
+      });
     }
     const restartButton = document.getElementById('restartLesson');
     if (restartButton) restartButton.textContent = spanish ? 'Empezar de nuevo' : 'Start Over';
