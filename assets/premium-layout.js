@@ -18,8 +18,19 @@
   function unifiedFooter(footer) {
     if(footer.classList.contains('tjm-unified-footer'))return;
     const regional=/^\/(?:ny|nola|hi|mo)(?:\/|$)/.test(location.pathname);
+    const spanish=/^\/es(?:\/|$)/.test(location.pathname) || document.documentElement.lang.toLowerCase().startsWith('es');
     const signup=regional?'#guide-form':null;
-    const social=[
+    const social=spanish?[
+      ['▶','YouTube',signup||'https://www.youtube.com/@TryJesusMedia'],
+      ['f','Facebook','https://www.facebook.com/tryjesusmedia'],
+      ['◎','Instagram','https://www.instagram.com/tryjesusmedia1/'],
+      ['♪','TikTok','https://www.tiktok.com/@tryjesusmedia'],
+      ['✉','Correo','mailto:info@tryjesusmedia.com'],
+      ['▣','Texto','sms:+18162596486'],
+      ['▦','Reservar llamada','https://calendly.com/kalroller/tryjesusmedia'],
+      ['◆','Tienda',signup||'https://try-jesus-new-york-shop.fourthwall.com/'],
+      ['◉','WhatsApp','https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM']
+    ]:[
       ['▶','YouTube',signup||'https://www.youtube.com/@TryJesusMedia'],
       ['f','Facebook','https://www.facebook.com/tryjesusmedia'],
       ['◎','Instagram','https://www.instagram.com/tryjesusmedia1/'],
@@ -30,7 +41,15 @@
       ['◆','Merch',signup||'https://try-jesus-new-york-shop.fourthwall.com/'],
       ['◉','WhatsApp','https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM']
     ];
-    const legal=[
+    const legal=spanish?[
+      ['Recorrido de lectura Biblia y El Conflicto de los Siglos','/bibleandconflictoftheages/'],
+      ['Conoce a Jesús: guías bíblicas','/get-to-know-jesus/'],
+      ['Guías de profecía bíblica','/bible-prophecy/'],
+      ['Privacidad','/privacy'],
+      ['Ayuda de accesibilidad','mailto:info@tryjesusmedia.com?subject=Website%20accessibility%20help'],
+      ['Desarrollado por FaithCraft.agency','https://faithcraft.agency/'],
+      ['Volver arriba','#']
+    ]:[
       ['Bible & Conflict of the Ages Reading Journey','/bibleandconflictoftheages/'],
       ['Get to Know Jesus Bible Studies','/get-to-know-jesus/'],
       ['Bible Prophecy Studies','/bible-prophecy/'],
@@ -60,15 +79,15 @@
     footer.className='site-footer tjm-unified-footer';
     footer.innerHTML=
       '<div class="footer-brand">'+
-        '<a href="/" aria-label="Try Jesus Media home"><img src="/assets/logo.png" width="76" height="76" alt="Try Jesus Media logo"></a>'+
-        '<div><strong>TRY JESUS MEDIA</strong><span class="footer-community-tagline">Clear Bible answers. Practical help for your journey with Jesus.</span></div>'+
+        '<a href="'+(spanish?'/es/':'/')+'" aria-label="'+(spanish?'Inicio de Try Jesus Media':'Try Jesus Media home')+'"><img src="/assets/logo.png" width="76" height="76" alt="Try Jesus Media logo"></a>'+
+        '<div><strong>TRY JESUS MEDIA</strong><span class="footer-community-tagline">'+(spanish?'Respuestas bíblicas claras. Ayuda práctica para tu recorrido con Jesús.':'Clear Bible answers. Practical help for your journey with Jesus.')+'</span></div>'+
       '</div>'+
-      '<details class="premium-fold premium-socials"><summary>Stay connected</summary>'+
+      '<details class="premium-fold premium-socials"><summary>'+(spanish?'Mantente conectado':'Stay connected')+'</summary>'+
         '<div class="social-footer"><div class="social-links">'+socialLinks+'</div></div>'+
       '</details>'+
       '<div class="footer-bottom">'+
-        '<nav class="tjm-footer-links" aria-label="Footer links">'+legalLinks+'</nav>'+
-        '<p class="tjm-copyright-last">© <span id="currentYear">'+new Date().getFullYear()+'</span> Try Jesus Media. All rights reserved.</p>'+
+        '<nav class="tjm-footer-links" aria-label="'+(spanish?'Enlaces del pie de página':'Footer links')+'">'+legalLinks+'</nav>'+
+        '<p class="tjm-copyright-last">© <span id="currentYear">'+new Date().getFullYear()+'</span> Try Jesus Media. '+(spanish?'Todos los derechos reservados.':'All rights reserved.')+'</p>'+
       '</div>';
     // Reuse the same footer-bottom node so an existing IntersectionObserver
     // (on the members page) continues tracking footer visibility.
@@ -102,8 +121,8 @@
         }
       });
       const social=q('.social-footer',footer)||q('.footer-social-links',footer)||q('.social-links',footer);
-      if(social) fold(social,'Stay connected','premium-socials');
-      footer.querySelectorAll('img').forEach(img=>{if(/logo|Try Jesus/i.test(img.src+' '+img.alt)){const a=img.closest('a');if(a)a.href='/';}});
+      if(social) fold(social,spanish?'Mantente conectado':'Stay connected','premium-socials');
+      footer.querySelectorAll('img').forEach(img=>{if(/logo|Try Jesus/i.test(img.src+' '+img.alt)){const a=img.closest('a');if(a)a.href=spanish?'/es/':'/';}});
     });
     // Keep the copyright notice literally last, after every footer link.
     document.querySelectorAll('footer').forEach(footer=>{
@@ -128,6 +147,7 @@
       }
     });
     const path=location.pathname.replace(/\/$/,'');
+    const spanish=document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(path);
     if(path==='' || path==='/index.html') {
       document.body.classList.add('premium-home');
       // The homepage Omnisend signup form stays visible (no accordion).
@@ -136,30 +156,39 @@
       // Keep the two optional program drawers together, directly below the hero.
       if (decodedFold && perksFold) decodedFold.after(perksFold);
     }
-    if(path==='/welcome' || path==='/signupcomplete') {
+    if(path==='/welcome' || path==='/signupcomplete' || path==='/es/welcome') {
       document.body.classList.add('premium-members');
       const main=q('main');
       const intro=document.createElement('section');intro.className='premium-member-start';
-      intro.innerHTML='<h1>Where would you like to begin?</h1><p>Choose your next step. Come back whenever you’re ready.</p><div class="premium-destinations"><article class="premium-destination" id="chronological-reading-plan"><h2>The ChronBible Guide</h2><p>Follow the Bible story in the order it happened.</p><a class="button" href="/chronbible/?view=journey">Open ChronBible</a></article><article class="premium-destination" id="bible-decoded"><h2>Bible Decoded</h2><p>Learn practical ways to understand Scripture with Pastor Kal.</p><a class="button" href="/bibledecoded/">Explore Bible Decoded</a></article><article class="premium-destination"><h2>Bible Guides</h2><p>Explore questions about Jesus, faith, and Bible prophecy.</p><a class="button" href="#bible-guides">Choose a Bible guide</a></article></div>';
+      intro.innerHTML=spanish
+        ? '<h1>¿Por dónde te gustaría comenzar?</h1><p>Elige tu próximo paso. Vuelve cuando estés listo.</p><div class="premium-destinations"><article class="premium-destination" id="chronological-reading-plan"><h2>La Guía ChronBible</h2><p>Sigue la historia de la Biblia en el orden en que sucedió.</p><a class="button" href="/chronbible/?view=journey">Abrir ChronBible</a></article><article class="premium-destination" id="bible-decoded"><h2>Bible Decoded</h2><p>Aprende maneras prácticas de comprender las Escrituras con Pastor Kal.</p><a class="button" href="/bibledecoded/">Explorar Bible Decoded</a></article><article class="premium-destination"><h2>Guías bíblicas</h2><p>Explora preguntas sobre Jesús, la fe y la profecía bíblica.</p><a class="button" href="#bible-guides">Elegir una guía bíblica</a></article></div>'
+        : '<h1>Where would you like to begin?</h1><p>Choose your next step. Come back whenever you’re ready.</p><div class="premium-destinations"><article class="premium-destination" id="chronological-reading-plan"><h2>The ChronBible Guide</h2><p>Follow the Bible story in the order it happened.</p><a class="button" href="/chronbible/?view=journey">Open ChronBible</a></article><article class="premium-destination" id="bible-decoded"><h2>Bible Decoded</h2><p>Learn practical ways to understand Scripture with Pastor Kal.</p><a class="button" href="/bibledecoded/">Explore Bible Decoded</a></article><article class="premium-destination"><h2>Bible Guides</h2><p>Explore questions about Jesus, faith, and Bible prophecy.</p><a class="button" href="#bible-guides">Choose a Bible guide</a></article></div>';
       q('#chronological-reading-plan',main)?.remove();q('#bible-decoded',main)?.remove();main.prepend(intro);
-      [['#bible-guides','Choose a Bible guide'],['#watch','Watch on YouTube'],['#live-discussion','Join the weekly Zoom discussion'],['#whatsapp-group','Connect with our WhatsApp family'],['#ask-pastor-kal','Ask Pastor Kal AI'],['#shop','Explore the store']].forEach(([s,t])=>fold(q(s,main),t));
-      const resources=document.createElement('h2');resources.id='member-resources';resources.className='premium-resources-title';resources.textContent='More member resources';
+      const folds=spanish
+        ? [['#bible-guides','Elegir una guía bíblica'],['#watch','Ver en YouTube'],['#live-discussion','Unirse a la conversación semanal por Zoom'],['#whatsapp-group','Conectarse con nuestra familia de WhatsApp'],['#ask-pastor-kal','Preguntar a Pastor Kal IA'],['#shop','Explorar la tienda']]
+        : [['#bible-guides','Choose a Bible guide'],['#watch','Watch on YouTube'],['#live-discussion','Join the weekly Zoom discussion'],['#whatsapp-group','Connect with our WhatsApp family'],['#ask-pastor-kal','Ask Pastor Kal AI'],['#shop','Explore the store']];
+      folds.forEach(([s,t])=>fold(q(s,main),t));
+      const resources=document.createElement('h2');resources.id='member-resources';resources.className='premium-resources-title';resources.textContent=spanish?'Más recursos para miembros':'More member resources';
       q('#watch',main)?.closest('.premium-fold')?.before(resources);
-      const nav=q('#siteNav');if(nav)nav.innerHTML='<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="/baptism/">Baptism</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/mo/">Missouri</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
+      const nav=q('#siteNav');if(nav)nav.innerHTML=spanish
+        ? '<a href="/chronbible/?view=journey">La Guía ChronBible</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Guías bíblicas</a><a href="/baptism/">Bautismo</a><a href="#member-resources">Más recursos</a><details class="locations-dropdown"><summary>Ubicaciones</summary><div class="locations-submenu"><a href="/hi/">Hawái</a><a href="/mo/">Misuri</a><a href="/nola/">Nueva Orleans</a><a href="/ny/">Nueva York</a></div></details>'
+        : '<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="/baptism/">Baptism</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/mo/">Missouri</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
       const shopFold=q('#shop',main)?.closest('.premium-fold');
       if(shopFold && !q('.premium-pastor-form',main)){
         // Style the introduction and layout only; Omnisend owns its entire form.
         const pastorFold=document.createElement('details');
         pastorFold.className='premium-fold premium-pastor-form';
         const pastorToggle=document.createElement('summary');
-        pastorToggle.textContent='Talk to a Pastor';
+        pastorToggle.textContent=spanish?'Habla con un pastor':'Talk to a Pastor';
         const pastorEmbed=document.createElement('div');
         pastorEmbed.id='omnisend-embedded-v2-6af73ec26e39df0b955367c0';
         const pastorContent=document.createElement('div');
         pastorContent.className='premium-pastor-content';
         const pastorIntro=document.createElement('div');
         pastorIntro.className='premium-pastor-intro';
-        pastorIntro.innerHTML='<h2>You don’t have to walk alone.</h2><p>Whether you have a question about faith, would like prayer, or simply need someone to listen, we’re here for you. Fill out the form, and someone from our pastoral team will reach out personally. We look forward to getting to know you and walking alongside you.</p>';
+        pastorIntro.innerHTML=spanish
+          ? '<h2>No tienes que caminar solo.</h2><p>Ya sea que tengas una pregunta sobre la fe, quieras oración o simplemente necesites que alguien te escuche, estamos aquí para ti. Completa el formulario y alguien de nuestro equipo pastoral se comunicará contigo personalmente. Esperamos conocerte y acompañarte en tu camino.</p>'
+          : '<h2>You don’t have to walk alone.</h2><p>Whether you have a question about faith, would like prayer, or simply need someone to listen, we’re here for you. Fill out the form, and someone from our pastoral team will reach out personally. We look forward to getting to know you and walking alongside you.</p>';
         pastorContent.append(pastorIntro,pastorEmbed);
         pastorFold.append(pastorToggle,pastorContent);
         let omniloaded=false;
