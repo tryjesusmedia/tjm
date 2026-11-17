@@ -39,15 +39,15 @@ const LESSON_ES = Object.freeze({
   "bible-memorization":{title:"Memorización bíblica",description:"Guarda la Escritura en tu mente mediante repetición, énfasis, capítulos, mapas temáticos y canciones de la Escritura."},
   "word-search":{title:"El método de búsqueda de palabras",description:"Método adicional: usa concordancias, léxicos, números de Strong y el uso repetido en la Biblia para investigar palabras y frases importantes."}
 });
-const localizeLección = (item) => item ? ({...item,...(LESSON_ES[item.id]||{})}) : item;
+const localizeLesson = (item) => item ? ({...item,...(LESSON_ES[item.id]||{})}) : item;
 const API_ERROR_ES = new Map([
   ["Please try again.","Inténtalo de nuevo."],
   ["Please sign in to continue.","Inicia sesión para continuar."],
-  ["Tu sign-in has expired. Please sign in again.","Tu sesión ha expirado. Inicia sesión de nuevo."],
+  ["Tu sesión ha expirado. Inicia sesión de nuevo.","Tu sesión ha expirado. Inicia sesión de nuevo."],
   ["Please confirm your email address before continuing.","Confirma tu correo electrónico antes de continuar."],
   ["Member access is being prepared. Please try again later.","El acceso para miembros se está preparando. Inténtalo de nuevo más tarde."],
-  ["Tu account does not have Bible Decoded access yet.","Tu cuenta todavía no tiene acceso a Bible Decoded."],
-  ["This cuaderno is being prepared. Please try again shortly.","Este cuaderno todavía se está preparando. Inténtalo de nuevo en breve."],
+  ["Your account does not have Bible Decoded access yet.","Tu cuenta todavía no tiene acceso a Bible Decoded."],
+  ["This workbook is being prepared. Please try again shortly.","Este cuaderno se está preparando. Inténtalo de nuevo en breve."],
   ["Workbook not found.","No se encontró el cuaderno."],
   ["Please wait a minute, then try again.","Espera un minuto y vuelve a intentarlo."],
   ["Please choose one answer for each of the 10 quiz questions.","Elige una respuesta para cada una de las 10 preguntas del cuestionario."],
@@ -251,7 +251,7 @@ function wireSignout() {
 }
 function noAccess() {
   $("#app").innerHTML =
-    `<section class="page-top narrow"><p class="eyebrow">SESIÓN INICIADA</p><h1>Tu cuenta de Bible Decoded.</h1><div class="account-row"><p>Has iniciado sesión como <strong>${esc(me.user.email)}</strong>.</p><button class="account-signout" type="button" data-signout>Cerrar sesión y usar otra cuenta</button></div><div class="notice">Actualmente no tienes acceso a Bible Decoded. Si ya compraste el programa, verifica que estés usando el mismo correo electrónico que usaste al pagar.</div><div class="actions"><a class="button" href="https://buy.stripe.com/dRm28sacw6ufdSKfHu57W0b">Obtener Bible Decoded — <span class="purchase-prices"><s>$227</s> $97</span></a><a class="button secondary" href="${ROOT}">Ver el programa Bible Decoded</a><button id="check-access" class="button secondary">Comprobar mi acceso de nuevo</button></div><p class="offer-note">Precio especial para los próximos 100 clientes solamente!</p></section>`;
+    `<section class="page-top narrow"><p class="eyebrow">SESIÓN INICIADA</p><h1>Tu cuenta de Bible Decoded.</h1><div class="account-row"><p>Has iniciado sesión como <strong>${esc(me.user.email)}</strong>.</p><button class="account-signout" type="button" data-signout>Cerrar sesión y usar otra cuenta</button></div><div class="notice">Actualmente no tienes acceso a Bible Decoded. Si ya compraste el programa, verifica que estés usando el mismo correo electrónico que usaste al pagar.</div><div class="actions"><a class="button" href="https://buy.stripe.com/dRm28sacw6ufdSKfHu57W0b">Obtener Bible Decoded — <span class="purchase-prices"><s>$227</s> $97</span></a><a class="button secondary" href="${ROOT}">Ver el programa Bible Decoded</a><button id="check-access" class="button secondary">Comprobar mi acceso de nuevo</button></div><p class="offer-note">¡Precio especial para los próximos 100 clientes solamente!</p></section>`;
   $("#check-access").onclick = () => location.reload();
   wireSignout();
 }
@@ -269,7 +269,7 @@ function dashboard() {
     config.lessons.find((l) => l.id === recent?.lesson_id) ||
     config.lessons.find(
       (l) =>
-        !l.extra && !hasEarnedCompletion(me.progress.find((p) => p.lesson_id === l.id)),
+        !l.bonus && !hasEarnedCompletion(me.progress.find((p) => p.lesson_id === l.id)),
     ) ||
     config.lessons[0];
   const name = me.user.name.split(" ")[0];
@@ -277,7 +277,7 @@ function dashboard() {
     const progress = me.progress.find((p) => p.lesson_id === l.id);
     const completed = hasEarnedCompletion(progress);
     const quizScore = Number.isInteger(progress?.quiz_score) ? progress.quiz_score : 0;
-    return `<details class="lesson-fold"><summary class="lesson-fold-toggle"><span class="lesson-fold-name"><span class="lesson-fold-number">${l.extra ? "Extra" : `0${l.number}`}</span><span>${esc(l.title)}</span></span><span class="lesson-fold-chevron" aria-hidden="true">⌄</span></summary><article class="card lesson-card ${completed ? "completed" : ""}"><div class="card-status"><div class="number">${l.extra ? "Extra" : `0${l.number}`}</div><div class="card-status-text"><span class="lesson-status" ${completed ? 'data-completion-reveal="pending"' : ""}>${completed ? "✓ Completada" : progress ? "En progreso" : "Lista cuando tú lo estés"}</span><span class="dashboard-quiz-score" aria-label="Puntuación del cuestionario ${quizScore} percent">Cuestionario: ${quizScore}%</span></div></div><h3>${esc(l.title)}</h3><p>${esc(l.description)}</p><div class="actions">${l.extra ? "" : `<a class="button secondary" href="${lessonLink(l.id, "video")}">Ver video</a>`}<a class="button secondary" href="${lessonLink(l.id, "cuaderno")}">Abrir cuaderno</a><button class="button secondary" data-printable="${l.id}">Guía imprimible (PDF)</button>${progress ? `<a href="${lessonLink(l.id)}" class="small">Continuar donde lo dejé →</a>` : ""}</div></article></details>`;
+    return `<details class="lesson-fold"><summary class="lesson-fold-toggle"><span class="lesson-fold-name"><span class="lesson-fold-number">${l.bonus ? "Extra" : `0${l.number}`}</span><span>${esc(l.title)}</span></span><span class="lesson-fold-chevron" aria-hidden="true">⌄</span></summary><article class="card lesson-card ${completed ? "completed" : ""}"><div class="card-status"><div class="number">${l.bonus ? "Bonus" : `0${l.number}`}</div><div class="card-status-text"><span class="lesson-status" ${completed ? 'data-completion-reveal="pending"' : ""}>${completed ? "✓ Completada" : progress ? "En progreso" : "Lista cuando tú lo estés"}</span><span class="dashboard-quiz-score" aria-label="Puntuación del cuestionario ${quizScore} por ciento">Cuestionario: ${quizScore}%</span></div></div><h3>${esc(l.title)}</h3><p>${esc(l.description)}</p><div class="actions">${l.bonus ? "" : `<a class="button secondary" href="${lessonLink(l.id, "video")}">Ver video</a>`}<a class="button secondary" href="${lessonLink(l.id, "workbook")}">Abrir cuaderno</a><button class="button secondary" data-printable="${l.id}">Guía imprimible (PDF)</button>${progress ? `<a href="${lessonLink(l.id)}" class="small">Continuar donde lo dejé →</a>` : ""}</div></article></details>`;
   };
   $("#app").innerHTML =
     `<section class="page-top"><p class="eyebrow">BIBLE DECODED · TU PANEL</p><h1>Bienvenido de nuevo${name ? ", " + esc(name) : ""}.</h1><p class="muted">Un poco de tiempo en la Palabra puede convertirse en una parte duradera de tu día.</p></section><section class="progress-panel"><div><h2>Tu progreso</h2><p>${done} de 6 lecciones completadas</p><progress max="6" value="${done}" aria-label="${done} de 6 lecciones completadas"></progress></div><a class="button gold" href="${done === 6 ? ROOT + "complete/" : lessonLink(next.id)}">${done === 6 ? "Celebrar tu progreso" : "Continuar aprendiendo →"}</a></section><div class="actions no-print">${albumLink()}</div><h2 class="section-label">Tus lecciones</h2><p class="small muted">Sigue las lecciones en orden o vuelve a un método cuando lo necesites.</p><div class="cards">${config.lessons
@@ -285,7 +285,7 @@ function dashboard() {
       .map(card)
       .join(
         "",
-      )}</div><div class="extra card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">SIGUE EXPLORANDO LAS ESCRITURAS</p><h2>Laboratorio de Estudio Bible Decoded</h2>${me.labUnlocked ? `<p>¡Felicitaciones por completar Bible Decoded! Ahora tienes herramientas para explorar las Escrituras con confianza.</p><p>Visita tu Laboratorio de Estudio para crear tus propios estudios bíblicos y poner en práctica lo aprendido.</p><a class="button" href="${ROOT}complete/#study-lab">Visitar el Laboratorio de Estudio</a>` : `<p>Obtén 90% o más en cada uno de los seis cuestionarios principales para desbloquear tu Laboratorio de Estudio personal. Podrás nombrar, guardar y volver a tantos estudios como quieras.</p><p class="notice">${6 - done} lesson${6 - done === 1 ? "" : "s"} to go. The extra is yours to explore at any time.</p><p class="small muted">Cualquier estudio bíblico y nota que ya hayas guardado seguirá aquí cuando obtengas una puntuación aprobatoria en los seis cuestionarios.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">Ver el programa Bible Decoded</a></div>`;
+      )}</div><div class="bonus card">${card(config.lessons.at(-1))}</div><section class="section"><p class="eyebrow">SIGUE EXPLORANDO LAS ESCRITURAS</p><h2>Laboratorio de Estudio Bible Decoded</h2>${me.labUnlocked ? `<p>¡Felicitaciones por completar Bible Decoded! Ahora tienes herramientas para explorar las Escrituras con confianza.</p><p>Visita tu Laboratorio de Estudio para crear tus propios estudios bíblicos y poner en práctica lo aprendido.</p><a class="button" href="${ROOT}complete/#study-lab">Visitar el Laboratorio de Estudio</a>` : `<p>Obtén 90% o más en cada uno de los seis cuestionarios principales para desbloquear tu Laboratorio de Estudio personal. Podrás nombrar, guardar y volver a tantos estudios como quieras.</p><p class="notice">${6 - done} ${6 - done === 1 ? "lección pendiente" : "lecciones pendientes"}. La lección extra está disponible en cualquier momento.</p><p class="small muted">Cualquier estudio bíblico y nota que ya hayas guardado seguirá aquí cuando obtengas una puntuación aprobatoria en los seis cuestionarios.</p>`}</section>${coachingInvite()}<div class="actions dashboard-program-link no-print"><a class="button secondary" href="${ROOT}">Ver el programa Bible Decoded</a></div>`;
   document.querySelectorAll(".lesson-status[data-completion-reveal]").forEach((label) => revealCompletion(label));
   wireSignout();
   document.querySelectorAll("[data-printable]").forEach(
@@ -320,10 +320,10 @@ function renderWorkbook(blocks) {
     else groups.at(-1).blocks.push(b);
   }
   const nonempty = groups.filter((g) => g.blocks.length);
-  return `<div class="cuaderno-layout"><div class="cuaderno">${nonempty.map((g, i) => `<details class="cuaderno-subsection" id="section-${i}"><summary><span class="subsection-number">${String(i + 1).padStart(2, "0")}</span><span>${esc(g.title)}</span><span class="subsection-toggle" aria-hidden="true">+</span></summary><section class="cuaderno-section">${g.blocks.map(blockHTML).join("")}</section></details>`).join("")}</div></div>`;
+  return `<div class="workbook-layout"><div class="workbook">${nonempty.map((g, i) => `<details class="workbook-subsection" id="section-${i}"><summary><span class="subsection-number">${String(i + 1).padStart(2, "0")}</span><span>${esc(g.title)}</span><span class="subsection-toggle" aria-hidden="true">+</span></summary><section class="workbook-section">${g.blocks.map(blockHTML).join("")}</section></details>`).join("")}</div></div>`;
 }
 function wireWorkbookSubsections(root = document) {
-  root.querySelectorAll(".cuaderno-subsection").forEach((panel) => {
+  root.querySelectorAll(".workbook-subsection").forEach((panel) => {
     const toggle = panel.querySelector(".subsection-toggle");
     panel.addEventListener("toggle", () => {
       toggle.textContent = panel.open ? "−" : "+";
@@ -373,7 +373,7 @@ function wireLessonQuiz(items) {
     });
     const result = $("#quiz-result");
     if (unanswered) {
-      result.textContent = `Responde las 10 preguntas. Te faltan ${unanswered} .`;
+      result.textContent = `Responde las 10 preguntas. Te faltan ${unanswered} left.`;
       result.className = "quiz-result notice";
       return;
     }
@@ -446,7 +446,7 @@ function updateLessonCompletion(completed) {
   label.textContent = completed
     ? "¡Muy bien! Has completado esta lección."
     : "¡Vas por buen camino! Obtén 90% o más en este cuestionario y marcaremos la lección como completada.";
-  $(".cuaderno-end h2").textContent = completed ? "Ver siguiente lección" : "Pon en práctica lo que aprendiste.";
+  $(".workbook-end h2").textContent = completed ? "Ver siguiente lección" : "Pon en práctica lo que aprendiste.";
   if (completed) cancelLessonCompletion = revealCompletion(status, () => {
     input.checked = true;
     label.textContent = "Lección completada";
@@ -492,19 +492,19 @@ function showConflict(id, current, root = document, store = autosave) {
       }),
   );
 }
-function connectWorkbook(data, root = document, cuadernoScope = scope, blocks = currentBlocks) {
+function connectWorkbook(data, root = document, workbookScope = scope, blocks = currentBlocks) {
   wireWorkbookSubsections(root);
   const store = new Autosave({
     rows: data.answers,
     storage: local,
-    key: `bd-draft:${me.user.id}:${cuadernoScope}`,
+    key: `bd-draft:${me.user.id}:${workbookScope}`,
     save: (fieldId, value, revision) =>
-      api(`answer/${cuadernoScope}`, "PUT", { fieldId, value, revision }),
+      api(`answer/${workbookScope}`, "PUT", { fieldId, value, revision }),
     onState: (state) => showSaveState(state, root),
     onConflict: (id, current) => showConflict(id, current, root, store),
   });
   if (root === document) autosave = store;
-  else studyStores.set(cuadernoScope, store);
+  else studyStores.set(workbookScope, store);
   for (const field of fieldList(blocks)) {
     const input = root.querySelector(`[data-field="${field.id}"]`);
     const value = store.get(field.id, field.type === "check" ? false : "");
@@ -519,7 +519,7 @@ function connectWorkbook(data, root = document, cuadernoScope = scope, blocks = 
     input.addEventListener("blur", () => {
       void store.flush();
       if (lesson)
-        void api(`progress/${cuadernoScope}`, "PUT", { lastField: field.id }).catch(
+        void api(`progress/${workbookScope}`, "PUT", { lastField: field.id }).catch(
           () => {},
         );
     });
@@ -535,7 +535,7 @@ function connectWorkbook(data, root = document, cuadernoScope = scope, blocks = 
       .forEach(
         (p) => (p.textContent = root.querySelector(`[data-field="${p.dataset.print}"]`).value),
       );
-    const panels = root === document ? [] : [...root.querySelectorAll(".cuaderno-subsection")];
+    const panels = root === document ? [] : [...root.querySelectorAll(".workbook-subsection")];
     const states = panels.map((panel) => panel.open);
     panels.forEach((panel) => { panel.open = true; });
     const studyPanel = root === document ? null : root.closest(".saved-study");
@@ -566,7 +566,7 @@ function connectWorkbook(data, root = document, cuadernoScope = scope, blocks = 
   });
   wireSignout();
 }
-async function printDownload(id = scope, button = $("#download-cuaderno")) {
+async function printDownload(id = scope, button = $("#download-workbook")) {
   button.disabled = true;
   try {
     const { data } = await auth.auth.getSession();
@@ -601,7 +601,7 @@ async function loadLesson() {
   const next = config.lessons.find((l) => l.number === lesson.number + 1);
   document.title = `${lesson.title} | Bible Decoded`;
   $("#app").innerHTML =
-    `<section class="page-top lesson-heading"><p class="breadcrumb"><a href="${ROOT}dashboard/">Bible Decoded</a> / ${lesson.extra ? "Extra" : `Lección ${lesson.number}`}</p><p class="eyebrow">${lesson.extra ? "TU MÉTODO EXTRA" : `LECCIÓN ${lesson.number} DE 6`}</p><h1>${esc(lesson.title)}</h1><p class="muted">${esc(lesson.description)}</p></section><div class="video" id="video"><div class="video-unavailable"><strong>${data.video ? "Cargando tu video…" : "El video de la lección se está preparando."}</strong><p>${data.video ? "" : "Puedes trabajar en los ejercicios de abajo mientras se conecta el video."}</p></div></div><p class="small no-print">Mira el video a tu propio ritmo. Completa el ejercicio de abajo antes de continuar.</p><div class="actions no-print">${albumLink()}</div><details class="lesson-cuaderno" id="cuaderno"><summary><span><span class="eyebrow">HOJA DE TRABAJO INTERACTIVA</span>Tu ${lesson.extra ? "extra " : ""}cuaderno</span><span class="cuaderno-toggle" aria-hidden="true">+</span></summary><div class="lesson-cuaderno-body"><div class="cuaderno-head"><h2>Tu interactive cuaderno</h2><div id="save-status" class="save-status" role="status" aria-live="polite"></div></div><div class="actions no-print"><button id="save-now" class="button secondary">Guardar ahora</button><button id="download-cuaderno" class="button secondary">Guía imprimible (PDF)</button><button id="print-answers" class="button secondary">Imprimir mis respuestas</button></div><p class="small muted no-print">¿Prefieres papel y lápiz? Descarga la guía imprimible, abre el PDF y elige Imprimir. También puedes escribir abajo; tus respuestas se guardan automáticamente.</p>${renderWorkbook(currentBlocks)}<div class="cuaderno-end"><h2>Pon en práctica lo que aprendiste.</h2><div class="actions"><button id="finish-lesson" class="button">Guardar y continuar →</button><div class="check lesson-completion" id="lesson-completion" role="status" aria-live="polite"><input id="completed" type="checkbox" disabled aria-labelledby="completion-label"><span id="completion-label">¡Vas por buen camino! Obtén 90% o más en este cuestionario y marcaremos la lección como completada.</span></div></div></div></div></details><div class="help-bar"><div><strong>Herramientas de estudio bíblico</strong><div class="tools"><a href="https://www.biblegateway.com/" target="_blank" rel="noopener">Leer la Escritura ↗</a><a href="https://www.blueletterbible.org/" target="_blank" rel="noopener">Concordancia y léxico ↗</a></div></div></div>${lesson.number === 1 || lesson.number === 6 || lesson.extra ? coachingInvite() : ""}`;
+    `<section class="page-top lesson-heading"><p class="breadcrumb"><a href="${ROOT}dashboard/">Bible Decoded</a> / ${lesson.bonus ? "Extra" : `Lección ${lesson.number}`}</p><p class="eyebrow">${lesson.bonus ? "TU MÉTODO EXTRA" : `LECCIÓN ${lesson.number} DE 6`}</p><h1>${esc(lesson.title)}</h1><p class="muted">${esc(lesson.description)}</p></section><div class="video" id="video"><div class="video-unavailable"><strong>${data.video ? "Cargando tu video…" : "El video de la lección se está preparando."}</strong><p>${data.video ? "" : "Puedes trabajar en los ejercicios de abajo mientras se conecta el video."}</p></div></div><p class="small no-print">Mira el video a tu propio ritmo. Completa el ejercicio de abajo antes de continuar.</p><div class="actions no-print">${albumLink()}</div><details class="lesson-workbook" id="workbook"><summary><span><span class="eyebrow">HOJA DE TRABAJO INTERACTIVA</span>Tu ${lesson.bonus ? "cuaderno extra" : "cuaderno"}</span><span class="workbook-toggle" aria-hidden="true">+</span></summary><div class="lesson-workbook-body"><div class="workbook-head"><h2>Tu cuaderno interactivo</h2><div id="save-status" class="save-status" role="status" aria-live="polite"></div></div><div class="actions no-print"><button id="save-now" class="button secondary">Guardar ahora</button><button id="download-workbook" class="button secondary">Guía imprimible (PDF)</button><button id="print-answers" class="button secondary">Imprimir mis respuestas</button></div><p class="small muted no-print">¿Prefieres papel y lápiz? Descarga la guía imprimible, abre el PDF y elige Imprimir. También puedes escribir abajo; tus respuestas se guardan automáticamente.</p>${renderWorkbook(currentBlocks)}<div class="workbook-end"><h2>Pon en práctica lo que aprendiste.</h2><div class="actions"><button id="finish-lesson" class="button">Guardar y continuar →</button><div class="check lesson-completion" id="lesson-completion" role="status" aria-live="polite"><input id="completed" type="checkbox" disabled aria-labelledby="completion-label"><span id="completion-label">¡Vas por buen camino! Obtén 90% o más en este cuestionario y marcaremos la lección como completada.</span></div></div></div></div></details><div class="help-bar"><div><strong>Herramientas de estudio bíblico</strong><div class="tools"><a href="https://www.biblegateway.com/" target="_blank" rel="noopener">Leer la Escritura ↗</a><a href="https://www.blueletterbible.org/" target="_blank" rel="noopener">Concordancia y léxico ↗</a></div></div></div>${lesson.number === 1 || lesson.number === 6 || lesson.bonus ? coachingInvite() : ""}`;
   if (lesson.bonus) {
     const video = $("#video");
     video.classList.add("bonus-thumbnail");
@@ -609,21 +609,21 @@ async function loadLesson() {
       '<img src="/assets/bible-decoded.jpg" alt="Bible Decoded" width="720" height="960">';
   }
   clearCompletionReveals();
-  const cuadernoPanel = $("#cuaderno");
-  const cuadernoEnd = cuadernoPanel.querySelector(".cuaderno-end");
-  cuadernoPanel.after(cuadernoEnd);
+  const workbookPanel = $("#workbook");
+  const workbookEnd = workbookPanel.querySelector(".workbook-end");
+  workbookPanel.after(workbookEnd);
   const quizItems = LESSON_QUIZZES[lesson.id];
   if (quizItems) {
     const savedQuizScore = Number.isInteger(progress?.quiz_score) ? progress.quiz_score : null;
-    cuadernoPanel.insertAdjacentHTML("afterend", lessonQuizHTML(quizItems, savedQuizScore));
+    workbookPanel.insertAdjacentHTML("afterend", lessonQuizHTML(quizItems, savedQuizScore));
     wireLessonQuiz(quizItems);
   }
   const previous = config.lessons.find((item) => item.number === lesson.number - 1);
   $(".lesson-heading").insertAdjacentHTML("beforeend",
-    `<nav class="lesson-navigation no-print" aria-label="Lección navigation">${previous ? `<a data-lesson-navigation href="${lessonLink(previous.id)}">← Lección anterior</a>` : ""}<a data-lesson-navigation href="${ROOT}dashboard/">Todas las lecciones</a>${next ? `<a data-lesson-navigation href="${lessonLink(next.id)}">Siguiente lección →</a>` : ""}</nav>`);
-  cuadernoEnd.querySelector("h2").insertAdjacentHTML("afterend",
-    `<p class="next-lesson-note">${lesson.number === 6 ? (me.labUnlocked ? "Siguiente: Celebra que completaste el curso" : "Siguiente: Tu dashboard") : next ? `Siguiente: ${esc(next.title)}` : "Siguiente: Tu dashboard"}</p>`);
-  document.querySelectorAll(".lesson-cuaderno, .lesson-quiz, .cuaderno-subsection").forEach((panel) => {
+    `<nav class="lesson-navigation no-print" aria-label="Navegación de lecciones">${previous ? `<a data-lesson-navigation href="${lessonLink(previous.id)}">← Lección anterior</a>` : ""}<a data-lesson-navigation href="${ROOT}dashboard/">Todas las lecciones</a>${next ? `<a data-lesson-navigation href="${lessonLink(next.id)}">Siguiente lección →</a>` : ""}</nav>`);
+  workbookEnd.querySelector("h2").insertAdjacentHTML("afterend",
+    `<p class="next-lesson-note">${lesson.number === 6 ? (me.labUnlocked ? "Siguiente: Celebra que completaste el curso" : "Siguiente: Tu panel") : next ? `Siguiente: ${esc(next.title)}` : "Siguiente: Tu panel"}</p>`);
+  document.querySelectorAll(".lesson-workbook, .lesson-quiz, .workbook-subsection").forEach((panel) => {
     const summary = panel.querySelector(":scope > summary");
     const hint = document.createElement("span");
     hint.className = "panel-hint";
@@ -638,21 +638,21 @@ async function loadLesson() {
       if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
       if (!(await autosave.flush())) {
-        tell("Tu answers are not saved yet. Please check your connection and try again.", true);
+        tell("Tus respuestas todavía no se han guardado. Revisa tu conexión e inténtalo de nuevo.", true);
         return;
       }
       await saveVideoPosition();
       location.assign(link.href);
     });
   });
-  $("#download-cuaderno").onclick = () => {
+  $("#download-workbook").onclick = () => {
     void printDownload();
   };
-  cuadernoPanel.addEventListener(
+  workbookPanel.addEventListener(
     "toggle",
     () =>
-      (cuadernoPanel.querySelector(".cuaderno-toggle").textContent =
-        cuadernoPanel.open ? "−" : "+"),
+      (workbookPanel.querySelector(".workbook-toggle").textContent =
+        workbookPanel.open ? "−" : "+"),
   );
   updateLessonCompletion(hasEarnedCompletion(progress));
   $("#finish-lesson").onclick = async () => {
@@ -678,7 +678,7 @@ async function loadLesson() {
     }
   };
   if (data.video) await mountVideo(data.video, progress?.seconds || 0);
-  if (params.get("view") === "cuaderno") $("#cuaderno").scrollIntoView();
+  if (params.get("view") === "workbook") $("#workbook").scrollIntoView();
   else if (params.get("view") !== "video" && progress?.last_field)
     document
       .getElementById(progress.last_field)
@@ -746,7 +746,7 @@ async function mountVideo(video, seconds) {
         },
         events: {
           onReady: (event) =>
-            (event.target.getIframe().title = lesson.title + " video de la lección"),
+            (event.target.getIframe().title = lesson.title + " — video de la lección"),
           onStateChange: () => {
             void saveVideoPosition();
           },
@@ -760,7 +760,7 @@ async function mountVideo(video, seconds) {
     } else {
       const iframe = document.createElement("iframe");
       iframe.src = video.url + `?startTime=${Math.floor(seconds)}s`;
-      iframe.title = `${lesson.title} video de la lección`;
+      iframe.title = `${lesson.title} — video de la lección`;
       iframe.allow =
         "accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;";
       iframe.allowFullscreen = true;
@@ -796,7 +796,7 @@ async function saveVideoPosition() {
     lastVideoPosition = seconds;
   } catch {
     tell(
-      "Tu video position could not save. Tu cuaderno’s save status is shown below.",
+      "No se pudo guardar la posición del video. El estado de guardado de tu cuaderno aparece abajo.",
       true,
     );
   }
@@ -812,7 +812,7 @@ async function openStudyPanel(panel) {
   try {
     const id = panel.dataset.studyId;
     const data = await api("study/" + encodeURIComponent(id));
-    editor.innerHTML = `<p class="muted">Use the methods that help you explore this passage. Tu work will be here when you return.</p><div class="cuaderno-head"><h3>Tu study workspace</h3><div data-save-status class="save-status" role="status" aria-live="polite"></div></div><div class="actions study-actions no-print"><button data-save-now class="button">Guardar mi estudio</button><button data-print-answers class="button secondary">Imprimir mi estudio</button></div>${renderWorkbook(data.study.blocks)}`;
+    editor.innerHTML = `<p class="muted">Usa los métodos que te ayuden a explorar este pasaje. Tu trabajo estará aquí cuando regreses.</p><div class="workbook-head"><h3>Tu espacio de estudio</h3><div data-save-status class="save-status" role="status" aria-live="polite"></div></div><div class="actions study-actions no-print"><button data-save-now class="button">Guardar mi estudio</button><button data-print-answers class="button secondary">Imprimir mi estudio</button></div>${renderWorkbook(data.study.blocks)}`;
     // Keep labels unique while preserving the account's original answer identifiers.
     editor.querySelectorAll("[id]").forEach((node) => { node.id = `study-${id}-${node.id}`; });
     editor.querySelectorAll("[for]").forEach((node) => { node.htmlFor = `study-${id}-${node.htmlFor}`; });
@@ -914,7 +914,7 @@ async function completion() {
     return;
   }
   $("#app").innerHTML =
-    `<section class="page-top narrow"><p class="eyebrow">SEIS LECCIONES. UN NUEVO COMIENZO.</p><h1>Completaste<br>Bible Decoded.</h1><p>Has practicado los métodos. Ahora incorpóralos a tu propio tiempo en las Escrituras.</p><div class="actions"><a class="button" href="#study-lab">Abrir mi Laboratorio de Estudio →</a><a class="button secondary" href="${lessonLink("word-search", "cuaderno")}">Explore the extra lesson</a></div></section><section class="certificate" id="certificate" aria-label="Certificado de Finalización de Bible Decoded"><span class="certificate-corner corner-tl" aria-hidden="true"></span><span class="certificate-corner corner-tr" aria-hidden="true"></span><span class="certificate-corner corner-bl" aria-hidden="true"></span><span class="certificate-corner corner-br" aria-hidden="true"></span><div class="certificate-content"><div class="certificate-bonus" ${bonusCompleted(me) ? "" : "hidden"}><span aria-hidden="true">❧</span><p>Extra lesson completed</p><span aria-hidden="true">❧</span></div><img class="certificate-faith-seal" src="/assets/bible-decoded-completion-seal.svg" width="140" height="140" alt="Sello dorado con una Biblia abierta y ramas de laurel: Bible Decoded — Curso completado"><img class="certificate-logo" src="/assets/logo.png" width="88" height="88" alt="Try Jesus Media"><p class="certificate-brand">TRY JESUS MEDIA</p><div class="certificate-flourish" aria-hidden="true">◆</div><h2 class="certificate-title">Certificado <em>de finalización</em></h2><p class="certificate-presented">PRESENTADO CON ALEGRÍA A</p><p class="person" id="certificate-name">${esc(me.user.name || me.user.email)}</p><p class="certificate-recognition">En reconocimiento por completar las seis lecciones guiadas de</p><h3 class="certificate-course">Bible Decoded</h3><p class="certificate-dedication">Una base para comprender las Escrituras,<br>compartir su verdad y guiar a otros hacia Jesús.</p><div class="certificate-footer"><div class="certificate-motto"><p>Sigue descubriendo.<br>Sigue creciendo.</p><span>TRYJESUSMEDIA.COM</span></div><div class="certificate-host"><img class="certificate-signature" src="/assets/pastor-kal-signature-transparent.svg" alt="Pastor Kal Roller’s signature" width="180" height="64"><p>Pastor Kal Roller</p><span>PRESENTADOR DEL CURSO</span></div></div><p class="certificate-methods">Fundamentos · Busca a Cristo · Reconocimiento de patrones<br>El método de las preguntas · Exégesis · Memorización bíblica</p></div></section><details class="certificate-name-editor no-print"><summary>Cambiar nombre del certificado</summary><form id="certificate-name-form"><label for="certificate-display-name">Nombre que aparecerá en tu certificado</label><div class="actions"><input id="certificate-display-name" name="certificateName" type="text" maxlength="80" required autocomplete="name" value="${esc(me.user.name || me.user.email)}"><button class="button secondary" type="submit">Actualizar nombre</button></div><p class="small muted">Esto cambia solo el nombre del certificado y se guarda en este dispositivo.</p><p id="certificate-name-status" class="small" role="status"></p></form></details><div class="actions no-print"><button id="print-certificate" class="button secondary">Imprimir mi certificado</button><a href="/welcome/#live-discussion" class="button secondary">Unirse a la conversación bíblica semanal</a><a href="${ROOT}dashboard/">Volver a mi panel</a></div>${coachingInvite()}<section class="section completion-study-lab" id="study-lab" aria-labelledby="study-lab-title"><p class="eyebrow">UN NUEVO DESCUBRIMIENTO COMIENZA CON UN PASAJE</p><h2 id="study-lab-title">Laboratorio de Estudio Bible Decoded</h2><div id="study-lab-content"></div></section>`;
+    `<section class="page-top narrow"><p class="eyebrow">SEIS LECCIONES. UN NUEVO COMIENZO.</p><h1>Completaste<br>Bible Decoded.</h1><p>Has practicado los métodos. Ahora incorpóralos a tu propio tiempo en las Escrituras.</p><div class="actions"><a class="button" href="#study-lab">Abrir mi Laboratorio de Estudio →</a><a class="button secondary" href="${lessonLink("word-search", "workbook")}">Explorar la lección extra</a></div></section><section class="certificate" id="certificate" aria-label="Certificado de Finalización de Bible Decoded"><span class="certificate-corner corner-tl" aria-hidden="true"></span><span class="certificate-corner corner-tr" aria-hidden="true"></span><span class="certificate-corner corner-bl" aria-hidden="true"></span><span class="certificate-corner corner-br" aria-hidden="true"></span><div class="certificate-content"><div class="certificate-bonus" ${bonusCompleted(me) ? "" : "hidden"}><span aria-hidden="true">❧</span><p>Lección extra completada</p><span aria-hidden="true">❧</span></div><img class="certificate-faith-seal" src="/assets/bible-decoded-completion-seal.svg" width="140" height="140" alt="Sello dorado con una Biblia abierta y ramas de laurel: Bible Decoded — Curso completado"><img class="certificate-logo" src="/assets/logo.png" width="88" height="88" alt="Try Jesus Media"><p class="certificate-brand">TRY JESUS MEDIA</p><div class="certificate-flourish" aria-hidden="true">◆</div><h2 class="certificate-title">Certificado <em>de finalización</em></h2><p class="certificate-presented">PRESENTADO CON ALEGRÍA A</p><p class="person" id="certificate-name">${esc(me.user.name || me.user.email)}</p><p class="certificate-recognition">En reconocimiento por completar las seis lecciones guiadas de</p><h3 class="certificate-course">Bible Decoded</h3><p class="certificate-dedication">Una base para comprender las Escrituras,<br>compartir su verdad y guiar a otros hacia Jesús.</p><div class="certificate-footer"><div class="certificate-motto"><p>Sigue descubriendo.<br>Sigue creciendo.</p><span>TRYJESUSMEDIA.COM</span></div><div class="certificate-host"><img class="certificate-signature" src="/assets/pastor-kal-signature-transparent.svg" alt="Pastor Kal Roller’s signature" width="180" height="64"><p>Pastor Kal Roller</p><span>PRESENTADOR DEL CURSO</span></div></div><p class="certificate-methods">Fundamentos · Busca a Cristo · Reconocimiento de patrones<br>El método de las preguntas · Exégesis · Memorización bíblica</p></div></section><details class="certificate-name-editor no-print"><summary>Cambiar nombre del certificado</summary><form id="certificate-name-form"><label for="certificate-display-name">Nombre que aparecerá en tu certificado</label><div class="actions"><input id="certificate-display-name" name="certificateName" type="text" maxlength="80" required autocomplete="name" value="${esc(me.user.name || me.user.email)}"><button class="button secondary" type="submit">Actualizar nombre</button></div><p class="small muted">Esto cambia solo el nombre del certificado y se guarda en este dispositivo.</p><p id="certificate-name-status" class="small" role="status"></p></form></details><div class="actions no-print"><button id="print-certificate" class="button secondary">Imprimir mi certificado</button><a href="/welcome/#live-discussion" class="button secondary">Unirse a la conversación bíblica semanal</a><a href="${ROOT}dashboard/">Volver a mi panel</a></div>${coachingInvite()}<section class="section completion-study-lab" id="study-lab" aria-labelledby="study-lab-title"><p class="eyebrow">UN NUEVO DESCUBRIMIENTO COMIENZA CON UN PASAJE</p><h2 id="study-lab-title">Laboratorio de Estudio Bible Decoded</h2><div id="study-lab-content"></div></section>`;
   if (bonusCompleted(me)) revealCompletion($(".certificate-bonus"));
   wireSignout();
   $("#print-certificate").onclick = () => {
@@ -1029,7 +1029,7 @@ async function boot() {
   } catch (e) {
     if (e.status !== 401) throw e;
     await auth.auth.signOut({ scope: "local" });
-    authForm("Tu sign-in has expired. Please sign in again.");
+    authForm("Tu sesión ha expirado. Inicia sesión de nuevo.");
     return;
   }
   memberHeader();
