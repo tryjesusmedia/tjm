@@ -153,10 +153,10 @@
     document.body.classList.add('guide-reader-page');
 
     const getSectionName = (panel, index) => {
-      if (index === 0) return 'Introduction';
+      if (index === 0) return spanish ? 'Introducción' : 'Introduction';
       const eyebrow = cleanText(panel.querySelector('.eyebrow')?.textContent);
       if (eyebrow) return eyebrow;
-      return cleanText(panel.querySelector('h2, h1')?.textContent) || `Section ${index + 1}`;
+      return cleanText(panel.querySelector('h2, h1')?.textContent) || (spanish ? `Sección ${index + 1}` : `Section ${index + 1}`);
     };
 
     const sectionNames = panels.map(getSectionName);
@@ -171,26 +171,26 @@
 
     const toolbar = document.createElement('div');
     toolbar.className = 'guide-reader-toolbar';
-    toolbar.setAttribute('aria-label', 'Reading tools');
+    toolbar.setAttribute('aria-label', spanish ? 'Herramientas de lectura' : 'Reading tools');
     toolbar.innerHTML = `
       <div class="guide-reading-controls">
-        <div class="guide-text-controls" role="group" aria-label="Text size">
-          <button type="button" data-text-size="decrease" aria-label="Decrease text size">−</button>
-          <button type="button" data-text-size="increase" aria-label="Increase text size">+</button>
+        <div class="guide-text-controls" role="group" aria-label="${spanish ? 'Tamaño de texto' : 'Text size'}">
+          <button type="button" data-text-size="decrease" aria-label="${spanish ? 'Disminuir tamaño de texto' : 'Decrease text size'}">−</button>
+          <button type="button" data-text-size="increase" aria-label="${spanish ? 'Aumentar tamaño de texto' : 'Increase text size'}">+</button>
           <span class="guide-text-status" role="status" aria-live="polite" aria-atomic="true"></span>
         </div>
-        <label class="guide-audio-speed"><span>Listen speed</span>
-          <select id="guideAudioSpeed" aria-label="Audio reading speed">
-            <option value="0.82">Slower</option>
+        <label class="guide-audio-speed"><span>${spanish ? 'Velocidad de audio' : 'Listen speed'}</span>
+          <select id="guideAudioSpeed" aria-label="${spanish ? 'Velocidad de lectura en voz alta' : 'Audio reading speed'}">
+            <option value="0.82">${spanish ? 'Más lento' : 'Slower'}</option>
             <option value="0.94">Normal</option>
-            <option value="1.1">Faster</option>
+            <option value="1.1">${spanish ? 'Más rápido' : 'Faster'}</option>
           </select>
         </label>
       </div>
       <div class="guide-reader-links">
-        <a href="/welcome/#bible-guides">Save &amp; Finish Later</a>
-        <a href="/welcome/#bible-guides">Return to Bible Guides</a>
-        <a href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM" target="_blank" rel="noopener noreferrer">Need Help?</a>
+        <a href="${spanish ? '/es/welcome/#bible-guides' : '/welcome/#bible-guides'}">${spanish ? 'Guardar y terminar después' : 'Save &amp; Finish Later'}</a>
+        <a href="${spanish ? '/es/welcome/#bible-guides' : '/welcome/#bible-guides'}">${spanish ? 'Volver a las guías bíblicas' : 'Return to Bible Guides'}</a>
+        <a href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM" target="_blank" rel="noopener noreferrer">${spanish ? '¿Necesitas ayuda?' : 'Need Help?'}</a>
       </div>`;
 
     shell.insertBefore(toolbar, stage);
@@ -226,7 +226,7 @@
     const outline = document.createElement('details');
     outline.className = 'guide-outline';
     outline.innerHTML = `
-      <summary><span>View All Sections</span><span aria-hidden="true">＋</span></summary>
+      <summary><span>${spanish ? 'Ver todas las secciones' : 'View All Sections'}</span><span aria-hidden="true">＋</span></summary>
       <ol>${sectionNames.map((name, index) => `<li><button type="button" data-section-index="${index}"><span>${index + 1}</span>${name}</button></li>`).join('')}</ol>`;
     shell.insertBefore(outline, stage);
 
@@ -255,7 +255,7 @@
       const tools = document.createElement('details');
       tools.className = 'guide-simple-tools';
       const label = document.createElement('summary');
-      label.textContent = 'Reading tools & help';
+      label.textContent = spanish ? 'Herramientas de lectura y ayuda' : 'Reading tools & help';
       tools.appendChild(label);
       shell.insertBefore(tools, stage);
       [toolbar, outline, shell.querySelector('.guide-glossary')].filter(Boolean)
@@ -265,7 +265,7 @@
     panels.forEach((panel, index) => {
       panel.querySelectorAll('details.evidence-drawer > summary > span:first-child').forEach((label) => {
         const text = cleanText(label.textContent);
-        if (text && !/^go deeper:/i.test(text)) label.textContent = `Go deeper: ${text}`;
+        if (text && !/^(?:go deeper|profundiza):/i.test(text)) label.textContent = `${spanish ? 'Profundiza' : 'Go deeper'}: ${text}`;
       });
 
       if (!panel.querySelector('.main-point')) {
@@ -279,7 +279,7 @@
         if (summaryText) {
           const summary = document.createElement('aside');
           summary.className = 'main-point';
-          const summaryLabel = index === 0 ? 'WHAT YOU’LL DISCOVER' : isProphecyGuide ? 'WHAT THIS MEANS' : 'THE MAIN POINT';
+          const summaryLabel = spanish ? (index === 0 ? 'LO QUE DESCUBRIRÁS' : isProphecyGuide ? 'LO QUE SIGNIFICA' : 'LA IDEA PRINCIPAL') : (index === 0 ? 'WHAT YOU’LL DISCOVER' : isProphecyGuide ? 'WHAT THIS MEANS' : 'THE MAIN POINT');
           summary.setAttribute('aria-label', summaryLabel.toLowerCase());
           summary.innerHTML = `<span>${summaryLabel}</span><p>${summaryText}</p>`;
           const copy = panel.querySelector('.panel-copy, .panel-copy-wide');
@@ -296,8 +296,8 @@
     const nextButton = document.getElementById('nextButton');
     const panelCount = document.getElementById('panelCount');
 
-    if (backButton) backButton.innerHTML = '<span aria-hidden="true">←</span> Previous Section';
-    if (nextButton) nextButton.innerHTML = 'Continue <span aria-hidden="true">→</span>';
+    if (backButton) backButton.innerHTML = spanish ? '<span aria-hidden="true">←</span> Sección anterior' : '<span aria-hidden="true">←</span> Previous Section';
+    if (nextButton) nextButton.innerHTML = spanish ? 'Continuar <span aria-hidden="true">→</span>' : 'Continue <span aria-hidden="true">→</span>';
 
     const sectionStatus = document.createElement('div');
     sectionStatus.className = 'guide-section-status';
@@ -306,11 +306,11 @@
 
     const mobileNavigation = document.createElement('nav');
     mobileNavigation.className = 'mobile-guide-navigation';
-    mobileNavigation.setAttribute('aria-label', 'Mobile guide navigation');
+    mobileNavigation.setAttribute('aria-label', spanish ? 'Navegación móvil de la guía' : 'Mobile guide navigation');
     mobileNavigation.innerHTML = `
-      <button type="button" class="mobile-guide-back" aria-label="Previous section"><span aria-hidden="true">←</span><span>Previous</span></button>
+      <button type="button" class="mobile-guide-back" aria-label="${spanish ? 'Sección anterior' : 'Previous section'}"><span aria-hidden="true">←</span><span>${spanish ? 'Anterior' : 'Previous'}</span></button>
       <span class="mobile-guide-status" aria-live="polite"></span>
-      <button type="button" class="mobile-guide-next" aria-label="Next section"><span>Continue</span><span aria-hidden="true">→</span></button>`;
+      <button type="button" class="mobile-guide-next" aria-label="${spanish ? 'Sección siguiente' : 'Next section'}"><span>${spanish ? 'Continuar' : 'Continue'}</span><span aria-hidden="true">→</span></button>`;
     document.body.appendChild(mobileNavigation);
     mobileNavigation.querySelector('.mobile-guide-back')?.addEventListener('click', () => backButton?.click());
     mobileNavigation.querySelector('.mobile-guide-next')?.addEventListener('click', () => nextButton?.click());
@@ -320,8 +320,8 @@
       const index = currentIndex();
       const sectionNumber = index + 1;
       const name = sectionNames[index];
-      if (panelCount) panelCount.textContent = `SECTION ${sectionNumber} OF ${panels.length}`;
-      sectionStatus.innerHTML = `<span>Section ${sectionNumber} of ${panels.length}</span><strong>${name}</strong>`;
+      if (panelCount) panelCount.textContent = `${spanish ? 'SECCIÓN' : 'SECTION'} ${sectionNumber} ${spanish ? 'DE' : 'OF'} ${panels.length}`;
+      sectionStatus.innerHTML = `<span>${spanish ? 'Sección' : 'Section'} ${sectionNumber} ${spanish ? 'de' : 'of'} ${panels.length}</span><strong>${name}</strong>`;
       outline.querySelectorAll('[data-section-index]').forEach((button, buttonIndex) => {
         button.classList.toggle('is-current', buttonIndex === index);
         button.setAttribute('aria-current', buttonIndex === index ? 'step' : 'false');
@@ -335,11 +335,11 @@
       const mobileStatus = mobileNavigation.querySelector('.mobile-guide-status');
       const mobileBack = mobileNavigation.querySelector('.mobile-guide-back');
       const mobileNext = mobileNavigation.querySelector('.mobile-guide-next');
-      if (mobileStatus) mobileStatus.textContent = `${sectionNumber} of ${panels.length}`;
+      if (mobileStatus) mobileStatus.textContent = `${sectionNumber} ${spanish ? 'de' : 'of'} ${panels.length}`;
       if (mobileBack) mobileBack.disabled = index === 0;
       if (mobileNext) {
         mobileNext.disabled = index === panels.length - 1;
-        mobileNext.querySelector('span:first-child').textContent = index === panels.length - 1 ? 'Finished' : 'Continue';
+        mobileNext.querySelector('span:first-child').textContent = index === panels.length - 1 ? (spanish ? 'Finalizado' : 'Finished') : (spanish ? 'Continuar' : 'Continue');
       }
     };
 
@@ -349,14 +349,14 @@
 
     const printButton = [...document.querySelectorAll('.header-link')].find((button) => /print/i.test(button.textContent));
     if (printButton) {
-      printButton.textContent = 'Large Print';
-      printButton.setAttribute('aria-label', 'Open the large-print version');
+      printButton.textContent = spanish ? 'Letra grande' : 'Large Print';
+      printButton.setAttribute('aria-label', spanish ? 'Abrir la versión de letra grande' : 'Open the large-print version');
     }
     const restartButton = document.getElementById('restartLesson');
-    if (restartButton) restartButton.textContent = 'Start Over';
+    if (restartButton) restartButton.textContent = spanish ? 'Empezar de nuevo' : 'Start Over';
 
     const saveNote = document.querySelector('.save-note');
-    if (saveNote) saveNote.textContent = 'Your place is saved automatically on this device.';
+    if (saveNote) saveNote.textContent = spanish ? 'Tu progreso se guarda automáticamente en este dispositivo.' : 'Your place is saved automatically on this device.';
 
   };
 
