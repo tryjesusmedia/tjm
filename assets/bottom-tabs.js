@@ -4,14 +4,14 @@
   const pathname = location.pathname.replace(/\/index\.html$/i, '').replace(/\/+$/, '').toLowerCase();
   // Signup confirmation displays the Members Page without redirecting its tracking URL.
   const path = pathname === '/signupcomplete' ? '/welcome' : pathname;
-  const spanish = path === '/es/chronbible' || path === '/es/welcome';
-  const allowed = ['/chronbible', '/bibledecoded', '/welcome', '/es/chronbible', '/es/welcome'];
+  const spanish = path === '/es/chronbible' || path === '/es/bibledecoded' || path === '/es/welcome';
+  const allowed = ['/chronbible', '/bibledecoded', '/welcome', '/es/chronbible', '/es/bibledecoded', '/es/welcome'];
   if (!allowed.includes(path)) return;
   let bar = document.querySelector('.chron-bottom-tabs');
   if (!bar) {
     const template = document.createElement('template');
     template.innerHTML = spanish
-      ? "<nav class=\"chron-bottom-tabs\" aria-label=\"Navegación principal de la aplicación\">\n    <a href=\"/es/chronbible/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2Z\"/></svg><span>ChronBible</span></a>\n    <a href=\"/bibledecoded/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"m10 8 6 4-6 4Z\"/></svg><span>Bible Decoded</span></a>\n    <a href=\"/es/welcome/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/></svg><span>Más recursos</span></a>\n  </nav>"
+      ? "<nav class=\"chron-bottom-tabs\" aria-label=\"Navegación principal de la aplicación\">\n    <a href=\"/es/chronbible/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2Z\"/></svg><span>ChronBible</span></a>\n    <a href=\"/es/bibledecoded/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"m10 8 6 4-6 4Z\"/></svg><span>Bible Decoded</span></a>\n    <a href=\"/es/welcome/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/></svg><span>Más recursos</span></a>\n  </nav>"
       : "<nav class=\"chron-bottom-tabs\" aria-label=\"Main app navigation\">\n    <a href=\"/chronbible/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2Z\"/></svg><span>ChronBible</span></a>\n    <a href=\"/bibledecoded/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"m10 8 6 4-6 4Z\"/></svg><span>Bible Decoded</span></a>\n    <a href=\"/welcome/\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/></svg><span>Other Resources</span></a>\n  </nav>";
     bar = template.content.firstElementChild;
     document.body.append(bar);
