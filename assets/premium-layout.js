@@ -101,33 +101,94 @@
     }
   }
 
-  function setupLanguageSwitch() {
-    const normalize = value => {
-      let path=String(value||'/').replace(/\/index\.html$/,'').replace(/\/+$/,'');
-      return path||'/';
-    };
-    const pairs=[
-      ['/', '/es/'],
-      ['/welcome/', '/es/welcome/'],
-      ['/chronbible/', '/es/chronbible/'],
-      ['/guidesonline/', '/es/guidesonline/'],
-      ['/bibledecoded/', '/es/bibledecoded/'],
-      ['/bibledecoded/welcome/', '/es/bibledecoded/welcome/'],
-      ['/bibledecoded/dashboard/', '/es/bibledecoded/dashboard/'],
-      ['/bibledecoded/lesson/', '/es/bibledecoded/lesson/'],
-      ['/bibledecoded/complete/', '/es/bibledecoded/complete/']
-    ];
-    const current=normalize(location.pathname);
-    let englishPath=null,spanishPath=null;
-    for(const [english,spanish] of pairs){
-      if(current===normalize(english)||current===normalize(spanish)){
-        englishPath=english;
-        spanishPath=spanish;
-        break;
+  const LANGUAGE_PAIRS=[
+    ['/', '/es/'],
+    ['/welcome/', '/es/welcome/'],
+    ['/chronbible/', '/es/chronbible/'],
+    ['/guidesonline/', '/es/guidesonline/'],
+    ['/bibledecoded/', '/es/bibledecoded/'],
+    ['/bibledecoded/welcome/', '/es/bibledecoded/welcome/'],
+    ['/bibledecoded/dashboard/', '/es/bibledecoded/dashboard/'],
+    ['/bibledecoded/lesson/', '/es/bibledecoded/lesson/'],
+    ['/bibledecoded/complete/', '/es/bibledecoded/complete/']
+  ];
+  const normalizeLanguagePath = value => {
+    let path=String(value||'/').replace(/\/index\.html$/,'').replace(/\/+$/,'');
+    return path||'/';
+  };
+  function languagePairFor(pathname=location.pathname) {
+    const current=normalizeLanguagePath(pathname);
+    for(const [english,spanish] of LANGUAGE_PAIRS){
+      if(current===normalizeLanguagePath(english)||current===normalizeLanguagePath(spanish)){
+        return {english,spanish,current};
       }
     }
-    if(!englishPath||!spanishPath||document.querySelector('.tjm-language-switch'))return;
-    const isSpanish=current===normalize(spanishPath);
+    return null;
+  }
+  function preferredLanguage() {
+    try {
+      const value=localStorage.getItem('tjm-language');
+      return value==='es'||value==='en'?value:null;
+    } catch { return null; }
+  }
+  function pairedLanguagePath(pathname,language) {
+    const pair=languagePairFor(pathname);
+    if(!pair)return null;
+    return language==='es'?pair.spanish:pair.english;
+  }
+  function enforceLanguagePreference() {
+    const language=preferredLanguage();
+    if(!language)return false;
+    const target=pairedLanguagePath(location.pathname,language);
+    if(!target||normalizeLanguagePath(target)===normalizeLanguagePath(location.pathname))return false;
+    location.replace(target+location.search+location.hash);
+    return true;
+  }
+  function localizeEquivalentLinks(root=document) {
+    const language=preferredLanguage();
+    if(!language)return;
+    root.querySelectorAll?.('a[href]').forEach(link=>{
+      if(link.closest('.tjm-language-switch'))return;
+      let url;
+      try{url=new URL(link.getAttribute('href'),location.href);}catch{return;}
+      if(url.origin!==location.origin)return;
+      const target=pairedLanguagePath(url.pathname,language);
+      if(!target||normalizeLanguagePath(target)===normalizeLanguagePath(url.pathname))return;
+      url.pathname=target;
+      link.href=url.pathname+url.search+url.hash;
+    });
+  }
+  function keepLanguageSticky() {
+    localizeEquivalentLinks(document);
+    const observer=new MutationObserver(records=>{
+      records.forEach(record=>record.addedNodes.forEach(node=>{
+        if(node.nodeType!==1)return;
+        if(node.matches?.('a[href]'))localizeEquivalentLinks(node.parentElement||document);
+        else localizeEquivalentLinks(node);
+      }));
+    });
+    observer.observe(document.body,{childList:true,subtree:true});
+    document.addEventListener('click',event=>{
+      const link=event.target.closest?.('a[href]');
+      if(!link||link.closest('.tjm-language-switch'))return;
+      const language=preferredLanguage();
+      if(!language)return;
+      let url;
+      try{url=new URL(link.href,location.href);}catch{return;}
+      if(url.origin!==location.origin)return;
+      const target=pairedLanguagePath(url.pathname,language);
+      if(!target||normalizeLanguagePath(target)===normalizeLanguagePath(url.pathname))return;
+      event.preventDefault();
+      url.pathname=target;
+      location.assign(url.href);
+    },true);
+  }
+
+  function setupLanguageSwitch() {
+    const pair=languagePairFor(location.pathname);
+    if(!pair||document.querySelector('.tjm-language-switch'))return;
+    const {english:englishPath,spanish:spanishPath,current}=pair;
+    const isSpanish=current===normalizeLanguagePath(spanishPath);
     const menuButton=document.querySelector(
       'header .tjm-menu-button, header .menu-toggle, header .bd-menu-toggle, header #profile-button'
     );
@@ -165,10 +226,12 @@
   }
 
   function setup() {
+    if(enforceLanguagePreference())return;
     const path=location.pathname.replace(/\/$/,'');
     const spanish=document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(path);
     document.body.classList.add('premium-system');
     setupLanguageSwitch();
+    keepLanguageSticky();
     document.querySelectorAll('footer').forEach(unifiedFooter);
     // Footer branding and legal links remain visible; optional social links share one drawer.
     document.querySelectorAll('footer').forEach(footer=>{
