@@ -135,6 +135,10 @@
     if(!header||!menuButton)return;
     const host=menuButton.closest('.tjm-masthead-row,.header-inner,.wrap')||header;
     host.classList.add('tjm-has-language-switch');
+    const controls=document.createElement('div');
+    controls.className='tjm-language-menu-group';
+    menuButton.before(controls);
+    controls.append(menuButton);
     const suffix=location.search+location.hash;
     const makeLink=(href,longLabel,shortLabel,language,active)=>{
       const link=document.createElement('a');
@@ -157,7 +161,7 @@
       Object.assign(document.createElement('span'),{className:'tjm-language-divider',textContent:'|'}),
       makeLink(spanishPath,'Español','ES','es',isSpanish)
     );
-    host.insertBefore(nav,menuButton);
+    controls.prepend(nav);
   }
 
   function setup() {
