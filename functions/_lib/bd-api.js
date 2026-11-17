@@ -68,17 +68,21 @@ async function requireLab(db,user){
  if(await completedCourseLessons(db,user.id)!==6)fail(403,'Score 90% or higher on each of the six lesson quizzes to unlock your Study Lab.');
  await db.prepare('INSERT OR IGNORE INTO bd_lab_access(user_id) VALUES (?)').bind(user.id).run();
 }
-async function scopeInfo(db,user,scope){
- const lesson=LESSONS.find(l=>l.id===scope);if(lesson)return {blocks:await contentBlocks(db,lesson.id),lesson};
+async function contentRow(db,id,language='en'){
+ const localized=language==='es'?await db.prepare('SELECT blocks,printable FROM bd_content WHERE id=?').bind('es:'+id).first():null;
+ const base=localized||await db.prepare('SELECT blocks,printable FROM bd_content WHERE id=?').bind(id).first();
+ if(!base)fail(503,'This workbook is being prepared. Please try again shortly.');
+ return base;
+}
+async function contentBlocks(db,id,language='en'){
+ return JSON.parse((await contentRow(db,id,language)).blocks);
+}
+async function scopeInfo(db,user,scope,language='en'){
+ const lesson=LESSONS.find(l=>l.id===scope);if(lesson)return {blocks:await contentBlocks(db,lesson.id,language),lesson};
  if(!/^[0-9a-f-]{36}$/.test(scope))fail(404,'Study not found.');
  const study=await db.prepare('SELECT * FROM bd_studies WHERE id=? AND user_id=?').bind(scope,user.id).first();
  if(!study)fail(404,'Study not found.');
- await requireLab(db,user);return {blocks:await contentBlocks(db,'study-lab'),study};
-}
-async function contentBlocks(db,id){
- const row=await db.prepare('SELECT blocks FROM bd_content WHERE id=?').bind(id).first();
- if(!row)fail(503,'This workbook is being prepared. Please try again shortly.');
- return JSON.parse(row.blocks);
+ await requireLab(db,user);return {blocks:await contentBlocks(db,'study-lab',language),study};
 }
 export function fieldsFor(blocks){return blocks.flatMap(b=>b.type==='grid'?b.rows.flatMap(r=>r.cells):['field','check'].includes(b.type)?[b]:[]);}
 const answerRows=async(db,user,scope)=>(await db.prepare("SELECT field_id,value,revision FROM bd_answers WHERE user_id=? AND scope=? AND field_id NOT IN ('__quiz_score','__quiz_passed')").bind(user.id,scope).all()).results.map(r=>({...r,value:JSON.parse(r.value)}));
@@ -150,6 +154,7 @@ export async function handle(request,env,waitUntil){
   if(waitUntil)waitUntil(task);else await task;
  };
  const url=new URL(request.url),route=url.pathname.replace(/^\/api\/bibledecoded\/?/,'').replace(/\/$/,'');
+ const language=request.headers.get('x-tjm-language')==='es'?'es':'en';
  if(route==='webhook'&&request.method==='POST')return webhook(request,env);
  if(!['GET','POST','PUT'].includes(request.method))fail(405,'Method not allowed.');
  if(request.method!=='GET'){
@@ -185,7 +190,10 @@ export async function handle(request,env,waitUntil){
  }
  if(!member)fail(403,'Your account does not have Bible Decoded access yet.');
  if(route.startsWith('printable/')&&request.method==='GET'){
-  const id=route.slice('printable/'.length),row=await db.prepare('SELECT printable FROM bd_content WHERE id=?').bind(id).first(),pdf=row?.printable;if(!pdf)fail(404,'Workbook not found.');
+  const id=route.slice('printable/'.length);
+  const localized=language==='es'?await db.prepare('SELECT printable FROM bd_content WHERE id=?').bind('es:'+id).first():null;
+  const fallback=localized?.printable?localized:await db.prepare('SELECT printable FROM bd_content WHERE id=?').bind(id).first();
+  const pdf=fallback?.printable;if(!pdf)fail(404,'Workbook not found.');
   const bytes=Uint8Array.from(atob(pdf),c=>c.charCodeAt(0));
   return new Response(bytes,{headers:{'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="Bible-Decoded-${id}-Workbook.pdf"`,'Cache-Control':'private, no-store','Vary':'Authorization','X-Content-Type-Options':'nosniff'}});
  }
@@ -197,7 +205,7 @@ export async function handle(request,env,waitUntil){
   const owned=await db.prepare('SELECT id,title FROM bd_studies WHERE id=? AND user_id=?').bind(body.id,user.id).first();if(!owned)fail(409,'Please try creating the study again.');return json(owned,201);
  }
  const match=route.match(/^(lesson|study|answer|progress)\/([a-z0-9-]+)$/);if(!match)fail(404,'Not found.');
- const [,kind,scope]=match,{lesson,study,blocks}=await scopeInfo(db,user,scope);
+ const [,kind,scope]=match,{lesson,study,blocks}=await scopeInfo(db,user,scope,language);
  if((kind==='lesson'&&lesson||kind==='study'&&study)&&request.method==='GET'){
   return json({lesson:lesson?{...summary(lesson),blocks}:null,study:study?{id:study.id,title:study.title,blocks}:null,answers:await answerRows(db,user,scope),video:lesson?await videoFor(env,lesson):null});
  }
