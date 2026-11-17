@@ -1,0 +1,907 @@
+(() => {
+  "use strict";
+
+  const CONFIG = window.TJM_CHRONBIBLE_CONFIG;
+  const PLAN_PATH = "/es/chronbible/data/readings.json";
+  const POINTS_PER_CHAPTER = 10;
+  const REWARD_HITOS = Object.freeze([1, 25, 100, 250, 500, 750, 1000, 1440]);
+  const FIRST_NAME_HOLD_MS = 1400;
+  const root = document.getElementById("view-root");
+  const loading = document.getElementById("loading-state");
+  const authGate = document.getElementById("auth-gate");
+  const authError = document.getElementById("auth-error");
+  const signInButton = document.getElementById("google-sign-in");
+  const appleSignInButton = document.getElementById("apple-sign-in");
+  const emailSignInForm = document.getElementById("email-sign-in");
+  const emailSignInStatus = document.getElementById("email-sign-in-status");
+  const guestButton = document.getElementById("continue-without-sign-in");
+  const headerSignIn = document.getElementById("header-sign-in");
+  const profileButton = document.getElementById("profile-button");
+  const accountMenu = document.getElementById("account-menu");
+  const toastRegion = document.getElementById("toast-region");
+  const syncStatus = document.getElementById("sync-status");
+
+  let db = null;
+  let plan = null;
+  let session = null;
+  let guestBrowsing = false;
+  let completed = new Set();
+  let currentIndex = 0;
+  let lastIndex = 0;
+  let activeView = new URLSearchParams(window.location.search).get("view") === "journey" ? "journey" : "readings";
+  let activeSection = "";
+  let journeyReturn = null;
+  let refreshTimer = null;
+  let journeyAlias = "";
+  let journeyFirstName = "";
+  let leaderboard = [];
+  let leaderboardLoaded = false;
+  let leaderboardLoading = false;
+  let leaderboardError = "";
+  let leaderboardOpen = true;
+  let nameHoldTimer = null;
+  let namePointerStart = null;
+  let lastNameTapAt = 0;
+  let nameEditInProgress = false;
+  let nameEditRequestId = 0;
+  let identityVersion = 0;
+  let visitRefreshPromise = null;
+  let sessionVersion = 0;
+  let leaderboardRequestId = 0;
+  let visitRefreshId = 0;
+
+  function escapeHTML(value = "") {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function displayName() {
+    const metadata = session?.user?.user_metadata ?? {};
+    return metadata.full_name || metadata.name || session?.user?.email?.split("@")[0] || "miembro de Try Jesus";
+  }
+
+  function avatarUrl() {
+    const metadata = session?.user?.user_metadata ?? {};
+    return metadata.avatar_url || metadata.picture || "";
+  }
+
+  function initials(name) {
+    return String(name || "T").split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase();
+  }
+
+  function setSync(label, mode = "") {
+    syncStatus.className = `sync-status${mode ? ` is-${mode}` : ""}`;
+    syncStatus.innerHTML = `<i></i>${escapeHTML(label)}`;
+  }
+
+  function toast(message, type = "") {
+    const item = document.createElement("div");
+    item.className = `toast${type ? ` ${type}` : ""}`;
+    item.textContent = message;
+    toastRegion.appendChild(item);
+    setTimeout(() => item.remove(), 4200);
+  }
+
+  function normalizeIndex(value) {
+    const index = Number(value);
+    if (!Number.isInteger(index)) return 0;
+    return Math.max(0, Math.min(index, plan.readings.length - 1));
+  }
+
+  function currentReading() {
+    return plan.readings[normalizeIndex(currentIndex)];
+  }
+
+  function percentComplete() {
+    return Math.round((completed.size / plan.chapterCount) * 100);
+  }
+
+  function metadataFirstName() {
+    const metadata = session?.user?.user_metadata ?? {};
+    const supplied = String(metadata.given_name || metadata.full_name || metadata.name || "").trim();
+    const first = supplied.split(/\s+/)[0] || "Amigo";
+    return first.length <= 40 && !/[<>\u0000-\u001f\u007f]/u.test(first) ? first : "Amigo";
+  }
+
+  function friendlyFirstName() {
+    return journeyFirstName || metadataFirstName();
+  }
+
+  function isCurrentSession(userId, version) {
+    return Boolean(userId && session?.user?.id === userId && sessionVersion === version);
+  }
+
+  function resetRewardState() {
+    leaderboardRequestId += 1;
+    visitRefreshId += 1;
+    nameEditRequestId += 1;
+    identityVersion += 1;
+    nameEditInProgress = false;
+    cancelNameGesture();
+    visitRefreshPromise = null;
+    journeyAlias = "";
+    journeyFirstName = "";
+    leaderboard = [];
+    leaderboardLoaded = false;
+    leaderboardLoading = false;
+    leaderboardError = "";
+  }
+
+  function rewardSummary() {
+    const completedChapters = completed.size;
+    const nextMilestone = REWARD_HITOS.find((milestone) => completedChapters < milestone) ?? null;
+    const milestoneProgress = nextMilestone === null
+      ? 100
+      : Math.round((completedChapters / nextMilestone) * 100);
+    return {
+      completedChapters,
+      journeyPoints: completedChapters * POINTS_PER_CHAPTER,
+      nextMilestone,
+      milestoneProgress: Math.max(0, Math.min(100, milestoneProgress)),
+    };
+  }
+
+  function readingComplete(reading) {
+    return reading.bibleTasks.every((task) => completed.has(task.progressIndex));
+  }
+
+  function completedTaskCount() {
+    return plan.readings.filter(readingComplete).length;
+  }
+
+  function sectionReadings(title) {
+    return plan.readings.filter((reading) => reading.section === title);
+  }
+
+
+  function showSignIn() {
+    authError.textContent = "";
+    authGate.hidden = false;
+  }
+
+  function showView(name, focusMain = false) {
+    window.TJMReadingBadgeViewer?.close(true);
+    const returningToJourney = name === "journey" && activeView === "readings";
+    if (returningToJourney) activeSection = journeyReturn?.section || currentReading().section;
+    activeView = name;
+    document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
+    render();
+    if (name === "rewards" && session) void refreshJourneyFromVisit();
+    if (returningToJourney) {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const index = journeyReturn?.index ?? currentIndex;
+        const item = root.querySelector(`[data-reading-index="${index}"]`);
+        item?.focus({ preventScroll: true });
+        if (journeyReturn) window.scrollTo({ top: journeyReturn.scrollY, behavior: "instant" });
+        else item?.scrollIntoView({ block: "center", behavior: "smooth" });
+      }));
+      return;
+    }
+    if (focusMain) {
+      document.getElementById("journey-main").focus({ preventScroll: true });
+      const hero = document.querySelector(".journey-hero");
+      const journeyTop = hero ? hero.getBoundingClientRect().bottom + window.scrollY : 0;
+      window.scrollTo({ top: journeyTop, behavior: "smooth" });
+    }
+  }
+
+  function sourceTaskLinks(reading) {
+    if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No hay enlaces de pasajes disponibles</button>`;
+    return `<div class="chapter-task-list" aria-label="Opciones de pasajes bíblicos">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Marcar ${escapeHTML(task.label)} como completado" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" aria-label="Leer ${escapeHTML(task.label)} en BibleGateway">Leer ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
+  }
+
+  function reviewFlag(reading) {
+    if (!reading.reviewNote) return "";
+    return `<p class="source-flag"><span aria-hidden="true">△</span><span><strong>La referencia de la fuente necesita revisión.</strong><br>${escapeHTML(reading.reviewNote)}</span></p>`;
+  }
+
+  function guideBlocks(blocks) {
+    return blocks.map(block => block.style?.startsWith("HEADING") ? `<h3>${escapeHTML(block.text)}</h3>` : `<p>${escapeHTML(block.text)}</p>`).join("");
+  }
+
+  function renderReadingGuide(reading) {
+    const section = plan.sections.find(s => s.title === reading.section);
+    const sectionReadings = plan.readings.filter(r => r.section === reading.section);
+    const last = sectionReadings.at(-1).index === reading.index;
+    return `<div class="reading-guide"><details class="reading-guidance"><summary>En esta lectura</summary>${reading.guidance.map(t => `<p>${escapeHTML(t)}</p>`).join("")}</details>${last ? `<details open><summary>Pausa y reflexiona</summary>${guideBlocks(section.reflection)}</details>` : ""}</div>`;
+  }
+
+  function renderGuide() {
+    return `<section aria-labelledby="guide-heading"><header class="view-heading"><div><p class="eyebrow">UN PEQUEÑO PASO A LA VEZ</p><h2 id="guide-heading">Tu guía de lectura</h2><p>${escapeHTML(plan.description)}</p><p>Este sitio sigue la edición actualizada del libro. Las versiones anteriores de la aplicación pueden usar un orden de lectura anterior.</p></div></header><div class="guide-sections">${plan.guide.map(group => `<details><summary>${escapeHTML(group.title)}</summary>${group.table ? guideBlocks(group.blocks.slice(0,1)) : ""}${group.table ? `<table class="guide-table"><thead><tr>${group.table[0].map(t=>`<th scope="col">${escapeHTML(t)}</th>`).join("")}</tr></thead><tbody>${group.table.slice(1).map(row=>`<tr>${row.map(t=>`<td>${escapeHTML(t)}</td>`).join("")}</tr>`).join("")}</tbody></table>` : ""}${guideBlocks(group.table ? group.blocks.slice(1) : group.blocks)}</details>`).join("")}</div></section>`;
+  }
+
+  function renderReadings() {
+    const reading = currentReading();
+    const percent = percentComplete();
+    return `
+      <section aria-labelledby="readings-heading">
+        <button class="reading-back" type="button" data-view-shortcut="journey" aria-label="Volver al recorrido"><span aria-hidden="true">←</span> Volver al recorrido</button>
+        <header class="view-heading">
+          <div>
+            <p class="eyebrow">${escapeHTML(reading.section)} · LECTURA ${reading.number} DE ${plan.readings.length}</p>
+            <div class="reading-title-with-badge"><h2 id="readings-heading">${escapeHTML(reading.title)}</h2>${readingComplete(reading) ? renderReadingBadge(reading) : ""}</div>
+          </div>
+          <div class="reading-switcher" aria-label="Navegación de lecturas">
+            <button class="icon-button" type="button" data-reading-nav="prev" aria-label="Lectura anterior" ${currentIndex === 0 ? "disabled" : ""}>‹</button>
+            <span class="reading-number"><strong>Lectura ${reading.number}</strong><small>${percent}% COMPLETADO</small></span>
+            <button class="icon-button" type="button" data-reading-nav="next" aria-label="Lectura siguiente" ${currentIndex === plan.readings.length - 1 ? "disabled" : ""}>›</button>
+          </div>
+        </header>
+
+        <div class="readings-grid">
+          <article class="reading-card scripture-card">
+            <div class="card-kicker"><span>LA&nbsp;BIBLIA</span></div>
+            <h3>${escapeHTML(reading.reference)}</h3>
+            <div class="reading-actions">
+              ${sourceTaskLinks(reading)}
+              <label class="reading-complete"><input type="checkbox" data-reading-complete="${reading.index}" ${readingComplete(reading) ? "checked" : ""}> Lectura completada</label>
+            </div>
+            ${reviewFlag(reading)}
+            ${renderReadingGuide(reading)}
+          </article>
+        </div>
+      </section>`;
+  }
+
+  function renderJourney() {
+    const sections = plan.sections.map((section) => {
+      const readings = sectionReadings(section.title);
+      const completeCount = readings.filter(readingComplete).length;
+      const percent = Math.round((completeCount / readings.length) * 100);
+      const open = activeSection === section.title;
+      return `<article class="book-section">
+        <button class="book-summary" type="button" data-section="${escapeHTML(section.title)}" aria-expanded="${open}">
+          <span class="book-badge">${String(section.number).padStart(2, "0")}</span>
+          <span><h3>${escapeHTML(section.title)}</h3><p>Lecturas ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "lectura" : "lecturas"}</p></span>
+          <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${completeCount} DE ${readings.length} COMPLETADAS</small></span>
+        </button>
+        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Parte ${reading.partNumber} de ${reading.partCount}` : ""}</small></span><em>Abrir →</em></button>`).join("")}</div>` : ""}
+      </article>`;
+    }).join("");
+
+    return `<section aria-label="Recorrido cronológico"><header class="view-heading"><div><p class="eyebrow">LA SECUENCIA COMPLETA</p></div></header><div class="book-grid">${sections}</div>${plan.reviewQueue?.length ? `<details class="review-queue"><summary>${plan.reviewQueue.length} referencia proporcionada marcada para revisión</summary>${plan.reviewQueue.map((item) => `<div class="review-item"><strong>${escapeHTML(item.reference)}</strong><br>${escapeHTML(item.note)}</div>`).join("")}</details>` : ""}</section>`;
+  }
+
+  function renderReadingBadge(reading) {
+    const art = window.TJMReadingBadges;
+    const badge = art?.getBadge(reading.id);
+    if (!badge) return "";
+    return `<button type="button" class="reading-badge" data-reading-badge="${escapeHTML(reading.id)}" aria-label="${escapeHTML(`Ampliar insignia obtenida. Lectura ${reading.number}: ${reading.title}`)}" aria-haspopup="dialog"><img src="${art.badgeDataUri(badge)}" width="64" height="64" alt="" loading="lazy" decoding="async"><span class="reading-badge-number">Lectura ${reading.number}</span></button>`;
+  }
+
+  function renderEarnedBadges() {
+    const earned = plan.readings.filter(readingComplete);
+    return `<section class="earned-badges" aria-labelledby="earned-badges-heading"><h3 id="earned-badges-heading">Insignias obtenidas · ${earned.length}</h3>${earned.length ? `<div class="earned-badge-grid">${earned.map(renderReadingBadge).join("")}</div>` : ""}</section>`;
+  }
+
+  function renderProgress() {
+    const percent = percentComplete();
+    const rewards = rewardSummary();
+    const rows = plan.sections.map((section) => {
+      const readings = sectionReadings(section.title);
+      const count = readings.filter(readingComplete).length;
+      const sectionPercent = Math.round((count / readings.length) * 100);
+      return `<div class="book-progress-row"><header><span>${escapeHTML(section.title)}</span><span>${count} / ${readings.length}</span></header><div class="progress-track"><i style="width:${sectionPercent}%"></i></div></div>`;
+    }).join("");
+
+    const tasksComplete = completedTaskCount();
+    return `<section aria-label="Progreso de lectura"><header class="view-heading"><div><p class="eyebrow">TU PROGRESO DE LECTURA</p></div></header>${renderEarnedBadges()}<div class="stat-grid"><article class="stat-card"><strong>${tasksComplete}</strong><span>Lecturas completadas</span></article><article class="stat-card"><strong>${completed.size}</strong><span>Pasajes completados</span></article><article class="stat-card"><strong>${percent}%</strong><span>Recorrido completado</span></article><article class="stat-card reward-stat"><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>Puntos del recorrido</span></article></div><div class="progress-layout progress-layout-wide"><article class="progress-panel"><h3>Progreso por sección</h3>${rows}</article></div></section>`;
+  }
+
+  function renderMilestones(rewards) {
+    return REWARD_HITOS.map((milestone) => {
+      const earned = rewards.completedChapters >= milestone;
+      const label = milestone === plan.chapterCount ? "Recorrido completado" : `${milestone.toLocaleString()} pasajes`;
+      return `<li class="milestone ${earned ? "earned" : ""}"><span aria-hidden="true">${earned ? "✓" : "◇"}</span><strong>${label}</strong></li>`;
+    }).join("");
+  }
+
+  function renderLeaderboardRows() {
+    if (leaderboardLoading && !leaderboardLoaded) return `<div class="leaderboard-state"><span class="loading-orb"></span><strong>Reuniendo a la comunidad…</strong></div>`;
+    if (leaderboardError) return `<div class="leaderboard-state leaderboard-error"><strong>Clasificación no disponible</strong><p>${escapeHTML(leaderboardError)}</p><button class="button button-secondary" type="button" data-retry-leaderboard>Intentar de nuevo</button></div>`;
+    if (!leaderboard.length) return `<div class="leaderboard-state"><strong>Aún no hay lectores.</strong></div>`;
+    return `<div class="leaderboard-list" role="list" aria-label="Todos los lectores del recorrido">${leaderboard.map((entry) => `<article class="leaderboard-row ${entry.is_current_user ? "is-current" : ""}" role="listitem"><span class="leaderboard-rank">#${entry.rank}</span><span class="leaderboard-identity"><span class="leaderboard-alias"><strong>${escapeHTML(entry.alias)}</strong>${entry.is_current_user ? "<small>TÚ</small>" : ""}</span></span><span class="leaderboard-score"><strong>${Number(entry.journey_points).toLocaleString()} JP</strong><small>${Number(entry.completed_chapters).toLocaleString()} pasajes</small></span></article>`).join("")}</div>`;
+  }
+
+  function publicJourneyName() {
+    return leaderboard.find(entry => entry.is_current_user)?.alias || journeyAlias || "Friend";
+  }
+
+  function renderRewards() {
+    const rewards = rewardSummary();
+
+    const welcome = session
+      ? `<button class="member-welcome" type="button" data-change-name aria-label="Cambiar tu nombre público" ${leaderboardLoading ? "disabled" : ""}><span>¡Bienvenido, ${escapeHTML(publicJourneyName())}!</span><span class="welcome-change-name">Cambiar nombre</span></button>`
+      : `<p class="member-welcome member-welcome-guest">¡Bienvenido, amigo!</p>`;
+
+    return `<section aria-label="Your journey points and leaderboard" class="rewards-view"><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">TUS PUNTOS DEL RECORRIDO</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} de ${plan.chapterCount.toLocaleString()} pasajes completados</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">HITOS</p><h3>Señales en el camino</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">TODOS LOS LECTORES</span><strong>Clasificación del recorrido</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><button class="button button-primary" type="button" data-require-sign-in>Inicia sesión para participar</button></div>`) : ""}</article></section>`;
+  }
+
+  function render() {
+    if (!plan) return;
+    document.querySelectorAll("[data-view]").forEach(button => button.classList.toggle("active", button.dataset.view === activeView));
+    const selectedBadge = window.TJMReadingBadgeViewer?.selectedId();
+    if (selectedBadge) {
+      const reading = plan.readings.find(item => item.id === selectedBadge);
+      if (!session || !reading || !readingComplete(reading)) window.TJMReadingBadgeViewer.close(true);
+    }
+    let content;
+    if (activeView === "readings") content = renderReadings();
+    else if (activeView === "guide") content = renderGuide();
+    else if (activeView === "journey") content = renderJourney();
+    else if (activeView === "progress") content = renderProgress();
+    else if (activeView === "rewards") content = renderRewards();
+    else content = renderReadings();
+    root.innerHTML = `${content}`;
+  }
+
+  async function loadJourneyIdentity({ userId = session?.user?.id, version = sessionVersion } = {}) {
+    if (!db || !isCurrentSession(userId, version)) return false;
+    const identityVersionAtStart = identityVersion;
+    const [profileResult, firstNameResult] = await Promise.all([
+      db.rpc("ensure_journey_profile"),
+      db.rpc("get_my_journey_first_name"),
+    ]);
+    if (identityVersionAtStart !== identityVersion || !isCurrentSession(userId, version)) return false;
+    if (profileResult.error) throw profileResult.error;
+    if (firstNameResult.error) throw firstNameResult.error;
+    journeyAlias = String(profileResult.data || "");
+    journeyFirstName = String(firstNameResult.data || metadataFirstName());
+    updateProfile();
+    return true;
+  }
+
+  async function loadJourneyRewards({ identityReady = false } = {}) {
+    if (!session || !db || leaderboardLoading || nameEditInProgress) return false;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const requestId = ++leaderboardRequestId;
+    leaderboardLoading = true;
+    leaderboardError = "";
+    if (activeView === "rewards") render();
+    try {
+      const identityLoaded = identityReady || await loadJourneyIdentity({ userId, version });
+      if (!isCurrentSession(userId, version) || requestId !== leaderboardRequestId) return false;
+      if (!identityLoaded) return false;
+      const leaderboardResult = await db.rpc("get_chronbible_doc_leaderboard");
+      if (!isCurrentSession(userId, version) || requestId !== leaderboardRequestId) return false;
+      if (leaderboardResult.error) throw leaderboardResult.error;
+      leaderboard = Array.isArray(leaderboardResult.data) ? leaderboardResult.data : [];
+      leaderboardLoaded = true;
+      return true;
+    } catch (error) {
+      if (isCurrentSession(userId, version) && requestId === leaderboardRequestId) {
+        leaderboardError = error.message || "Inténtalo de nuevo en un momento.";
+      }
+      return false;
+    } finally {
+      if (isCurrentSession(userId, version) && requestId === leaderboardRequestId) {
+        leaderboardLoading = false;
+        if (activeView === "rewards") render();
+      }
+    }
+  }
+
+  async function changeJourneyName() {
+    if (!session) { showSignIn(); return; }
+    if (leaderboardLoading) return;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const entered = window.prompt("Elige tu nombre público para la clasificación (3–40 caracteres):", journeyAlias || "");
+    if (entered === null) return;
+    const alias = entered.trim().replace(/\s+/g, " ");
+    if (/[\x00-\x1f\x7f<>]/.test(entered) || [...alias].length < 3 || [...alias].length > 40) {
+      toast("Escribe un nombre de 3 a 40 caracteres, sin marcas especiales."); return;
+    }
+    leaderboardLoading = true;
+    leaderboardError = "";
+    render();
+    try {
+      const { data, error } = await db.rpc("update_journey_alias", { p_alias: alias });
+      if (!isCurrentSession(userId, version)) return;
+      if (error) throw error;
+      identityVersion += 1;
+      journeyAlias = String(data || alias);
+      leaderboard = leaderboard.map(entry => entry.is_current_user ? { ...entry, alias: journeyAlias } : entry);
+      render();
+      leaderboardLoading = false;
+      leaderboardLoaded = false;
+      await loadJourneyRewards();
+      toast(`Tu nombre en la clasificación ahora es ${journeyAlias}.`);
+    } catch (error) {
+      if (!isCurrentSession(userId, version)) return;
+      leaderboardLoading = false;
+      leaderboardError = error.message || "No se pudo guardar tu nombre. Inténtalo de nuevo.";
+      render();
+    }
+  }
+
+  async function editJourneyFirstName() {
+    if (nameEditInProgress) return;
+    if (!session) {
+      showSignIn();
+      return;
+    }
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const requestId = ++nameEditRequestId;
+    nameEditInProgress = true;
+    try {
+      const answer = window.prompt("¿Qué nombre quieres que usemos para darte la bienvenida?", friendlyFirstName());
+      if (answer === null) return;
+      if (requestId !== nameEditRequestId || !isCurrentSession(userId, version)) return;
+      const firstName = answer.trim();
+      if (!firstName || firstName.length > 40 || /[<>\u0000-\u001f\u007f]/u.test(firstName)) {
+        toast("Escribe un nombre de 1 a 40 caracteres.", "error");
+        return;
+      }
+      identityVersion += 1;
+      const { data, error } = await db.rpc("update_my_journey_first_name", { p_first_name: firstName });
+      if (requestId !== nameEditRequestId || !isCurrentSession(userId, version)) return;
+      if (error) throw error;
+      identityVersion += 1;
+      journeyFirstName = String(data || firstName);
+      updateProfile();
+      renderPreservingPlace();
+      toast(`¡Bienvenido, ${journeyFirstName}!`);
+    } catch (error) {
+      if (requestId === nameEditRequestId && isCurrentSession(userId, version)) {
+        toast(error.message || "No se pudo guardar tu nombre.", "error");
+      }
+    } finally {
+      if (requestId === nameEditRequestId) nameEditInProgress = false;
+    }
+  }
+
+  function clearNameHold() {
+    if (nameHoldTimer) clearTimeout(nameHoldTimer);
+    const pointer = namePointerStart;
+    if (pointer?.target?.hasPointerCapture?.(pointer.id)) {
+      try { pointer.target.releasePointerCapture(pointer.id); } catch {}
+    }
+    nameHoldTimer = null;
+    namePointerStart = null;
+  }
+
+  function cancelNameGesture() {
+    clearNameHold();
+    lastNameTapAt = 0;
+  }
+
+  function beginNameHold(event) {
+    const target = event.target.closest("[data-edit-first-name]");
+    if (!target || !event.isPrimary || event.button !== 0) return;
+    clearNameHold();
+    namePointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY, at: Date.now(), target };
+    try { target.setPointerCapture?.(event.pointerId); } catch {}
+    nameHoldTimer = setTimeout(() => {
+      clearNameHold();
+      lastNameTapAt = 0;
+      void editJourneyFirstName();
+    }, FIRST_NAME_HOLD_MS);
+  }
+
+  function moveNameHold(event) {
+    if (!namePointerStart || event.pointerId !== namePointerStart.id) return;
+    if (Math.hypot(event.clientX - namePointerStart.x, event.clientY - namePointerStart.y) > 12) {
+      clearNameHold();
+      lastNameTapAt = 0;
+    }
+  }
+
+  function finishNameTap(event) {
+    if (!namePointerStart || event.pointerId !== namePointerStart.id) return;
+    const start = namePointerStart;
+    const isTap = Date.now() - start.at < 700
+      && Math.hypot(event.clientX - start.x, event.clientY - start.y) <= 12;
+    clearNameHold();
+    if (!isTap) return;
+    const now = Date.now();
+    if (now - lastNameTapAt <= 500) {
+      lastNameTapAt = 0;
+      void editJourneyFirstName();
+    } else {
+      lastNameTapAt = now;
+    }
+  }
+
+  async function refreshJourneyFromVisit() {
+    if (!session || activeView !== "rewards" || document.visibilityState === "hidden" || nameEditInProgress) return false;
+    if (visitRefreshPromise) return visitRefreshPromise;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const refreshId = ++visitRefreshId;
+    const refreshPromise = (async () => {
+      try {
+        const loaded = await loadMiembroData({ preservePlace: true, userId, version });
+        if (!loaded || !isCurrentSession(userId, version)) return false;
+        await loadJourneyRewards();
+        if (!isCurrentSession(userId, version)) return false;
+        renderPreservingPlace();
+        return true;
+      } catch (error) {
+        if (isCurrentSession(userId, version)) console.warn("Journey refresh", error.message);
+        return false;
+      } finally {
+        if (refreshId === visitRefreshId) visitRefreshPromise = null;
+      }
+    })();
+    visitRefreshPromise = refreshPromise;
+    return refreshPromise;
+  }
+
+  async function persistProgress(previousCompleted, previousLastIndex) {
+    if (!session) return;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    const completedIndices = Array.from(completed).sort((a, b) => a - b);
+    const savedLastIndex = lastIndex;
+    setSync("Guardando…", "saving");
+    const { error } = await db.from("reading_plan_progress").upsert({
+      user_id: userId,
+      plan_id: CONFIG.planId,
+      completed_indices: completedIndices,
+      last_index: savedLastIndex,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "user_id,plan_id" });
+
+    if (!isCurrentSession(userId, version)) return;
+    if (error) {
+      completed = previousCompleted;
+      lastIndex = previousLastIndex;
+      currentIndex = normalizeIndex(lastIndex);
+      setSync("Error de sincronización", "error");
+      toast(error.message, "error");
+      render();
+      return;
+    }
+    setSync("Progreso guardado", "synced");
+    if (activeView === "rewards") await loadJourneyRewards();
+  }
+
+  async function goToReading(index, view = "readings") {
+    const nextIndex = normalizeIndex(index);
+    if (activeView === "journey") journeyReturn = { section: activeSection, index: nextIndex, scrollY: window.scrollY };
+    const previousCompleted = new Set(completed);
+    const previousLastIndex = lastIndex;
+    currentIndex = nextIndex;
+    lastIndex = nextIndex;
+    activeSection = currentReading().section;
+    showView(view, true);
+    if (session && previousLastIndex !== lastIndex) await persistProgress(previousCompleted, previousLastIndex);
+  }
+
+  async function toggleChapter(progressIndex, readingIndex, checked) {
+    if (!session) {
+      showSignIn();
+      return;
+    }
+    const chapterIndex = Number(progressIndex);
+    if (!Number.isInteger(chapterIndex) || chapterIndex < 0 || chapterIndex >= plan.chapterCount) return;
+    const normalizedReadingIndex = normalizeIndex(readingIndex);
+    const previousCompleted = new Set(completed);
+    const previousLastIndex = lastIndex;
+    if (checked) completed.add(chapterIndex);
+    else completed.delete(chapterIndex);
+    currentIndex = normalizedReadingIndex;
+    lastIndex = normalizedReadingIndex;
+    render();
+    await persistProgress(previousCompleted, previousLastIndex);
+  }
+
+  async function loadMiembroData({ preservePlace = false, userId = session?.user?.id, version = sessionVersion } = {}) {
+    if (!isCurrentSession(userId, version)) return false;
+    setSync("Sincronizando tu progreso…", "saving");
+    const progressResult = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id", userId).eq("plan_id", CONFIG.planId).maybeSingle();
+    if (!isCurrentSession(userId, version)) return false;
+    if (progressResult.error) throw progressResult.error;
+    let memberData = progressResult.data;
+    for (const [legacyVersion, planId] of [['v4','chronological-bible-order-v4'], ['v3','chronological-bible-order-v3'], ['v2','chronological-bible-order-v2'], ['v1','chronological-bible-order-v1']]) {
+      if (memberData) break;
+      const {data, error} = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id",userId).eq("plan_id",planId).maybeSingle();
+      if (!isCurrentSession(userId, version)) return false;
+      if (error) throw error;
+      if (data) {
+        const migrated = globalThis.TJMPlanProgress.migrate(plan,data,legacyVersion);
+        memberData = {completed_indices:migrated.completed,last_index:migrated.lastIndex,updated_at:new Date().toISOString()};
+      }
+    }
+    if (memberData && !progressResult.data) {
+      const { error: migrationError } = await db.from("reading_plan_progress").upsert({ user_id: userId, plan_id: CONFIG.planId, completed_indices: memberData.completed_indices, last_index: memberData.last_index, updated_at: memberData.updated_at }, { onConflict: "user_id,plan_id", ignoreDuplicates: true });
+      if (!isCurrentSession(userId, version)) return false;
+      if (migrationError) throw migrationError;
+      // A second device may have created the new row while this one was migrating.
+      const saved = await db.from("reading_plan_progress").select("completed_indices,last_index,updated_at").eq("user_id",userId).eq("plan_id",CONFIG.planId).maybeSingle();
+      if (!isCurrentSession(userId,version)) return false;
+      if (saved.error) throw saved.error;
+      memberData = saved.data ?? memberData;
+    }
+    if (!isCurrentSession(userId, version)) return false;
+    completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
+    lastIndex = normalizeIndex(memberData?.last_index ?? 0);
+    if (!preservePlace) {
+      currentIndex = lastIndex;
+      activeSection = activeView === "journey" ? "" : currentReading().section;
+    }
+    setSync("Progreso guardado", "synced");
+    return true;
+  }
+
+  function renderPreservingPlace() {
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    render();
+    requestAnimationFrame(() => window.scrollTo({ left: scrollLeft, top: scrollTop, behavior: "auto" }));
+  }
+
+  function updateProfile() {
+    document.getElementById("sign-out").hidden = !session;
+    document.getElementById("account-email").hidden = !session;
+    if (!session) {
+      profileButton.hidden = false;
+      return;
+    }
+    const name = journeyFirstName || displayName();
+    const avatar = avatarUrl();
+    document.getElementById("profile-name").textContent = name.split(" ")[0] || "Miembro";
+    document.getElementById("profile-initial").textContent = initials(name);
+    document.getElementById("account-email").textContent = session.user.email || "Sesión iniciada";
+    const image = document.getElementById("profile-avatar");
+    if (avatar) {
+      image.src = avatar;
+      image.hidden = false;
+      document.getElementById("profile-initial").hidden = true;
+    } else {
+      image.hidden = true;
+      document.getElementById("profile-initial").hidden = false;
+    }
+    profileButton.hidden = false;
+  }
+
+  function scheduleRefresh() {
+    clearInterval(refreshTimer);
+    refreshTimer = setInterval(async () => {
+      if (document.visibilityState !== "visible" || !session) return;
+      const userId = session.user.id;
+      const version = sessionVersion;
+      try {
+        const loaded = await loadMiembroData({ preservePlace: true, userId, version });
+        if (!loaded || !isCurrentSession(userId, version)) return;
+        if (activeView === "rewards") await loadJourneyRewards();
+        if (!isCurrentSession(userId, version)) return;
+        renderPreservingPlace();
+      } catch (error) {
+        console.warn("Background sync", error.message);
+      }
+    }, 45000);
+  }
+
+  async function applySession(nextSession) {
+    const previousUserId = session?.user?.id || "";
+    const nextUserId = nextSession?.user?.id || "";
+    if (previousUserId !== nextUserId) {
+      journeyReturn = null;
+      window.TJMReadingBadgeViewer?.close(true);
+      sessionVersion += 1;
+      clearInterval(refreshTimer);
+      completed = new Set();
+      currentIndex = 0;
+      lastIndex = 0;
+      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      resetRewardState();
+    }
+    session = nextSession;
+    accountMenu.hidden = true;
+    if (!session) {
+      updateProfile();
+      completed = new Set();
+      currentIndex = 0;
+      lastIndex = 0;
+      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      clearInterval(refreshTimer);
+      authGate.hidden = guestBrowsing;
+      headerSignIn.hidden = !guestBrowsing;
+      setSync(guestBrowsing ? "Solo visualización — no se guarda" : "Inicia sesión para guardar tu progreso");
+      render();
+      return;
+    }
+    guestBrowsing = false;
+    authGate.hidden = true;
+    headerSignIn.hidden = true;
+    const userId = session.user.id;
+    const version = sessionVersion;
+    profileButton.hidden = false;
+    try {
+      const [loaded, identityLoaded] = await Promise.all([
+        loadMiembroData({ userId, version }),
+        loadJourneyIdentity({ userId, version }),
+      ]);
+      if (!loaded || !identityLoaded || !isCurrentSession(userId, version)) return;
+      render();
+      if (activeView === "rewards") await loadJourneyRewards({ identityReady: true });
+      scheduleRefresh();
+    } catch (error) {
+      console.error(error);
+      setSync("Sincronización no disponible", "error");
+      authError.textContent = "Tu inicio de sesión funcionó, pero no se pudo cargar tu progreso. Inténtalo de nuevo o comunícate con Try Jesus Media.";
+      authGate.hidden = false;
+    }
+  }
+
+  async function signInProvider(provider, button) {
+    authError.textContent = "";
+    if (!db) { authError.textContent = "El inicio de sesión todavía se está cargando. Inténtalo de nuevo en un momento."; return; }
+    button.disabled = true;
+    try {
+      const { error } = await db.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: CONFIG.siteUrl },
+      });
+      if (error) throw error;
+    } catch {
+      authError.textContent = "No pudimos iniciar la sesión. Inténtalo de nuevo o usa tu correo electrónico.";
+      button.disabled = false;
+    }
+  }
+
+  async function signInEmail(event) {
+    event.preventDefault();
+    authError.textContent = "";
+    if (!db) { authError.textContent = "El inicio de sesión todavía se está cargando. Inténtalo de nuevo en un momento."; return; }
+    const button = emailSignInForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+    emailSignInStatus.textContent = "Enviando tu enlace de inicio de sesión…";
+    try {
+      const { error } = await db.auth.signInWithOtp({
+        email: document.getElementById("signin-email").value.trim(),
+        options: { emailRedirectTo: CONFIG.siteUrl },
+      });
+      if (error) throw error;
+      emailSignInStatus.textContent = "Revisa tu correo electrónico para encontrar el enlace de inicio de sesión. Si es necesario, revisa la carpeta de correo no deseado. Puedes solicitar otro enlace en un minuto.";
+      setTimeout(() => { button.disabled = false; }, 60000);
+    } catch {
+      emailSignInStatus.textContent = "";
+      authError.textContent = "No pudimos enviar el correo de inicio de sesión. Inténtalo de nuevo en breve o continúa con Google o Apple.";
+      button.disabled = false;
+    }
+  }
+
+  document.querySelector(".journey-nav").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-view]");
+    if (button) showView(button.dataset.view, true);
+  });
+
+  root.addEventListener("click", (event) => {
+    const target = event.target.closest("button, a");
+    if (!target) return;
+    if (target.dataset.readingBadge) {
+      const reading = plan.readings.find(item => item.id === target.dataset.readingBadge);
+      if (reading && readingComplete(reading)) window.TJMReadingBadgeViewer?.open(reading.id, target);
+    }
+    else if (target.hasAttribute("data-edit-first-name") && event.detail === 0) void editJourneyFirstName();
+    else if (target.hasAttribute("data-change-name")) void changeJourneyName();
+    else if (target.hasAttribute("data-toggle-leaderboard")) { leaderboardOpen = !leaderboardOpen; renderPreservingPlace(); }
+    else if (target.hasAttribute("data-require-sign-in")) showSignIn();
+    else if (target.dataset.readingNav) goToReading(currentIndex + (target.dataset.readingNav === "next" ? 1 : -1));
+    else if (target.dataset.readingIndex !== undefined) goToReading(Number(target.dataset.readingIndex));
+    else if (target.dataset.section !== undefined) {
+      activeSection = activeSection === target.dataset.section ? "" : target.dataset.section;
+      render();
+    } else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
+    else if (target.hasAttribute("data-retry-leaderboard")) loadJourneyRewards();
+  });
+
+  root.addEventListener("pointerdown", beginNameHold);
+  window.addEventListener("pointermove", moveNameHold);
+  window.addEventListener("pointerup", finishNameTap);
+  window.addEventListener("pointercancel", cancelNameGesture);
+  document.addEventListener("pointerout", (event) => {
+    if (event.relatedTarget === null) cancelNameGesture();
+  });
+  window.addEventListener("blur", cancelNameGesture);
+  window.addEventListener("scroll", cancelNameGesture, { passive: true });
+  root.addEventListener("contextmenu", (event) => {
+    if (!event.target.closest("[data-edit-first-name]")) return;
+    event.preventDefault();
+  });
+  root.addEventListener("keydown", (event) => {
+    const target = event.target.closest("[data-edit-first-name]");
+    if (event.repeat || !target || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    void editJourneyFirstName();
+  });
+
+  root.addEventListener("change", (event) => {
+    const target = event.target;
+    if (target.matches("[data-reading-complete]")) {
+      if (!session) { target.checked=false; showSignIn(); return; }
+      const previousCompleted=new Set(completed), previousLastIndex=lastIndex;
+      const reading=plan.readings[Number(target.dataset.readingComplete)];
+      for (const task of reading.bibleTasks) target.checked ? completed.add(task.progressIndex) : completed.delete(task.progressIndex);
+      lastIndex=reading.index;
+      render();
+      void persistProgress(previousCompleted,previousLastIndex);
+    } else if (target.matches("[data-chapter-progress]")) {
+      if (!session) target.checked = false;
+      toggleChapter(target.dataset.chapterProgress, target.dataset.readingIndex, target.checked);
+    }
+  });
+
+  profileButton.addEventListener("click", () => {
+    const opening = accountMenu.hidden;
+    accountMenu.hidden = !opening;
+    profileButton.setAttribute("aria-expanded", String(opening));
+  });
+  document.getElementById("sign-out").addEventListener("click", async () => {
+    guestBrowsing = false;
+    await db.auth.signOut({ scope: "local" });
+  });
+  signInButton.addEventListener("click", () => signInProvider("google", signInButton));
+  appleSignInButton.addEventListener("click", () => signInProvider("apple", appleSignInButton));
+  emailSignInForm.addEventListener("submit", signInEmail);
+  guestButton.addEventListener("click", () => {
+    guestBrowsing = true;
+    authError.textContent = "";
+    authGate.hidden = true;
+    headerSignIn.hidden = false;
+    setSync("Solo visualización — no se guarda");
+    render();
+  });
+  headerSignIn.addEventListener("click", showSignIn);
+  document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState === "visible" && session) {
+      const userId = session.user.id;
+      const version = sessionVersion;
+      try {
+        const loaded = await loadMiembroData({ preservePlace: true, userId, version });
+        if (!loaded || !isCurrentSession(userId, version)) return;
+        if (activeView === "rewards") await loadJourneyRewards();
+        if (!isCurrentSession(userId, version)) return;
+        renderPreservingPlace();
+      } catch (error) {
+        console.warn(error.message);
+      }
+    }
+  });
+  window.addEventListener("pageshow", () => { void refreshJourneyFromVisit(); });
+  window.addEventListener("focus", () => { void refreshJourneyFromVisit(); });
+
+  async function init() {
+    try {
+      const response = await fetch(PLAN_PATH, { cache: "no-cache" });
+      if (!response.ok) throw new Error(`No se pudo cargar el plan de lectura (${response.status}).`);
+      plan = await response.json();
+      window.TJM_CHRONBIBLE_PLAN = plan;
+      const indicesAreValid = plan.readings?.every((reading, index) => reading.index === index && reading.number === index + 1 && reading.bibleTasks?.length);
+      const chapterIndices = plan.readings.flatMap((reading) => reading.bibleTasks.map((task) => task.progressIndex));
+      const passagesAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
+      if (plan.planId !== CONFIG.planId || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.verseCount !== 31102 || !indicesAreValid || !passagesAreValid) throw new Error("Falló la validación del plan de lectura.");
+      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      loading.hidden = true;
+      root.hidden = false;
+      render();
+      if (!window.supabase?.createClient) throw new Error("No se pudo cargar el servicio seguro de la cuenta. Actualiza la página e inténtalo de nuevo.");
+      db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, {
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit" },
+      });
+      const { data, error } = await db.auth.getSession();
+      if (error) throw error;
+      await applySession(data.session);
+      db.auth.onAuthStateChange((_event, nextSession) => {
+        if (nextSession?.access_token === session?.access_token) return;
+        setTimeout(() => applySession(nextSession), 0);
+      });
+    } catch (error) {
+      console.error(error);
+      loading.innerHTML = `<strong>No pudimos preparar el recorrido.</strong><p>${escapeHTML(error.message)}</p><button class="button button-primary" type="button" onclick="location.reload()">Intentar de nuevo</button>`;
+      authError.textContent = error.message;
+      authGate.hidden = false;
+    }
+  }
+
+  init();
+})();
