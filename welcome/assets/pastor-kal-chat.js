@@ -44,8 +44,8 @@
   const intro = el("div", "pk-intro");
   const description = el("p", "pk-description",
     spanish
-      ? "Pastor Kal es una guía bíblica con IA, no una persona real. Haz tus preguntas aquí."
-      : "Pastor Kal is an AI Bible guide, not a real person. Ask your Bible questions here."
+      ? "Hola, soy Pastor Kal, un guía bíblico con IA. Pregúntame lo que quieras y haré todo lo posible por ayudarte."
+      : "Hi, I'm Pastor Kal, an AI Bible guide. Ask me anything and I'll do my best to help."
   );
   const humanLink = el("a", "pk-human-link",
     spanish ? "Habla con una persona en nuestro grupo de WhatsApp" : "Talk to a real person in our WhatsApp group"
