@@ -464,4 +464,11 @@ html body.premium-system[data-page="sales"] .bd-poster img { display:block; widt
 
     </div>
 
-  </footer><script defer src="/es/bibledecoded/assets/members-menu.js?v=1"></script></body></html>
+  </footer><script defer src="/es/bibledecoded/assets/members-menu.js?v=1"></script><script>
+document.addEventListener('click',event=>{
+  const link=event.target.closest('a[href^="https://buy.stripe.com/"]');
+  if(!link)return;
+  try{sessionStorage.setItem('tjm-bd-language','es');}catch{}
+});
+</script>
+</body></html>
