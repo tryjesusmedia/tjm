@@ -39,32 +39,42 @@
   const panel = el("section", "pk-panel");
   panel.setAttribute("aria-label", spanish ? "Guía bíblica con IA Pastor Kal" : "Pastor Kal AI Bible Guide");
 
+  // Compact introduction and a way to reach a real person; no chatbot footer.
   const header = el("header", "pk-header");
-  const avatar = el("div", "pk-avatar");
-  avatar.innerHTML = '<img src="/welcome/assets/pastor-kal-avatar.jpg" alt="Pastor Kal">';
-  const title = el("div", "pk-title");
-  title.innerHTML = '<strong>Pastor Kal</strong><span>' + (spanish ? 'Guía bíblica con IA' : 'AI Bible Guide') + '</span>';
+  const intro = el("div", "pk-intro");
+  const description = el("p", "pk-description",
+    spanish
+      ? "Pastor Kal es una guía bíblica con IA, no una persona real. Haz tus preguntas aquí."
+      : "Pastor Kal is an AI Bible guide, not a real person. Ask your Bible questions here."
+  );
+  const humanLink = el("a", "pk-human-link",
+    spanish ? "Habla con una persona en nuestro grupo de WhatsApp" : "Talk to a real person in our WhatsApp group"
+  );
+  humanLink.href = "https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM";
+  humanLink.target = "_blank";
+  humanLink.rel = "noopener noreferrer";
+  intro.append(description, humanLink);
   const close = el("button", "pk-close", "×");
   close.type = "button";
   close.setAttribute("aria-label", spanish ? "Cerrar Pastor Kal" : "Close Pastor Kal");
-  header.append(avatar, title, close);
+  header.append(intro, close);
 
   const body = el("div", "pk-body");
-  const footer = el("footer", "pk-footer");
+  body.setAttribute("role", "log");
+  body.setAttribute("aria-label", spanish ? "Conversación con Pastor Kal IA" : "Conversation with Pastor Kal AI");
+  body.setAttribute("aria-live", "polite");
   const form = el("form", "pk-form");
   const input = el("textarea", "pk-input");
   input.placeholder = spanish ? "Haz una pregunta sobre la Biblia o la vida…" : "Ask a Bible or life question…";
   input.rows = 1;
   input.maxLength = 6000;
+  input.setAttribute("aria-label", spanish ? "Tu pregunta para Pastor Kal IA" : "Your question for Pastor Kal AI");
   const send = el("button", "pk-send", "↑");
   send.type = "submit";
   send.setAttribute("aria-label", spanish ? "Enviar pregunta" : "Send question");
   form.append(input, send);
-  const disclaimer = el("div", "pk-disclaimer");
-  disclaimer.innerHTML = spanish ? 'Este Pastor Kal es un chatbot de IA. Si deseas comunicarte con el Pastor Kal real, únete al chat familiar de WhatsApp <a href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM" target="_blank" rel="noopener noreferrer">aquí</a>.<span class="pk-safety">Este chatbot no es para emergencias ni para asesoramiento médico profesional.</span>' : 'This Pastor Kal is an AI chat bot. If you\'d like to contact the real human Pastor Kal, join the WhatsApp family chat <a href="https://chat.whatsapp.com/Lqv7ZVbC3PPBmQNMjRoXaM" target="_blank" rel="noopener noreferrer">here</a>.<span class="pk-safety">This chatbot is not for emergencies or professional medical advice.</span>';
-  footer.append(form, disclaimer);
 
-  panel.append(header, body, footer);
+  panel.append(header, body, form);
   document.body.append(launcher, panel);
 
   function addMessage(role, text, { save = false } = {}) {
@@ -82,28 +92,11 @@
       state.history.forEach((m) => addMessage(m.role, m.content));
       return;
     }
-    addMessage(
-      "assistant",
-      spanish ? "Hola, soy Pastor Kal, una guía bíblica con IA. Puedes traerme tus preguntas sobre la Biblia, tus dudas o algo con lo que estés luchando. ¿Qué tienes en mente?" : "Hi, I’m Pastor Kal, an AI Bible guide. Bring me your Bible questions, doubts, or something you’re wrestling with. What’s on your mind?"
+    addMessage("assistant",
+      spanish
+        ? "¡Hola! ¿Qué te gustaría preguntar sobre la Biblia?"
+        : "Hi! What would you like to ask about the Bible?"
     );
-    const suggestions = el("div", "pk-suggestions");
-    (spanish ? [
-      "¿Por qué permite Dios el sufrimiento?",
-      "¿Qué sucede cuando morimos?",
-      "¿Cómo puedo saber que Dios me perdona?",
-      "Explícame Daniel 2."
-    ] : [
-      "Why does God allow suffering?",
-      "What happens when we die?",
-      "How can I know God forgives me?",
-      "Explain Daniel 2 to me."
-    ]).forEach((label) => {
-      const button = el("button", "pk-suggestion", label);
-      button.type = "button";
-      button.addEventListener("click", () => submitMessage(label));
-      suggestions.append(button);
-    });
-    body.append(suggestions);
   }
 
   async function submitMessage(forcedText) {
