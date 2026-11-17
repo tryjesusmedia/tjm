@@ -265,6 +265,8 @@
     translate();
     const main=document.querySelector('main');
     if(main)new MutationObserver(translate).observe(main,{childList:true,subtree:true,characterData:true});
+    const toast=document.getElementById('toast');
+    if(toast)new MutationObserver(translate).observe(toast,{childList:true,characterData:true,subtree:true});
   }
 
   function setup() {
