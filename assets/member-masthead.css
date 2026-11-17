@@ -93,3 +93,36 @@ html body.premium-system [data-tjm-masthead] :is(#profile-button,.tjm-menu-butto
 @media (max-width: 999px) {
   html body.chronbible header[data-tjm-masthead] .header-actions { padding-bottom: 10px; }
 }
+
+
+/* ChronBible language/menu column repair: the language group is an independent
+   grid item and must not share the centered Amazon store column. */
+@media (min-width: 1000px) {
+  html body.premium-system.chronbible header[data-tjm-masthead] > .tjm-masthead-row.tjm-has-language-switch {
+    grid-template-columns: minmax(0, 1fr) 200px minmax(0, 1fr) !important;
+    grid-template-rows: 86px !important;
+  }
+  html body.premium-system.chronbible header[data-tjm-masthead] .tjm-masthead-title {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    justify-self: start !important;
+  }
+  html body.premium-system.chronbible header[data-tjm-masthead] .header-actions {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 200px !important;
+    justify-self: center !important;
+    align-self: center !important;
+    margin: 0 !important;
+  }
+  html body.premium-system.chronbible header[data-tjm-masthead] .tjm-language-menu-group {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    justify-self: end !important;
+    align-self: center !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    z-index: 2;
+  }
+}
