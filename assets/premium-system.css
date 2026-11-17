@@ -921,3 +921,63 @@ html body.premium-system > footer.tjm-compact-footer .tjm-copyright-last {
     font-size:18.667px !important;
   }
 }
+
+
+/* Visible English / Español switch for pages with translated equivalents. */
+html body.premium-system .tjm-has-language-switch { position: relative; }
+html body.premium-system .tjm-language-switch {
+  position: absolute;
+  top: 50%;
+  right: 78px;
+  z-index: 24;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: Montserrat,Arial,sans-serif;
+}
+html body.premium-system .tjm-language-switch a,
+html body.premium-system .tjm-language-switch a span {
+  font-family: Montserrat,Arial,sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+html body.premium-system .tjm-language-switch a {
+  color: #eebd4a;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+html body.premium-system .tjm-language-switch a:hover,
+html body.premium-system .tjm-language-switch a:focus-visible {
+  text-decoration: underline;
+}
+html body.premium-system .tjm-language-switch a[aria-current="page"] {
+  color: #f3e8d0;
+  cursor: default;
+  text-decoration: none;
+}
+html body.premium-system .tjm-language-divider {
+  color: rgba(243,232,208,.52);
+  font: 600 13px/1 Montserrat,Arial,sans-serif !important;
+}
+html body.premium-system .tjm-lang-short { display: none; }
+
+@media (max-width: 720px) {
+  html body.premium-system .tjm-language-switch {
+    right: 68px;
+    gap: 3px;
+  }
+  html body.premium-system .tjm-language-switch a,
+  html body.premium-system .tjm-language-switch a span {
+    font-size: 13px !important;
+  }
+  html body.premium-system .tjm-lang-long { display: none; }
+  html body.premium-system .tjm-lang-short { display: inline; }
+  html body.premium-system .tjm-language-divider {
+    font-size: 12px !important;
+  }
+}
