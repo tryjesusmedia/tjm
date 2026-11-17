@@ -110,7 +110,11 @@
     ['/bibledecoded/welcome/', '/es/bibledecoded/welcome/'],
     ['/bibledecoded/dashboard/', '/es/bibledecoded/dashboard/'],
     ['/bibledecoded/lesson/', '/es/bibledecoded/lesson/'],
-    ['/bibledecoded/complete/', '/es/bibledecoded/complete/']
+    ['/bibledecoded/complete/', '/es/bibledecoded/complete/'],
+    ['/get-to-know-jesus/', '/es/get-to-know-jesus/'],
+    ['/bible-prophecy/', '/es/bible-prophecy/'],
+    ...Array.from({length:10},(_,i)=>[`/get-to-know-jesus/guide${i+1}/`,`/es/get-to-know-jesus/guide${i+1}/`]),
+    ...Array.from({length:9},(_,i)=>[`/bible-prophecy/guide${i+1}/`,`/es/bible-prophecy/guide${i+1}/`])
   ];
   const normalizeLanguagePath = value => {
     let path=String(value||'/').replace(/\/index\.html$/,'').replace(/\/+$/,'');
@@ -190,7 +194,7 @@
     const {english:englishPath,spanish:spanishPath,current}=pair;
     const isSpanish=current===normalizeLanguagePath(spanishPath);
     const menuButton=document.querySelector(
-      'header .tjm-menu-button, header .menu-toggle, header .bd-menu-toggle, header #profile-button'
+      'header .tjm-menu-button, header .menu-toggle, header .bd-menu-toggle, header #profile-button, header #guide-menu-toggle'
     );
     const header=menuButton?.closest('header')||document.querySelector('header');
     if(!header||!menuButton)return;
