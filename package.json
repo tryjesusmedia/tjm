@@ -18,7 +18,7 @@
     "test:reward-security": "node scripts/test-reward-security.mjs",
     "test:reading-experience": "node scripts/test-reading-experience.mjs",
     "test:web-app-parity": "node scripts/test-web-app-parity.mjs",
-    "build:bibledecoded": "esbuild scripts/bd-app.js --bundle --minify --format=iife --outfile=bibledecoded/assets/app.js",
+    "build:bibledecoded": "esbuild scripts/bd-app.js --bundle --minify --format=iife --outfile=bibledecoded/assets/app.js && mkdir -p es/bibledecoded/assets && esbuild scripts/bd-app-es.js --bundle --minify --format=iife --outfile=es/bibledecoded/assets/app.js",
     "build:bibledecoded:pages": "node scripts/build-bibledecoded-pages.mjs",
     "test:bibledecoded": "node --test tests/bibledecoded*.test.mjs"
   },
