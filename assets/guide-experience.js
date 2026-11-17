@@ -1,6 +1,8 @@
 (() => {
   'use strict';
 
+  const spanish = document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(location.pathname);
+
   const safeStorage = {
     get(key) {
       try { return window.localStorage.getItem(key); } catch (_) { return null; }
@@ -16,13 +18,13 @@
     document.querySelectorAll('a[href*="biblegateway.com/passage"]').forEach((link) => {
       try {
         const destination = new URL(link.href);
-        destination.searchParams.set('version', 'KJV');
+        destination.searchParams.set('version', spanish ? 'RVR1960' : 'KJV');
         link.href = destination.href;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         link.removeAttribute('data-native-bible-link');
         const reference = destination.searchParams.get('search') || cleanText(link.querySelector('span')?.textContent);
-        link.setAttribute('aria-label', `${reference} — read in the KJV on BibleGateway`);
+        link.setAttribute('aria-label', `${reference} — ${spanish ? 'leer en Reina-Valera 1960 en BibleGateway' : 'read in the KJV on BibleGateway'}`);
         const detail = link.querySelector('small');
         if (detail && !/↗\s*$/.test(detail.textContent)) detail.textContent = `${detail.textContent.replace(/\s*·\s*Opens here\s*$/, '')} ↗`;
       } catch (_) {
@@ -40,17 +42,19 @@
     library.classList.add('app-guide-library');
 
     const heading = library.querySelector('#guidesTitle');
-    if (heading) heading.textContent = 'Bible Guides';
+    if (heading) heading.textContent = spanish ? 'Guías bíblicas' : 'Bible Guides';
 
     const eyebrow = library.querySelector('.section-heading > .eyebrow');
     if (eyebrow) eyebrow.hidden = true;
 
     const headingCopy = library.querySelector('.section-heading > p:not(.eyebrow)');
     if (headingCopy) {
-      headingCopy.textContent = 'Choose one of your two guide journeys. Your progress is saved separately for each set. Prefer printed guides? ';
+      headingCopy.textContent = spanish
+        ? 'Elige uno de los dos recorridos de guías. Tu progreso se guarda por separado en cada conjunto. ¿Prefieres guías impresas? '
+        : 'Choose one of your two guide journeys. Your progress is saved separately for each set. Prefer printed guides? ';
       const printedGuides = document.createElement('a');
       printedGuides.href = '/guides/';
-      printedGuides.textContent = 'Click here';
+      printedGuides.textContent = spanish ? 'Haz clic aquí' : 'Click here';
       headingCopy.append(printedGuides, '.');
     }
 
@@ -65,11 +69,15 @@
       const guideItems = [...journey.querySelectorAll('.guide-item')];
 
       journey.querySelector('.journey-number')?.remove();
-      if (label) label.textContent = isJesus ? '10-GUIDE RELATIONSHIP JOURNEY' : '9-GUIDE PROPHECY JOURNEY';
-      if (title) title.textContent = isJesus ? 'Get to Know Jesus' : 'Bible Prophecy';
+      if (label) label.textContent = isJesus
+        ? (spanish ? 'RECORRIDO DE 10 GUÍAS SOBRE JESÚS Y LA FE' : '10-GUIDE RELATIONSHIP JOURNEY')
+        : (spanish ? 'RECORRIDO DE 9 GUÍAS DE PROFECÍA' : '9-GUIDE PROPHECY JOURNEY');
+      if (title) title.textContent = isJesus
+        ? (spanish ? 'Conoce a Jesús' : 'Get to Know Jesus')
+        : (spanish ? 'Profecía bíblica' : 'Bible Prophecy');
       if (copy) copy.textContent = isJesus
-        ? 'Explore who God is, what Jesus has done, and what following Him means for your life.'
-        : 'Examine the Bible’s prophetic evidence, sequence, and meaning one guide at a time.';
+        ? (spanish ? 'Descubre quién es Dios, lo que Jesús ha hecho y qué significa seguirlo en tu vida.' : 'Explore who God is, what Jesus has done, and what following Him means for your life.')
+        : (spanish ? 'Examina las pruebas, la secuencia y el significado de la profecía bíblica, una guía a la vez.' : 'Examine the Bible’s prophetic evidence, sequence, and meaning one guide at a time.');
 
       const savedGuides = guideItems.map((item, index) => {
         const value = Number.parseInt(safeStorage.get(`tjm-${isJesus ? 'jesus' : 'bible-prophecy'}-guide-${index + 1}-progress`) || '1', 10);
@@ -82,24 +90,37 @@
 
       const progress = document.createElement('div');
       progress.className = 'app-guide-progress';
-      progress.innerHTML = `<div><strong>${percent}% complete</strong>${current ? `<span>Guide ${current.guide} of ${guideCount}</span>` : ''}</div><div class="app-guide-progress-track"><span style="width:${percent}%"></span></div>`;
+      progress.innerHTML = `<div><strong>${percent}% ${spanish ? 'completado' : 'complete'}</strong>${current ? `<span>${spanish ? 'Guía' : 'Guide'} ${current.guide} ${spanish ? 'de' : 'of'} ${guideCount}</span>` : ''}</div><div class="app-guide-progress-track"><span style="width:${percent}%"></span></div>`;
       toggle?.before(progress);
 
-      if (toggleCopy) toggleCopy.textContent = journey.open ? 'Hide Guides' : 'See Guides';
       const updateToggle = () => {
-        if (toggleCopy) toggleCopy.textContent = journey.open ? 'Hide Guides' : 'See Guides';
-        toggle?.setAttribute('aria-label', journey.open ? `Hide ${title?.textContent || ''} guides` : `See ${title?.textContent || ''} guides`);
+        const titleText = title?.textContent || '';
+        if (toggleCopy) toggleCopy.textContent = journey.open
+          ? (spanish ? 'Ocultar guías' : 'Hide Guides')
+          : (spanish ? 'Ver guías' : 'See Guides');
+        toggle?.setAttribute('aria-label', journey.open
+          ? (spanish ? `Ocultar las guías de ${titleText}` : `Hide ${titleText} guides`)
+          : (spanish ? `Ver las guías de ${titleText}` : `See ${titleText} guides`));
       };
       journey.addEventListener('toggle', updateToggle);
       updateToggle();
 
       guideItems.forEach((item) => {
+        if (spanish) {
+          try {
+            const url = new URL(item.href, location.href);
+            if (url.origin === location.origin && /^\/(?:get-to-know-jesus|bible-prophecy)\/guide\d+\/?$/.test(url.pathname)) {
+              item.href = '/es' + url.pathname;
+            }
+          } catch (_) {}
+        }
         item.querySelector('.guide-item-copy > small')?.remove();
         item.querySelector('.guide-item-meta')?.remove();
         const arrow = item.querySelector(':scope > b');
         if (arrow) arrow.textContent = '›';
         const copyElement = item.querySelector('.guide-item-copy');
-        item.setAttribute('aria-label', `Open ${cleanText(copyElement?.querySelector('strong')?.textContent)}`);
+        item.setAttribute('aria-label',
+          (spanish ? 'Abrir ' : 'Open ') + cleanText(copyElement?.querySelector('strong')?.textContent));
       });
     });
 
