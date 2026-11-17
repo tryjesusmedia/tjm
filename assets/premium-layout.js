@@ -100,10 +100,71 @@
       }
     }
   }
+
+  function setupLanguageSwitch() {
+    const normalize = value => {
+      let path=String(value||'/').replace(/\/index\.html$/,'').replace(/\/+$/,'');
+      return path||'/';
+    };
+    const pairs=[
+      ['/', '/es/'],
+      ['/welcome', '/es/welcome/'],
+      ['/chronbible', '/es/chronbible/'],
+      ['/guidesonline', '/es/guidesonline/'],
+      ['/bibledecoded', '/es/bibledecoded/'],
+      ['/bibledecoded/welcome', '/es/bibledecoded/welcome/'],
+      ['/bibledecoded/dashboard', '/es/bibledecoded/dashboard/'],
+      ['/bibledecoded/lesson', '/es/bibledecoded/lesson/'],
+      ['/bibledecoded/complete', '/es/bibledecoded/complete/']
+    ];
+    const current=normalize(location.pathname);
+    let englishPath=null,spanishPath=null;
+    for(const [english,spanish] of pairs){
+      if(current===normalize(english)||current===normalize(spanish)){
+        englishPath=english;
+        spanishPath=spanish;
+        break;
+      }
+    }
+    if(!englishPath||!spanishPath||document.querySelector('.tjm-language-switch'))return;
+    const isSpanish=current===normalize(spanishPath);
+    const menuButton=document.querySelector(
+      'header .tjm-menu-button, header .menu-toggle, header .bd-menu-toggle, header #profile-button'
+    );
+    const header=menuButton?.closest('header')||document.querySelector('header');
+    if(!header||!menuButton)return;
+    const host=menuButton.closest('.tjm-masthead-row,.header-inner,.wrap')||header;
+    host.classList.add('tjm-has-language-switch');
+    const suffix=location.search+location.hash;
+    const makeLink=(href,longLabel,shortLabel,language,active)=>{
+      const link=document.createElement('a');
+      link.href=href+suffix;
+      link.lang=language;
+      link.hreflang=language;
+      link.setAttribute('aria-label',language==='es'?'Ver esta página en español':'View this page in English');
+      if(active)link.setAttribute('aria-current','page');
+      link.innerHTML='<span class="tjm-lang-long">'+longLabel+'</span><span class="tjm-lang-short">'+shortLabel+'</span>';
+      link.addEventListener('click',()=>{
+        try{localStorage.setItem('tjm-language',language);}catch{}
+      });
+      return link;
+    };
+    const nav=document.createElement('nav');
+    nav.className='tjm-language-switch';
+    nav.setAttribute('aria-label',isSpanish?'Idioma':'Language');
+    nav.append(
+      makeLink(englishPath,'English','EN','en',!isSpanish),
+      Object.assign(document.createElement('span'),{className:'tjm-language-divider',textContent:'|'}),
+      makeLink(spanishPath,'Español','ES','es',isSpanish)
+    );
+    host.insertBefore(nav,menuButton);
+  }
+
   function setup() {
     const path=location.pathname.replace(/\/$/,'');
     const spanish=document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(path);
     document.body.classList.add('premium-system');
+    setupLanguageSwitch();
     document.querySelectorAll('footer').forEach(unifiedFooter);
     // Footer branding and legal links remain visible; optional social links share one drawer.
     document.querySelectorAll('footer').forEach(footer=>{
