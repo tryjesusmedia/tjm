@@ -308,7 +308,7 @@
   }
 
   function publicJourneyName() {
-    return leaderboard.find(entry => entry.is_current_user)?.alias || journeyAlias || "Friend";
+    return leaderboard.find(entry => entry.is_current_user)?.alias || journeyAlias || "Amigo";
   }
 
   function renderRewards() {
@@ -318,7 +318,7 @@
       ? `<button class="member-welcome" type="button" data-change-name aria-label="Cambiar tu nombre público" ${leaderboardLoading ? "disabled" : ""}><span>¡Bienvenido, ${escapeHTML(publicJourneyName())}!</span><span class="welcome-change-name">Cambiar nombre</span></button>`
       : `<p class="member-welcome member-welcome-guest">¡Bienvenido, amigo!</p>`;
 
-    return `<section aria-label="Your journey points and leaderboard" class="rewards-view"><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">TUS PUNTOS DEL RECORRIDO</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} de ${plan.chapterCount.toLocaleString()} pasajes completados</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">HITOS</p><h3>Señales en el camino</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">TODOS LOS LECTORES</span><strong>Clasificación del recorrido</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><button class="button button-primary" type="button" data-require-sign-in>Inicia sesión para participar</button></div>`) : ""}</article></section>`;
+    return `<section aria-label="Tus puntos del recorrido y clasificación" class="rewards-view"><div class="reward-overview"><article class="points-card">${welcome}<p class="eyebrow">TUS PUNTOS DEL RECORRIDO</p><strong>${rewards.journeyPoints.toLocaleString()}</strong><span>${rewards.completedChapters.toLocaleString()} de ${plan.chapterCount.toLocaleString()} pasajes completados</span><div class="reward-progress"><div class="progress-track"><i style="width:${rewards.milestoneProgress}%"></i></div></div></article></div><article class="milestone-panel"><header><div><p class="eyebrow">HITOS</p><h3>Señales en el camino</h3></div></header><ul>${renderMilestones(rewards)}</ul></article><article class="leaderboard-panel ${leaderboardOpen ? "is-open" : "is-closed"}"><button class="leaderboard-toggle" type="button" data-toggle-leaderboard aria-expanded="${leaderboardOpen}"><span><span class="eyebrow">TODOS LOS LECTORES</span><strong>Clasificación del recorrido</strong></span><i aria-hidden="true">${leaderboardOpen ? "−" : "+"}</i></button>${leaderboardOpen ? (session ? renderLeaderboardRows() : `<div class="leaderboard-state"><button class="button button-primary" type="button" data-require-sign-in>Inicia sesión para participar</button></div>`) : ""}</article></section>`;
   }
 
   function render() {
