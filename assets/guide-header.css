@@ -23,3 +23,52 @@ body.guide-reader-page .site-footer .footer-brand strong {font-family:"Cormorant
 body.guide-reader-page .site-footer .social-intro {color:#eebd4a}
 .guide-footer-return {display:block;width:fit-content;margin:0 auto 28px;color:#f3e8d0;text-underline-offset:4px}
 @media print {.guide-extra-tools,#guide-menu-toggle,#guide-header-menu{display:none!important}}
+
+/* Bible-guide EN/ES switch: stays immediately LEFT of the hamburger on
+   desktop and phone, without covering the guide title. */
+html body.premium-system.guide-reader-page header.site-header.tjm-has-language-switch {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) max-content !important;
+  align-items:center;
+  column-gap:12px;
+}
+html body.premium-system.guide-reader-page header.site-header .tjm-language-menu-group {
+  display:inline-flex !important;
+  grid-column:2 !important;
+  grid-row:1 !important;
+  align-items:center !important;
+  justify-self:end !important;
+  gap:12px !important;
+  min-width:0;
+  width:max-content;
+}
+html body.premium-system.guide-reader-page header.site-header .guide-header-title {
+  grid-column:1 !important;
+  grid-row:1 !important;
+  min-width:0;
+}
+html body.premium-system.guide-reader-page header.site-header .tjm-language-switch {
+  display:inline-flex !important;
+  align-items:center !important;
+  white-space:nowrap;
+  gap:5px;
+}
+html body.premium-system.guide-reader-page header.site-header .tjm-lang-long {display:none !important;}
+html body.premium-system.guide-reader-page header.site-header .tjm-lang-short {display:inline !important;}
+html body.premium-system.guide-reader-page header.site-header .tjm-language-switch a,
+html body.premium-system.guide-reader-page header.site-header .tjm-language-switch a span {
+  font:700 15px/1.2 Montserrat,Arial,sans-serif !important;
+}
+html body.premium-system.guide-reader-page header.site-header #guide-menu-toggle {
+  display:block !important;
+  flex:0 0 48px !important;
+  width:48px !important;
+  height:48px !important;
+  grid-column:auto !important;
+  grid-row:auto !important;
+}
+@media(max-width:600px){
+  html body.premium-system.guide-reader-page header.site-header {column-gap:6px;padding:10px 12px;}
+  html body.premium-system.guide-reader-page header.site-header .tjm-language-menu-group {gap:6px !important;}
+  html body.premium-system.guide-reader-page header.site-header .guide-header-title {font-size:clamp(23px,6.5vw,36px) !important;}
+}
