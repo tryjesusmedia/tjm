@@ -233,18 +233,18 @@
   // Guide content is translated in the /es/ lesson files. The shared reader
   // runtime still emits a few dynamic English labels when progress changes.
   function localizeSpanishGuideControls() {
-    if (!/^\\/es\\/(?:get-to-know-jesus|bible-prophecy)\\/guide\\d+\\/?$/.test(location.pathname)) return;
+    if (!/^\/es\/(?:get-to-know-jesus|bible-prophecy)\/guide\d+\/?$/.test(location.pathname)) return;
     const translate=()=>{
       const count=document.getElementById('panelCount');
       if(count) {
         const value=count.textContent.trim();
-        const step=value.match(/^STEP\\s+(\\d+)\\s+OF\\s+(\\d+)$/i);
+        const step=value.match(/^STEP\s+(\d+)\s+OF\s+(\d+)$/i);
         if(step)count.textContent='PASO '+step[1]+' DE '+step[2];
       }
       const toast=document.getElementById('toast');
       if(toast) {
         const value=toast.textContent.trim();
-        const step=value.match(/^Step\\s+(\\d+)\\s+of\\s+(\\d+)$/i);
+        const step=value.match(/^Step\s+(\d+)\s+of\s+(\d+)$/i);
         const replacements={
           'Guide restarted':'Guía reiniciada',
           'Audio reading is not supported in this browser.':'La lectura en voz alta no está disponible en este navegador.'
