@@ -1001,3 +1001,42 @@ html body.premium-system .tjm-lang-short { display: none; }
     font-size: 12px !important;
   }
 }
+
+
+/* Compact EN/ES navigation across translated pages. */
+html body.premium-system .tjm-language-switch .tjm-lang-long { display:none !important; }
+html body.premium-system .tjm-language-switch .tjm-lang-short { display:inline !important; }
+html body.premium-system .tjm-language-switch { gap:7px !important; }
+html body.premium-system .tjm-language-menu-group { gap:12px !important; }
+
+/* The guides use a different masthead, but the language controls still belong
+   directly to the left of the hamburger. */
+html body.premium-system.guide-reader-page header.site-header.tjm-has-language-switch {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:12px !important;
+}
+html body.premium-system.guide-reader-page header.site-header.tjm-has-language-switch > .tjm-language-menu-group {
+  grid-column:2 !important;
+  grid-row:1 !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-self:end !important;
+  gap:10px !important;
+  width:max-content !important;
+  max-width:100% !important;
+  margin:0 !important;
+}
+html body.premium-system.guide-reader-page header.site-header.tjm-has-language-switch > .guide-header-title {
+  grid-column:1 !important;
+  grid-row:1 !important;
+  justify-self:start !important;
+  min-width:0 !important;
+}
+@media(max-width:600px) {
+  html body.premium-system.guide-reader-page header.site-header.tjm-has-language-switch .guide-header-title {
+    font-size:clamp(24px,5.8vw,32px) !important;
+  }
+  html body.premium-system.guide-reader-page header.site-header.tjm-has-language-switch > .tjm-language-menu-group { gap:7px !important; }
+}
