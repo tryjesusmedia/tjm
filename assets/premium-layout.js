@@ -229,12 +229,51 @@
     controls.prepend(nav);
   }
 
+
+  // Guide content is translated in the /es/ lesson files. The shared reader
+  // runtime still emits a few dynamic English labels when progress changes.
+  function localizeSpanishGuideControls() {
+    if (!/^\\/es\\/(?:get-to-know-jesus|bible-prophecy)\\/guide\\d+\\/?$/.test(location.pathname)) return;
+    const translate=()=>{
+      const count=document.getElementById('panelCount');
+      if(count) {
+        const value=count.textContent.trim();
+        const step=value.match(/^STEP\\s+(\\d+)\\s+OF\\s+(\\d+)$/i);
+        if(step)count.textContent='PASO '+step[1]+' DE '+step[2];
+      }
+      const toast=document.getElementById('toast');
+      if(toast) {
+        const value=toast.textContent.trim();
+        const step=value.match(/^Step\\s+(\\d+)\\s+of\\s+(\\d+)$/i);
+        const replacements={
+          'Guide restarted':'Guía reiniciada',
+          'Audio reading is not supported in this browser.':'La lectura en voz alta no está disponible en este navegador.'
+        };
+        const translated=step?'Paso '+step[1]+' de '+step[2]:(replacements[value]||null);
+        if(translated && translated!==value)toast.textContent=translated;
+      }
+      const listen=document.querySelector('#listenButton .listen-label');
+      if(listen) {
+        const value=listen.textContent.trim();
+        if(value==='Listen')listen.textContent='Escuchar';
+        if(value==='Stop')listen.textContent='Detener';
+      }
+      document.querySelectorAll('#lessonDots [aria-label^="Open section"]').forEach(dot=>{
+        dot.setAttribute('aria-label',dot.getAttribute('aria-label').replace('Open section','Abrir sección'));
+      });
+    };
+    translate();
+    const main=document.querySelector('main');
+    if(main)new MutationObserver(translate).observe(main,{childList:true,subtree:true,characterData:true});
+  }
+
   function setup() {
     if(enforceLanguagePreference())return;
     const path=location.pathname.replace(/\/$/,'');
     const spanish=document.documentElement.lang.toLowerCase().startsWith('es') || /^\/es(?:\/|$)/.test(path);
     document.body.classList.add('premium-system');
     setupLanguageSwitch();
+    localizeSpanishGuideControls();
     keepLanguageSticky();
     document.querySelectorAll('footer').forEach(unifiedFooter);
     // Footer branding and legal links remain visible; optional social links share one drawer.
