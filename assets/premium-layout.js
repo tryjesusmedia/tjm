@@ -211,14 +211,14 @@
       }
     }
     if(document.body.dataset.page==='sales') {
-      fold(q('#curriculum'),'Explore the six lessons');
-      fold(q('.faq'),'Frequently asked questions');
-      fold(q('.store-section'),'Optional books, clothing and gifts');
-      fold(q('.study-preview')?.closest('section'),'Your included Study Lab');
+      fold(q('#curriculum'),spanish?'Explora las seis lecciones':'Explore the six lessons');
+      fold(q('.faq'),spanish?'Preguntas frecuentes':'Frequently asked questions');
+      fold(q('.store-section'),spanish?'Libros, ropa y regalos opcionales':'Optional books, clothing and gifts');
+      fold(q('.study-preview')?.closest('section'),spanish?'Tu Laboratorio de Estudio incluido':'Your included Study Lab');
       const purchase=q('#enroll');
-      if(purchase){purchase.querySelectorAll('a.button').forEach(a=>a.remove());fold(purchase,'What your purchase includes');}
+      if(purchase){purchase.querySelectorAll('a.button').forEach(a=>a.remove());fold(purchase,spanish?'Lo que incluye tu compra':'What your purchase includes');}
       // Give the one purchase button enough context without a second sales panel.
-      const note=q('.hero-copy .offer-note');if(note)note.textContent='One-time purchase. No monthly subscription.';
+      const note=q('.hero-copy .offer-note');if(note)note.textContent=spanish?'Pago único. Sin suscripción mensual.':'One-time purchase. No monthly subscription.';
     }
     function simplifyLesson() {
       if(document.body.dataset.page!=='lesson')return;
