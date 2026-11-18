@@ -106,6 +106,7 @@
     ['/welcome/', '/es/welcome/'],
     ['/ny/', '/es/ny/'],
     ['/nola/', '/es/nola/'],
+    ['/mo/', '/es/mo/'],
     ['/chronbible/', '/es/chronbible/'],
     ['/guidesonline/', '/es/guidesonline/'],
     ['/bibledecoded/', '/es/bibledecoded/'],
@@ -346,7 +347,7 @@
       const resources=document.createElement('h2');resources.id='member-resources';resources.className='premium-resources-title';resources.textContent=spanish?'Más recursos para miembros':'More member resources';
       q('#watch',main)?.closest('.premium-fold')?.before(resources);
       const nav=q('#siteNav');if(nav)nav.innerHTML=spanish
-        ? '<a href="/es/chronbible/?view=journey">La Guía ChronBible</a><a href="/es/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Guías bíblicas</a><a href="/baptism/">Bautismo</a><a href="#member-resources">Más recursos</a><details class="locations-dropdown"><summary>Ubicaciones</summary><div class="locations-submenu"><a href="/hi/">Hawái</a><a href="/mo/">Misuri</a><a href="/es/nola/">Nueva Orleans</a><a href="/es/ny/">Nueva York</a></div></details>'
+        ? '<a href="/es/chronbible/?view=journey">La Guía ChronBible</a><a href="/es/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Guías bíblicas</a><a href="/baptism/">Bautismo</a><a href="#member-resources">Más recursos</a><details class="locations-dropdown"><summary>Ubicaciones</summary><div class="locations-submenu"><a href="/hi/">Hawái</a><a href="/es/mo/">Misuri</a><a href="/es/nola/">Nueva Orleans</a><a href="/es/ny/">Nueva York</a></div></details>'
         : '<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="/baptism/">Baptism</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/mo/">Missouri</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
       const shopFold=q('#shop',main)?.closest('.premium-fold');
       if(shopFold && !q('.premium-pastor-form',main)){
