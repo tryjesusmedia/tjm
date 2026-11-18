@@ -17,7 +17,7 @@
   // their lead-capture destinations for YouTube and merch.
   function unifiedFooter(footer) {
     if(footer.classList.contains('tjm-unified-footer'))return;
-    const regional=/^\/(?:ny|nola|hi|mo)(?:\/|$)/.test(location.pathname);
+    const regional=/^\/(?:es\/)?(?:ny|nola|hi|mo)(?:\/|$)/.test(location.pathname);
     const spanish=/^\/es(?:\/|$)/.test(location.pathname) || document.documentElement.lang.toLowerCase().startsWith('es');
     const signup=regional?'#guide-form':null;
     const social=spanish?[
@@ -104,6 +104,7 @@
   const LANGUAGE_PAIRS=[
     ['/', '/es/'],
     ['/welcome/', '/es/welcome/'],
+    ['/ny/', '/es/ny/'],
     ['/chronbible/', '/es/chronbible/'],
     ['/guidesonline/', '/es/guidesonline/'],
     ['/bibledecoded/', '/es/bibledecoded/'],
@@ -344,7 +345,7 @@
       const resources=document.createElement('h2');resources.id='member-resources';resources.className='premium-resources-title';resources.textContent=spanish?'Más recursos para miembros':'More member resources';
       q('#watch',main)?.closest('.premium-fold')?.before(resources);
       const nav=q('#siteNav');if(nav)nav.innerHTML=spanish
-        ? '<a href="/es/chronbible/?view=journey">La Guía ChronBible</a><a href="/es/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Guías bíblicas</a><a href="/baptism/">Bautismo</a><a href="#member-resources">Más recursos</a><details class="locations-dropdown"><summary>Ubicaciones</summary><div class="locations-submenu"><a href="/hi/">Hawái</a><a href="/mo/">Misuri</a><a href="/nola/">Nueva Orleans</a><a href="/ny/">Nueva York</a></div></details>'
+        ? '<a href="/es/chronbible/?view=journey">La Guía ChronBible</a><a href="/es/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Guías bíblicas</a><a href="/baptism/">Bautismo</a><a href="#member-resources">Más recursos</a><details class="locations-dropdown"><summary>Ubicaciones</summary><div class="locations-submenu"><a href="/hi/">Hawái</a><a href="/mo/">Misuri</a><a href="/nola/">Nueva Orleans</a><a href="/es/ny/">Nueva York</a></div></details>'
         : '<a href="/chronbible/?view=journey">The ChronBible Guide</a><a href="/bibledecoded/">Bible Decoded</a><a href="#bible-guides">Bible Guides</a><a href="/baptism/">Baptism</a><a href="#member-resources">More resources</a><details class="locations-dropdown"><summary>Locations</summary><div class="locations-submenu"><a href="/hi/">Hawaii</a><a href="/mo/">Missouri</a><a href="/nola/">New Orleans</a><a href="/ny/">New York</a></div></details>';
       const shopFold=q('#shop',main)?.closest('.premium-fold');
       if(shopFold && !q('.premium-pastor-form',main)){
