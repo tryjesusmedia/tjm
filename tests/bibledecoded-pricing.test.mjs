@@ -11,11 +11,11 @@ const paths = [
   "bibledecoded/assets/app.js",
 ];
 
-test("Bible Decoded pricing is $37 across its sales pages, purchase buttons, and source", () => {
+test("Bible Decoded pricing is $37 across sales pages, purchase buttons and source", () => {
   for (const path of paths) {
     const source = fs.readFileSync(new URL("../" + path, import.meta.url), "utf8");
-    assert.doesNotMatch(source, /\\$97\\b/, path + " still advertises $97");
-    assert.match(source, /\\$37\\b/, path + " must advertise $37");
-    assert.match(source, /<s>\\$227<\\/s>\\s*\\$37/, path + " must retain the $227 strikethrough");
+    assert.doesNotMatch(source, /\$97\b/, path + " still advertises $97");
+    assert.match(source, /\$37\b/, path + " must advertise $37");
+    assert.match(source, /<s>\$227<\/s>\s*\$37/, path + " must retain the $227 strikethrough");
   }
 });
