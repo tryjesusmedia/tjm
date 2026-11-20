@@ -388,7 +388,11 @@
       }
     }
     if(document.body.dataset.page==='sales') {
+      // The lessons list is collapsed in the initial HTML to prevent a flash of expanded content.
+      // Keep it closed on every page entry, including pages where the browser restores <details> state.
       fold(q('#curriculum'),spanish?'Explora las seis lecciones':'Explore the six lessons');
+      const lessonsFold=q('#curriculum')?.closest('details.premium-fold');
+      if(lessonsFold) lessonsFold.open=false;
       fold(q('.faq'),spanish?'Preguntas frecuentes':'Frequently asked questions');
       fold(q('.study-preview')?.closest('section'),spanish?'Tu Laboratorio de Estudio incluido':'Your included Study Lab');
       const purchase=q('#enroll');
@@ -409,6 +413,12 @@
     const guideTools=q('.guide-simple-tools'),extra=q('.guide-extra-tools');
     if(guideTools&&extra)guideTools.append(extra);
     revealHash();
+    // On entry, keep the curriculum closed even when an old #curriculum URL is reused.
+    if(document.body.dataset.page==='sales') q('#curriculum')?.closest('details.premium-fold')?.removeAttribute('open');
+    // Back/forward-cache navigation must also begin with lessons collapsed.
+    window.addEventListener('pageshow',()=>{
+      if(document.body.dataset.page==='sales') q('#curriculum')?.closest('details.premium-fold')?.removeAttribute('open');
+    });
     window.addEventListener('hashchange',()=>revealHash());
     document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a)return;const url=new URL(a.href,location.href);if(url.origin===location.origin&&url.pathname===location.pathname&&url.hash){revealHash(url.hash);}});
   }
