@@ -2073,3 +2073,189 @@ html body.premium-system[data-page="sales"] main .hero .hero-copy h1.bd-promise 
   letter-spacing: .035em !important;
   text-transform: uppercase;
 }
+
+/* Bible Decoded EN/ES sales-page clarity: TJM1 plum, ivory and gold.
+   Intentionally scoped to sales so the lessons, dashboard and other pages keep their typography. */
+html body.premium-system[data-page="sales"] main .bd-offer-hero {
+  background: #e4d8c4;
+  padding: clamp(36px, 5vw, 64px) 0 clamp(42px, 6vw, 76px);
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .hero-grid {
+  display: block;
+  min-height: 0;
+  padding: 0;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy {
+  max-width: 850px;
+  width: 100%;
+  margin-inline: auto;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy p.bd-offer-kicker {
+  margin: 0 0 16px;
+  color: #80602e !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 750 !important;
+  line-height: 1.45 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy h1.bd-promise {
+  max-width: 28ch;
+  margin: 0 0 22px;
+  font-family: Georgia, serif !important;
+  font-size: clamp(32px, 3.5vw, 40px) !important;
+  font-weight: 600 !important;
+  line-height: 1.18 !important;
+  letter-spacing: -.025em !important;
+  color: #171418 !important;
+  text-wrap: balance;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy h1.bd-promise .bd-promise-objection {
+  display: block;
+  margin: 16px 0 0;
+  padding: 0;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  line-height: 1.48 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #80602e !important;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy p.bd-offer-description {
+  max-width: 61ch;
+  margin: 0 0 26px;
+  color: #493a45 !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+  letter-spacing: 0 !important;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 0 0 17px;
+  padding: 0;
+  color: #311e33;
+  font-family: Montserrat, Arial, sans-serif;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-price strong {
+  color: #311e33;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-price s {
+  color: #685b66;
+  font-size: 19px;
+  font-weight: 500;
+  text-decoration-thickness: 2px;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-price > span {
+  color: #554953;
+  font-size: 15px;
+  font-weight: 500;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-actions {
+  width: 100%;
+  max-width: 500px;
+  margin: 0;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-actions a.bd-primary-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 58px;
+  padding: 14px 18px;
+  border: 1px solid #d9aa3c;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f6d578, #eebd4a);
+  box-shadow: 0 4px 10px rgba(49,30,51,.09);
+  color: #311e33 !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 750 !important;
+  line-height: 1.4 !important;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-actions a.bd-primary-cta:is(:hover,:focus-visible) {
+  background: #eebd4a;
+  box-shadow: 0 5px 16px rgba(49,30,51,.15);
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy p.bd-checkout-note {
+  max-width: 500px;
+  margin: 10px 0 25px;
+  color: #5e525b !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  text-align: center;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-checkout-note span {
+  color: #80602e;
+  font-weight: 800;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero ul.bd-hero-benefits {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 25px;
+  padding: 0;
+  max-width: 590px;
+  list-style: none;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero ul.bd-hero-benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  color: #311e33 !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0 !important;
+}
+html body.premium-system[data-page="sales"] main .bd-offer-hero ul.bd-hero-benefits li::before {
+  content: "✓";
+  flex: 0 0 auto;
+  color: #80602e;
+  font-weight: 800;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-secondary {
+  display: inline-block;
+  color: #6f4868 !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+  text-underline-offset: 4px;
+}
+html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-secondary:is(:hover,:focus-visible) {
+  color: #311e33 !important;
+}
+html body.premium-system[data-page="sales"] main #enroll .price s {
+  margin: 0 12px;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: .5em;
+  font-weight: 500;
+  opacity: .8;
+}
+@media (max-width: 650px) {
+  html body.premium-system[data-page="sales"] main .bd-offer-hero { padding: 34px 0 48px; }
+  html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy h1.bd-promise { font-size: 32px !important; line-height: 1.17 !important; }
+  html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy h1.bd-promise .bd-promise-objection { font-size: 16px !important; margin-top: 14px; }
+  html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .hero-copy p.bd-offer-description { font-size: 17px !important; line-height: 1.58 !important; }
+  html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-price strong { font-size: 32px; }
+  html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-actions a.bd-primary-cta { font-size: 18px !important; }
+}
