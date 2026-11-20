@@ -2038,3 +2038,38 @@ body[data-page="lesson"] .coaching-copy p { max-width: 65ch; margin-bottom: 1.1e
   #certificate-print .certificate-flourish { margin: 6px auto; }
   #certificate-print .certificate-title { margin-top: 8px; }
 }
+
+/* Bible Decoded sales headline — TJM1 plum, ivory, and gold (EN/ES). */
+html body.premium-system[data-page="sales"] main .hero .hero-copy h1.bd-promise {
+  margin: 0 0 26px;
+  padding: clamp(24px, 4vw, 40px);
+  max-width: 100%;
+  color: #f3e8d0 !important;
+  background: linear-gradient(140deg, #311e33 0%, #1c111d 100%);
+  border: 1px solid rgba(238, 189, 74, .55);
+  border-left: 5px solid #eebd4a;
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(49, 30, 51, .18);
+  font: 700 clamp(2.15rem, 4.4vw, 3.4rem)/1.16 Georgia, serif !important;
+  letter-spacing: -.025em !important;
+  overflow-wrap: normal;
+  text-wrap: pretty;
+}
+html body.premium-system[data-page="sales"] main .hero .hero-copy h1.bd-promise .bd-promise-objection {
+  display: block;
+  margin-top: .55em;
+  color: #eebd4a !important;
+  font: 800 clamp(1.25rem, 2.5vw, 1.65rem)/1.4 Montserrat, Arial, sans-serif !important;
+  letter-spacing: -.012em !important;
+  text-wrap: pretty;
+}
+@media (max-width: 650px) {
+  html body.premium-system[data-page="sales"] main .hero .hero-copy h1.bd-promise {
+    padding: 24px 20px;
+    border-left-width: 4px;
+    font-size: clamp(2rem, 8.5vw, 2.65rem) !important;
+  }
+  html body.premium-system[data-page="sales"] main .hero .hero-copy h1.bd-promise .bd-promise-objection {
+    font-size: clamp(1.18rem, 4.7vw, 1.45rem) !important;
+  }
+}
