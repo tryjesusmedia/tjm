@@ -2060,15 +2060,16 @@ html body.premium-system[data-page="sales"] main .hero .hero-copy h1.bd-promise 
   overflow-wrap: break-word;
 }
 html body.premium-system[data-page="sales"] main .hero .hero-copy h1.bd-promise .bd-promise-objection {
-  display: inline;
-  margin: 0;
+  display: block;
+  margin: 14px 0 0;
   padding: 0;
-  color: inherit !important;
+  color: #80602e !important;
   background: none;
   border: 0;
-  font-family: inherit !important;
-  font-size: inherit !important;
-  font-weight: inherit !important;
-  line-height: inherit !important;
-  letter-spacing: inherit !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 750 !important;
+  line-height: 1.5 !important;
+  letter-spacing: .035em !important;
+  text-transform: uppercase;
 }
