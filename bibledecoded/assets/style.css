@@ -2259,3 +2259,29 @@ html body.premium-system[data-page="sales"] main #enroll .price s {
   html body.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-price strong { font-size: 32px; }
   html body.premium-system.premium-system[data-page="sales"] main .bd-offer-hero .bd-hero-actions a.bd-primary-cta { font-size: 18px !important; }
 }
+
+/* Bible Decoded: three optional pitch sections below FAQ, EN/ES, TJM1 branding. */
+html body.premium-system[data-page="sales"] main .bd-pitch-section {padding:clamp(44px,6vw,72px) 20px}
+html body.premium-system[data-page="sales"] main .bd-pitch-inner {width:min(880px,100%);margin:auto}
+html body.premium-system[data-page="sales"] main .bd-pitch-problem {background:#e4d8c4;border-top:1px solid #c6b79e;color:#311e33}
+html body.premium-system[data-page="sales"] main .bd-pitch-breakthrough {background:#311e33;color:#f3e8d0}
+html body.premium-system[data-page="sales"] main .bd-pitch-transformation {background:#f3e8d0;color:#311e33}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section p.bd-pitch-kicker {margin:0 0 14px;color:#80602e!important;font:750 16px/1.45 Montserrat,Arial,sans-serif!important;letter-spacing:.08em!important;text-transform:uppercase}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-breakthrough p.bd-pitch-kicker {color:#eebd4a!important}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section h2 {margin:0 0 24px;max-width:25ch;color:#311e33!important;font:600 clamp(28px,3.4vw,36px)/1.22 Georgia,serif!important;letter-spacing:-.025em!important;text-wrap:balance;overflow-wrap:break-word}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-breakthrough h2 {color:#f3e8d0!important}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section h2 span {display:block;margin-top:12px;color:#eebd4a!important;font:inherit!important}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section .bd-pitch-inner > p:not(.bd-pitch-kicker):not(.bd-pitch-payment-note) {max-width:66ch;margin:0 0 18px;color:#493a45!important;font:400 18px/1.65 Montserrat,Arial,sans-serif!important;letter-spacing:0!important}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-breakthrough .bd-pitch-inner > p:not(.bd-pitch-kicker):not(.bd-pitch-payment-note) {color:#f3e8d0!important}
+html body.premium-system[data-page="sales"] main .bd-pitch-section p strong {font-weight:700;color:inherit}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section .bd-pitch-inner > p.bd-pitch-closing {margin:22px 0!important;color:#311e33!important;font-weight:700!important}
+html body.premium-system[data-page="sales"] main .bd-pitch-action {max-width:500px;margin:26px 0 0}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section a.bd-pitch-cta {box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;min-height:58px;padding:14px 18px;border:1px solid #d9aa3c;border-radius:12px;background:linear-gradient(180deg,#f6d578,#eebd4a);box-shadow:0 4px 10px rgba(49,30,51,.09);color:#311e33!important;font:750 18px/1.4 Montserrat,Arial,sans-serif!important;text-align:center;text-decoration:none;white-space:normal}
+html body.premium-system[data-page="sales"] main .bd-pitch-section a.bd-pitch-cta:is(:hover,:focus-visible) {background:#eebd4a;box-shadow:0 5px 16px rgba(49,30,51,.15)}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section p.bd-pitch-payment-note {max-width:500px;margin:10px 0 0;color:#625661!important;font:500 14px/1.45 Montserrat,Arial,sans-serif!important;text-align:center}
+html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-breakthrough p.bd-pitch-payment-note {color:#e1d4df!important}
+@media(max-width:650px) {
+ html body.premium-system[data-page="sales"] main .bd-pitch-section {padding:42px 20px 46px}
+ html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section h2 {font-size:28px!important}
+ html body.premium-system.premium-system[data-page="sales"] main .bd-pitch-section .bd-pitch-inner > p:not(.bd-pitch-kicker):not(.bd-pitch-payment-note) {font-size:17px!important;line-height:1.58!important}
+}
