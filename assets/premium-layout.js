@@ -390,7 +390,6 @@
     if(document.body.dataset.page==='sales') {
       fold(q('#curriculum'),spanish?'Explora las seis lecciones':'Explore the six lessons');
       fold(q('.faq'),spanish?'Preguntas frecuentes':'Frequently asked questions');
-      fold(q('.store-section'),spanish?'Libros, ropa y regalos opcionales':'Optional books, clothing and gifts');
       fold(q('.study-preview')?.closest('section'),spanish?'Tu Laboratorio de Estudio incluido':'Your included Study Lab');
       const purchase=q('#enroll');
       if(purchase){purchase.querySelectorAll('a.button').forEach(a=>a.remove());fold(purchase,spanish?'Lo que incluye tu compra':'What your purchase includes');}
