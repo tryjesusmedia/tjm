@@ -4,11 +4,13 @@
   const PLAN_URL = '/chronbible/data/readings.json';
   const PREF_KEY = 'chronbible-scripture-reader-settings-v1';
   const API_BASE = 'https://bible-api.com/';
+  // Prefer the requested local font. Use a visually faithful hosted substitute
+  // on Android and other devices where Microsoft fonts are not installed.
   const FONTS = {
-    'Arial': "Arial, Helvetica, sans-serif",
-    'Times New Roman': "'Times New Roman', Times, serif",
+    'Arial': "Arial, Arimo, Helvetica, sans-serif",
+    'Times New Roman': "'Times New Roman', Tinos, Times, serif",
     'Calibri': "Calibri, Carlito, Arial, sans-serif",
-    'Georgia': "Georgia, 'Times New Roman', serif"
+    'Georgia': "Georgia, Gelasio, serif"
   };
   const DEFAULT_PREFS = { translation: 'web', theme: 'light', font: 'Georgia', size: 20 };
 
@@ -16,8 +18,10 @@
   const elements = {
     menuBtn: $('reader-menu-button'), menu: $('reader-settings'), scrim: $('settings-scrim'),
     closeBtn: $('settings-close'), translationSwitch: $('translation-switch'),
-    translationValue: $('translation-value'), versionDescription: $('version-description'),
-    themeSwitch: $('theme-switch'), themeDescription: $('theme-description'), themeValue: $('theme-value'),
+    translationValue: $('translation-value'), translationLeft: $('translation-left'),
+    versionDescription: $('version-description'),
+    themeSwitch: $('theme-switch'), themeDescription: $('theme-description'),
+    themeValue: $('theme-value'), themeLeft: $('theme-left'),
     fontPicker: $('reader-font'), fontSmaller: $('font-smaller'), fontLarger: $('font-larger'),
     sizeSlider: $('font-size-slider'), sizeValue: $('font-size-value'),
     headerReading: $('header-reading'), headerPassage: $('header-passage'),
@@ -75,15 +79,20 @@
     document.documentElement.style.setProperty('--scripture-size', prefs.size + 'px');
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#171418' : '#F8F5EC');
 
-    elements.translationSwitch.setAttribute('aria-checked', String(isKJV));
-    elements.translationSwitch.setAttribute('aria-label', isKJV ? 'Switch to World English Bible' : 'Switch to King James Version');
-    elements.translationValue.textContent = isKJV ? 'KJV' : 'WEB';
+    // Two equal choices, without on/off colors or semantics.
+    elements.translationSwitch.dataset.position = isKJV ? 'left' : 'right';
+    elements.translationSwitch.setAttribute('aria-label',
+      isKJV ? 'KJV selected. Tap to switch to WEB' : 'WEB selected. Tap to switch to KJV');
+    elements.translationLeft.classList.toggle('is-selected', isKJV);
+    elements.translationValue.classList.toggle('is-selected', !isKJV);
     elements.versionDescription.textContent = isKJV ? 'King James Version' : 'World English Bible';
 
-    elements.themeSwitch.setAttribute('aria-checked', String(isDark));
-    elements.themeSwitch.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    elements.themeSwitch.dataset.position = isDark ? 'left' : 'right';
+    elements.themeSwitch.setAttribute('aria-label',
+      isDark ? 'Dark selected. Tap to switch to Light' : 'Light selected. Tap to switch to Dark');
+    elements.themeLeft.classList.toggle('is-selected', isDark);
+    elements.themeValue.classList.toggle('is-selected', !isDark);
     elements.themeDescription.textContent = isDark ? 'Dark mode' : 'Light mode';
-    elements.themeValue.textContent = isDark ? 'Dark' : 'Light';
 
     elements.fontPicker.value = prefs.font;
     elements.sizeSlider.value = String(prefs.size);
@@ -91,7 +100,10 @@
     elements.fontSmaller.disabled = prefs.size <= 16;
     elements.fontLarger.disabled = prefs.size >= 32;
 
-    if (reading) elements.bibleGatewayLink.href = escapeLinkReference(reading.bibleTasks.map((task) => task.label).join('; '));
+    // Always open ONE selected passage in Bible Gateway, also after switching versions.
+    if (reading && activeTasks.length) {
+      elements.bibleGatewayLink.href = escapeLinkReference(activeTasks[0].label);
+    }
     elements.credit.textContent = isKJV
       ? 'Scripture: King James Version (public domain in the United States).'
       : 'Scripture: World English Bible (public domain).';
@@ -207,10 +219,8 @@
     document.title = singlePassage
       ? activeTasks[0].label + ' | ChronBible'
       : 'Reading ' + n + ': ' + reading.title + ' | ChronBible';
-    elements.bibleGatewayLink.href = escapeLinkReference(activeTasks.map((task) => task.label).join('; '));
-    elements.bibleGatewayLink.textContent = singlePassage
-      ? 'Read ' + activeTasks[0].label + ' on Bible Gateway ↗'
-      : 'Read this reading on Bible Gateway ↗';
+    elements.bibleGatewayLink.href = escapeLinkReference(activeTasks[0].label);
+    elements.bibleGatewayLink.textContent = 'Read ' + activeTasks[0].label + ' on Bible Gateway ↗';
     elements.back.hidden = !singlePassage && n <= 1;
     elements.back.href = singlePassage ? '/chronbible/?reading=' + n : readingHref(n - 1);
     elements.back.setAttribute('aria-label', singlePassage
@@ -478,6 +488,18 @@
   async function init() {
     setupControls();
     applyPreferences();
+
+    // Older multi-chapter reader links should show the chapter-button overview,
+    // never load every passage directly and bypass the reading choices.
+    const entry = new URLSearchParams(location.search);
+    if (!entry.has('passage')) {
+      const raw = entry.get('reading');
+      const number = raw && /^\d+$/.test(raw) ? Number(raw) : null;
+      const overview = '/chronbible/' + (number && number >= 1 && number <= 313
+        ? '?reading=' + number : '');
+      window.location.replace(overview);
+      return;
+    }
     try {
       const res = await fetch(PLAN_URL, { cache: 'no-cache' });
       if (!res.ok) throw new Error('The reading plan is unavailable (' + res.status + ').');
