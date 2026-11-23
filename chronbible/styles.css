@@ -181,3 +181,7 @@ body.chronbible { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 .chronbible a.journey-reading { text-decoration:none; }
 .chronbible a.journey-reading:focus-visible { outline:3px solid #eebd4a; outline-offset:2px; }
 .chronbible .chron-read-full { width:100%; min-height:62px; margin-bottom:8px; font-size:14px; text-transform:none; letter-spacing:.01em; }
+
+/* Return to last Scripture chapter, not the Journey list. */
+.chronbible a.reading-return-link{display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;cursor:pointer}
+.chronbible a.reading-return-link:hover{color:#311e33;text-decoration:none}
