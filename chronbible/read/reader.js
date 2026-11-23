@@ -391,10 +391,11 @@
       // downloaded books remain readable when the connection is interrupted.
       let response;
       try {
-        response = await fetch(url, { signal, cache: 'force-cache' });
+        // Book requests are intentionally not aborted when users switch editions:
+        // the shared in-flight download can finish and populate the local cache.
+        response = await fetch(url, { cache: 'force-cache' });
         if (!response.ok) throw new Error('Local Bible file returned HTTP ' + response.status);
       } catch (error) {
-        if (signal?.aborted) throw error;
         if ('caches' in window) {
           try {
             response = await (await caches.open(BIBLE_CACHE_NAME)).match(url);
