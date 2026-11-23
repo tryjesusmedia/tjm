@@ -9,7 +9,7 @@
   <link rel="icon" href="/chronbible/icons/journey-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&amp;family=Carlito:wght@400;700&amp;family=Cormorant+Garamond:wght@500;600;700&amp;family=Gelasio:wght@400;700&amp;family=Montserrat:wght@400;500;600;700;800&amp;family=Tinos:wght@400;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/chronbible/read/reader.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" defer crossorigin="anonymous"></script>
   <script src="/chronbible/config.js?v=20261005-doc-plan" defer></script>
@@ -40,18 +40,24 @@
 
     <div class="setting-row">
       <div><strong>Translation</strong><small id="version-description">World English Bible</small></div>
-      <button class="switch" id="translation-switch" type="button" role="switch" aria-checked="false" aria-label="Switch to King James Version">
-        <span class="switch-knob"></span>
-      </button>
-      <span class="setting-value" id="translation-value">WEB</span>
+      <div class="setting-choices" aria-label="Choose Bible translation">
+        <span class="setting-choice" id="translation-left">KJV</span>
+        <button class="switch" id="translation-switch" type="button" data-position="right" aria-label="WEB selected. Tap to switch to KJV">
+          <span class="switch-knob" aria-hidden="true"></span>
+        </button>
+        <span class="setting-choice is-selected" id="translation-value">WEB</span>
+      </div>
     </div>
 
     <div class="setting-row">
       <div><strong>Appearance</strong><small id="theme-description">Light mode</small></div>
-      <button class="switch" id="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode">
-        <span class="switch-knob"></span>
-      </button>
-      <span class="setting-value" id="theme-value">Light</span>
+      <div class="setting-choices" aria-label="Choose reading appearance">
+        <span class="setting-choice" id="theme-left">Dark</span>
+        <button class="switch" id="theme-switch" type="button" data-position="right" aria-label="Light selected. Tap to switch to dark">
+          <span class="switch-knob" aria-hidden="true"></span>
+        </button>
+        <span class="setting-choice is-selected" id="theme-value">Light</span>
+      </div>
     </div>
 
     <div class="setting-block">
@@ -75,7 +81,7 @@
 
     <div class="settings-divider"></div>
     <a id="bible-gateway-link" class="settings-biblegateway" href="https://www.biblegateway.com/" target="_blank" rel="noopener noreferrer">Read this reading on Bible Gateway ↗</a>
-    <p class="settings-note">Reading preferences are saved on this device. Calibri displays when the font is installed.</p>
+    <p class="settings-note">Reading preferences are saved on this device. Equivalent web fonts display when a device doesn't include Arial, Times New Roman, Calibri, or Georgia.</p>
   </aside>
   <div id="settings-scrim" class="settings-scrim" hidden></div>
 
