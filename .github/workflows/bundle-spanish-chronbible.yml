@@ -1,0 +1,36 @@
+name: Bundle Spanish public-domain Bible text
+on:
+  push:
+    branches:
+      - feature/spanish-chronbible-bes-rv1909
+    paths:
+      - scripts/build_spanish_bibles.py
+      - .github/workflows/bundle-spanish-chronbible.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    name: Download, validate and commit BES 2026 + RV1909
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin official Spanish Bible texts locally
+        run: python scripts/build_spanish_bibles.py
+      - name: Commit verified 132 book files to this branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add es/chronbible/read/text/
+          if ! git diff --cached --quiet; then
+            git commit -m "Bundle verified BES 2026 and RV1909 Bible texts"
+            git push
+          fi
