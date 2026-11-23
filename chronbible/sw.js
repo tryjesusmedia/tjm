@@ -1,14 +1,14 @@
-/* ChronBible service worker v3 — the two public-domain Bibles are stored on this site.
+/* ChronBible service worker v4 — the two public-domain Bibles are stored on this site.
    The reader functions without third-party Scripture APIs, and visited books are
    cached locally. Readers can explicitly download all 132 book files for offline use. */
 const BOOK_CACHE = 'chronbible-bibles-v1';
-const SHELL_CACHE = 'chronbible-shell-v3';
+const SHELL_CACHE = 'chronbible-shell-v4';
 const CORE = [
   '/chronbible/',
   '/chronbible/read/',
   '/chronbible/data/readings.json',
   '/chronbible/config.js?v=20261005-doc-plan',
-  '/chronbible/read/reader.js?v=6',
+  '/chronbible/read/reader.js?v=7',
   '/chronbible/read/reader.css?v=5'
 ];
 
