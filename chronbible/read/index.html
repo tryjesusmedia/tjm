@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F8F5EC">
+  <meta name="description" content="Read your ChronBible Scripture passage in the World English Bible or King James Version.">
+  <title>ChronBible Reading | The Bible in Chronological Order</title>
+  <link rel="icon" href="/chronbible/icons/journey-192.png">
+  <link rel="stylesheet" href="/chronbible/read/reader.css?v=1">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" defer crossorigin="anonymous"></script>
+  <script src="/chronbible/config.js?v=20261005-doc-plan" defer></script>
+  <script src="/chronbible/read/reader.js?v=1" defer></script>
+</head>
+<body class="reader-theme-light">
+  <a class="skip-link" href="#scripture">Skip to Scripture</a>
+
+  <header class="reader-header">
+    <div class="header-left">
+      <a class="reader-back" href="/chronbible/?view=journey" aria-label="Back to the reading journey" title="Back to journey">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg>
+      </a>
+      <div class="header-reference">
+        <strong id="header-reading">Reading <span>001</span></strong>
+        <span id="header-passage">Loading Scripture…</span>
+      </div>
+    </div>
+
+    <button class="reader-menu-button" id="reader-menu-button" type="button"
+      aria-expanded="false" aria-controls="reader-settings" aria-label="Open reading settings">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <aside class="reader-settings" id="reader-settings" aria-label="Reading settings" hidden>
+    <div class="settings-top"><h2>Reading settings</h2><button id="settings-close" type="button" aria-label="Close reading settings">✕</button></div>
+
+    <div class="setting-row">
+      <div><strong>Translation</strong><small id="version-description">World English Bible</small></div>
+      <button class="switch" id="translation-switch" type="button" role="switch" aria-checked="false" aria-label="Switch to King James Version">
+        <span class="switch-knob"></span>
+      </button>
+      <span class="setting-value" id="translation-value">WEB</span>
+    </div>
+
+    <div class="setting-row">
+      <div><strong>Appearance</strong><small id="theme-description">Light mode</small></div>
+      <button class="switch" id="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode">
+        <span class="switch-knob"></span>
+      </button>
+      <span class="setting-value" id="theme-value">Light</span>
+    </div>
+
+    <div class="setting-block">
+      <label for="reader-font">Font type</label>
+      <select id="reader-font" name="font">
+        <option value="Arial">Arial</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Calibri">Calibri</option>
+        <option value="Georgia">Georgia</option>
+      </select>
+    </div>
+
+    <div class="setting-block">
+      <div class="setting-between"><label id="font-size-label" for="font-size-slider">Font size</label><output id="font-size-value" for="font-size-slider">20 px</output></div>
+      <div class="size-row">
+        <button id="font-smaller" type="button" aria-label="Decrease Scripture font size">A−</button>
+        <input id="font-size-slider" type="range" min="16" max="32" step="1" value="20" aria-labelledby="font-size-label">
+        <button id="font-larger" type="button" aria-label="Increase Scripture font size">A+</button>
+      </div>
+    </div>
+
+    <div class="settings-divider"></div>
+    <a class="settings-journey" href="/chronbible/?view=journey">← Back to my reading journey</a>
+    <p class="settings-note">Reading preferences are saved on this device. Calibri displays when the font is installed.</p>
+  </aside>
+  <div id="settings-scrim" class="settings-scrim" hidden></div>
+
+  <main id="scripture" class="reader-main" tabindex="-1">
+    <div class="reader-intro">
+      <span class="reader-kicker" id="reader-kicker">CHRONBIBLE READING</span>
+      <h1 id="reader-title">Preparing your reading…</h1>
+      <p class="reader-range" id="reader-range"></p>
+      <p class="reader-edition"><span class="edition-line"></span><span id="edition-label">World English Bible (WEB)</span><span class="edition-line"></span></p>
+    </div>
+
+    <div class="reader-status" id="reader-status" role="status" aria-live="polite">Loading reading plan…</div>
+    <div id="reader-passages" class="reader-passages"></div>
+    <div class="reader-endnote" id="reader-endnote" hidden>
+      <p id="translation-credit">Scripture: World English Bible (public domain).</p>
+      <p>ChronBible preserves the order of passages in the chronological reading plan.</p>
+    </div>
+
+    <section id="reading-progress" class="reading-progress" hidden aria-labelledby="progress-title">
+      <div>
+        <p class="progress-eyebrow">YOUR READING JOURNEY</p>
+        <h2 id="progress-title">Finished this reading?</h2>
+        <p id="progress-help">Sign in to save reading progress across devices.</p>
+      </div>
+      <button id="complete-reading" type="button" class="complete-button" disabled>Mark reading complete</button>
+      <a id="save-progress-signin" href="/chronbible/?view=journey">Sign in to save progress →</a>
+      <p id="progress-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <nav class="reader-pagination" aria-label="Reading navigation">
+      <a id="previous-reading" class="reader-page-link" href="/chronbible/?view=journey">← Previous reading</a>
+      <a class="reader-journey-link" href="/chronbible/?view=journey">All readings</a>
+      <a id="next-reading" class="reader-page-link reader-page-next" href="/chronbible/?view=journey">Next reading →</a>
+    </nav>
+  </main>
+
+  <footer class="reader-footer">
+    <span>Chron<span class="footer-gold">Bible</span></span>
+    <p>Clear Bible answers and a welcoming community.</p>
+    <a href="/chronbible/?view=journey">Back to your reading journey</a>
+  </footer>
+
+  <noscript><p class="noscript">Please enable JavaScript to display Bible readings.</p></noscript>
+</body>
+</html>
