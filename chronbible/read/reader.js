@@ -21,8 +21,8 @@
     fontPicker: $('reader-font'), fontSmaller: $('font-smaller'), fontLarger: $('font-larger'),
     sizeSlider: $('font-size-slider'), sizeValue: $('font-size-value'),
     headerReading: $('header-reading'), headerPassage: $('header-passage'),
-    title: $('reader-title'), range: $('reader-range'), kicker: $('reader-kicker'),
-    editionLabel: $('edition-label'), credit: $('translation-credit'),
+    back: $('reader-back'), bibleGatewayLink: $('bible-gateway-link'),
+    credit: $('translation-credit'),
     status: $('reader-status'), passages: $('reader-passages'),
     endnote: $('reader-endnote'), progress: $('reading-progress'),
     completeButton: $('complete-reading'), progressStatus: $('progress-status'),
@@ -89,7 +89,7 @@
     elements.fontSmaller.disabled = prefs.size <= 16;
     elements.fontLarger.disabled = prefs.size >= 32;
 
-    elements.editionLabel.textContent = isKJV ? 'King James Version (KJV)' : 'World English Bible (WEB)';
+    if (reading) elements.bibleGatewayLink.href = escapeLinkReference(reading.bibleTasks.map((task) => task.label).join('; '));
     elements.credit.textContent = isKJV
       ? 'Scripture: King James Version (public domain in the United States).'
       : 'Scripture: World English Bible (public domain).';
@@ -183,10 +183,10 @@
     elements.headerReading.innerHTML = 'Reading <span>' + String(n).padStart(3, '0') + '</span>';
     elements.headerPassage.textContent = shortReference;
     elements.headerPassage.title = reading.reference;
-    elements.title.textContent = reading.title;
-    elements.range.textContent = reading.reference;
-    elements.kicker.textContent = 'READING ' + String(n).padStart(3, '0') + ' OF ' + plan.readings.length + ' · ' + reading.section.toUpperCase();
     document.title = 'Reading ' + n + ': ' + reading.title + ' | ChronBible';
+    elements.bibleGatewayLink.href = escapeLinkReference(reading.bibleTasks.map((task) => task.label).join('; '));
+    elements.back.hidden = n <= 1;
+    if (n > 1) elements.back.href = readingHref(n - 1);
 
     if (n > 1) {
       elements.previous.href = readingHref(n - 1);
@@ -331,10 +331,10 @@
     }
     await Promise.all(Array.from({ length: Math.min(4, tasks.length) }, worker));
     if (requestId !== scriptureRequestId) return;
-    elements.status.hidden = !failed;
-    elements.status.textContent = failed
-      ? failed + ' passage' + (failed === 1 ? '' : 's') + ' could not load. Use Retry in each passage.'
-      : '';
+    // Passage errors remain visible beside the affected verses with Retry and Bible Gateway links.
+    // Do not show a duplicate error summary above the whole reading.
+    elements.status.hidden = true;
+    elements.status.textContent = '';
     elements.endnote.hidden = !success;
   }
 
@@ -448,7 +448,6 @@
     } catch (error) {
       elements.status.hidden = false;
       elements.status.textContent = error.message + ' Return to the ChronBible journey and try again.';
-      elements.title.textContent = 'Reading unavailable';
       console.warn(error);
     }
   }
