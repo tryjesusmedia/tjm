@@ -141,9 +141,9 @@ def scripture_book(elem: ET.Element, osis: str, version: str) -> dict:
 
     def append(text: str | None):
         if text and current_chapter is not None and current_verse is not None:
-            clean = normalize(text)
-            if clean:
-                parts[(current_chapter, current_verse)].append(clean)
+            # Preserve exact inline XML text boundaries: inserting a space here
+            # corrupts Spanish punctuation and words split by inline markup.
+            parts[(current_chapter, current_verse)].append(text)
 
     def walk(node: ET.Element):
         nonlocal current_chapter, current_verse
@@ -178,7 +178,7 @@ def scripture_book(elem: ET.Element, osis: str, version: str) -> dict:
     number_of_chapters = EXPECTED_CHAPTERS[list(CODE.values()).index(osis)]
     for ch in range(1, number_of_chapters + 1):
         verses = [
-            {"number": verse, "text": normalize(" ".join(texts))}
+            {"number": verse, "text": normalize("".join(texts))}
             for (chapter, verse), texts in sorted(parts.items())
             if chapter == ch and texts
         ]
