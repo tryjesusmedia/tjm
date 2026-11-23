@@ -1,0 +1,29 @@
+{
+  "source": "Official eBible.org USFX exports; independently stored with the ChronBible website",
+  "translations": [
+    {
+      "id": "bes",
+      "title": "La Biblia en Español Sencillo 2026",
+      "books": 66,
+      "chapters": 1189,
+      "numberedVerses": 31102,
+      "upstream": "https://ebible.org/find/details.php?id=spabes",
+      "zip": "https://ebible.org/Scriptures/spabes_usfx.zip",
+      "zipSha256": "d2843552b3e87df0b211d2c7136f0879fca8046fe7741ab0aacf34538d42f671",
+      "license": "Public Domain (as marked by eBible.org in the 2026 edition)"
+    },
+    {
+      "id": "rv1909",
+      "title": "Reina-Valera 1909",
+      "books": 66,
+      "chapters": 1189,
+      "numberedVerses": 31084,
+      "upstream": "https://ebible.org/find/details.php?id=spaRV1909",
+      "zip": "https://ebible.org/Scriptures/spaRV1909_usfx.zip",
+      "zipSha256": "6fd2db9b7b865f8f0c7eeb9ca859a52e36d532ca8d5a35fbf746310436197b48",
+      "license": "Public Domain (as marked by eBible.org in the 2026 edition)"
+    }
+  ],
+  "readingCount": 313,
+  "passageCount": 1440
+}
