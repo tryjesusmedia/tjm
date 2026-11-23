@@ -186,7 +186,7 @@
     const passageParam = params.get('passage');
     singlePassage = passageParam !== null;
     if (singlePassage) {
-      if (!/^\\d+$/.test(passageParam)) throw new Error('Invalid Scripture passage link.');
+      if (!/^\d+$/.test(passageParam)) throw new Error('Invalid Scripture passage link.');
       const progressIndex = Number(passageParam);
       const task = reading.bibleTasks.find((item) => item.progressIndex === progressIndex);
       if (!task) throw new Error('This passage is not part of the selected ChronBible reading.');
