@@ -177,7 +177,7 @@
     if (returningToJourney) {
       requestAnimationFrame(() => requestAnimationFrame(() => {
         const index = journeyReturn?.index ?? currentIndex;
-        const item = root.querySelector(`[data-reading-open-index="${index}"]`);
+        const item = root.querySelector(`[data-reading-index="${index}"]`);
         item?.focus({ preventScroll: true });
         if (journeyReturn) window.scrollTo({ top: journeyReturn.scrollY, behavior: "instant" });
         else item?.scrollIntoView({ block: "center", behavior: "smooth" });
@@ -287,7 +287,7 @@
           <span><h3>${escapeHTML(section.title)}</h3><p>Readings ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "reading" : "readings"}</p></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${completeCount} OF ${readings.length} COMPLETE</small></span>
         </button>
-        ${open ? `<div class="reading-list">${readings.map((reading) => `<a class="journey-reading ${readingComplete(reading) ? "done" : ""}" href="/chronbible/read/?reading=${reading.number}" data-reading-open-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Read →</em></a>`).join("")}</div>` : ""}
+        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Open →</em></button>`).join("")}</div>` : ""}
       </article>`;
     }).join("");
 
