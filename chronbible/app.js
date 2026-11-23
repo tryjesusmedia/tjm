@@ -237,7 +237,6 @@
             <div class="card-kicker"><span>THE&nbsp;BIBLE</span></div>
             <h3>${escapeHTML(reading.reference)}</h3>
             <div class="reading-actions">
-              <a class="button button-primary chron-read-full" href="/chronbible/read/?reading=${reading.number}" aria-label="Read all passages in reading ${reading.number}">Open full reading in WEB →</a>
               ${sourceTaskLinks(reading)}
               <label class="reading-complete"><input type="checkbox" data-reading-complete="${reading.index}" ${readingComplete(reading) ? "checked" : ""}> Reading complete</label>
             </div>
