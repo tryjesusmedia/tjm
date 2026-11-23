@@ -178,9 +178,9 @@
     if (reading && activeTasks.length) {
       elements.bibleGatewayLink.href = escapeLinkReference(activeTasks[0].label);
     }
-    elements.credit.textContent = isKJV
+    elements.credit.textContent = isRV
       ? 'Texto bíblico: Reina-Valera 1909 (dominio público).'
-      : 'Scripture: World English Bible (public domain).';
+      : 'Texto bíblico: Biblia en Español Sencillo 2026 (dominio público).';
 
     if (loadScripture && reading) void loadPassages();
   }
@@ -280,7 +280,7 @@
       activeTasks = [task];
       document.body.classList.add('single-passage');
       try {
-        sessionStorage.setItem('tjm-chronbible-last-scripture-page-v1',
+        sessionStorage.setItem('tjm-chronbible-es-last-scripture-page-v1',
           window.location.pathname + window.location.search);
       } catch {}
     } else {
@@ -345,10 +345,10 @@
 
   function renderVerses(data, label) {
     if (!data || !Array.isArray(data.verses) || data.verses.length === 0) {
-      throw new Error('No verse text was returned for ' + label + '.');
+      throw new Error('No hay versículos disponibles para ' + label + '.');
     }
     const verses = data.verses.filter((item) => Number.isInteger(Number(item.verse)) && typeof item.text === 'string');
-    if (!verses.length) throw new Error('The Bible service returned no readable verses for ' + label + '.');
+    if (!verses.length) throw new Error('No hay versículos legibles para ' + label + '.');
 
     let lastChapter = null;
     return verses.map((item) => {
@@ -369,14 +369,14 @@
 
   function parsePassage(label) {
     const match = /^(.+?)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$/.exec(String(label).trim());
-    if (!match) throw new Error('Unsupported Scripture reference: ' + label);
+    if (!match) throw new Error('Referencia bíblica no reconocida: ' + label);
     const book = BOOK_CODES[match[1]];
-    if (!book) throw new Error('Unrecognized Bible book: ' + match[1]);
+    if (!book) throw new Error('Libro bíblico no reconocido: ' + match[1]);
     const chapter = Number(match[2]);
     const start = match[3] ? Number(match[3]) : null;
     const end = match[4] ? Number(match[4]) : start;
     if (!Number.isInteger(chapter) || chapter < 1 || (start !== null && (!Number.isInteger(start) || start < 1 || !Number.isInteger(end) || end < start))) {
-      throw new Error('Invalid Scripture reference: ' + label);
+      throw new Error('Referencia bíblica no válida: ' + label);
     }
     return { book, chapter, start, end, label };
   }
@@ -406,12 +406,12 @@
             response = await (await caches.open(BIBLE_CACHE_NAME)).match(url);
           } catch {}
         }
-        if (!response) throw new Error('This Bible book is not available offline yet. Connect once to save it.');
+        if (!response) throw new Error('Este libro aún no está disponible sin conexión. Conéctate una vez para guardarlo.');
       }
 
       const data = await response.json();
       if (data.version !== version || data.book !== book || !Array.isArray(data.chapters) || data.chapters.length === 0) {
-        throw new Error('The locally stored Bible file did not pass its integrity check.');
+        throw new Error('El archivo bíblico guardado no superó la verificación.');
       }
       bookCache.set(id, data);
       if ('caches' in window) {
@@ -436,7 +436,7 @@
     const book = await getLocalBook(translation, ref.book, signal);
     const chapter = book.chapters[ref.chapter - 1];
     if (!chapter || chapter.chapter !== ref.chapter || !Array.isArray(chapter.verses)) {
-      throw new Error('Chapter missing from stored Bible: ' + task.label);
+      throw new Error('Capítulo no encontrado en la Biblia guardada: ' + task.label);
     }
     const verses = chapter.verses.filter(verse =>
       typeof verse.text === 'string' && Number.isInteger(verse.number) &&
@@ -447,12 +447,12 @@
       verse: verse.number,
       text: verse.text
     }));
-    if (!verses.length) throw new Error('No verses found in stored Bible for ' + task.label);
+    if (!verses.length) throw new Error('No se encontraron versículos para ' + task.label);
     // When referencing a specific verse, fail visibly rather than silently
     // substituting an incorrect verse from the translation.
     if (ref.start !== null &&
         (!verses.some(v => v.verse === ref.start) || !verses.some(v => v.verse === ref.end))) {
-      throw new Error('The selected translation does not contain the requested numbered verse(s): ' + task.label);
+      throw new Error('La versión elegida no contiene los números de versículo solicitados: ' + task.label);
     }
     const data = { reference: task.label, translation_id: translation, verses };
     verseCache.set(cacheKey, data);
@@ -472,7 +472,7 @@
     let completed = 0;
     let failed = 0;
     let cursor = 0;
-    status.textContent = 'Guardando ambas Biblias: 0 / ' + urls.length + ' books';
+    status.textContent = 'Guardando ambas Biblias: 0 / ' + urls.length + ' libros';
     async function worker() {
       while (cursor < urls.length) {
         const url = urls[cursor++];
@@ -492,7 +492,7 @@
           console.warn('Offline Scripture download', url, error.message);
         } finally {
           completed++;
-          status.textContent = 'Guardando ambas Biblias: ' + completed + ' / ' + urls.length + ' books';
+          status.textContent = 'Guardando ambas Biblias: ' + completed + ' / ' + urls.length + ' libros';
         }
       }
     }
@@ -513,11 +513,11 @@
     const target = $('task-verses-' + index);
     if (!target) return;
     target.innerHTML = '<div class="passage-error"><p>Unable to load this passage right now. ' +
-      'Please check your connection and try again.</p>' +
-      '<button type="button" data-retry-task="' + index + '">Retry passage</button>' +
+      'Comprueba tu conexión e inténtalo de nuevo.</p>' +
+      '<button type="button" data-retry-task="' + index + '">Reintentar</button>' +
       '<a target="_blank" rel="noopener noreferrer" href="' +
-      escapeHTML(escapeLinkReference(task.label)) + '">Read externally ↗</a></div>';
-    $('task-status-' + index).textContent = 'Unavailable';
+      escapeHTML(escapeLinkReference(task.label)) + '">Leer en eBible.org ↗</a></div>';
+    $('task-status-' + index).textContent = 'No disponible';
     console.warn('ChronBible passage', task.label, error?.message || error);
   }
 
@@ -625,8 +625,8 @@
         completed = new Set((data?.completed_indices || []).map(Number).filter(Number.isInteger));
       }
     } catch (error) {
-      console.warn('ChronBible reader progress:', error.message);
-      elements.progressStatus.textContent = 'Could not load saved progress. You can still read Scripture.';
+      console.warn('Progreso del lector ChronBible:', error.message);
+      elements.progressStatus.textContent = 'No se pudo cargar tu progreso. Puedes seguir leyendo la Biblia.';
     }
     updateProgressUI();
   }
@@ -687,7 +687,7 @@
     if (!entry.has('passage')) {
       const raw = entry.get('reading');
       const number = raw && /^\d+$/.test(raw) ? Number(raw) : null;
-      const overview = '/chronbible/' + (number && number >= 1 && number <= 313
+      const overview = '/es/chronbible/' + (number && number >= 1 && number <= 313
         ? '?reading=' + number : '');
       window.location.replace(overview);
       return;
