@@ -32,14 +32,19 @@ svg{max-width:100%}
 .settings-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:21px}
 .settings-top h2{font:600 28px/1.1 Georgia,serif;margin:0}
 #settings-close{border:none;background:transparent;color:var(--muted);cursor:pointer;padding:5px;font-size:17px}
-.setting-row{display:grid;grid-template-columns:minmax(0,1fr) 47px 41px;gap:9px;align-items:center;padding:17px 0;border-top:1px solid var(--border)}
+.setting-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:17px 0;border-top:1px solid var(--border)}
 .setting-row strong{display:block;font-size:14px;font-weight:700}
 .setting-row small{display:block;font-size:11px;line-height:1.6;color:var(--muted)}
-.setting-value{font-size:11px;color:var(--muted);text-align:right;font-weight:700}
-.switch{display:block;position:relative;height:27px;width:47px;border:1px solid var(--border);border-radius:100px;background:#bab1ba;cursor:pointer;transition:background .2s ease}
-.switch[aria-checked=true]{background:#c08b38;border-color:#ae7b30}
+.setting-choices{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.setting-choice{font-size:11px;line-height:1.5;font-weight:600;color:var(--muted);min-width:26px;text-align:center;transition:color .15s ease}
+.setting-choice.is-selected{font-weight:800;color:#9d722b}
+.reader-theme-dark .setting-choice.is-selected{color:var(--gold)}
+/* This is a neutral left/right chooser, NOT a colored on/off switch. */
+.switch{display:block;position:relative;flex:none;height:27px;width:47px;border:1px solid #c6bac4;border-radius:100px;background:#e3dce3;cursor:pointer}
+.reader-theme-dark .switch{background:#514654;border-color:#817387}
 .switch-knob{position:absolute;top:2px;left:2px;height:21px;width:21px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;transition:transform .2s ease}
-.switch[aria-checked=true] .switch-knob{transform:translateX(20px)}
+.switch[data-position="right"] .switch-knob{transform:translateX(20px)}
+.switch[data-position="left"] .switch-knob{transform:translateX(0)}
 .setting-block{padding:18px 0 15px;border-top:1px solid var(--border)}
 .setting-block>label,.setting-between label{display:block;font-size:13px;font-weight:700;margin-bottom:11px}
 .setting-block select{display:block;width:100%;height:45px;padding:9px 12px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:7px;font-size:13px}
