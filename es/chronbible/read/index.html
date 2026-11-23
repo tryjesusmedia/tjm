@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F8F5EC">
+  <meta name="description" content="Lee el pasaje de ChronBible en Biblia en Español Sencillo 2026 o Reina-Valera 1909.">
+  <title>Lectura bíblica | ChronBible en español</title>
+  <link rel="icon" href="/chronbible/icons/journey-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&amp;family=Carlito:wght@400;700&amp;family=Cormorant+Garamond:wght@500;600;700&amp;family=Gelasio:wght@400;700&amp;family=Montserrat:wght@400;500;600;700;800&amp;family=Tinos:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/chronbible/read/reader.css?v=5">
+  <!-- This standalone Scripture view has no external script dependency. -->
+  <script src="/es/chronbible/config.js?v=1" defer></script>
+  <script src="/es/chronbible/read/reader.js?v=2" defer></script>
+</head>
+<body class="reader-theme-light">
+  <a class="skip-link" href="#scripture">Saltar al texto bíblico</a>
+
+  <header class="reader-header">
+    <div class="header-left">
+      <a class="reader-back" id="reader-back" href="/es/chronbible/read/?reading=1" aria-label="Lectura anterior de ChronBible" title="Lectura anterior" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg>
+      </a>
+      <div class="header-reference">
+        <strong id="header-reading">Lectura <span>001</span></strong>
+        <span id="header-passage">Cargando la Biblia…</span>
+      </div>
+    </div>
+
+    <button class="reader-menu-button" id="reader-menu-button" type="button"
+      aria-expanded="false" aria-controls="reader-settings" aria-label="Abrir opciones de lectura">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <aside class="reader-settings" id="reader-settings" aria-label="Opciones de lectura" hidden>
+    <div class="settings-top"><h2>Opciones de lectura</h2><button id="settings-close" type="button" aria-label="Cerrar opciones de lectura">✕</button></div>
+
+    <div class="setting-row">
+      <div><strong>Versión bíblica</strong><small id="version-description">Biblia en Español Sencillo 2026</small></div>
+      <div class="setting-choices" aria-label="Elegir versión bíblica">
+        <span class="setting-choice" id="translation-left">RV1909</span>
+        <button class="switch" id="translation-switch" type="button" data-position="right" aria-label="BES seleccionada. Cambiar a RV1909">
+          <span class="switch-knob" aria-hidden="true"></span>
+        </button>
+        <span class="setting-choice is-selected" id="translation-value">BES</span>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div><strong>Apariencia</strong><small id="theme-description">Modo claro</small></div>
+      <div class="setting-choices" aria-label="Elegir modo de lectura">
+        <span class="setting-choice" id="theme-left">Oscuro</span>
+        <button class="switch" id="theme-switch" type="button" data-position="right" aria-label="Modo claro seleccionado. Cambiar a oscuro">
+          <span class="switch-knob" aria-hidden="true"></span>
+        </button>
+        <span class="setting-choice is-selected" id="theme-value">Claro</span>
+      </div>
+    </div>
+
+    <div class="setting-block">
+      <label for="reader-font">Tipo de letra</label>
+      <select id="reader-font" name="font">
+        <option value="Arial">Arial</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Calibri">Calibri</option>
+        <option value="Georgia">Georgia</option>
+      </select>
+    </div>
+
+    <div class="setting-block">
+      <div class="setting-between"><label id="font-size-label" for="font-size-slider">Tamaño de letra</label><output id="font-size-value" for="font-size-slider">20 px</output></div>
+      <div class="size-row">
+        <button id="font-smaller" type="button" aria-label="Reducir el tamaño de letra">A−</button>
+        <input id="font-size-slider" type="range" min="16" max="32" step="1" value="20" aria-labelledby="font-size-label">
+        <button id="font-larger" type="button" aria-label="Aumentar el tamaño de letra">A+</button>
+      </div>
+    </div>
+
+    <div class="settings-divider"></div>
+    <a id="bible-gateway-link" class="settings-biblegateway" href="https://ebible.org/spabes/" target="_blank" rel="noopener noreferrer">Leer este pasaje en eBible.org ↗</a>
+    <button id="download-offline-bibles" class="settings-offline" type="button">Guardar BES y RV1909 sin conexión</button>
+    <p id="offline-bible-status" role="status" aria-live="polite" class="settings-offline-status">Ambas Biblias están guardadas en este sitio. También puedes guardarlas en tu dispositivo.</p>
+    <p class="settings-note">Tus preferencias se guardan en este dispositivo. Si una fuente no está disponible, se utiliza una alternativa.</p>
+  </aside>
+  <div id="settings-scrim" class="settings-scrim" hidden></div>
+
+  <main id="scripture" class="reader-main" tabindex="-1">
+    <div class="reader-status" id="reader-status" role="status" aria-live="polite">Cargando el plan de lectura…</div>
+    <div id="reader-passages" class="reader-passages"></div>
+    <div class="reader-endnote" id="reader-endnote" hidden>
+      <p id="translation-credit">Texto bíblico: Biblia en Español Sencillo 2026 (dominio público).</p>
+      <p>ChronBible respeta el orden de los pasajes del plan cronológico.</p>
+    </div>
+
+    <section id="reading-progress" class="reading-progress" hidden aria-labelledby="progress-title">
+      <div>
+        <p class="progress-eyebrow">TU RECORRIDO BÍBLICO</p>
+        <h2 id="progress-title">¿Terminaste esta lectura?</h2>
+        <p id="progress-help">Inicia sesión para guardar tu progreso.</p>
+      </div>
+      <button id="complete-reading" type="button" class="complete-button" disabled>Marcar lectura completada</button>
+      <a id="save-progress-signin" href="/es/chronbible/?view=journey">Iniciar sesión para guardar →</a>
+      <p id="progress-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <nav class="reader-pagination" aria-label="Reading navigation">
+      <a id="previous-reading" class="reader-page-link" href="/es/chronbible/?view=journey">← Lectura anterior</a>
+      <a class="reader-journey-link" href="/es/chronbible/?view=journey">Todas las lecturas</a>
+      <a id="next-reading" class="reader-page-link reader-page-next" href="/es/chronbible/?view=journey">Lectura siguiente →</a>
+    </nav>
+  </main>
+
+  <footer class="reader-footer">
+    <span>Chron<span class="footer-gold">Bible</span></span>
+    <p>Respuestas bíblicas claras y una comunidad acogedora.</p>
+    <a href="/es/chronbible/?view=journey">Volver al recorrido bíblico</a>
+  </footer>
+
+  <noscript><p class="noscript">Activa JavaScript para mostrar las lecturas bíblicas.</p></noscript>
+</body>
+</html>
