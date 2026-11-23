@@ -3,6 +3,8 @@
 
   const CONFIG = window.TJM_CHRONBIBLE_CONFIG;
   const PLAN_PATH = "/es/chronbible/data/readings.json";
+  const requestedNumber = Number(new URLSearchParams(location.search).get("reading"));
+  const requestedIndex = Number.isInteger(requestedNumber) && requestedNumber >= 1 && requestedNumber <= 313 ? requestedNumber - 1 : null;
   const POINTS_PER_CHAPTER = 10;
   const REWARD_HITOS = Object.freeze([1, 25, 100, 250, 500, 750, 1000, 1440]);
   const FIRST_NAME_HOLD_MS = 1400;
@@ -166,18 +168,16 @@
   function showView(name, focusMain = false) {
     window.TJMReadingBadgeViewer?.close(true);
     const returningToJourney = name === "journey" && activeView === "readings";
-    if (returningToJourney) activeSection = journeyReturn?.section || currentReading().section;
+    if (returningToJourney) activeSection = currentReading().section;
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
     if (name === "rewards" && session) void refreshJourneyFromVisit();
     if (returningToJourney) {
       requestAnimationFrame(() => requestAnimationFrame(() => {
-        const index = journeyReturn?.index ?? currentIndex;
-        const item = root.querySelector(`[data-reading-index="${index}"]`);
+        const item = root.querySelector(`[data-reading-index="${currentIndex}"]`);
         item?.focus({ preventScroll: true });
-        if (journeyReturn) window.scrollTo({ top: journeyReturn.scrollY, behavior: "instant" });
-        else item?.scrollIntoView({ block: "center", behavior: "smooth" });
+        item?.scrollIntoView({ block: "center", behavior: "smooth" });
       }));
       return;
     }
@@ -189,9 +189,17 @@
     }
   }
 
+  function revealJourneyFromLink() {
+    if (activeView !== "journey" || requestedIndex === null) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const item = root.querySelector(`[data-reading-index="${currentIndex}"]`);
+      item?.scrollIntoView({ block: "center", behavior: "auto" });
+    }));
+  }
+
   function sourceTaskLinks(reading) {
     if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No hay enlaces de pasajes disponibles</button>`;
-    return `<div class="chapter-task-list" aria-label="Opciones de pasajes bíblicos">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Marcar ${escapeHTML(task.label)} como completado" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" aria-label="Leer ${escapeHTML(task.label)} en BibleGateway">Leer ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
+    return `<div class="chapter-task-list" aria-label="Opciones de pasajes bíblicos">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Marcar ${escapeHTML(task.label)} como completado" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="/es/chronbible/read/?reading=${reading.number}&passage=${task.progressIndex}" aria-label="Leer ${escapeHTML(task.label)} en ChronBible">Leer ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
   }
 
   function reviewFlag(reading) {
@@ -219,7 +227,7 @@
     const percent = percentComplete();
     return `
       <section aria-labelledby="readings-heading">
-        <button class="reading-back" type="button" data-view-shortcut="journey" aria-label="Volver al recorrido"><span aria-hidden="true">←</span> Volver al recorrido</button>
+        <button class="reading-back" type="button" data-view-shortcut="journey" aria-label="Volver al recorrido"><span aria-hidden="true">←</span> Volver</button>
         <header class="view-heading">
           <div>
             <p class="eyebrow">${escapeHTML(reading.section)} · LECTURA ${reading.number} DE ${plan.readings.length}</p>
@@ -259,7 +267,7 @@
           <span><h3>${escapeHTML(section.title)}</h3><p>Lecturas ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "lectura" : "lecturas"}</p></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${completeCount} DE ${readings.length} COMPLETADAS</small></span>
         </button>
-        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Parte ${reading.partNumber} de ${reading.partCount}` : ""}</small></span><em>Abrir →</em></button>`).join("")}</div>` : ""}
+        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""} ${reading.index === currentIndex ? "last-viewed" : ""}" type="button" ${reading.index === currentIndex ? 'aria-current="location"' : ""} data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Parte ${reading.partNumber} de ${reading.partCount}` : ""}</small></span><em>Abrir →</em></button>`).join("")}</div>` : ""}
       </article>`;
     }).join("");
 
@@ -624,8 +632,8 @@
     completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
     if (!preservePlace) {
-      currentIndex = lastIndex;
-      activeSection = activeView === "journey" ? "" : currentReading().section;
+      currentIndex = requestedIndex ?? lastIndex;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
     }
     setSync("Progreso guardado", "synced");
     return true;
@@ -689,9 +697,9 @@
       sessionVersion += 1;
       clearInterval(refreshTimer);
       completed = new Set();
-      currentIndex = 0;
+      currentIndex = requestedIndex ?? 0;
       lastIndex = 0;
-      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
       resetRewardState();
     }
     session = nextSession;
@@ -699,14 +707,15 @@
     if (!session) {
       updateProfile();
       completed = new Set();
-      currentIndex = 0;
+      currentIndex = requestedIndex ?? 0;
       lastIndex = 0;
-      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
       clearInterval(refreshTimer);
       authGate.hidden = guestBrowsing;
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Solo visualización — no se guarda" : "Inicia sesión para guardar tu progreso");
       render();
+      revealJourneyFromLink();
       return;
     }
     guestBrowsing = false;
@@ -722,6 +731,7 @@
       ]);
       if (!loaded || !identityLoaded || !isCurrentSession(userId, version)) return;
       render();
+      revealJourneyFromLink();
       if (activeView === "rewards") await loadJourneyRewards({ identityReady: true });
       scheduleRefresh();
     } catch (error) {
@@ -880,10 +890,12 @@
       const chapterIndices = plan.readings.flatMap((reading) => reading.bibleTasks.map((task) => task.progressIndex));
       const passagesAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
       if (plan.planId !== CONFIG.planId || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.verseCount !== 31102 || !indicesAreValid || !passagesAreValid) throw new Error("Falló la validación del plan de lectura.");
-      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      currentIndex = requestedIndex ?? 0;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
       loading.hidden = true;
       root.hidden = false;
       render();
+      revealJourneyFromLink();
       if (!window.supabase?.createClient) throw new Error("No se pudo cargar el servicio seguro de la cuenta. Actualiza la página e inténtalo de nuevo.");
       db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, {
         auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit" },
