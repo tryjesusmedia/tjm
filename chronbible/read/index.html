@@ -20,7 +20,7 @@
 
   <header class="reader-header">
     <div class="header-left">
-      <a class="reader-back" href="/chronbible/?view=journey" aria-label="Back to the reading journey" title="Back to journey">
+      <a class="reader-back" id="reader-back" href="/chronbible/read/?reading=1" aria-label="Previous ChronBible reading" title="Previous reading" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg>
       </a>
       <div class="header-reference">
@@ -74,19 +74,12 @@
     </div>
 
     <div class="settings-divider"></div>
-    <a class="settings-journey" href="/chronbible/?view=journey">← Back to my reading journey</a>
+    <a id="bible-gateway-link" class="settings-biblegateway" href="https://www.biblegateway.com/" target="_blank" rel="noopener noreferrer">Read this reading on Bible Gateway ↗</a>
     <p class="settings-note">Reading preferences are saved on this device. Calibri displays when the font is installed.</p>
   </aside>
   <div id="settings-scrim" class="settings-scrim" hidden></div>
 
   <main id="scripture" class="reader-main" tabindex="-1">
-    <div class="reader-intro">
-      <span class="reader-kicker" id="reader-kicker">CHRONBIBLE READING</span>
-      <h1 id="reader-title">Preparing your reading…</h1>
-      <p class="reader-range" id="reader-range"></p>
-      <p class="reader-edition"><span class="edition-line"></span><span id="edition-label">World English Bible (WEB)</span><span class="edition-line"></span></p>
-    </div>
-
     <div class="reader-status" id="reader-status" role="status" aria-live="polite">Loading reading plan…</div>
     <div id="reader-passages" class="reader-passages"></div>
     <div class="reader-endnote" id="reader-endnote" hidden>
