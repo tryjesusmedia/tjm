@@ -176,3 +176,8 @@ body.chronbible { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 .chronbible .chron-bottom-tabs svg { width:23px; height:23px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linejoin:round; stroke-linecap:round; }
 .chronbible .toast-region { bottom:calc(94px + env(safe-area-inset-bottom,0px)); }
 @media print { .chronbible .chron-bottom-tabs { display:none; } body.chronbible { padding-bottom:0; } }
+
+/* Scripture reader links keep the Journey card layout and accessibility. */
+.chronbible a.journey-reading { text-decoration:none; }
+.chronbible a.journey-reading:focus-visible { outline:3px solid #eebd4a; outline-offset:2px; }
+.chronbible .chron-read-full { width:100%; min-height:62px; margin-bottom:8px; font-size:14px; text-transform:none; letter-spacing:.01em; }
