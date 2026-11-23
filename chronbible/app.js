@@ -3,6 +3,9 @@
 
   const CONFIG = window.TJM_CHRONBIBLE_CONFIG;
   const PLAN_PATH = "data/readings.json";
+  const LAST_PASSAGE_KEY = "tjm-chronbible-last-scripture-page-v1";
+  const requestedReadingNumber = Number(new URLSearchParams(window.location.search).get("reading"));
+  const requestedIndex = Number.isInteger(requestedReadingNumber) && requestedReadingNumber >= 1 && requestedReadingNumber <= 313 ? requestedReadingNumber - 1 : null;
   const POINTS_PER_CHAPTER = 10;
   const REWARD_MILESTONES = Object.freeze([1, 25, 100, 250, 500, 750, 1000, 1440]);
   const FIRST_NAME_HOLD_MS = 1400;
@@ -189,9 +192,34 @@
     }
   }
 
+  function previousPassageHref(reading) {
+    // Return to the most recently visited Scripture page in this tab.
+    try {
+      const saved = sessionStorage.getItem(LAST_PASSAGE_KEY);
+      if (saved) {
+        const url = new URL(saved, window.location.origin);
+        const number = Number(url.searchParams.get("reading"));
+        const passage = Number(url.searchParams.get("passage"));
+        const candidate = plan?.readings?.[number - 1];
+        if (url.origin === window.location.origin && url.pathname === "/chronbible/read/" &&
+            Number.isInteger(number) && candidate && Number.isInteger(passage) &&
+            candidate.bibleTasks.some(task => task.progressIndex === passage)) {
+          return url.pathname + url.search;
+        }
+      }
+    } catch {}
+    // On the first visit, offer the previous reading's final passage.
+    const previous = plan?.readings?.[reading.index - 1];
+    if (previous?.bibleTasks?.length) {
+      const task = previous.bibleTasks[previous.bibleTasks.length - 1];
+      return "/chronbible/read/?reading=" + previous.number + "&passage=" + task.progressIndex;
+    }
+    return "";
+  }
+
   function sourceTaskLinks(reading) {
     if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No passage links available</button>`;
-    return `<div class="chapter-task-list" aria-label="Scripture passage choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="/chronbible/read/?reading=${reading.number}#passage-${task.progressIndex}" aria-label="Read ${escapeHTML(task.label)} in ChronBible">Read ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
+    return `<div class="chapter-task-list" aria-label="Scripture passage choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="/chronbible/read/?reading=${reading.number}&passage=${task.progressIndex}" aria-label="Read ${escapeHTML(task.label)} in ChronBible">Read ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
   }
 
   function reviewFlag(reading) {
@@ -219,7 +247,7 @@
     const percent = percentComplete();
     return `
       <section aria-labelledby="readings-heading">
-        <button class="reading-back" type="button" data-view-shortcut="journey" aria-label="Back to Journey"><span aria-hidden="true">←</span> Back to Journey</button>
+        ${previousPassageHref(reading) ? `<a class="reading-back reading-return-link" href="${escapeHTML(previousPassageHref(reading))}" aria-label="Back to last Scripture page"><span aria-hidden="true">←</span> Back to Last Reading</a>` : ""}
         <header class="view-heading">
           <div>
             <p class="eyebrow">${escapeHTML(reading.section)} · READING ${reading.number} OF ${plan.readings.length}</p>
@@ -624,7 +652,7 @@
     completed = new Set((memberData?.completed_indices ?? []).map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < plan.chapterCount));
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
     if (!preservePlace) {
-      currentIndex = lastIndex;
+      currentIndex = requestedIndex ?? lastIndex;
       activeSection = activeView === "journey" ? "" : currentReading().section;
     }
     setSync("Progress saved", "synced");
@@ -689,9 +717,9 @@
       sessionVersion += 1;
       clearInterval(refreshTimer);
       completed = new Set();
-      currentIndex = 0;
+      currentIndex = requestedIndex ?? 0;
       lastIndex = 0;
-      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      activeSection = activeView === "journey" ? "" : currentReading().section;
       resetRewardState();
     }
     session = nextSession;
@@ -699,9 +727,9 @@
     if (!session) {
       updateProfile();
       completed = new Set();
-      currentIndex = 0;
+      currentIndex = requestedIndex ?? 0;
       lastIndex = 0;
-      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      activeSection = activeView === "journey" ? "" : currentReading().section;
       clearInterval(refreshTimer);
       authGate.hidden = guestBrowsing;
       headerSignIn.hidden = !guestBrowsing;
@@ -795,6 +823,11 @@
     else if (target.hasAttribute("data-retry-leaderboard")) loadJourneyRewards();
   });
 
+  // Refresh the last-reading link after restoration from back/forward cache.
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted && activeView === "readings" && plan) renderPreservingPlace();
+  });
+
   root.addEventListener("pointerdown", beginNameHold);
   window.addEventListener("pointermove", moveNameHold);
   window.addEventListener("pointerup", finishNameTap);
@@ -879,7 +912,8 @@
       const chapterIndices = plan.readings.flatMap((reading) => reading.bibleTasks.map((task) => task.progressIndex));
       const passagesAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
       if (plan.planId !== CONFIG.planId || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.verseCount !== 31102 || !indicesAreValid || !passagesAreValid) throw new Error("Reading plan validation failed.");
-      activeSection = activeView === "journey" ? "" : plan.readings[0].section;
+      currentIndex = requestedIndex ?? 0;
+      activeSection = activeView === "journey" ? "" : currentReading().section;
       loading.hidden = true;
       root.hidden = false;
       render();
