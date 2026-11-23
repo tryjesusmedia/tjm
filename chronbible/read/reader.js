@@ -253,14 +253,28 @@
     // Single-chapter matching is forced to "indifferent" for Jude, Obadiah, etc.
     const url = API_BASE + encodeURIComponent(task.label) +
       '?translation=' + translation + '&single_chapter_book_matching=indifferent';
-    const response = await fetch(url, { signal, headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error('Bible service returned HTTP ' + response.status + '.');
-    const data = await response.json();
-    if (!Array.isArray(data.verses) || !data.verses.length) {
-      throw new Error(data.error || 'No verses returned.');
+    // Retry temporary network / provider failures automatically. The individual
+    // passage's Retry button remains available if every attempt fails.
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (signal?.aborted) throw new DOMException('Request cancelled', 'AbortError');
+      try {
+        const response = await fetch(url, { signal, headers: { Accept: 'application/json' } });
+        if (!response.ok) {
+          const failure = new Error('Bible service returned HTTP ' + response.status + '.');
+          failure.retryable = response.status === 429 || response.status >= 500;
+          throw failure;
+        }
+        const data = await response.json();
+        if (!Array.isArray(data.verses) || !data.verses.length) {
+          throw new Error(data.error || 'No verses returned.');
+        }
+        verseCache.set(cacheKey, data);
+        return data;
+      } catch (error) {
+        if (error.name === 'AbortError' || signal?.aborted || error.retryable === false || attempt === 2) throw error;
+        await new Promise((resolve) => setTimeout(resolve, 450 * (attempt + 1)));
+      }
     }
-    verseCache.set(cacheKey, data);
-    return data;
   }
 
   function passageError(index, error) {
