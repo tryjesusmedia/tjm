@@ -704,5 +704,11 @@
     }
   }
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/chronbible/sw.js', {
+      scope: '/chronbible/', updateViaCache: 'none'
+    }).catch(error => console.warn('ChronBible offline setup:', error.message));
+  }
+
   void init();
 })();
