@@ -3,7 +3,80 @@
 
   const PLAN_URL = '/chronbible/data/readings.json';
   const PREF_KEY = 'chronbible-scripture-reader-settings-v1';
-  const API_BASE = 'https://bible-api.com/';
+  // Both complete 66-book Bible texts are versioned alongside this application.
+  // No third-party Bible API or key is needed to display Scripture.
+  const BIBLE_DATA_ROOT = '/chronbible/read/text/';
+  const BIBLE_CACHE_NAME = 'chronbible-bibles-v1';
+  const BOOK_CODES = Object.freeze({
+    "Genesis": "Gen",
+    "Exodus": "Exod",
+    "Leviticus": "Lev",
+    "Numbers": "Num",
+    "Deuteronomy": "Deut",
+    "Joshua": "Josh",
+    "Judges": "Judg",
+    "Ruth": "Ruth",
+    "1 Samuel": "1Sam",
+    "2 Samuel": "2Sam",
+    "1 Kings": "1Kgs",
+    "2 Kings": "2Kgs",
+    "1 Chronicles": "1Chr",
+    "2 Chronicles": "2Chr",
+    "Ezra": "Ezra",
+    "Nehemiah": "Neh",
+    "Esther": "Esth",
+    "Job": "Job",
+    "Psalm": "Ps",
+    "Psalms": "Ps",
+    "Proverbs": "Prov",
+    "Ecclesiastes": "Eccl",
+    "Song of Solomon": "Song",
+    "Isaiah": "Isa",
+    "Jeremiah": "Jer",
+    "Lamentations": "Lam",
+    "Ezekiel": "Ezek",
+    "Daniel": "Dan",
+    "Hosea": "Hos",
+    "Joel": "Joel",
+    "Amos": "Amos",
+    "Obadiah": "Obad",
+    "Jonah": "Jonah",
+    "Micah": "Mic",
+    "Nahum": "Nah",
+    "Habakkuk": "Hab",
+    "Zephaniah": "Zeph",
+    "Haggai": "Hag",
+    "Zechariah": "Zech",
+    "Malachi": "Mal",
+    "Matthew": "Matt",
+    "Mark": "Mark",
+    "Luke": "Luke",
+    "John": "John",
+    "Acts": "Acts",
+    "Romans": "Rom",
+    "1 Corinthians": "1Cor",
+    "2 Corinthians": "2Cor",
+    "Galatians": "Gal",
+    "Ephesians": "Eph",
+    "Philippians": "Phil",
+    "Colossians": "Col",
+    "1 Thessalonians": "1Thess",
+    "2 Thessalonians": "2Thess",
+    "1 Timothy": "1Tim",
+    "2 Timothy": "2Tim",
+    "Titus": "Titus",
+    "Philemon": "Phlm",
+    "Hebrews": "Heb",
+    "James": "Jas",
+    "1 Peter": "1Pet",
+    "2 Peter": "2Pet",
+    "1 John": "1John",
+    "2 John": "2John",
+    "3 John": "3John",
+    "Jude": "Jude",
+    "Revelation": "Rev"
+  });
+  const BOOK_LIST = Object.freeze(["Gen","Exod","Lev","Num","Deut","Josh","Judg","Ruth","1Sam","2Sam","1Kgs","2Kgs","1Chr","2Chr","Ezra","Neh","Esth","Job","Ps","Prov","Eccl","Song","Isa","Jer","Lam","Ezek","Dan","Hos","Joel","Amos","Obad","Jonah","Mic","Nah","Hab","Zeph","Hag","Zech","Mal","Matt","Mark","Luke","John","Acts","Rom","1Cor","2Cor","Gal","Eph","Phil","Col","1Thess","2Thess","1Tim","2Tim","Titus","Phlm","Heb","Jas","1Pet","2Pet","1John","2John","3John","Jude","Rev"]);
   // Prefer the requested local font. Use a visually faithful hosted substitute
   // on Android and other devices where Microsoft fonts are not installed.
   const FONTS = {
@@ -122,6 +195,7 @@
 
   function setupControls() {
     elements.menuBtn.addEventListener('click', () => setMenu(elements.menu.hidden));
+    document.getElementById('download-offline-bibles')?.addEventListener('click', () => void downloadBothBiblesForOffline());
     elements.closeBtn.addEventListener('click', () => setMenu(false));
     elements.scrim.addEventListener('click', () => setMenu(false));
     document.addEventListener('keydown', (event) => {
@@ -285,34 +359,146 @@
     }).join('');
   }
 
+  const bookCache = new Map();
+  const pendingBooks = new Map();
+
+  function parsePassage(label) {
+    const match = /^(.+?)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$/.exec(String(label).trim());
+    if (!match) throw new Error('Unsupported Scripture reference: ' + label);
+    const book = BOOK_CODES[match[1]];
+    if (!book) throw new Error('Unrecognized Bible book: ' + match[1]);
+    const chapter = Number(match[2]);
+    const start = match[3] ? Number(match[3]) : null;
+    const end = match[4] ? Number(match[4]) : start;
+    if (!Number.isInteger(chapter) || chapter < 1 || (start !== null && (!Number.isInteger(start) || start < 1 || !Number.isInteger(end) || end < start))) {
+      throw new Error('Invalid Scripture reference: ' + label);
+    }
+    return { book, chapter, start, end, label };
+  }
+
+  function bookPath(version, book) {
+    return BIBLE_DATA_ROOT + version + '/' + book + '.json';
+  }
+
+  async function getLocalBook(version, book, signal) {
+    const id = version + '/' + book;
+    if (bookCache.has(id)) return bookCache.get(id);
+    if (pendingBooks.has(id)) return pendingBooks.get(id);
+
+    const url = bookPath(version, book);
+    const pending = (async () => {
+      // Prefer our own checked-in files. Cache Storage also lets previously
+      // downloaded books remain readable when the connection is interrupted.
+      let response;
+      try {
+        response = await fetch(url, { signal, cache: 'force-cache' });
+        if (!response.ok) throw new Error('Local Bible file returned HTTP ' + response.status);
+      } catch (error) {
+        if (signal?.aborted) throw error;
+        if ('caches' in window) {
+          try {
+            response = await (await caches.open(BIBLE_CACHE_NAME)).match(url);
+          } catch {}
+        }
+        if (!response) throw new Error('This Bible book is not available offline yet. Connect once to save it.');
+      }
+
+      const data = await response.json();
+      if (data.version !== version || data.book !== book || !Array.isArray(data.chapters) || data.chapters.length === 0) {
+        throw new Error('The locally stored Bible file did not pass its integrity check.');
+      }
+      bookCache.set(id, data);
+      if ('caches' in window) {
+        // An optional secondary cache protects books even when the service
+        // worker is unavailable, and is shared with the offline-download button.
+        try {
+          const cache = await caches.open(BIBLE_CACHE_NAME);
+          await cache.put(url, new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } }));
+        } catch {}
+      }
+      return data;
+    })();
+    pendingBooks.set(id, pending);
+    try { return await pending; }
+    finally { pendingBooks.delete(id); }
+  }
+
   async function fetchScripture(task, translation, signal) {
     const cacheKey = translation + '|' + task.label;
     if (verseCache.has(cacheKey)) return verseCache.get(cacheKey);
-    // The public bible-api.com service supplies verse-numbered WEB and KJV.
-    // Single-chapter matching is forced to "indifferent" for Jude, Obadiah, etc.
-    const url = API_BASE + encodeURIComponent(task.label) +
-      '?translation=' + translation + '&single_chapter_book_matching=indifferent';
-    // Retry temporary network / provider failures automatically. The individual
-    // passage's Retry button remains available if every attempt fails.
-    for (let attempt = 0; attempt < 3; attempt++) {
-      if (signal?.aborted) throw new DOMException('Request cancelled', 'AbortError');
-      try {
-        const response = await fetch(url, { signal, headers: { Accept: 'application/json' } });
-        if (!response.ok) {
-          const failure = new Error('Bible service returned HTTP ' + response.status + '.');
-          failure.retryable = response.status === 429 || response.status >= 500;
-          throw failure;
+    const ref = parsePassage(task.label);
+    const book = await getLocalBook(translation, ref.book, signal);
+    const chapter = book.chapters[ref.chapter - 1];
+    if (!chapter || chapter.chapter !== ref.chapter || !Array.isArray(chapter.verses)) {
+      throw new Error('Chapter missing from stored Bible: ' + task.label);
+    }
+    const verses = chapter.verses.filter(verse =>
+      typeof verse.text === 'string' && Number.isInteger(verse.number) &&
+      (ref.start === null || (verse.number >= ref.start && verse.number <= ref.end))
+    ).map(verse => ({
+      book_name: book.englishName || task.label,
+      chapter: ref.chapter,
+      verse: verse.number,
+      text: verse.text
+    }));
+    if (!verses.length) throw new Error('No verses found in stored Bible for ' + task.label);
+    // When referencing a specific verse, fail visibly rather than silently
+    // substituting an incorrect verse from the translation.
+    if (ref.start !== null &&
+        (!verses.some(v => v.verse === ref.start) || !verses.some(v => v.verse === ref.end))) {
+      throw new Error('The selected translation does not contain the requested numbered verse(s): ' + task.label);
+    }
+    const data = { reference: task.label, translation_id: translation, verses };
+    verseCache.set(cacheKey, data);
+    return data;
+  }
+
+  async function downloadBothBiblesForOffline() {
+    const button = document.getElementById('download-offline-bibles');
+    const status = document.getElementById('offline-bible-status');
+    if (!button || !status || !('caches' in window)) {
+      if (status) status.textContent = 'Offline downloads are unavailable in this browser.';
+      return;
+    }
+    button.disabled = true;
+    const urls = ['web', 'kjv'].flatMap(version => BOOK_LIST.map(book => bookPath(version, book)));
+    const cache = await caches.open(BIBLE_CACHE_NAME);
+    let completed = 0;
+    let failed = 0;
+    let cursor = 0;
+    status.textContent = 'Saving both Bibles: 0 / ' + urls.length + ' books';
+    async function worker() {
+      while (cursor < urls.length) {
+        const url = urls[cursor++];
+        try {
+          let file = await cache.match(url);
+          if (!file) {
+            const response = await fetch(url, { cache: 'force-cache' });
+            if (!response.ok) throw new Error('Bible file failed (' + response.status + ')');
+            const data = await response.clone().json();
+            if (!['web', 'kjv'].includes(data.version) || !Array.isArray(data.chapters) || !data.chapters.length) {
+              throw new Error('Invalid Bible download');
+            }
+            await cache.put(url, response);
+          }
+        } catch (error) {
+          failed++;
+          console.warn('Offline Scripture download', url, error.message);
+        } finally {
+          completed++;
+          status.textContent = 'Saving both Bibles: ' + completed + ' / ' + urls.length + ' books';
         }
-        const data = await response.json();
-        if (!Array.isArray(data.verses) || !data.verses.length) {
-          throw new Error(data.error || 'No verses returned.');
-        }
-        verseCache.set(cacheKey, data);
-        return data;
-      } catch (error) {
-        if (error.name === 'AbortError' || signal?.aborted || error.retryable === false || attempt === 2) throw error;
-        await new Promise((resolve) => setTimeout(resolve, 450 * (attempt + 1)));
       }
+    }
+    try {
+      await Promise.all(Array.from({ length: 4 }, worker));
+      status.textContent = failed
+        ? (completed - failed) + ' books saved; ' + failed + ' could not download. Tap again to retry.'
+        : 'Both complete Bibles saved for offline reading on this device.';
+    } catch {
+      status.textContent = 'Unable to finish offline download. Try again when connected.';
+    } finally {
+      button.disabled = false;
     }
   }
 
@@ -516,6 +702,12 @@
       elements.status.textContent = error.message + ' Return to the ChronBible journey and try again.';
       console.warn(error);
     }
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/chronbible/sw.js', {
+      scope: '/chronbible/', updateViaCache: 'none'
+    }).catch(error => console.warn('ChronBible offline setup:', error.message));
   }
 
   void init();
