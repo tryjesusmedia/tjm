@@ -174,7 +174,7 @@
     if (returningToJourney) {
       requestAnimationFrame(() => requestAnimationFrame(() => {
         const index = journeyReturn?.index ?? currentIndex;
-        const item = root.querySelector(`[data-reading-index="${index}"]`);
+        const item = root.querySelector(`[data-reading-open-index="${index}"]`);
         item?.focus({ preventScroll: true });
         if (journeyReturn) window.scrollTo({ top: journeyReturn.scrollY, behavior: "instant" });
         else item?.scrollIntoView({ block: "center", behavior: "smooth" });
@@ -191,7 +191,7 @@
 
   function sourceTaskLinks(reading) {
     if (!reading.bibleTasks?.length) return `<button class="button button-primary" type="button" disabled>No passage links available</button>`;
-    return `<div class="chapter-task-list" aria-label="Scripture passage choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" aria-label="Read ${escapeHTML(task.label)} on BibleGateway">Read ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
+    return `<div class="chapter-task-list" aria-label="Scripture passage choices">${reading.bibleTasks.map((task) => `<div class="chapter-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-index="${reading.index}" aria-label="Mark ${escapeHTML(task.label)} complete" ${completed.has(task.progressIndex) ? "checked" : ""}><a class="button button-primary source-task" href="/chronbible/read/?reading=${reading.number}#passage-${task.progressIndex}" aria-label="Read ${escapeHTML(task.label)} in ChronBible">Read ${escapeHTML(task.label)} <span aria-hidden="true">↗</span></a></div>`).join("")}</div>`;
   }
 
   function reviewFlag(reading) {
@@ -237,6 +237,7 @@
             <div class="card-kicker"><span>THE&nbsp;BIBLE</span></div>
             <h3>${escapeHTML(reading.reference)}</h3>
             <div class="reading-actions">
+              <a class="button button-primary chron-read-full" href="/chronbible/read/?reading=${reading.number}" aria-label="Read all passages in reading ${reading.number}">Open full reading in WEB →</a>
               ${sourceTaskLinks(reading)}
               <label class="reading-complete"><input type="checkbox" data-reading-complete="${reading.index}" ${readingComplete(reading) ? "checked" : ""}> Reading complete</label>
             </div>
@@ -259,7 +260,7 @@
           <span><h3>${escapeHTML(section.title)}</h3><p>Readings ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "reading" : "readings"}</p></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${completeCount} OF ${readings.length} COMPLETE</small></span>
         </button>
-        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Open →</em></button>`).join("")}</div>` : ""}
+        ${open ? `<div class="reading-list">${readings.map((reading) => `<a class="journey-reading ${readingComplete(reading) ? "done" : ""}" href="/chronbible/read/?reading=${reading.number}" data-reading-open-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Read →</em></a>`).join("")}</div>` : ""}
       </article>`;
     }).join("");
 
