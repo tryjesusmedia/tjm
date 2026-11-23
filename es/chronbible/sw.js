@@ -8,7 +8,7 @@ const CORE = [
   '/es/chronbible/read/',
   '/es/chronbible/data/readings.json',
   '/es/chronbible/config.js?v=1',
-  '/es/chronbible/read/reader.js?v=1',
+  '/es/chronbible/read/reader.js?v=2',
   '/chronbible/read/reader.css?v=5'
 ];
 
