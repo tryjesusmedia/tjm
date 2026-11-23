@@ -3,7 +3,6 @@
 
   const CONFIG = window.TJM_CHRONBIBLE_CONFIG;
   const PLAN_PATH = "data/readings.json";
-  const LAST_PASSAGE_KEY = "tjm-chronbible-last-scripture-page-v1";
   const requestedReadingNumber = Number(new URLSearchParams(window.location.search).get("reading"));
   const requestedIndex = Number.isInteger(requestedReadingNumber) && requestedReadingNumber >= 1 && requestedReadingNumber <= 313 ? requestedReadingNumber - 1 : null;
   const POINTS_PER_CHAPTER = 10;
@@ -169,18 +168,16 @@
   function showView(name, focusMain = false) {
     window.TJMReadingBadgeViewer?.close(true);
     const returningToJourney = name === "journey" && activeView === "readings";
-    if (returningToJourney) activeSection = journeyReturn?.section || currentReading().section;
+    if (returningToJourney) activeSection = currentReading().section;
     activeView = name;
     document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
     render();
     if (name === "rewards" && session) void refreshJourneyFromVisit();
     if (returningToJourney) {
       requestAnimationFrame(() => requestAnimationFrame(() => {
-        const index = journeyReturn?.index ?? currentIndex;
-        const item = root.querySelector(`[data-reading-index="${index}"]`);
+        const item = root.querySelector(`[data-reading-index="${currentIndex}"]`);
         item?.focus({ preventScroll: true });
-        if (journeyReturn) window.scrollTo({ top: journeyReturn.scrollY, behavior: "instant" });
-        else item?.scrollIntoView({ block: "center", behavior: "smooth" });
+        item?.scrollIntoView({ block: "center", behavior: "smooth" });
       }));
       return;
     }
@@ -192,29 +189,25 @@
     }
   }
 
-  function previousPassageHref(reading) {
-    // Return to the most recently visited Scripture page in this tab.
-    try {
-      const saved = sessionStorage.getItem(LAST_PASSAGE_KEY);
-      if (saved) {
-        const url = new URL(saved, window.location.origin);
-        const number = Number(url.searchParams.get("reading"));
-        const passage = Number(url.searchParams.get("passage"));
-        const candidate = plan?.readings?.[number - 1];
-        if (url.origin === window.location.origin && url.pathname === "/chronbible/read/" &&
-            Number.isInteger(number) && candidate && Number.isInteger(passage) &&
-            candidate.bibleTasks.some(task => task.progressIndex === passage)) {
-          return url.pathname + url.search;
-        }
-      }
-    } catch {}
-    // On the first visit, offer the previous reading's final passage.
-    const previous = plan?.readings?.[reading.index - 1];
-    if (previous?.bibleTasks?.length) {
-      const task = previous.bibleTasks[previous.bibleTasks.length - 1];
-      return "/chronbible/read/?reading=" + previous.number + "&passage=" + task.progressIndex;
-    }
-    return "";
+  function backToJourney() {
+    if (!plan) return;
+    // Keep the return to Journey shareable and correct after refresh.
+    const url = new URL(window.location.href);
+    url.searchParams.set("view", "journey");
+    url.searchParams.set("reading", String(currentReading().number));
+    url.hash = "";
+    window.history.replaceState(window.history.state, "", url.pathname + url.search);
+    journeyReturn = null;
+    showView("journey");
+  }
+
+  function revealJourneyFromLink() {
+    if (activeView !== "journey" || requestedIndex === null) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const item = root.querySelector(`[data-reading-index="${currentIndex}"]`);
+      item?.focus({ preventScroll: true });
+      item?.scrollIntoView({ block: "center", behavior: "auto" });
+    }));
   }
 
   function sourceTaskLinks(reading) {
@@ -247,7 +240,7 @@
     const percent = percentComplete();
     return `
       <section aria-labelledby="readings-heading">
-        ${previousPassageHref(reading) ? `<a class="reading-back reading-return-link" href="${escapeHTML(previousPassageHref(reading))}" aria-label="Back to last Scripture page"><span aria-hidden="true">←</span> Back to Last Reading</a>` : ""}
+        <button class="reading-back" type="button" data-back-to-journey aria-label="Back to Journey, showing the last reading"><span aria-hidden="true">←</span> Back</button>
         <header class="view-heading">
           <div>
             <p class="eyebrow">${escapeHTML(reading.section)} · READING ${reading.number} OF ${plan.readings.length}</p>
@@ -287,7 +280,7 @@
           <span><h3>${escapeHTML(section.title)}</h3><p>Readings ${readings[0].number}–${readings[readings.length - 1].number} · ${readings.length} ${readings.length === 1 ? "reading" : "readings"}</p></span>
           <span class="book-progress"><span class="progress-track"><i style="width:${percent}%"></i></span><small>${completeCount} OF ${readings.length} COMPLETE</small></span>
         </button>
-        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""}" type="button" data-reading-index="${reading.index}"><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Open →</em></button>`).join("")}</div>` : ""}
+        ${open ? `<div class="reading-list">${readings.map((reading) => `<button class="journey-reading ${readingComplete(reading) ? "done" : ""} ${reading.index === currentIndex ? "last-viewed" : ""}" type="button" data-reading-index="${reading.index}" ${reading.index === currentIndex ? 'aria-current="location"' : ""}><span class="reading-check">✓</span><span><strong>${escapeHTML(reading.title)}</strong><small>${escapeHTML(reading.reference)}${reading.partCount > 1 ? ` · Part ${reading.partNumber} of ${reading.partCount}` : ""}</small></span><em>Open →</em></button>`).join("")}</div>` : ""}
       </article>`;
     }).join("");
 
@@ -653,7 +646,7 @@
     lastIndex = normalizeIndex(memberData?.last_index ?? 0);
     if (!preservePlace) {
       currentIndex = requestedIndex ?? lastIndex;
-      activeSection = activeView === "journey" ? "" : currentReading().section;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
     }
     setSync("Progress saved", "synced");
     return true;
@@ -719,7 +712,7 @@
       completed = new Set();
       currentIndex = requestedIndex ?? 0;
       lastIndex = 0;
-      activeSection = activeView === "journey" ? "" : currentReading().section;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
       resetRewardState();
     }
     session = nextSession;
@@ -729,12 +722,13 @@
       completed = new Set();
       currentIndex = requestedIndex ?? 0;
       lastIndex = 0;
-      activeSection = activeView === "journey" ? "" : currentReading().section;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
       clearInterval(refreshTimer);
       authGate.hidden = guestBrowsing;
       headerSignIn.hidden = !guestBrowsing;
       setSync(guestBrowsing ? "Viewing only — not saved" : "Sign in to save progress");
       render();
+      revealJourneyFromLink();
       return;
     }
     guestBrowsing = false;
@@ -750,6 +744,7 @@
       ]);
       if (!loaded || !identityLoaded || !isCurrentSession(userId, version)) return;
       render();
+      revealJourneyFromLink();
       if (activeView === "rewards") await loadJourneyRewards({ identityReady: true });
       scheduleRefresh();
     } catch (error) {
@@ -814,6 +809,7 @@
     else if (target.hasAttribute("data-change-name")) void changeJourneyName();
     else if (target.hasAttribute("data-toggle-leaderboard")) { leaderboardOpen = !leaderboardOpen; renderPreservingPlace(); }
     else if (target.hasAttribute("data-require-sign-in")) showSignIn();
+    else if (target.hasAttribute("data-back-to-journey")) backToJourney();
     else if (target.dataset.readingNav) goToReading(currentIndex + (target.dataset.readingNav === "next" ? 1 : -1));
     else if (target.dataset.readingIndex !== undefined) goToReading(Number(target.dataset.readingIndex));
     else if (target.dataset.section !== undefined) {
@@ -913,10 +909,11 @@
       const passagesAreValid = chapterIndices.length === plan.chapterCount && chapterIndices.every((index, position) => index === position);
       if (plan.planId !== CONFIG.planId || plan.readings.length !== plan.readingCount || plan.readings.length !== 313 || plan.verseCount !== 31102 || !indicesAreValid || !passagesAreValid) throw new Error("Reading plan validation failed.");
       currentIndex = requestedIndex ?? 0;
-      activeSection = activeView === "journey" ? "" : currentReading().section;
+      activeSection = activeView === "journey" ? (requestedIndex === null ? "" : currentReading().section) : currentReading().section;
       loading.hidden = true;
       root.hidden = false;
       render();
+      revealJourneyFromLink();
       if (!window.supabase?.createClient) throw new Error("The secure account service could not be loaded. Please refresh and try again.");
       db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, {
         auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit" },
