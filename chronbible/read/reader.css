@@ -145,3 +145,9 @@ body.single-passage .reader-main{max-width:820px;min-height:calc(100dvh - var(--
 body.single-passage .reader-passages{gap:0}
 body.single-passage .passage-status{display:none}
 body.single-passage .passage-top{margin-bottom:22px}
+
+/* Entire WEB and KJV offline-pack control, with neutral progress status. */
+.settings-offline{display:block;width:100%;min-height:46px;margin-top:13px;border:1px solid var(--border);border-radius:9px;background:var(--paper);color:var(--text);font-size:12px;font-weight:800;line-height:1.4;padding:10px 15px;cursor:pointer;text-align:center}
+.settings-offline:hover{border-color:var(--gold)}
+.settings-offline:disabled{opacity:.65;cursor:wait}
+.settings-offline-status{font-size:11px;line-height:1.6;color:var(--muted);margin:10px 0 0}
