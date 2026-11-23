@@ -33,6 +33,8 @@
   let prefs = readPreferences();
   let plan = null;
   let reading = null;
+  let activeTasks = [];
+  let singlePassage = false;
   let db = null;
   let session = null;
   let completed = new Set();
@@ -179,14 +181,41 @@
     if (!reading || reading.number !== n || !Array.isArray(reading.bibleTasks)) {
       throw new Error('This reading could not be found in the guide.');
     }
+    // Chapter/passage links include the unique progressIndex. Show only that passage.
+    // A full-reading URL without this parameter retains the legacy multi-passage view.
+    const passageParam = params.get('passage');
+    singlePassage = passageParam !== null;
+    if (singlePassage) {
+      if (!/^\\d+$/.test(passageParam)) throw new Error('Invalid Scripture passage link.');
+      const progressIndex = Number(passageParam);
+      const task = reading.bibleTasks.find((item) => item.progressIndex === progressIndex);
+      if (!task) throw new Error('This passage is not part of the selected ChronBible reading.');
+      activeTasks = [task];
+      document.body.classList.add('single-passage');
+      try {
+        sessionStorage.setItem('tjm-chronbible-last-scripture-page-v1',
+          window.location.pathname + window.location.search);
+      } catch {}
+    } else {
+      activeTasks = reading.bibleTasks;
+      document.body.classList.remove('single-passage');
+    }
     const shortReference = reading.reference.split(';')[0].trim();
     elements.headerReading.innerHTML = 'Reading <span>' + String(n).padStart(3, '0') + '</span>';
-    elements.headerPassage.textContent = shortReference;
-    elements.headerPassage.title = reading.reference;
-    document.title = 'Reading ' + n + ': ' + reading.title + ' | ChronBible';
-    elements.bibleGatewayLink.href = escapeLinkReference(reading.bibleTasks.map((task) => task.label).join('; '));
-    elements.back.hidden = n <= 1;
-    if (n > 1) elements.back.href = readingHref(n - 1);
+    elements.headerPassage.textContent = singlePassage ? activeTasks[0].label : shortReference;
+    elements.headerPassage.title = singlePassage ? activeTasks[0].label : reading.reference;
+    document.title = singlePassage
+      ? activeTasks[0].label + ' | ChronBible'
+      : 'Reading ' + n + ': ' + reading.title + ' | ChronBible';
+    elements.bibleGatewayLink.href = escapeLinkReference(activeTasks.map((task) => task.label).join('; '));
+    elements.bibleGatewayLink.textContent = singlePassage
+      ? 'Read ' + activeTasks[0].label + ' on Bible Gateway ↗'
+      : 'Read this reading on Bible Gateway ↗';
+    elements.back.hidden = !singlePassage && n <= 1;
+    elements.back.href = singlePassage ? '/chronbible/?reading=' + n : readingHref(n - 1);
+    elements.back.setAttribute('aria-label', singlePassage
+      ? 'Back to reading ' + n + ' overview' : 'Previous ChronBible reading');
+    elements.back.title = singlePassage ? 'Back to reading overview' : 'Previous reading';
 
     if (n > 1) {
       elements.previous.href = readingHref(n - 1);
@@ -204,15 +233,15 @@
       elements.next.setAttribute('aria-disabled', 'true');
       elements.next.removeAttribute('href');
     }
-    elements.progress.hidden = false;
-    elements.passages.innerHTML = reading.bibleTasks.map((task, idx) => {
+    elements.progress.hidden = singlePassage;
+    elements.passages.innerHTML = activeTasks.map((task, idx) => {
       const label = escapeHTML(task.label);
       return '<article class="passage" id="passage-' + task.progressIndex + '" data-task-index="' + idx + '">' +
         '<div class="passage-top"><h2 class="passage-title">' + label + '</h2>' +
         '<span class="passage-status" id="task-status-' + idx + '">WEB</span></div>' +
         '<div class="chapter-verses" id="task-verses-' + idx + '" aria-label="Scripture text for ' + label + '">' +
         '<div class="passage-loading">Loading verses…</div></div>' +
-        '<label class="passage-progress"><input type="checkbox" data-progress-index="' + task.progressIndex + '" disabled> Mark ' + label + ' complete</label>' +
+        (singlePassage ? '' : '<label class="passage-progress"><input type="checkbox" data-progress-index="' + task.progressIndex + '" disabled> Mark ' + label + ' complete</label>') +
         '</article>';
     }).join('');
     if (location.hash.startsWith('#passage-')) {
@@ -278,7 +307,7 @@
   }
 
   function passageError(index, error) {
-    const task = reading.bibleTasks[index];
+    const task = activeTasks[index];
     const target = $('task-verses-' + index);
     if (!target) return;
     target.innerHTML = '<div class="passage-error"><p>Unable to load this passage right now. ' +
@@ -291,10 +320,10 @@
   }
 
   async function retryPassage(index) {
-    if (!reading || index < 0 || index >= reading.bibleTasks.length) return;
+    if (!reading || index < 0 || index >= activeTasks.length) return;
     const requestId = scriptureRequestId;
     const translation = prefs.translation;
-    const task = reading.bibleTasks[index];
+    const task = activeTasks[index];
     $('task-verses-' + index).innerHTML = '<div class="passage-loading">Loading verses…</div>';
     try {
       const response = await fetchScripture(task, translation, scriptureAbort?.signal);
@@ -315,14 +344,14 @@
     elements.status.hidden = false;
     elements.status.textContent = 'Loading ' + (translation === 'web' ? 'World English Bible' : 'King James Version') + ' passages…';
 
-    for (const [idx] of reading.bibleTasks.entries()) {
+    for (const [idx] of activeTasks.entries()) {
       const target = $('task-verses-' + idx);
       if (target) target.innerHTML = '<div class="passage-loading">Loading verses…</div>';
       $('task-status-' + idx).textContent = translation.toUpperCase();
     }
     elements.endnote.hidden = true;
 
-    const tasks = reading.bibleTasks;
+    const tasks = activeTasks;
     let cursor = 0;
     let success = 0;
     let failed = 0;
@@ -349,11 +378,11 @@
     // Do not show a duplicate error summary above the whole reading.
     elements.status.hidden = true;
     elements.status.textContent = '';
-    elements.endnote.hidden = !success;
+    elements.endnote.hidden = singlePassage || !success;
   }
 
   function updateProgressUI() {
-    if (!reading) return;
+    if (!reading || singlePassage) return;
     const indices = reading.bibleTasks.map((task) => task.progressIndex);
     const allComplete = indices.every((index) => completed.has(index));
     const checkedCount = indices.filter((index) => completed.has(index)).length;
@@ -458,7 +487,8 @@
         throw new Error('The ChronBible reading plan could not be verified.');
       }
       setReadingData();
-      await Promise.all([loadPassages(), initProgress()]);
+      if (singlePassage) await loadPassages();
+      else await Promise.all([loadPassages(), initProgress()]);
     } catch (error) {
       elements.status.hidden = false;
       elements.status.textContent = error.message + ' Return to the ChronBible journey and try again.';
