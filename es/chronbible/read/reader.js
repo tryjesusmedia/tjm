@@ -174,7 +174,7 @@
     elements.fontSmaller.disabled = prefs.size <= 16;
     elements.fontLarger.disabled = prefs.size >= 32;
 
-    // Always open ONE selected passage in Bible Gateway, also after switching versions.
+    // Abrir la misma referencia bíblica en la edición oficial de eBible.org.
     if (reading && activeTasks.length) {
       elements.bibleGatewayLink.href = escapeLinkReference(activeTasks[0].label);
     }
@@ -325,7 +325,7 @@
         '<div class="passage-top"><h2 class="passage-title">' + label + '</h2>' +
         '<span class="passage-status" id="task-status-' + idx + '">WEB</span></div>' +
         '<div class="chapter-verses" id="task-verses-' + idx + '" aria-label="Scripture text for ' + label + '">' +
-        '<div class="passage-loading">Loading verses…</div></div>' +
+        '<div class="passage-loading">Cargando versículos…</div></div>' +
         (singlePassage ? '' : '<label class="passage-progress"><input type="checkbox" data-progress-index="' + task.progressIndex + '" disabled> Mark ' + label + ' complete</label>') +
         '</article>';
     }).join('');
@@ -512,7 +512,7 @@
     const task = activeTasks[index];
     const target = $('task-verses-' + index);
     if (!target) return;
-    target.innerHTML = '<div class="passage-error"><p>Unable to load this passage right now. ' +
+    target.innerHTML = '<div class="passage-error"><p>No pudimos cargar este pasaje por ahora. ' +
       'Comprueba tu conexión e inténtalo de nuevo.</p>' +
       '<button type="button" data-retry-task="' + index + '">Reintentar</button>' +
       '<a target="_blank" rel="noopener noreferrer" href="' +
@@ -526,7 +526,7 @@
     const requestId = scriptureRequestId;
     const translation = prefs.translation;
     const task = activeTasks[index];
-    $('task-verses-' + index).innerHTML = '<div class="passage-loading">Loading verses…</div>';
+    $('task-verses-' + index).innerHTML = '<div class="passage-loading">Cargando versículos…</div>';
     try {
       const response = await fetchScripture(task, translation, scriptureAbort?.signal);
       if (requestId !== scriptureRequestId || translation !== prefs.translation) return;
@@ -548,7 +548,7 @@
 
     for (const [idx] of activeTasks.entries()) {
       const target = $('task-verses-' + idx);
-      if (target) target.innerHTML = '<div class="passage-loading">Loading verses…</div>';
+      if (target) target.innerHTML = '<div class="passage-loading">Cargando versículos…</div>';
       $('task-status-' + idx).textContent = translation.toUpperCase();
     }
     elements.endnote.hidden = true;
@@ -576,7 +576,7 @@
     }
     await Promise.all(Array.from({ length: Math.min(4, tasks.length) }, worker));
     if (requestId !== scriptureRequestId) return;
-    // Passage errors remain visible beside the affected verses with Retry and Bible Gateway links.
+    // Los errores individuales muestran opciones para reintentar y consultar eBible.org.
     // Do not show a duplicate error summary above the whole reading.
     elements.status.hidden = true;
     elements.status.textContent = '';
