@@ -51,11 +51,11 @@ svg{max-width:100%}
 .size-row button:disabled{opacity:.42;cursor:not-allowed}
 .size-row input{width:100%;accent-color:#b68a3d;cursor:pointer}
 .settings-divider{border-top:1px solid var(--border);margin:10px 0 17px}
-.settings-journey{display:inline-block;text-decoration:none;color:#b3873c;font-weight:700;font-size:12px}
-.settings-journey:hover{text-decoration:underline}
+.settings-biblegateway{display:flex;align-items:center;justify-content:center;min-height:47px;padding:11px 15px;border:1px solid #D5A142;border-radius:9px;background:#eebd4a;text-decoration:none;color:#271b28;font-size:13px;line-height:1.4;font-weight:800;text-align:center}
+.settings-biblegateway:hover{background:#f6d178}
 .settings-note{margin:15px 0 0;font-size:11px;color:var(--muted);line-height:1.6}
 .settings-scrim{position:fixed;inset:var(--header-height) 0 0;z-index:105;background:#0b061080}
-.reader-main{max-width:868px;margin:0 auto;padding:55px 26px 87px}
+.reader-main{max-width:868px;margin:0 auto;padding:25px 26px 87px}
 .reader-intro{text-align:center;margin:0 auto 41px}
 .reader-kicker{display:block;color:#a47b33;font-size:11px;letter-spacing:.16em;font-weight:800;margin-bottom:19px}
 .reader-intro h1{font:600 clamp(43px,6vw,65px)/1.08 'Cormorant Garamond',Georgia,serif;letter-spacing:-.024em;margin:0 auto 17px;max-width:800px}
@@ -111,7 +111,7 @@ svg{max-width:100%}
   .reader-back{width:36px;height:36px}
   .header-reference strong{font-size:12px}
   .header-reference>span{font-size:11px;max-width:calc(100vw - 146px)}
-  .reader-main{padding:38px 18px 69px}
+  .reader-main{padding:18px 18px 69px}
   .reader-intro{margin-bottom:35px}
   .reader-intro h1{font-size:clamp(38px,10vw,56px)}
   .reader-range{font-size:13px}
