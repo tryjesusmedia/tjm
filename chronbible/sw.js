@@ -1,15 +1,16 @@
-/* ChronBible service worker v4 — the two public-domain Bibles are stored on this site.
+/* ChronBible service worker v5 — the two public-domain Bibles are stored on this site.
    The reader functions without third-party Scripture APIs, and visited books are
    cached locally. Readers can explicitly download all 132 book files for offline use. */
 const BOOK_CACHE = 'chronbible-bibles-v1';
-const SHELL_CACHE = 'chronbible-shell-v4';
+const SHELL_CACHE = 'chronbible-shell-v5';
 const CORE = [
   '/chronbible/',
   '/chronbible/read/',
+  '/chronbible/read/headings.json',
   '/chronbible/data/readings.json',
   '/chronbible/config.js?v=20261005-doc-plan',
-  '/chronbible/read/reader.js?v=7',
-  '/chronbible/read/reader.css?v=5'
+  '/chronbible/read/reader.js?v=8',
+  '/chronbible/read/reader.css?v=6'
 ];
 
 self.addEventListener('install', event => {
@@ -85,6 +86,7 @@ self.addEventListener('fetch', event => {
 
   if (url.pathname === '/chronbible/data/readings.json' ||
       url.pathname === '/chronbible/read/reader.js' ||
+      url.pathname === '/chronbible/read/headings.json' ||
       url.pathname === '/chronbible/read/reader.css' ||
       url.pathname === '/chronbible/config.js') {
     event.respondWith(networkFirst(request));

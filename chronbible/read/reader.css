@@ -151,3 +151,8 @@ body.single-passage .passage-top{margin-bottom:22px}
 .settings-offline:hover{border-color:var(--gold)}
 .settings-offline:disabled{opacity:.65;cursor:wait}
 .settings-offline-status{font-size:11px;line-height:1.6;color:var(--muted);margin:10px 0 0}
+
+/* Editorial headings are distinct from Scripture and scale with the reader controls. */
+.chapter-verses .scripture-topic{font-size:1em;line-height:1.4;margin:1.2em 0 .34em}
+.chapter-verses .scripture-topic:first-child{margin-top:0}
+.chapter-verses .scripture-topic strong{font-weight:700}

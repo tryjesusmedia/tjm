@@ -2,6 +2,7 @@
   'use strict';
 
   const PLAN_URL = '/chronbible/data/readings.json';
+  const HEADINGS_URL = '/chronbible/read/headings.json';
   const PREF_KEY = 'chronbible-scripture-reader-settings-v1';
   // Both complete 66-book Bible texts are versioned alongside this application.
   // No third-party Bible API or key is needed to display Scripture.
@@ -338,13 +339,32 @@
       '&version=' + (prefs.translation === 'kjv' ? 'KJV' : 'WEB');
   }
 
-  function renderVerses(data, label) {
+  let passageHeadings = [];
+
+  async function loadPassageHeadings() {
+    try {
+      const response = await fetch(HEADINGS_URL, { cache: 'no-cache' });
+      if (!response.ok) return;
+      const headings = await response.json();
+      if (Array.isArray(headings) && headings.length === 1440) passageHeadings = headings;
+    } catch {
+      // Supplemental headings must never prevent Scripture from loading.
+    }
+  }
+
+  function renderVerses(data, task) {
+    const label = task.label;
     if (!data || !Array.isArray(data.verses) || data.verses.length === 0) {
       throw new Error('No verse text was returned for ' + label + '.');
     }
     const verses = data.verses.filter((item) => Number.isInteger(Number(item.verse)) && typeof item.text === 'string');
     if (!verses.length) throw new Error('The Bible service returned no readable verses for ' + label + '.');
 
+    const headings = passageHeadings[task.progressIndex];
+    const anchors = Array.isArray(headings)
+      ? headings.filter(entry => Array.isArray(entry) && Number.isInteger(entry[0]) && typeof entry[1] === 'string')
+      : [];
+    let anchor = 0;
     let lastChapter = null;
     return verses.map((item) => {
       const chapter = Number(item.chapter);
@@ -354,7 +374,13 @@
         ? '<strong class="chapter-number">' + escapeHTML(book) + ' ' + chapter + '</strong>' : '';
       lastChapter = chapterKey;
       const text = escapeHTML(item.text.replace(/\s+/g, ' ').trim());
-      return heading + '<span class="verse"><sup aria-label="Verse ' + Number(item.verse) + '">' +
+      const verse = Number(item.verse);
+      let topic = '';
+      while (anchor < anchors.length && anchors[anchor][0] <= verse) {
+        topic += '<p class="scripture-topic"><strong>' + escapeHTML(anchors[anchor][1]) + '</strong></p>';
+        anchor++;
+      }
+      return heading + topic + '<span class="verse"><sup aria-label="Verse ' + Number(item.verse) + '">' +
         Number(item.verse) + '</sup>' + text + '</span>';
     }).join('');
   }
@@ -525,7 +551,7 @@
     try {
       const response = await fetchScripture(task, translation, scriptureAbort?.signal);
       if (requestId !== scriptureRequestId || translation !== prefs.translation) return;
-      $('task-verses-' + index).innerHTML = renderVerses(response, task.label);
+      $('task-verses-' + index).innerHTML = renderVerses(response, task);
       $('task-status-' + index).textContent = translation.toUpperCase();
     } catch (error) {
       if (error.name !== 'AbortError' && requestId === scriptureRequestId) passageError(index, error);
@@ -559,7 +585,7 @@
         try {
           const data = await fetchScripture(task, translation, scriptureAbort.signal);
           if (requestId !== scriptureRequestId) return;
-          $('task-verses-' + index).innerHTML = renderVerses(data, task.label);
+          $('task-verses-' + index).innerHTML = renderVerses(data, task);
           $('task-status-' + index).textContent = translation.toUpperCase();
           success++;
         } catch (error) {
@@ -688,6 +714,7 @@
       return;
     }
     try {
+      const topicsReady = loadPassageHeadings();
       const res = await fetch(PLAN_URL, { cache: 'no-cache' });
       if (!res.ok) throw new Error('The reading plan is unavailable (' + res.status + ').');
       plan = await res.json();
@@ -696,6 +723,7 @@
         throw new Error('The ChronBible reading plan could not be verified.');
       }
       setReadingData();
+      await Promise.race([topicsReady, new Promise(resolve => setTimeout(resolve, 1500))]);
       if (singlePassage) await loadPassages();
       else await Promise.all([loadPassages(), initProgress()]);
     } catch (error) {
