@@ -384,6 +384,7 @@ function taskGroupComplete(reading, kind) {
     const style = kind === "bible" ? "button-primary" : "button-secondary";
     const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
+    const supplements = kind === "bible" ? reading.supplementalBibleTasks ?? [] : [];
     return `<div class="source-task-list" aria-label="${label}">${tasks.map((task, index) => {
       const taskTitle = kind === "commentary" && task.title ? task.title : task.label;
       const linkLabel = kind === "commentary" ? taskTitle.replace(/^Read\s+/i, "") : task.label;
@@ -391,7 +392,12 @@ function taskGroupComplete(reading, kind) {
         ? `/chronbible/read/?plan=conflict&reading=${encodeURIComponent(reading.id)}&passage=${index}`
         : task.url;
       const external = kind === "commentary" ? ' target="_blank" rel="noopener noreferrer"' : "";
-      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(link)}"${external} data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "Bible and Conflict"}">${escapeHTML(linkLabel)} <span aria-hidden="true">↗</span></a></div>`;
+      const trackedLink = `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(link)}"${external} data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "Bible and Conflict"}">${escapeHTML(linkLabel)} <span aria-hidden="true">↗</span></a></div>`;
+      const supplementalLinks = supplements.filter(extra => extra.afterIndex === index).map(extra => {
+        const href = `/chronbible/read/?plan=conflict&reading=${encodeURIComponent(reading.id)}&passage=${encodeURIComponent(extra.key)}`;
+        return `<div class="source-task-row"><span aria-hidden="true"></span><a class="button ${style} source-task" href="${escapeHTML(href)}" data-open-source="bible" data-reading-id="${reading.id}">${escapeHTML(extra.label)} <span aria-hidden="true">↗</span></a></div>`;
+      }).join("");
+      return trackedLink + supplementalLinks;
     }).join("")}</div>`;
   }
 
@@ -1221,6 +1227,7 @@ function taskGroupComplete(reading, kind) {
       && new Set(plan.readings.map((reading) => reading.id)).size === plan.readings.length
       && plan.readings.every((reading, index) => reading?.id && reading.day === index + 1);
     if (plan.planId !== CONFIG.planId || !readingSequenceIsValid) throw new Error("Reading plan validation failed.");
+      window.TJM_applyConflictScriptureAmendments?.(plan);
       prepareChapterProgressIndex();
       if (chapterTaskCount !== 1696) throw new Error("Chapter progress validation failed.");
       loading.hidden = true;

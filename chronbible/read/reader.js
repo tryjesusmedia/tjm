@@ -264,7 +264,8 @@
     const id = plan.readingAliases?.[rawId] || rawId;
     reading = plan.readings.find(item => item.id === id);
     const index = rawIndex !== null && /^\d+$/.test(rawIndex) ? Number(rawIndex) : -1;
-    const task = reading?.bibleTasks?.[index];
+    const task = index >= 0 ? reading?.bibleTasks?.[index]
+      : reading?.supplementalBibleTasks?.find(extra => extra.key === rawIndex);
     if (!task?.reference) throw new Error('This Scripture passage is not part of the selected Bible and Conflict reading.');
 
     singlePassage = true;
@@ -785,6 +786,7 @@
         if (plan.planId !== 'bible-conflict-ages-v1' || !Array.isArray(plan.readings)) {
           throw new Error('The Bible and Conflict reading plan could not be verified.');
         }
+        window.TJM_applyConflictScriptureAmendments?.(plan);
         setConflictReadingData();
         await Promise.race([loadPassageHeadings(), new Promise(resolve => setTimeout(resolve, 1500))]);
         await loadPassages();

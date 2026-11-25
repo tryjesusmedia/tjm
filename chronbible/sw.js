@@ -1,15 +1,16 @@
-/* ChronBible service worker v6 — the two public-domain Bibles are stored on this site.
+/* ChronBible service worker v7 — the two public-domain Bibles are stored on this site.
    The reader functions without third-party Scripture APIs, and visited books are
    cached locally. Readers can explicitly download all 132 book files for offline use. */
 const BOOK_CACHE = 'chronbible-bibles-v1';
-const SHELL_CACHE = 'chronbible-shell-v6';
+const SHELL_CACHE = 'chronbible-shell-v7';
 const CORE = [
   '/chronbible/',
   '/chronbible/read/',
   '/chronbible/read/headings.json',
   '/chronbible/data/readings.json',
   '/chronbible/config.js?v=20261005-doc-plan',
-  '/chronbible/read/reader.js?v=9',
+  '/bibleandconflictoftheages/scripture-amendments.js?v=1',
+  '/chronbible/read/reader.js?v=10',
   '/chronbible/read/reader.css?v=6'
 ];
 
@@ -84,7 +85,8 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (url.pathname === '/bibleandconflictoftheages/data/readings.json' ||
+  if (url.pathname === '/bibleandconflictoftheages/scripture-amendments.js' ||
+      url.pathname === '/bibleandconflictoftheages/data/readings.json' ||
       url.pathname === '/chronbible/data/readings.json' ||
       url.pathname === '/chronbible/read/reader.js' ||
       url.pathname === '/chronbible/read/headings.json' ||
