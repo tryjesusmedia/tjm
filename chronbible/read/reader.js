@@ -3,6 +3,10 @@
 
   const PLAN_URL = '/chronbible/data/readings.json';
   const HEADINGS_URL = '/chronbible/read/headings.json';
+  const entry = new URLSearchParams(location.search);
+  const conflictMode = entry.get('plan') === 'conflict';
+  const CONFLICT_HOME = '/bibleandconflictoftheages/';
+  const CONFLICT_PLAN_URL = CONFLICT_HOME + 'data/readings.json';
   const PREF_KEY = 'chronbible-scripture-reader-settings-v1';
   // Both complete 66-book Bible texts are versioned alongside this application.
   // No third-party Bible API or key is needed to display Scripture.
@@ -254,6 +258,33 @@
     });
   }
 
+  function setConflictReadingData() {
+    const rawId = entry.get('reading');
+    const rawIndex = entry.get('passage');
+    const id = plan.readingAliases?.[rawId] || rawId;
+    reading = plan.readings.find(item => item.id === id);
+    const index = rawIndex !== null && /^\d+$/.test(rawIndex) ? Number(rawIndex) : -1;
+    const task = reading?.bibleTasks?.[index];
+    if (!task?.reference) throw new Error('This Scripture passage is not part of the selected Bible and Conflict reading.');
+
+    singlePassage = true;
+    activeTasks = [{ label: task.reference, progressIndex: index }];
+    document.body.classList.add('single-passage');
+    document.querySelector('link[rel="icon"]')?.setAttribute('href', CONFLICT_HOME + 'icons/lion-lamb-192.png');
+    elements.headerReading.innerHTML = 'Reading <span>' + String(reading.day).padStart(3, '0') + '</span>';
+    elements.headerPassage.textContent = task.reference;
+    elements.headerPassage.title = task.reference;
+    document.title = task.reference + ' | Bible & Conflict of the Ages';
+    elements.bibleGatewayLink.href = escapeLinkReference(task.reference);
+    elements.bibleGatewayLink.textContent = 'Read ' + task.reference + ' on Bible Gateway ↗';
+    elements.back.hidden = false;
+    elements.back.href = CONFLICT_HOME + '?reading=' + encodeURIComponent(reading.id);
+    elements.back.setAttribute('aria-label', 'Back to Bible and Conflict reading overview');
+    elements.back.title = 'Back to reading overview';
+    elements.progress.hidden = true;
+    renderTaskCards();
+  }
+
   function readingHref(number) {
     return '/chronbible/read/?reading=' + number;
   }
@@ -319,6 +350,13 @@
       elements.next.removeAttribute('href');
     }
     elements.progress.hidden = singlePassage;
+    renderTaskCards();
+    if (location.hash.startsWith('#passage-')) {
+      requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
+    }
+  }
+
+  function renderTaskCards() {
     elements.passages.innerHTML = activeTasks.map((task, idx) => {
       const label = escapeHTML(task.label);
       return '<article class="passage" id="passage-' + task.progressIndex + '" data-task-index="' + idx + '">' +
@@ -329,9 +367,6 @@
         (singlePassage ? '' : '<label class="passage-progress"><input type="checkbox" data-progress-index="' + task.progressIndex + '" disabled> Mark ' + label + ' complete</label>') +
         '</article>';
     }).join('');
-    if (location.hash.startsWith('#passage-')) {
-      requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
-    }
   }
 
   function escapeLinkReference(ref) {
@@ -340,13 +375,36 @@
   }
 
   let passageHeadings = [];
+  let conflictHeadings = [];
 
   async function loadPassageHeadings() {
     try {
       const response = await fetch(HEADINGS_URL, { cache: 'no-cache' });
       if (!response.ok) return;
       const headings = await response.json();
-      if (Array.isArray(headings) && headings.length === 1440) passageHeadings = headings;
+      if (!Array.isArray(headings) || headings.length !== 1440) return;
+      if (!conflictMode) {
+        passageHeadings = headings;
+        return;
+      }
+      // Reuse the same original topic titles, anchored to the actual chapter/verse,
+      // since the two reading plans split some of the same chapters differently.
+      const chronResponse = await fetch(PLAN_URL, { cache: 'no-cache' });
+      if (!chronResponse.ok) return;
+      const chronPlan = await chronResponse.json();
+      const target = parsePassage(activeTasks[0].label);
+      const anchors = new Map();
+      for (const chronReading of chronPlan.readings) {
+        for (const task of chronReading.bibleTasks) {
+          const source = parsePassage(task.label);
+          if (source.book !== target.book || source.chapter !== target.chapter) continue;
+          for (const entry of headings[task.progressIndex] || []) {
+            const [verse, title] = entry;
+            if (inPassage(source, verse) && inPassage(target, verse)) anchors.set(verse, title);
+          }
+        }
+      }
+      conflictHeadings = [...anchors.entries()].sort((a, b) => a[0] - b[0]);
     } catch {
       // Supplemental headings must never prevent Scripture from loading.
     }
@@ -360,7 +418,7 @@
     const verses = data.verses.filter((item) => Number.isInteger(Number(item.verse)) && typeof item.text === 'string');
     if (!verses.length) throw new Error('The Bible service returned no readable verses for ' + label + '.');
 
-    const headings = passageHeadings[task.progressIndex];
+    const headings = conflictMode ? conflictHeadings : passageHeadings[task.progressIndex];
     const anchors = Array.isArray(headings)
       ? headings.filter(entry => Array.isArray(entry) && Number.isInteger(entry[0]) && typeof entry[1] === 'string')
       : [];
@@ -377,7 +435,9 @@
       const verse = Number(item.verse);
       let topic = '';
       while (anchor < anchors.length && anchors[anchor][0] <= verse) {
-        topic += '<p class="scripture-topic"><strong>' + escapeHTML(anchors[anchor][1]) + '</strong></p>';
+        if (!conflictMode || anchors[anchor][0] === verse) {
+          topic += '<p class="scripture-topic"><strong>' + escapeHTML(anchors[anchor][1]) + '</strong></p>';
+        }
         anchor++;
       }
       return heading + topic + '<span class="verse"><sup aria-label="Verse ' + Number(item.verse) + '">' +
@@ -389,17 +449,25 @@
   const pendingBooks = new Map();
 
   function parsePassage(label) {
-    const match = /^(.+?)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$/.exec(String(label).trim());
+    const match = /^(.+?)\s+(\d+)(?::(\d+(?:-\d+)?(?:,\s*\d+(?:-\d+)?)*))?$/.exec(String(label).trim());
     if (!match) throw new Error('Unsupported Scripture reference: ' + label);
     const book = BOOK_CODES[match[1]];
     if (!book) throw new Error('Unrecognized Bible book: ' + match[1]);
     const chapter = Number(match[2]);
-    const start = match[3] ? Number(match[3]) : null;
-    const end = match[4] ? Number(match[4]) : start;
-    if (!Number.isInteger(chapter) || chapter < 1 || (start !== null && (!Number.isInteger(start) || start < 1 || !Number.isInteger(end) || end < start))) {
+    const ranges = match[3]?.split(/,\s*/).map(part => {
+      const [start, end = start] = part.split('-').map(Number);
+      return { start, end };
+    }) || [];
+    if (!Number.isSafeInteger(chapter) || chapter < 1 ||
+        ranges.some(({ start, end }) => !Number.isSafeInteger(start) || start < 1 ||
+          !Number.isSafeInteger(end) || end < start)) {
       throw new Error('Invalid Scripture reference: ' + label);
     }
-    return { book, chapter, start, end, label };
+    return { book, chapter, ranges, label };
+  }
+
+  function inPassage(ref, verse) {
+    return !ref.ranges.length || ref.ranges.some(({ start, end }) => verse >= start && verse <= end);
   }
 
   function bookPath(version, book) {
@@ -461,7 +529,7 @@
     }
     const verses = chapter.verses.filter(verse =>
       typeof verse.text === 'string' && Number.isInteger(verse.number) &&
-      (ref.start === null || (verse.number >= ref.start && verse.number <= ref.end))
+      inPassage(ref, verse.number)
     ).map(verse => ({
       book_name: book.englishName || task.label,
       chapter: ref.chapter,
@@ -471,8 +539,8 @@
     if (!verses.length) throw new Error('No verses found in stored Bible for ' + task.label);
     // When referencing a specific verse, fail visibly rather than silently
     // substituting an incorrect verse from the translation.
-    if (ref.start !== null &&
-        (!verses.some(v => v.verse === ref.start) || !verses.some(v => v.verse === ref.end))) {
+    if (ref.ranges.some(({ start, end }) =>
+        !verses.some(v => v.verse === start) || !verses.some(v => v.verse === end))) {
       throw new Error('The selected translation does not contain the requested numbered verse(s): ' + task.label);
     }
     const data = { reference: task.label, translation_id: translation, verses };
@@ -704,7 +772,28 @@
 
     // Older multi-chapter reader links should show the chapter-button overview,
     // never load every passage directly and bypass the reading choices.
-    const entry = new URLSearchParams(location.search);
+    if (conflictMode) {
+      document.body.classList.add('single-passage');
+      elements.back.hidden = false;
+      elements.back.href = CONFLICT_HOME;
+      elements.back.setAttribute('aria-label', 'Back to Bible and Conflict');
+      elements.back.title = 'Back to Bible and Conflict';
+      try {
+        const res = await fetch(CONFLICT_PLAN_URL, { cache: 'no-cache' });
+        if (!res.ok) throw new Error('The Bible and Conflict reading plan is unavailable.');
+        plan = await res.json();
+        if (plan.planId !== 'bible-conflict-ages-v1' || !Array.isArray(plan.readings)) {
+          throw new Error('The Bible and Conflict reading plan could not be verified.');
+        }
+        setConflictReadingData();
+        await Promise.race([loadPassageHeadings(), new Promise(resolve => setTimeout(resolve, 1500))]);
+        await loadPassages();
+      } catch (error) {
+        elements.status.hidden = false;
+        elements.status.textContent = error.message + ' Return to Bible and Conflict and try again.';
+      }
+      return;
+    }
     if (!entry.has('passage')) {
       const raw = entry.get('reading');
       const number = raw && /^\d+$/.test(raw) ? Number(raw) : null;

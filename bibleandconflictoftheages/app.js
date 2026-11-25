@@ -62,6 +62,8 @@
   let visitRefreshId = 0;
 
   // Reading location is device-local and separate from completion records.
+  const overviewReading = new URLSearchParams(location.search).get("reading");
+  let restoreOverview = Boolean(overviewReading);
   let placeReady = false;
   let placeSaveTimer = null;
   const placeKey = () => `tjm-conflict-place-v1:${session?.user?.id || "guest"}`;
@@ -92,8 +94,16 @@
       && saved.journeyReturn.scrollY >= 0
       && (saved.journeyReturn.book === "" || plan.books.some(book => book.code === saved.journeyReturn.book))
       ? saved.journeyReturn : null;
+    const requestedIndex = restoreOverview
+      ? plan.readings.findIndex(reading => reading.id === resolveReadingId(overviewReading)) : -1;
+    restoreOverview = false;
     const index = plan.readings.findIndex(reading => reading.id === resolveReadingId(saved?.readingId));
-    if (index >= 0) {
+    const restoreScroll = index >= 0 && (requestedIndex < 0 || (index === requestedIndex && saved.view === "readings"));
+    if (requestedIndex >= 0) {
+      currentIndex = requestedIndex;
+      activeView = "readings";
+      activeBook = currentReading().code;
+    } else if (index >= 0) {
       currentIndex = index;
       activeView = ["readings", "journey", "progress", "rewards"].includes(saved.view) ? saved.view : "readings";
       activeBook = saved.book === "" || plan.books.some(book => book.code === saved.book)
@@ -104,7 +114,7 @@
     const userId = session?.user?.id;
     requestAnimationFrame(() => {
       if (userId !== session?.user?.id) return;
-      if (index >= 0 && Number.isFinite(saved.scrollY) && saved.scrollY >= 0) {
+      if (restoreScroll && Number.isFinite(saved.scrollY) && saved.scrollY >= 0) {
         window.scrollTo({ top: saved.scrollY, behavior: "instant" });
       }
       placeReady = true;
@@ -374,10 +384,14 @@ function taskGroupComplete(reading, kind) {
     const style = kind === "bible" ? "button-primary" : "button-secondary";
     const label = kind === "bible" ? "Scripture chapter choices" : "Companion chapter choices";
     if (!tasks?.length) return `<button class="button ${style}" type="button" disabled>${kind === "bible" ? "No Scripture listed" : "No companion reading listed"}</button>`;
-    return `<div class="source-task-list" aria-label="${label}">${tasks.map((task) => {
+    return `<div class="source-task-list" aria-label="${label}">${tasks.map((task, index) => {
       const taskTitle = kind === "commentary" && task.title ? task.title : task.label;
       const linkLabel = kind === "commentary" ? taskTitle.replace(/^Read\s+/i, "") : task.label;
-      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(task.url)}" target="_blank" rel="noopener noreferrer" data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "BibleGateway"}">${escapeHTML(linkLabel)} <span aria-hidden="true">↗</span></a></div>`;
+      const link = kind === "bible"
+        ? `/chronbible/read/?plan=conflict&reading=${encodeURIComponent(reading.id)}&passage=${index}`
+        : task.url;
+      const external = kind === "commentary" ? ' target="_blank" rel="noopener noreferrer"' : "";
+      return `<div class="source-task-row"><input class="chapter-checkbox" type="checkbox" data-chapter-progress="${task.progressIndex}" data-reading-id="${reading.id}" aria-label="Mark ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} complete" ${chapterCompleted.has(task.progressIndex) ? "checked" : ""}><a class="button ${style} source-task" href="${escapeHTML(link)}"${external} data-open-source="${kind}" data-reading-id="${reading.id}" aria-label="Read ${escapeHTML(taskTitle.replace(/^Read\s+/i, ""))} on ${kind === "commentary" ? "EGW Writings" : "Bible and Conflict"}">${escapeHTML(linkLabel)} <span aria-hidden="true">↗</span></a></div>`;
     }).join("")}</div>`;
   }
 
@@ -1122,7 +1136,10 @@ function taskGroupComplete(reading, kind) {
     else if (target.dataset.book) { activeBook = activeBook === target.dataset.book ? "" : target.dataset.book; render(); savePlace(); }
     else if (target.dataset.viewShortcut) showView(target.dataset.viewShortcut, true);
     else if (target.hasAttribute("data-retry-leaderboard")) loadJourneyRewards();
-    else if (target.dataset.openSource) recordOpen(target.dataset.readingId, target.dataset.openSource);
+    else if (target.dataset.openSource) {
+      if (target.dataset.openSource === "bible") savePlace();
+      recordOpen(target.dataset.readingId, target.dataset.openSource);
+    }
   });
 
   root.addEventListener("pointerdown", beginNameHold);

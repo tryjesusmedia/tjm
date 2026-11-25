@@ -18,6 +18,6 @@ The Supabase publishable key in `config.js` is intentionally public client confi
 
 `data/readings.json` is generated from the five supplied plans by `tjm-site/scripts/import-conflict-reading-plans.mjs`. The importer writes the same validated JSON bundle to `tryjesusjourney/data/conflictPlan.json`. It preserves source blocks and order, and writes ambiguous entries to `reviewQueue` instead of correcting them.
 
-Each Scripture assignment opens its exact passage in the KJV on BibleGateway, including partial and discontiguous verse ranges. Companion assignments remain direct external links on `https://egwwritings.org/`. The resolved companion chapter catalog is stored in `scripts/egw-reading-links.json`; run `npm run links:egw` only when an assignment changes and its official chapter locations must be refreshed.
+Each Scripture button opens its exact chapter or passage in the shared ChronBible reader with WEB and KJV, including partial and discontiguous verse ranges. Reader preferences are shared; Conflict and ChronBible progress remain separate. Companion assignments remain direct external links on `https://egwwritings.org/`. The resolved companion chapter catalog is stored in `scripts/egw-reading-links.json`; run `npm run links:egw` only when an assignment changes and its official chapter locations must be refreshed.
 
 Notes, principles, and highlighting are not loaded by this experience. Existing historical records remain in Supabase and are not deleted.
