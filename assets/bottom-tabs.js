@@ -2,7 +2,9 @@
 (() => {
   'use strict';
   const pathname = location.pathname.replace(/\/index\.html$/i, '').replace(/\/+$/, '').toLowerCase();
-  const path = pathname === '/signupcomplete' ? '/welcome' : pathname;
+  const path = pathname === '/signupcomplete'
+    ? (document.body.dataset.page === 'sales' ? '/bibledecoded' : '/welcome')
+    : pathname;
   const spanish = path === '/es/chronbible' || path === '/es/welcome' || path === '/es/bibledecoded' || path.startsWith('/es/bibledecoded/');
   const englishBibleDecoded = path === '/bibledecoded' || path.startsWith('/bibledecoded/');
   const spanishBibleDecoded = path === '/es/bibledecoded' || path.startsWith('/es/bibledecoded/');

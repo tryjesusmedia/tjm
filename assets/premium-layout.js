@@ -193,7 +193,8 @@
   }
 
   function setupLanguageSwitch() {
-    const pair=languagePairFor(location.pathname);
+    const isSignupOffer=normalizeLanguagePath(location.pathname)==='/signupcomplete' && document.body.dataset.page==='sales';
+    const pair=languagePairFor(isSignupOffer?'/bibledecoded/':location.pathname);
     if(!pair||document.querySelector('.tjm-language-switch'))return;
     const {english:englishPath,spanish:spanishPath,current}=pair;
     const isSpanish=current===normalizeLanguagePath(spanishPath);
@@ -333,7 +334,7 @@
       // Keep the two optional program drawers together, directly below the hero.
       if (decodedFold && perksFold) decodedFold.after(perksFold);
     }
-    if(path==='/welcome' || path==='/signupcomplete' || path==='/es/welcome') {
+    if(path==='/welcome' || (path==='/signupcomplete' && document.body.dataset.page!=='sales') || path==='/es/welcome') {
       document.body.classList.add('premium-members');
       const main=q('main');
       const intro=document.createElement('section');intro.className='premium-member-start';
